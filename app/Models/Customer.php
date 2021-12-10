@@ -4,17 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Data\Customer\MetaData;
 use Spatie\LaravelData\DataCollection;
+use App\Data\Customer\MetaData;
+use App\Data\Shared\AddressData;
+use App\Helpers\Models\Jsonable;
 
 class Customer extends Model
 {
-    use HasFactory;
+    use HasFactory, Jsonable;
 
     protected $casts = [
+        'meta_data' => 'array',
         'billing' => 'array',
-        'shipping' => 'array',
-        'meta_data' => 'array'
+        'shipping' => 'array'
     ];
 
     protected $fillable = [
@@ -43,11 +45,31 @@ class Customer extends Model
     }
 
     /**
-     * Meta Data collection
      * 
-     * @return DataCollection
      */
-    public function getMeta() : DataCollection {
-        return MetaData::collection( $this->meta_data );
+    public function getMetaDataAttribute($meta_data) : DataCollection {
+        return $this->getDataCollectionFrom(MetaData::class, $meta_data);
+    }
+
+    public function setMetaDataAttribute($meta_data) {
+        $this->attributes['meta_data'] = $this->getCollectionJson(
+            MetaData::class, $meta_data
+        );
+    }
+
+    public function getShippingAttribute($shipping) : AddressData {
+        return $this->getAddressData($shipping);
+    }
+
+    public function setShippingAttribute($shipping) {
+        $this->attributes['shipping'] = $this->getAddressDataJson($shipping);
+    }
+
+    public function getBillingAttribute($billing) : AddressData {
+        return $this->getAddressData($billing);
+    }
+
+    public function setBillingAttribute($billing) {
+        $this->attributes['billing'] = $this->getAddressDataJson($billing);
     }
 }

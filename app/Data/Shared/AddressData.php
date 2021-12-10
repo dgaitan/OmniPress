@@ -1,0 +1,24 @@
+<?php
+
+namespace App\Data\Shared;
+
+use Spatie\LaravelData\Data;
+
+class AddressData extends Data {
+    
+    public function __construct(
+        public string $first_name,
+        public string $last_name,
+        public string $company,
+        public string $address_1,
+        public string $address_2,
+        public string $city,
+        public string $state,
+        public string $postcode,
+        public string $country,
+        public string $email,
+        public string $phone
+    ) {
+
+    }
+}
