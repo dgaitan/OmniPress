@@ -42,9 +42,9 @@ class CreateOrdersTable extends Migration
             $table->boolean('set_paid')->default(false);
 
             // Structure dasta
-            $table->json('meta_data')->nullable(true);
-            $table->json('billing');
-            $table->json('shipping');
+            $table->jsonb('meta_data')->nullable(true);
+            $table->jsonb('billing');
+            $table->jsonb('shipping');
         });
     }
 
