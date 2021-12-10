@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Data\Customer;
+namespace Tests\Feature\Data\Shared;
 
 use App\Data\Shared\AddressData;
 use Tests\TestCase;

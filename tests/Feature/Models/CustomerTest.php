@@ -6,7 +6,7 @@ use DateTime;
 use App\Models\Customer;
 use App\Data\Customer\MetaData;
 use App\Data\Shared\AddressData;
-use Spatie\LaravelData\DataCollection;
+use App\Enums\CustomerRole;
 
 class CustomerTest extends BaseModelTest {
     
@@ -31,7 +31,7 @@ class CustomerTest extends BaseModelTest {
             'email' => 'foo@mail.com',
             'first_name' => 'John',
             'last_name' => 'Doe',
-            'role' => 'customer',
+            'role' => CustomerRole::CUSTOMER(),
             'username' => 'john_doe',
             'billing' => $billing->toJson(),
             'shipping' => $shipping->toJson(),
@@ -47,6 +47,8 @@ class CustomerTest extends BaseModelTest {
         $this->assertInstanceOf(AddressData::class, $customer->billing);
         $this->assertTrue($customer->is_paying_customer);
         $this->assertEquals(1, count( $customer->meta_data ));
+        $this->assertEquals('customer', $customer->role);
+        $this->assertEquals(CustomerRole::CUSTOMER(), $customer->role);
 
         $this->assertIsInt( $customer->meta_data[0]->id );
 
