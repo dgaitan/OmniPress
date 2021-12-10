@@ -17,6 +17,8 @@ class CreateCouponsTable extends Migration
             $table->id();
             $table->timestamps();
 
+            $table->bigInteger('coupon_id'); // Coupon ID on Woo
+
             $table->string('code', 100);
             $table->decimal('amount', 9, 3)->default(0);
             $table->dateTime('date_created');
@@ -29,7 +31,7 @@ class CreateCouponsTable extends Migration
             $table->jsonb('settings')->nullable(false);
             $table->jsonb('meta_data')->nullable();
 
-            $table->index(['code']);
+            $table->index(['code', 'coupon_id']);
         });
     }
 
