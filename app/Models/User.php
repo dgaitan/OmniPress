@@ -42,10 +42,16 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    /**
+     * User Owned Organizations
+     */
     public function my_organizations() {
         return $this->hasMany(Organization::class, 'owner_id');
     }
 
+    /**
+     * Organization where is member
+     */
     public function organizations() {
         return $this->belongsToMany(
             Organization::class, 

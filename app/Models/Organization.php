@@ -9,6 +9,8 @@ class Organization extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['name', 'is_default', 'status', 'owner_id'];
+
     /**
      * An organization has an owner
      */
