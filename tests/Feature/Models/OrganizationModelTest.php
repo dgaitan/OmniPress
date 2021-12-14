@@ -28,8 +28,8 @@ class OrganizationModelTest extends BaseModelTest {
         $this->assertTrue($org->is_default);
         $this->assertEquals(1, $org->status);
 
-        $this->assertEquals(1, $user->organizations()->count());
-        $this->assertEquals('Org 1', $user->organizations()->first()->name);
+        $this->assertEquals(1, $user->my_organizations()->count());
+        $this->assertEquals('Org 1', $user->my_organizations()->first()->name);
     }
 
     public function test_users_on_organization() : void {
@@ -54,16 +54,20 @@ class OrganizationModelTest extends BaseModelTest {
         $org->status = 1;
         $org->save();
 
-        $owner->organization_id = $org->id;
-        $owner->save();
-        $user1->organization_id = $org->id;
-        $user1->save();
-        $user2->organization_id = $org->id;
-        $user2->save();
+        $org->members()->attach([$owner->id, $user1->id, $user2->id]);
 
         $this->assertEquals(3, $org->members()->count());
         
-        $this->assertEquals("Org 1", $user1->organization->name);
+        $this->assertEquals("Org 1", $user1->organizations()->first()->name);
+        
+        $new_member = $org->members()->create(array(
+            'name' => 'David',
+            'email' => 'gaitan@drums.com',
+            'password' => Hash::make('secret')
+        ));
+
+        $this->assertEquals('David', $new_member->name);
+        $this->assertEquals(4, $org->members()->count());
     }
 
 }

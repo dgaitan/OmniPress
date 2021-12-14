@@ -20,6 +20,11 @@ class Organization extends Model
      * Add member relations
      */
     public function members() {
-        return $this->hasMany(User::class, 'organization_id');
+        return $this->belongsToMany(
+            User::class,
+            'organization_members',
+            'organization_id',
+            'user_id'
+        );
     }
 }

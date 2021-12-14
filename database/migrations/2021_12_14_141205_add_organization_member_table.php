@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddUsersToOrganizationTable extends Migration
+class AddOrganizationMemberTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,12 @@ class AddUsersToOrganizationTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->foreignId('organization_id')->nullable();
+        Schema::create('organization_members', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+
+            $table->foreignId('organization_id');
+            $table->foreignId('user_id');
         });
     }
 
@@ -25,8 +29,6 @@ class AddUsersToOrganizationTable extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            Schema::dropIfExists('users');
-        });
+        Schema::dropIfExists('organization_members');
     }
 }
