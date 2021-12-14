@@ -3,6 +3,8 @@
 namespace Tests\Feature\Models;
 
 use App\Models\Organization;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class OrganizationModelTest extends BaseModelTest {
 
@@ -28,6 +30,40 @@ class OrganizationModelTest extends BaseModelTest {
 
         $this->assertEquals(1, $user->organizations()->count());
         $this->assertEquals('Org 1', $user->organizations()->first()->name);
+    }
+
+    public function test_users_on_organization() : void {
+        $user1 = User::create([
+            'name' => 'John 1',
+            'email' => 'john@doe1.com',
+            'password' => Hash::make('secret')
+        ]);
+
+        $user2 = User::create([
+            'name' => 'John 2',
+            'email' => 'john@doe2.com',
+            'password' => Hash::make('secret')
+        ]);
+
+        $owner = $this->create_user();
+
+        $org = new Organization();
+        $org->name = "Org 1";
+        $org->owner_id = $owner->id;
+        $org->is_default = true;
+        $org->status = 1;
+        $org->save();
+
+        $owner->organization_id = $org->id;
+        $owner->save();
+        $user1->organization_id = $org->id;
+        $user1->save();
+        $user2->organization_id = $org->id;
+        $user2->save();
+
+        $this->assertEquals(3, $org->members()->count());
+        
+        $this->assertEquals("Org 1", $user1->organization->name);
     }
 
 }

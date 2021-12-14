@@ -15,4 +15,11 @@ class Organization extends Model
     public function owner() {
         return $this->belongsTo(User::class, 'owner_id');
     }
+
+    /**
+     * Add member relations
+     */
+    public function members() {
+        return $this->hasMany(User::class, 'organization_id');
+    }
 }
