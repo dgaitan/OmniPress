@@ -25,6 +25,9 @@ class OrganizationModelTest extends BaseModelTest {
         $this->assertEquals("Org 1", $org->name);
         $this->assertTrue($org->is_default);
         $this->assertEquals(1, $org->status);
+
+        $this->assertEquals(1, $user->organizations()->count());
+        $this->assertEquals('Org 1', $user->organizations()->first()->name);
     }
 
 }
