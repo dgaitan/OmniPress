@@ -44,6 +44,10 @@ class Customer extends Model
         return $this->hasMany(Order::class);
     }
 
+    public function service() {
+        return $this->belongsTo(Service::class, 'service_id');
+    }
+
     /**
      * 
      */

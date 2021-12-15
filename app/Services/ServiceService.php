@@ -15,6 +15,9 @@ class ServiceService {
      */
     protected $service;
 
+    /**
+     * Createa a Service
+     */
     public function create(array $args, array $accessData) : Service {
         $this->service = Service::create($args);
 

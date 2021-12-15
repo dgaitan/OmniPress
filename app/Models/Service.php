@@ -38,6 +38,13 @@ class Service extends Model
         return $this->belongsTo(Organization::class, 'organization_id');
     }
 
+    /**
+     * Retrieve the customers related to this service.
+     */
+    public function customers() {
+        return $this->hasMany(Customer::class, 'service_id');
+    }
+
     public function getAccessAttribute(string $access) {
         if ($this->type === ServiceType::WOOCOMMERCE) {
             return WooCommerceAccessData::fromEncryptedData($access);
