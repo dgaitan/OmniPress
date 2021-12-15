@@ -14,6 +14,7 @@ abstract class Client {
     public function __construct(\App\Models\Service $service) {
         $this->service = $service;
         $this->setCredentials();
+        $this->loadApi();
     }
 
     protected function setCredentials() {

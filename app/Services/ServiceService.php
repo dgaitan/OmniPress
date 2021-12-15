@@ -27,9 +27,6 @@ class ServiceService {
             $this->service->access = $accessData->getDataToStore();
         }
 
-        var_dump(ServiceType::default());
-        var_dump($this->service->type);
-
         $this->service->save();
 
         return $this->service;
