@@ -4,6 +4,7 @@ namespace App\Http\Clients\WooCommerce;
 
 use App\Data\Http\CustomerData;
 use App\Http\Clients\WooCommerce\Endpoints\CustomerEndpoint;
+use App\Http\Clients\WooCommerce\Endpoints\CouponEndpoint;
 
 class WooCommerceClient {
 
@@ -23,7 +24,8 @@ class WooCommerceClient {
 
     public function getEndpoints() {
         return [
-            'customers' => CustomerEndpoint::class
+            'customers' => CustomerEndpoint::class,
+            'coupons' => CouponEndpoint::class
         ];
     }
     
@@ -61,22 +63,4 @@ class WooCommerceClient {
 
         return $this->{$methodName}(...$params);
     }
-
-
-    // public function getCustomers(array $params = []): array {
-    //     $results = array();
-    //     $endpoint = 'customers';
-
-    //     if (isset($params['take'])) {
-    //         $response = $this->client->getApi()->get($endpoint, [
-    //             'page' => 1,
-    //             'per_page' => $params['take'],
-    //             'role' => 'all'
-    //         ]);
-
-    //         $results[1] = CustomerData::collectFromResponse($response);
-    //     }
-
-    //     return $results;
-    // }
 }

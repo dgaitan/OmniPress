@@ -43,7 +43,6 @@ abstract class BaseEndpoint {
     public function get(array $params = array()): array {
         $results = array();
         $params = $this->getParams($params);
-        var_dump($params);
 
         // When a 'take' param is present on params
         // it means that we only want that quantity of results.

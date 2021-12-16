@@ -4,8 +4,9 @@ namespace App\Data\Http;
 
 use Spatie\LaravelData\DataCollection;
 use App\Data\Shared\AddressData;
+use App\Data\BaseData;
 
-class CustomerData extends BaseHttpData {
+class CustomerData extends BaseData {
     
     public function __construct(
         public int $customer_id,

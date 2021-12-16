@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Data\Http;
+namespace App\Data;
 
 use ReflectionClass;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\DataCollection;
 use stdClass;
 
-abstract class BaseHttpData extends Data {
+abstract class BaseData extends Data {
     public static $id_field = 'id';
     
     /**

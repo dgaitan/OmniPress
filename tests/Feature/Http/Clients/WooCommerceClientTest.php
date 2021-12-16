@@ -40,4 +40,18 @@ class WooCommerceClientTest extends TestCase {
             }
         }
     }
+
+    public function test_get_coupons() : void {
+        $wooClient = new WooCommerceClient($this->client);
+        $coupons = $wooClient->getCoupons(['take' => 10]);
+
+        $this->assertTrue(10 === count($coupons[1]));
+    }
+
+    public function test_get_orders(): void {
+        $wooClient = new WooCommerceClient($this->client);
+        $orders = $wooClient->getOrders(['take' => 10]);
+
+        $this->assertTrue(10 === count($orders[1]));
+    }
 }
