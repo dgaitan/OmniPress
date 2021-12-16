@@ -19,12 +19,37 @@ abstract class BaseEndpoint {
      * @var string
      */
     protected $endpoint;
+    
+    /**
+     * Is the client in testing mode?
+     * 
+     * @var bool
+     */
+    protected $isTesting = false;
+    protected $testingData = [];
 
     /**
      * Constructor
      */
     public function __construct(WooCommerce $api) {
         $this->api = $api;
+    }
+
+    public function setTestingMode(bool $isTesting): static {
+        $this->isTesting = $isTesting;
+        return $this;
+    }
+
+    /**
+     * Set testing data
+     * 
+     * 
+     * @param array $data
+     * @return WooCoomerceClient
+     */
+    public function setTestingData(array $data): static {
+        $this->testingData = $data;
+        return $this;
     }
 
     /**
@@ -43,6 +68,13 @@ abstract class BaseEndpoint {
     public function get(array $params = array()): array {
         $results = array();
         $params = $this->getParams($params);
+
+        if ($this->isTesting) {
+            $response = $this->testingData;
+            $results[1] = $this->getDataProcessor()::collectFromResponse($response);
+
+            return $results;
+        }
 
         // When a 'take' param is present on params
         // it means that we only want that quantity of results.
