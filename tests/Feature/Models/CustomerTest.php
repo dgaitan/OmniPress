@@ -3,7 +3,7 @@
 namespace Tests\Feature\Models;
 
 use DateTime;
-use App\Models\Customer;
+use App\Models\WooCommerce\Customer;
 use App\Data\Customer\MetaData;
 use App\Data\Shared\AddressData;
 use App\Enums\CustomerRole;

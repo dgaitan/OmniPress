@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Enums\ServiceType;
 use App\Data\Service\WooCommerceAccessData;
+use App\Models\WooCommerce\Customer;
 
 class Service extends Model
 {

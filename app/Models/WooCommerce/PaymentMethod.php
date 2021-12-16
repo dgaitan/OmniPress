@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\WooCommerce;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class WooSetting extends Model
+class PaymentMethod extends Model
 {
     use HasFactory;
 }

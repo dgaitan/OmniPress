@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\WooCommerce;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Coupon extends Model
+class TaxRate extends Model
 {
     use HasFactory;
 }
