@@ -3,29 +3,80 @@
 namespace App\Http\Clients\WooCommerce;
 
 use App\Data\Http\CustomerData;
+use App\Http\Clients\WooCommerce\Endpoints\CustomerEndpoint;
 
 class WooCommerceClient {
 
+    /**
+     * The Client
+     * 
+     * @var \App\Http\Clients\Client;
+     */
     protected $client;
+
+    protected $endpoints;
 
     public function __construct(\App\Http\Clients\Client $client) {
         $this->client = $client;
+        $this->loadEndpoints();
     }
 
-    public function getCustomers(array $params = []): array {
-        $results = array();
-        $endpoint = 'customers';
+    public function getEndpoints() {
+        return [
+            'customers' => CustomerEndpoint::class
+        ];
+    }
+    
+    public function loadEndpoints() : void {
+        $endpoints = $this->getEndpoints();
 
-        if (isset($params['take'])) {
-            $response = $this->client->getApi()->get($endpoint, [
-                'page' => 1,
-                'per_page' => $params['take'],
-                'role' => 'all'
-            ]);
+        if ($endpoints) {
+            foreach ($endpoints as $name => $endpoint) {
+                $this->endpoints[$name] = new $endpoint($this->client->getApi());
+            }
+        }
+    }
 
-            $results[1] = CustomerData::collectFromResponse($response);
+    /**
+     * Check 
+     */
+    public function __call(string $name, array $params) {
+        $methodName = explode('get', $name);
+
+        if (count($methodName) === 1) {
+            return null;
         }
 
-        return $results;
+        $methodName = end($methodName);
+        $methodName = str_split($methodName);
+        $methodName[0] = strtolower($methodName[0]);
+        $methodName = implode('', $methodName);
+        if (array_key_exists($methodName, $this->endpoints)) {
+            return $this->endpoints[$methodName]->get(...$params);
+        }
+
+        if (!array_key_exists($methodName, get_class_methods($this))) {
+			return null;
+		}
+
+        return $this->{$methodName}(...$params);
     }
+
+
+    // public function getCustomers(array $params = []): array {
+    //     $results = array();
+    //     $endpoint = 'customers';
+
+    //     if (isset($params['take'])) {
+    //         $response = $this->client->getApi()->get($endpoint, [
+    //             'page' => 1,
+    //             'per_page' => $params['take'],
+    //             'role' => 'all'
+    //         ]);
+
+    //         $results[1] = CustomerData::collectFromResponse($response);
+    //     }
+
+    //     return $results;
+    // }
 }
