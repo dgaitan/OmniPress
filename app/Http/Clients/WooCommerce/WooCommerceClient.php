@@ -2,12 +2,14 @@
 
 namespace App\Http\Clients\WooCommerce;
 
-use App\Data\Http\CustomerData;
 use App\Http\Clients\WooCommerce\Endpoints\CustomerEndpoint;
 use App\Http\Clients\WooCommerce\Endpoints\CouponEndpoint;
 use App\Http\Clients\WooCommerce\Endpoints\OrderEndpoint;
+use App\Helpers\API\Testeable;
 
 class WooCommerceClient {
+
+    use Testeable;
 
     /**
      * The Client
@@ -16,15 +18,12 @@ class WooCommerceClient {
      */
     protected $client;
 
-    protected $endpoints;
-
     /**
-     * Is the client in testing mode?
+     * The endpoints handlers
      * 
-     * @var bool
+     * @var array
      */
-    protected $isTesting = false;
-    protected $testingData = [];
+    protected $endpoints;
 
     public function __construct(\App\Http\Clients\Client $client) {
         $this->client = $client;
@@ -58,30 +57,7 @@ class WooCommerceClient {
             }
         }
     }
-
-    public function setTestingMode(bool $isTesting): WooCommerceClient {
-        $this->isTesting = $isTesting;
-        return $this;
-    }
-
-    /**
-     * Set testing data
-     * 
-     * it should follows the next format:
-     * 
-     * [
-     *  'customers' => ...,
-     *  'coupons' => ...,
-     * ]
-     * 
-     * @param array $data
-     * @return WooCoomerceClient
-     */
-    public function setTestingData(array $data): WooCommerceClient {
-        $this->testingData = $data;
-        return $this;
-    }
-
+    
     /**
      * Check 
      */
@@ -96,10 +72,15 @@ class WooCommerceClient {
         $methodName = str_split($methodName);
         $methodName[0] = strtolower($methodName[0]);
         $methodName = implode('', $methodName);
+
         if (array_key_exists($methodName, $this->endpoints)) {
-            $this->endpoints[$methodName]
-                ->setTestingMode($this->isTesting)
-                ->setTestingData($this->testingData[$methodName]);
+            // Do this only is testing mode
+            if ($this->isTesting) {
+                $this->endpoints[$methodName]
+                    ->setTestingMode($this->isTesting)
+                    ->setTestingData($this->testingCollectionData[$methodName])
+                    ->retrieveDataFromAPI($this->retrieveFromAPI);
+            }
             
             return $this->endpoints[$methodName]->get(...$params);
         }

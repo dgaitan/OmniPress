@@ -12,6 +12,7 @@ class WooCommerceClientTest extends TestCase {
     protected $service;
     protected $client;
     protected $wooClient;
+    protected $retrieveFromAPI = true;
 
     protected function setUp(): void {
         parent::setUp();
@@ -20,7 +21,7 @@ class WooCommerceClientTest extends TestCase {
         $this->client = Client::initialize($this->service);
         $this->wooClient = new WooCommerceClient($this->client);
         $this->wooClient->setTestingMode(true);
-        $this->wooClient->setTestingData(WooCommerceClientTestResponses::data());
+        $this->wooClient->setTestingCollectionData(WooCommerceClientTestResponses::data());
     }
     
     public function test_get_customers() : void {
@@ -45,10 +46,34 @@ class WooCommerceClientTest extends TestCase {
         }
     }
 
+    public function test_get_customers_from_api() : void {
+        if ($this->retrieveFromAPI) {
+            $this->wooClient->retrieveDataFromAPI(true);
+            $customers = $this->wooClient->getCustomers(['role' => 'administrator']);
+            
+            $this->assertNotNull($customers);
+            $this->assertSame(1, count($customers));
+        }
+
+        $this->assertTrue(true);
+    }
+
     public function test_get_coupons() : void {
         $coupons = $this->wooClient->getCoupons(['take' => 10]);
 
         $this->assertTrue(2 === count($coupons[1]));
+    }
+
+    public function test_get_coupons_from_api() : void {
+        if ($this->retrieveFromAPI) {
+            $this->wooClient->retrieveDataFromAPI(true);
+            $coupons = $this->wooClient->getCoupons();
+            
+            $this->assertNotNull($coupons);
+            var_dump(count($coupons));
+        }
+
+        $this->assertTrue(true);
     }
 
     public function test_get_orders(): void {
@@ -81,5 +106,16 @@ class WooCommerceClientTest extends TestCase {
         $this->assertEquals('Woo Single #1', $line_item->name);
         $this->assertEquals(2, $line_item->quantity);
         $this->assertEquals(6.00, $line_item->subtotal);
+    }
+
+    public function test_get_orders_from_api() : void {
+        if ($this->retrieveFromAPI) {
+            $this->wooClient->retrieveDataFromAPI(true);
+            $orders = $this->wooClient->getOrders(['status' => 'processing']);
+            
+            $this->assertNotNull($orders);
+        }
+
+        $this->assertTrue(true);
     }
 }

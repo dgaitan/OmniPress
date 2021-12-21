@@ -3,8 +3,12 @@
 namespace App\Http\Clients\WooCommerce\Endpoints;
 
 use Automattic\WooCommerce\Client as WooCommerce;
+use App\Helpers\API\Testeable;
+use Exception;
 
 abstract class BaseEndpoint {
+
+    use Testeable;
 
     /**
      * WooCommerce api instnace
@@ -19,37 +23,12 @@ abstract class BaseEndpoint {
      * @var string
      */
     protected $endpoint;
-    
-    /**
-     * Is the client in testing mode?
-     * 
-     * @var bool
-     */
-    protected $isTesting = false;
-    protected $testingData = [];
 
     /**
      * Constructor
      */
     public function __construct(WooCommerce $api) {
         $this->api = $api;
-    }
-
-    public function setTestingMode(bool $isTesting): static {
-        $this->isTesting = $isTesting;
-        return $this;
-    }
-
-    /**
-     * Set testing data
-     * 
-     * 
-     * @param array $data
-     * @return WooCoomerceClient
-     */
-    public function setTestingData(array $data): static {
-        $this->testingData = $data;
-        return $this;
     }
 
     /**
@@ -69,7 +48,7 @@ abstract class BaseEndpoint {
         $results = array();
         $params = $this->getParams($params);
 
-        if ($this->isTesting) {
+        if ($this->isTesting && !$this->retrieveFromAPI) {
             $response = $this->testingData;
             $results[1] = $this->getDataProcessor()::collectFromResponse($response);
 
@@ -80,6 +59,7 @@ abstract class BaseEndpoint {
         // it means that we only want that quantity of results.
         if (isset($params['take'])) {
             $params['per_page'] = $params['take'];
+
             // Make the request
             $response = $this->api->get($this->endpoint, $params);
             // Add it like page one only
@@ -117,7 +97,7 @@ abstract class BaseEndpoint {
      */
     protected function getParams(array $params): array {
         if (!isset($params['per_page'])) {
-            $params['per_page'] = 200;
+            $params['per_page'] = 100;
         }
 
         if (!isset($params['page'])) {
