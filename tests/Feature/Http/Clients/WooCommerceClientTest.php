@@ -12,7 +12,7 @@ class WooCommerceClientTest extends TestCase {
     protected $service;
     protected $client;
     protected $wooClient;
-    protected $retrieveFromAPI = true;
+    protected $retrieveFromAPI = false;
 
     protected function setUp(): void {
         parent::setUp();
