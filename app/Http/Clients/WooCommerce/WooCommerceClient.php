@@ -5,6 +5,7 @@ namespace App\Http\Clients\WooCommerce;
 use App\Data\Http\CustomerData;
 use App\Http\Clients\WooCommerce\Endpoints\CustomerEndpoint;
 use App\Http\Clients\WooCommerce\Endpoints\CouponEndpoint;
+use App\Http\Clients\WooCommerce\Endpoints\OrderEndpoint;
 
 class WooCommerceClient {
 
@@ -38,7 +39,8 @@ class WooCommerceClient {
     public function getEndpoints(): array {
         return [
             'customers' => CustomerEndpoint::class,
-            'coupons' => CouponEndpoint::class
+            'coupons' => CouponEndpoint::class,
+            'orders' => OrderEndpoint::class
         ];
     }
 

@@ -51,10 +51,35 @@ class WooCommerceClientTest extends TestCase {
         $this->assertTrue(2 === count($coupons[1]));
     }
 
-    // public function test_get_orders(): void {
-    //     $wooClient = new WooCommerceClient($this->client);
-    //     $orders = $wooClient->getOrders(['take' => 10]);
+    public function test_get_orders(): void {
+        $orders = $this->wooClient->getOrders(['take' => 10]);
 
-    //     $this->assertTrue(10 === count($orders[1]));
-    // }
+        $this->assertTrue(2 === count($orders[1]));
+
+        $order1 = $orders[1][0];
+        
+        $this->assertEquals(727, $order1->order_id);
+        $this->assertEquals('727', $order1->number);
+        $this->assertEquals('processing', $order1->status);
+        $this->assertEquals('1.35', $order1->cart_tax);
+        $this->assertFalse($order1->prices_include_tax);
+        
+        // Billing and Shipping
+        $this->assertEquals('John', $order1->billing->first_name);
+        $this->assertEquals('John', $order1->shipping->first_name);
+        
+        // Met data
+        $this->assertEquals(13106, $order1->meta_data[0]->meta_id);
+        $this->assertEquals('_download_permissions_granted', $order1->meta_data[0]->key);
+        $this->assertEquals('yes', $order1->meta_data[0]->value);
+
+        // Line Items
+        $this->assertEquals(2, count($order1->line_items));
+        $line_item = $order1->line_items[0];
+        $this->assertEquals(315, $line_item->line_item_id);
+        $this->assertEquals(93, $line_item->product_id);
+        $this->assertEquals('Woo Single #1', $line_item->name);
+        $this->assertEquals(2, $line_item->quantity);
+        $this->assertEquals(6.00, $line_item->subtotal);
+    }
 }
