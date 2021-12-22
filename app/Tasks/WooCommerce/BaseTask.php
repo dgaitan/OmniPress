@@ -1,0 +1,74 @@
+<?php
+
+namespace App\Tasks\WooCommerce;
+
+use App\Http\Clients\WooCommerce\WooCommerceClient;
+use App\Helpers\API\Testeable;
+
+abstract class BaseTask {
+
+    // Is necessary this trait to test this class
+    use Testeable;
+
+    /**
+     * Results retrieved from Http request on Client
+     * 
+     * @var array
+     */
+    protected array $results;
+    
+    /**
+     * The task name accessor
+     * 
+     * @var string
+     */
+    protected string $name;
+
+    /**
+     * The Constructor
+     * 
+     * Should receive the WooCommerceClient to make the requests
+     * 
+     * @param WooCommerceClient $client
+     */
+    public function __construct(protected WooCommerceClient $client) {}
+
+    /**
+     * Main task after running initial tasks
+     * 
+     * @param mixed $data
+     * @return void
+     */
+    abstract protected function handle($data): void;
+
+    /**
+     * Run the syncronization
+     * 
+     * @param array $syncArgs
+     * @return void
+     */
+    public function sync(array $syncArgs = []): void {
+        $endpoint = $this->client->getEndpoint($this->name);
+
+        if ($this->isTesting) {
+            $endpoint->setTestingMode($this->isTesting);
+            $endpoint->setTestingData($this->testingCollectionData[$this->name]);
+            $endpoint->retrieveDataFromAPI($this->retrieveFromAPI);
+        }
+        
+        $this->results = $endpoint->get(...$syncArgs);
+        
+        if ($this->results) {
+            // Iterate the page result
+            foreach ($this->results as $page => $results) {
+    
+                // Iterate the results in a page
+                foreach ($results as $result) {
+                    $this->handle($result);
+                }
+    
+                sleep(2);
+            }
+        }
+    }
+}
