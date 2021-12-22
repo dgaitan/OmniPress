@@ -28,6 +28,13 @@ abstract class BaseData extends Data {
     protected static $priceFields = [];
 
     /**
+     * Fields that should be converted to float values
+     * 
+     * @var array
+     */
+    protected static $floatFields = [];
+
+    /**
      * Fields that should be collection.
      * 
      * ie: MetaData, LineItems, etc...
@@ -123,6 +130,10 @@ abstract class BaseData extends Data {
             return static::processPriceField($value);
         }
 
+        if (static::shouldBeFloat($key)) {
+            return (float) $value;
+        }
+
         if ($value instanceof stdClass) {
             $value = (array) $value;
         }
@@ -142,10 +153,20 @@ abstract class BaseData extends Data {
      * Check if a field should has be stored with a monteray value.
      * 
      * @param string $field - the field name
-     * @return boold
+     * @return bool
      */
     public static function isPriceField(string $field): bool {
         return in_array($field, static::$priceFields);
+    }
+
+    /**
+     * Check if a product should be float.
+     * 
+     * @param string $field - the field name
+     * @return bool
+     */
+    public static function shouldBeFloat(string $field): bool {
+        return in_array($field, static::$floatFields);
     }
 
     /**

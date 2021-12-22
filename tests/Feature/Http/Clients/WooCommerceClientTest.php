@@ -118,4 +118,21 @@ class WooCommerceClientTest extends TestCase {
 
         $this->assertTrue(true);
     }
+
+    public function test_get_products() : void {
+        $products = $this->wooClient->getProducts();
+
+        $this->assertTrue(2 === count($products[1]));
+    }
+
+    public function test_get_products_from_api() : void {
+        if ($this->retrieveFromAPI) {
+            $this->wooClient->retrieveDataFromAPI(true);
+            $products = $this->wooClient->getProducts(['status' => 'publish', 'take' => 20]);
+            
+            $this->assertNotNull($products);
+        }
+
+        $this->assertTrue(true);
+    }
 }
