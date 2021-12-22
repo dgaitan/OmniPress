@@ -238,4 +238,21 @@ abstract class BaseData extends Data {
 
         return $attributes;
     }
+
+    /**
+     * Prepare data to store in database
+     * 
+     * @return
+     */
+    public function toStoreData(): array {
+        $data = $this->toArray();
+
+        foreach ($data as $key => $value) {
+            if (static::isCollectionField($key) || is_array($value)) {
+                $data[$key] = json_encode($value);
+            }
+        }
+
+        return $data;
+    }
 }

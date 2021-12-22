@@ -59,6 +59,10 @@ class WooCommerceClient {
             }
         }
     }
+
+    public function getEndpoint(string $endpoint) {
+        return $this->endpoints[$endpoint];
+    }
     
     /**
      * Check 

@@ -16,7 +16,9 @@ class Customer extends Model
     protected $casts = [
         'meta_data' => 'array',
         'billing' => 'array',
-        'shipping' => 'array'
+        'shipping' => 'array',
+        'date_created' => 'datetime',
+        'date_modified' => 'datetime'
     ];
 
     protected $fillable = [
