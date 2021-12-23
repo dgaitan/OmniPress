@@ -82,8 +82,6 @@ abstract class BaseData extends Data {
     public static function _fromResponse(array $data) : static {
         $data = json_encode($data);
         $data = json_decode($data, true);
-        // dd(static::_processResponse($data));
-        // dd(static::from(static::_processResponse($data)));
         return static::from(static::_processResponse($data));
     }
 

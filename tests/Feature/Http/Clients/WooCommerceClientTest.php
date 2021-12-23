@@ -62,6 +62,7 @@ class WooCommerceClientTest extends TestCase {
         $coupons = $this->wooClient->getCoupons(['take' => 10]);
 
         $this->assertTrue(2 === count($coupons[1]));
+        $this->assertNotNull($coupons[1][0]->code);
     }
 
     public function test_get_coupons_from_api() : void {

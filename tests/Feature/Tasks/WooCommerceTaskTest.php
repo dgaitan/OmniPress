@@ -7,6 +7,7 @@ use Tests\TestCase;
 use App\Tasks\WooCommerceTask;
 use Tests\Utils\WooCommerceClientTestResponses;
 use App\Models\WooCommerce\Customer;
+use App\Models\WooCommerce\Coupon;
 
 class WooCommerceTaskTest extends TestCase {
 
@@ -51,5 +52,32 @@ class WooCommerceTaskTest extends TestCase {
             $customer->avatar_url
         );
         $this->assertEquals('customer', $customer->role);
+    }
+
+    public function test_coupon_task(): void {
+        $this->wooTask->syncCoupons();
+
+        $coupons = Coupon::all();
+        $this->assertNotNull($coupons);
+        $this->assertTrue(2 == $coupons->count());
+
+        $coupon = $coupons[0];
+        $id = $coupon->id;
+
+        $this->assertNotNull($coupon);
+        $this->assertEquals('free shipping', $coupon->code);
+        $this->assertEquals('fixed_cart', $coupon->discount_type);
+
+        // Test settings
+        $this->assertTrue($coupon->settings->free_shipping);
+        $this->assertFalse($coupon->settings->exclude_sale_items);
+
+        // Run sync again just to be sure we are not overwritting the coupons
+        $this->wooTask->syncCoupons();
+
+        $coupons = Coupon::all();
+        $this->assertTrue(2 == $coupons->count()); // should we have only 2 coupons
+        $this->assertSame($id, $coupons[0]->id); // Be sure is the same instance.
+
     }
 }

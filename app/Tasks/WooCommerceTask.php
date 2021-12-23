@@ -4,6 +4,7 @@ namespace App\Tasks;
 
 use App\Models\Service;
 use App\Tasks\WooCommerce\CustomerTask;
+use App\Tasks\WooCommerce\CouponTask;
 use App\Http\Clients\Client;
 use App\Http\Clients\WooCommerce\WooCommerceClient;
 use App\Helpers\API\Testeable;
@@ -14,7 +15,8 @@ class WooCommerceTask {
 
     protected WooCommerceClient $client;
     protected array $tasks = [
-        'customers' => CustomerTask::class
+        'customers' => CustomerTask::class,
+        'coupons' => CouponTask::class,
     ];
 
     public function __construct(
@@ -40,6 +42,10 @@ class WooCommerceTask {
 
     public function syncCustomers(array $syncArgs = []) {
         $this->sync('customers', $syncArgs);
+    }
+
+    public function syncCoupons(array $syncArgs = []) {
+        $this->sync('coupons', $syncArgs);
     }
 
     protected function sync(string $task, array $syncArgs = []): void {
