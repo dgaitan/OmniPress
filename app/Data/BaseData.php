@@ -99,6 +99,7 @@ abstract class BaseData extends Data {
             foreach ($data as $key => $value) {
                 if ($key === 'id') {
                     $_data[static::$id_field] = $value;
+                    continue;
                 }
 
                 $value = self::_processResponseItem($key, $value);
@@ -178,7 +179,7 @@ abstract class BaseData extends Data {
             return 0;
         }
         
-        return (float) $value;
+        return (int) $value;
     }
 
     /**

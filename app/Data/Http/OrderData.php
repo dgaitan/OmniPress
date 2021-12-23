@@ -59,7 +59,7 @@ class OrderData extends BaseData {
         public ?string $date_paid = '',
         public ?string $date_completed = null,
         public ?string $cart_hash = '',
-        public ?bool $set_paid = false,
+        public ?bool $set_paid,
         /** @var \App\Data\Shared\MetaData[] */
         public ?DataCollection $meta_data,
         /** @var \App\Data\Order\LineItemData[] */
@@ -75,6 +75,6 @@ class OrderData extends BaseData {
         /** @var \App\Data\Order\RefundData[] */
         public ?DataCollection $refunds,
     ) {
-
+        $this->set_paid = $this->set_paid ?? false;
     }
 }

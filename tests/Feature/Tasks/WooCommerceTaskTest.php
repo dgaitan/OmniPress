@@ -8,6 +8,7 @@ use App\Tasks\WooCommerceTask;
 use Tests\Utils\WooCommerceClientTestResponses;
 use App\Models\WooCommerce\Customer;
 use App\Models\WooCommerce\Coupon;
+use App\Models\WooCommerce\Order;
 
 class WooCommerceTaskTest extends TestCase {
 
@@ -78,6 +79,34 @@ class WooCommerceTaskTest extends TestCase {
         $coupons = Coupon::all();
         $this->assertTrue(2 == $coupons->count()); // should we have only 2 coupons
         $this->assertSame($id, $coupons[0]->id); // Be sure is the same instance.
+    }
+
+    public function test_order_task() : void {
+        $this->wooTask->syncCustomers(); // Is necesary to attach customer to order
+        $this->wooTask->syncOrders();
+
+        $orders = Order::all();
+        $this->assertNotNull($orders);
+
+        $order = Order::where('order_id', 723)->with('customer')->first();
+        $this->assertEquals('wc_order_58d17c18352', $order->order_key);
+        $this->assertEquals('checkout', $order->created_via);
+        $this->assertEquals('completed', $order->status);
+        $this->assertEquals('USD', $order->currency);
+
+        $this->assertEquals(10.00, $order->shipping_total);
+        $this->assertEquals(39.00, $order->total);
+        $this->assertEquals(49.00, $order->shipping_total + $order->total);
+
+        $this->assertEquals(
+            'mozilla/5.0 (x11; ubuntu; linux x86_64; rv:52.0) gecko/20100101 firefox/52.0',
+            $order->customer_user_agent
+        );
+        
+        $this->assertEquals(26, $order->customer->customer_id);
+        $this->assertEquals('joao.silva@example.com', $order->customer->email);
+        $this->assertEquals('Rio de Janeiro', $order->customer->billing->city);
+        $this->assertFalse($order->customer->is_paying_customer);
 
     }
 }
