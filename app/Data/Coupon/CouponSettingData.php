@@ -23,21 +23,4 @@ class CouponSettingData extends BaseData {
     ) {
 
     }
-
-    // public static function _fromResponse(array $data = []): static {
-    //     $_data = [];
-    //     $attributes = static::getAttributes();
-
-    //     if ($data) {
-    //         foreach ($data as $key => $value) {
-    //             if (!in_array($key, $attributes)) {
-    //                 continue;
-    //             }
-
-    //             $_data[$key] = $value;
-    //         }
-    //     }
-
-    //     return static::from($_data);
-    // }
 }
