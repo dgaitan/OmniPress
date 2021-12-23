@@ -9,6 +9,7 @@ use Tests\Utils\WooCommerceClientTestResponses;
 use App\Models\WooCommerce\Customer;
 use App\Models\WooCommerce\Coupon;
 use App\Models\WooCommerce\Order;
+use App\Models\WooCommerce\Product;
 
 class WooCommerceTaskTest extends TestCase {
 
@@ -79,6 +80,19 @@ class WooCommerceTaskTest extends TestCase {
         $coupons = Coupon::all();
         $this->assertTrue(2 == $coupons->count()); // should we have only 2 coupons
         $this->assertSame($id, $coupons[0]->id); // Be sure is the same instance.
+    }
+
+    public function test_product_task() : void {
+        $this->wooTask->syncProducts();
+
+        $products = Product::all();
+        $this->assertNotNull($products);
+        $this->assertTrue(2 === $products->count());
+
+        $product = Product::where('product_id', 799)->first();
+
+        $this->assertEquals('Ship Your Idea', $product->name);
+        $this->assertEquals('ship-your-idea-22', $product->slug);
     }
 
     public function test_order_task() : void {

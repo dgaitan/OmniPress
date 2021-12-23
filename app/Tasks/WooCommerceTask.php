@@ -8,6 +8,7 @@ use App\Http\Clients\WooCommerce\WooCommerceClient;
 use App\Tasks\WooCommerce\CustomerTask;
 use App\Tasks\WooCommerce\CouponTask;
 use App\Tasks\WooCommerce\OrderTask;
+use App\Tasks\WooCommerce\ProductTask;
 use App\Helpers\API\Testeable;
 
 class WooCommerceTask {
@@ -17,6 +18,7 @@ class WooCommerceTask {
     protected WooCommerceClient $client;
     protected array $tasks = [
         'customers' => CustomerTask::class,
+        'products' => ProductTask::class,
         'coupons' => CouponTask::class,
         'orders' => OrderTask::class
     ];
@@ -52,6 +54,10 @@ class WooCommerceTask {
 
     public function syncOrders(array $syncArgs = []) {
         $this->sync('orders', $syncArgs);
+    }
+
+    public function syncProducts(array $syncArgs = []) {
+        $this->sync('products', $syncArgs);
     }
 
     protected function sync(string $task, array $syncArgs = []): void {
