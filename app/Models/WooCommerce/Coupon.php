@@ -6,17 +6,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Helpers\Models\Jsonable;
 use App\Data\Coupon\CouponSettingData;
+use App\Casts\MetaData;
 
 class Coupon extends Model
 {
     use HasFactory, Jsonable;
 
-    protected $cast = [
+    protected $casts = [
         'date_created' => 'datetime',
         'date_modified' => 'datetime',
         'date_expires' => 'datetime',
-        'meta_data' => 'array',
-        'settings' => 'array'
+        'meta_data' => MetaData::class,
     ];
 
     protected $fillable = [

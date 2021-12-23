@@ -27,7 +27,9 @@ class OrderTask extends BaseTask {
         // Maybe get the customer
         if ($customer = Customer::where('customer_id', $data['customer_id'])->first()) {
             $data['customer_id'] = $customer->id;
-        } 
+        }
+
+        
 
         $order->fill($data);
         $order->save();

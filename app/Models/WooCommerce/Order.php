@@ -4,13 +4,14 @@ namespace App\Models\WooCommerce;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Cknow\Money\MoneyDecimalCast;
+use App\Casts\Address;
+use App\Casts\MetaData;
 
 class Order extends Model
 {
     use HasFactory;
 
-    protected $cast = [
+    protected $casts = [
         'date_created' => 'datetime',
         'date_modified' => 'datetime',
         'shipping_total' => 'decimal:0',
@@ -19,6 +20,9 @@ class Order extends Model
         'shipping_tax' => 'decimal:0',
         'total' => 'decimal:0',
         'total_tax' => 'decimal:0',
+        'billing' => Address::class,
+        'shipping' => Address::class,
+        'meta_data' => MetaData::class
     ];
 
     protected $fillable = [

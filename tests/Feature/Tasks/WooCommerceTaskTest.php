@@ -103,10 +103,20 @@ class WooCommerceTaskTest extends TestCase {
             $order->customer_user_agent
         );
         
+        // Test Order Customer
         $this->assertEquals(26, $order->customer->customer_id);
         $this->assertEquals('joao.silva@example.com', $order->customer->email);
         $this->assertEquals('Rio de Janeiro', $order->customer->billing->city);
         $this->assertFalse($order->customer->is_paying_customer);
 
+        // Test Shipping And Shipping
+        $this->assertEquals('João', $order->billing->first_name);
+        $this->assertEquals('Silva', $order->billing->last_name);
+        $this->assertEquals('Av. Brasil, 432', $order->billing->address_1);
+        $this->assertEquals('Rio de Janeiro', $order->shipping->city);
+
+        // test meta data
+        $this->assertTrue(1 === count($order->meta_data));
+        $this->assertEquals(13023, $order->meta_data[0]->meta_id);
     }
 }
