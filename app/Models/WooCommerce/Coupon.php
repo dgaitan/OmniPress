@@ -8,6 +8,44 @@ use App\Helpers\Models\Jsonable;
 use App\Data\Coupon\CouponSettingData;
 use App\Casts\MetaData;
 
+/**
+ * App\Models\WooCommerce\Coupon
+ *
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property int $coupon_id
+ * @property string $code
+ * @property string $amount
+ * @property \Illuminate\Support\Carbon $date_created
+ * @property \Illuminate\Support\Carbon $date_modified
+ * @property string $discount_type
+ * @property string|null $description
+ * @property \Illuminate\Support\Carbon|null $date_expires
+ * @property int $usage_count
+ * @property bool $individual_use
+ * @property mixed $settings
+ * @property array|null $meta_data
+ * @method static \Illuminate\Database\Eloquent\Builder|Coupon newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Coupon newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Coupon query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Coupon whereAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Coupon whereCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Coupon whereCouponId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Coupon whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Coupon whereDateCreated($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Coupon whereDateExpires($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Coupon whereDateModified($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Coupon whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Coupon whereDiscountType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Coupon whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Coupon whereIndividualUse($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Coupon whereMetaData($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Coupon whereSettings($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Coupon whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Coupon whereUsageCount($value)
+ * @mixin \Eloquent
+ */
 class Coupon extends Model
 {
     use HasFactory, Jsonable;

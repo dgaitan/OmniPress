@@ -7,6 +7,66 @@ use Illuminate\Database\Eloquent\Model;
 use App\Casts\ProductSetting;
 use App\Casts\MetaData;
 
+/**
+ * App\Models\WooCommerce\Product
+ *
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property int $product_id
+ * @property int|null $parent_id
+ * @property string $name
+ * @property string $slug
+ * @property string $permalink
+ * @property string $sku
+ * @property string $date_created
+ * @property string|null $date_modified
+ * @property string $type
+ * @property string $status
+ * @property bool $featured
+ * @property bool $on_sale
+ * @property bool $purchasable
+ * @property bool $virtual
+ * @property bool $manage_stock
+ * @property int $stock_quantity
+ * @property string $stock_status
+ * @property bool $sold_individually
+ * @property mixed $price
+ * @property mixed $regular_price
+ * @property mixed $sale_price
+ * @property array $settings
+ * @property array $meta_data
+ * @method static \Illuminate\Database\Eloquent\Builder|Product newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Product newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Product query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereDateCreated($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereDateModified($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereFeatured($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereManageStock($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereMetaData($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereOnSale($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereParentId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product wherePermalink($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product wherePrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereProductId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product wherePurchasable($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereRegularPrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereSalePrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereSettings($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereSku($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereSlug($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereSoldIndividually($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereStockQuantity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereStockStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereVirtual($value)
+ * @mixin \Eloquent
+ */
 class Product extends Model
 {
     use HasFactory;
