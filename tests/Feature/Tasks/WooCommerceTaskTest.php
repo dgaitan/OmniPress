@@ -28,7 +28,7 @@ class WooCommerceTaskTest extends TestCase {
     public function test_customers_task(): void {
         $this->wooTask->syncCustomers();
 
-        $customer = Customer::where('customer_id', 26)->first();
+        $customer = Customer::whereCustomerId(26)->first();
         $id = $customer->id;
 
         $this->assertEquals('joao.silva@example.com', $customer->email);
@@ -41,7 +41,7 @@ class WooCommerceTaskTest extends TestCase {
         // Now we are going to tty sync it again to be sure we are updating the same customer
         $this->wooTask->syncCustomers();
 
-        $customer = Customer::where('customer_id', 26)->get();
+        $customer = Customer::whereCustomerId(26);
 
         // We should have only 1 record with customer_id -> 26
         $this->assertEquals(1, $customer->count());
@@ -89,7 +89,7 @@ class WooCommerceTaskTest extends TestCase {
         $this->assertNotNull($products);
         $this->assertTrue(2 === $products->count());
 
-        $product = Product::where('product_id', 799)->first();
+        $product = Product::whereProductId(799)->first();
 
         $this->assertEquals('Ship Your Idea', $product->name);
         $this->assertEquals('ship-your-idea-22', $product->slug);
