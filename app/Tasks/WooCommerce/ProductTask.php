@@ -3,6 +3,7 @@
 namespace App\Tasks\WooCommerce;
 
 use App\Models\WooCommerce\Product;
+use App\Models\WooCommerce\ProductImage;
 
 class ProductTask extends BaseTask {
     
@@ -20,11 +21,21 @@ class ProductTask extends BaseTask {
      * @return void
      */
     protected function handle($data): void {
-        $order = Product::firstOrNew(['product_id' => $data->product_id]);
-        $data = $data->toStoreData();
+        $product = Product::firstOrNew(['product_id' => $data->product_id]);
+        $product->fill($data->toStoreData());
+        $product->save();
         
-
-        $order->fill($data);
-        $order->save();
+        if ($data->images) {
+            foreach ($data->images as $image) {
+                $imageData = $image->toStoreData();
+                $_image = ProductImage::firstOrNew(['product_image_id' => $image->image_id]);
+                
+                $imageData['product_id'] = $product->id;
+                $imageData['product_image_id'] = $image->image_id;
+                
+                $_image->fill($imageData);
+                $_image->save();
+            }
+        }
     }
 }

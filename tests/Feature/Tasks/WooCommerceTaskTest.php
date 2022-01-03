@@ -63,7 +63,7 @@ class WooCommerceTaskTest extends TestCase {
         $this->assertNotNull($coupons);
         $this->assertTrue(2 == $coupons->count());
 
-        $coupon = $coupons[0];
+        [$coupon] = $coupons;
         $id = $coupon->id;
 
         $this->assertNotNull($coupon);
@@ -93,6 +93,23 @@ class WooCommerceTaskTest extends TestCase {
 
         $this->assertEquals('Ship Your Idea', $product->name);
         $this->assertEquals('ship-your-idea-22', $product->slug);
+
+        $images = $product->images();
+        $this->assertEquals(4, $images->count());
+        
+        $image = $images->first();
+        $this->assertEquals(795, $image->product_image_id);
+        $this->assertEquals('https://example.com/wp-content/uploads/2017/03/T_4_front-11.jpg', $image->src);
+        $this->assertEmpty($image->name);
+        $this->assertEmpty($image->alt);
+
+        $image->name = "This new image";
+        $image->save();
+        $this->assertEquals("This new image", $image->name);
+
+        $anotherImage = $images->whereProductImageId(798)->first();
+        $this->assertNotNull($anotherImage);
+        $this->assertEquals('https://example.com/wp-content/uploads/2017/03/T_3_back-10.jpg', $anotherImage->src);
     }
 
     public function test_order_task() : void {

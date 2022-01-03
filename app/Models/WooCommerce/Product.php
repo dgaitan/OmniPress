@@ -66,6 +66,9 @@ use App\Casts\MetaData;
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereVirtual($value)
  * @mixin \Eloquent
+ * @property-read Product|null $children
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\WooCommerce\ProductImage[] $images
+ * @property-read int|null $images_count
  */
 class Product extends Model
 {
@@ -106,6 +109,10 @@ class Product extends Model
     ];
 
     public function children() {
-        $this->belongsTo(self::class, 'parent_id');
+        return $this->belongsTo(self::class, 'parent_id');
+    }
+
+    public function images() {
+        return $this->hasMany(ProductImage::class, 'product_id');
     }
 }
