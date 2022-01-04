@@ -144,6 +144,17 @@ class WooCommerceTaskTest extends TestCase {
         $tag = $product->tags()->first();
         $this->assertEquals(19, $tag->woo_tag_id);
         $this->assertEquals('Vacations', $tag->name);
+
+        $productAttributes = $product->attributes();
+        $this->assertEquals(2, $productAttributes->count());
+
+        $colorAttribute = $productAttributes->whereAttributeId(6)->first();
+        $this->assertEquals("Color", $colorAttribute->name);
+        $this->assertEquals(0, $colorAttribute->position);
+        $this->assertFalse($colorAttribute->visible);
+        $this->assertTrue($colorAttribute->variation);
+        $this->assertIsArray($colorAttribute->options);
+        $this->assertSame('Black', $colorAttribute->options[0]);
     }
 
     public function test_order_task() : void {

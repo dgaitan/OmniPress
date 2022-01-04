@@ -86,6 +86,7 @@ abstract class BaseTask {
 
             foreach ($collection as $element) {
                 $data = $element->toStoreData();
+                
                 $fieldIdName = is_null($customFieldId) ? $fieldId : $customFieldId;
                 $modelElement = $model::firstOrNew([$fieldIdName => $data[$fieldId]]);
                 

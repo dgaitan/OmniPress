@@ -2,10 +2,11 @@
 
 namespace App\Tasks\WooCommerce;
 
-use App\Models\WooCommerce\Product;
-use App\Models\WooCommerce\ProductImage;
-use App\Models\WooCommerce\Category;
 use App\Models\WooCommerce\Tag;
+use App\Models\WooCommerce\Product;
+use App\Models\WooCommerce\Category;
+use App\Models\WooCommerce\ProductImage;
+use App\Models\WooCommerce\ProductAttribute;
 
 class ProductTask extends BaseTask {
     
@@ -34,6 +35,16 @@ class ProductTask extends BaseTask {
             ProductImage::class,
             $data->images,
             'product_image_id',
+            ['product_id' => $product->id]
+        );
+
+        $this->syncCollection(
+            'attributes',
+            'attribute_id',
+            $product,
+            ProductAttribute::class,
+            $data->attributes,
+            null,
             ['product_id' => $product->id]
         );
         

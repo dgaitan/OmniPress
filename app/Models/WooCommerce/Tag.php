@@ -24,6 +24,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Tag whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Tag whereWooTagId($value)
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\WooCommerce\Product[] $products
+ * @property-read int|null $products_count
  */
 class Tag extends Model
 {

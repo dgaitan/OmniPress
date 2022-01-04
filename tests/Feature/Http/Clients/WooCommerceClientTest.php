@@ -124,6 +124,10 @@ class WooCommerceClientTest extends TestCase {
         $products = $this->wooClient->getProducts();
 
         $this->assertTrue(2 === count($products[1]));
+
+        $product = $products[1][0];
+        $this->assertEquals(799, $product->product_id);
+        $this->assertIsArray($product->attributes[0]->options);
     }
 
     public function test_get_products_from_api() : void {

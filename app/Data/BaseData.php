@@ -247,7 +247,7 @@ abstract class BaseData extends Data {
         $data = $this->toArray();
 
         foreach ($data as $key => $value) {
-            if (static::isCollectionField($key) || is_array($value)) {
+            if (static::isCollectionField($key)) {
                 $data[$key] = json_encode($value);
             }
         }

@@ -71,6 +71,10 @@ use App\Casts\MetaData;
  * @property-read int|null $images_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\WooCommerce\Category[] $categories
  * @property-read int|null $categories_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\WooCommerce\ProductAttribute[] $attributes
+ * @property-read int|null $attributes_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\WooCommerce\Tag[] $tags
+ * @property-read int|null $tags_count
  */
 class Product extends Model
 {
@@ -137,5 +141,9 @@ class Product extends Model
             'product_id',
             'tag_id'
         );
+    }
+
+    public function attributes() {
+        return $this->hasMany(ProductAttribute::class, 'product_id');
     }
 }
