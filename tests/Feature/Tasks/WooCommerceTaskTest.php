@@ -10,6 +10,7 @@ use App\Models\WooCommerce\Customer;
 use App\Models\WooCommerce\Coupon;
 use App\Models\WooCommerce\Order;
 use App\Models\WooCommerce\Product;
+use App\Models\WooCommerce\Category;
 
 class WooCommerceTaskTest extends TestCase {
 
@@ -110,6 +111,32 @@ class WooCommerceTaskTest extends TestCase {
         $anotherImage = $images->whereProductImageId(798)->first();
         $this->assertNotNull($anotherImage);
         $this->assertEquals('https://example.com/wp-content/uploads/2017/03/T_3_back-10.jpg', $anotherImage->src);
+
+        $wwwCategories = Category::all();
+        $categories = $product->categories();
+        $this->assertEquals(2, $categories->count());
+        $this->assertEquals(2, $wwwCategories->count());
+
+        $cat9 = $categories->whereWooCategoryId(9)->first();
+        $this->assertEquals('Clothing', $cat9->name);
+        $this->assertEquals('clothing', $cat9->slug);
+
+        $product->categories()->create([
+            'woo_category_id' => 111,
+            'name' => 'MacBook',
+            'slug' => 'mac-book'
+        ]);
+
+        $this->assertEquals(3, $product->categories()->count());
+
+        $cat111 = Category::whereWooCategoryId(111)->first();
+        $cat111Prod = $product->categories()->whereWooCategoryId(111)->first();
+        $this->assertEquals('mac-book', $cat111->slug);
+        $this->assertSame($cat111->id, $cat111Prod->id);
+
+        // Will Sync Again to check if the attach and detach of categories works well
+        $this->wooTask->syncProducts();
+        $this->assertEquals(2, $product->categories()->count());
     }
 
     public function test_order_task() : void {

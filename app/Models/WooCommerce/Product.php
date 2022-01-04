@@ -69,6 +69,8 @@ use App\Casts\MetaData;
  * @property-read Product|null $children
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\WooCommerce\ProductImage[] $images
  * @property-read int|null $images_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\WooCommerce\Category[] $categories
+ * @property-read int|null $categories_count
  */
 class Product extends Model
 {
@@ -108,11 +110,23 @@ class Product extends Model
         'meta_data'
     ];
 
+    /**
+     * Child Products
+     */
     public function children() {
         return $this->belongsTo(self::class, 'parent_id');
     }
 
     public function images() {
         return $this->hasMany(ProductImage::class, 'product_id');
+    }
+
+    public function categories() {
+        return $this->belongsToMany(
+            Category::class, 
+            'product_category', 
+            'product_id', 
+            'category_id'
+        );
     }
 }
