@@ -138,7 +138,12 @@ class WooCommerceTaskTest extends TestCase {
         $this->wooTask->syncProducts();
         $this->assertEquals(2, $product->categories()->count());
 
-        
+        $product = Product::whereProductId(799)->first();
+        $this->assertEquals(1, $product->tags()->count());
+
+        $tag = $product->tags()->first();
+        $this->assertEquals(19, $tag->woo_tag_id);
+        $this->assertEquals('Vacations', $tag->name);
     }
 
     public function test_order_task() : void {

@@ -606,7 +606,13 @@ class WooCommerceClientTestResponses {
               "slug": "t-shirts"
             }
           ],
-          "tags": [],
+          "tags": [
+            {
+              "id": 19,
+              "name": "Vacations",
+              "slug": "vacations"
+            }
+          ],
           "images": [
             {
               "id": 795,
