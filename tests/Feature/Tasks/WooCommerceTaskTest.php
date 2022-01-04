@@ -137,6 +137,8 @@ class WooCommerceTaskTest extends TestCase {
         // Will Sync Again to check if the attach and detach of categories works well
         $this->wooTask->syncProducts();
         $this->assertEquals(2, $product->categories()->count());
+
+        
     }
 
     public function test_order_task() : void {

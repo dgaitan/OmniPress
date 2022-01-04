@@ -71,4 +71,38 @@ abstract class BaseTask {
             }
         }
     }
+
+    public function syncCollection(
+        string $collectionName,
+        string $fieldId,
+        $modelToAttach,
+        string $model,
+        \Spatie\LaravelData\DataCollection $collection,
+        string $customFieldId = null,
+        array $extraFields = []
+    ): void {
+        if ($collection) {
+            $toAttach = [];
+
+            foreach ($collection as $element) {
+                $data = $element->toStoreData();
+                $fieldIdName = is_null($customFieldId) ? $fieldId : $customFieldId;
+                $modelElement = $model::firstOrNew([$fieldIdName => $data[$fieldId]]);
+                
+                if (!is_null($customFieldId)) {
+                    $data[$customFieldId] = $data[$fieldId];
+                }
+                $data = [...$data, ...$extraFields];
+                $modelElement->fill($data);
+                $modelElement->save();
+                
+                $toAttach[] = $modelElement->id;
+            }
+            
+            // If we can sync it automatically, let's do it
+            if (method_exists($modelToAttach->{$collectionName}(), 'sync')) {
+                $modelToAttach->{$collectionName}()->sync($toAttach);
+            }
+        }
+    }
 }
