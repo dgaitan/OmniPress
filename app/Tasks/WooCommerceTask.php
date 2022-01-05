@@ -15,7 +15,18 @@ class WooCommerceTask {
 
     use Testeable;
 
+    /**
+     * WooCommerce CLient Instance
+     * 
+     * @var WooCommerceClient
+     */
     protected WooCommerceClient $client;
+
+    /**
+     * Tasks registered to this task manager
+     * 
+     * @var array
+     */
     protected array $tasks = [
         'customers' => CustomerTask::class,
         'products' => ProductTask::class,
@@ -23,16 +34,30 @@ class WooCommerceTask {
         'orders' => OrderTask::class
     ];
 
+    /**
+     * Task Constructor
+     * 
+     * Is necessary a service to can run tasks because we to attach the data
+     * retrieved from sync to a service.
+     * 
+     * @param Service
+     */
     public function __construct(
         protected Service $service
     ) {
         $this->client = new WooCommerceClient(
             Client::initialize($this->service)
         );
+        
         $this->loadTasks();
     }
 
-    protected function loadTasks() {
+    /**
+     * Load the tasks registered
+     * 
+     * @return void
+     */
+    protected function loadTasks() : void {
         foreach ($this->tasks as $task => $handler) {
             $this->tasks[$task] = new $handler($this->client);
 
@@ -44,7 +69,13 @@ class WooCommerceTask {
         }
     }
 
-    public function syncCustomers(array $syncArgs = []) {
+    /**
+     * Syncronize Customers
+     * 
+     * @param  array
+     * @return void
+     */
+    public function syncCustomers(array $syncArgs = []): void {
         $this->sync('customers', $syncArgs);
     }
 
@@ -69,6 +100,7 @@ class WooCommerceTask {
             ->retrieveDataFromAPI($this->retrieveFromAPI);
         }
 
+        $task->setService($this->service);
         $task->sync($syncArgs);
     }
 }

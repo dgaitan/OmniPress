@@ -2,8 +2,10 @@
 
 namespace App\Tasks\WooCommerce;
 
-use App\Http\Clients\WooCommerce\WooCommerceClient;
 use App\Helpers\API\Testeable;
+use App\Http\Clients\WooCommerce\WooCommerceClient;
+use App\Models\Service;
+
 
 abstract class BaseTask {
 
@@ -25,6 +27,13 @@ abstract class BaseTask {
     protected string $name;
 
     /**
+     * The service where this sync is loading
+     * 
+     * @var Service
+     */
+    protected Service $service;
+
+    /**
      * The Constructor
      * 
      * Should receive the WooCommerceClient to make the requests
@@ -40,6 +49,16 @@ abstract class BaseTask {
      * @return void
      */
     abstract protected function handle($data): void;
+
+    /**
+     * @param Service $service - The service instance to set
+     * @return static
+     */
+    public function setService(Service $service): static {
+        $this->service = $service;
+
+        return $this;
+    }
 
     /**
      * Run the syncronization

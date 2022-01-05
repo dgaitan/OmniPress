@@ -32,6 +32,10 @@ class WooCommerceTaskTest extends TestCase {
         $customer = Customer::whereCustomerId(26)->first();
         $id = $customer->id;
 
+        // Assert that this customer is attached to a service
+        $this->assertEquals($this->service->id, $customer->service->id);
+        $this->assertEquals($this->service->name, $customer->service->name);
+
         $this->assertEquals('joao.silva@example.com', $customer->email);
         $this->assertEquals('Rio de Janeiro', $customer->billing->city);
         $this->assertFalse($customer->is_paying_customer);
