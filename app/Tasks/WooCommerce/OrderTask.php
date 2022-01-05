@@ -29,9 +29,8 @@ class OrderTask extends BaseTask {
             $data['customer_id'] = $customer->id;
         }
 
-        
-
         $order->fill($data);
+        $order->service_id = $this->service->id;
         $order->save();
     }
 }

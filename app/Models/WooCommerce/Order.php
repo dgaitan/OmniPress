@@ -2,10 +2,11 @@
 
 namespace App\Models\WooCommerce;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use App\Casts\Address;
 use App\Casts\MetaData;
+use App\Models\Service;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * App\Models\WooCommerce\Order
@@ -137,5 +138,9 @@ class Order extends Model
      */
     public function customer() {
         return $this->belongsTo(Customer::class);
+    }
+
+    public function service() {
+        return $this->belongsTo(Service::class, 'service_id');
     }
 }

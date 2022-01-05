@@ -179,6 +179,13 @@ class WooCommerceTaskTest extends TestCase {
         $this->assertNotNull($orders);
 
         $order = Order::where('order_id', 723)->with('customer')->first();
+
+        // Assert that this customer is attached to a service
+        $this->assertEquals($this->service->id, $order->service->id);
+        $this->assertEquals($this->service->name, $order->service->name);
+        $this->assertEquals(2, $this->service->wooOrders()->count());
+
+        // Assert Order
         $this->assertEquals('wc_order_58d17c18352', $order->order_key);
         $this->assertEquals('checkout', $order->created_via);
         $this->assertEquals('completed', $order->status);

@@ -6,6 +6,7 @@ use App\Data\Service\WooCommerceAccessData;
 use App\Enums\ServiceType;
 use App\Models\WooCommerce\Coupon;
 use App\Models\WooCommerce\Customer;
+use App\Models\WooCommerce\Order;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -86,6 +87,15 @@ class Service extends Model
      */
     public function wooCoupons() {
         return $this->hasMany(Coupon::class, 'service_id');
+    }
+
+    /**
+     * Collection of WooCommerce Orders related to this Service
+     * 
+     * @return \Illuminate\Database\Eloquent\Collection|Order[]
+     */
+    public function wooOrders() {
+        return $this->hasMany(Order::class, 'service_id');
     }
 
     public function getAccessAttribute(string $access) {
