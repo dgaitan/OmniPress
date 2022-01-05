@@ -16,7 +16,7 @@ trait Jsonable {
      * @return DataCollection
      */
     protected function getDataCollectionFrom(
-        string $data, string $value
+        string $data, string|array $value
     ) : DataCollection {
         return $data::collection($this->getJsonField($value));
     }
@@ -29,7 +29,7 @@ trait Jsonable {
      * @return Data 
      */
     protected function getDataFrom(
-        string $data, string $value
+        string $data, string|array $value
     ) : Data {
         return $data::from( $this->getJsonField($value) );
     }

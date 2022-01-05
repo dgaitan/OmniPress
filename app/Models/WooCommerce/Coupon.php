@@ -4,9 +4,9 @@ namespace App\Models\WooCommerce;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Helpers\Models\Jsonable;
 use App\Data\Coupon\CouponSettingData;
 use App\Casts\MetaData;
+use App\Casts\CouponSetting;
 
 /**
  * App\Models\WooCommerce\Coupon
@@ -48,13 +48,14 @@ use App\Casts\MetaData;
  */
 class Coupon extends Model
 {
-    use HasFactory, Jsonable;
+    use HasFactory;
 
     protected $casts = [
         'date_created' => 'datetime',
         'date_modified' => 'datetime',
         'date_expires' => 'datetime',
         'meta_data' => MetaData::class,
+        'settings' => CouponSetting::class
     ];
 
     protected $fillable = [
@@ -71,16 +72,4 @@ class Coupon extends Model
         'settings',
         'meta_data'
     ];
-
-    public function getSettingsAttribute($settings) {
-        return $this->getDataFrom(
-            CouponSettingData::class, $settings
-        );
-    }
-
-    public function setSettingsAttribute($settings) {
-        $this->attributes['settings'] = $this->getDataJson(
-            CouponSettingData::class, $settings
-        );
-    }
 }

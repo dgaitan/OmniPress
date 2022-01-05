@@ -4,11 +4,9 @@ namespace App\Models\WooCommerce;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Spatie\LaravelData\DataCollection;
-use App\Data\Customer\MetaData;
-use App\Data\Shared\AddressData;
-use App\Helpers\Models\Jsonable;
 use App\Models\Service;
+use App\Casts\MetaData;
+use App\Casts\Address;
 
 /**
  * App\Models\WooCommerce\Customer
@@ -57,12 +55,12 @@ use App\Models\Service;
  */
 class Customer extends Model
 {
-    use HasFactory, Jsonable;
+    use HasFactory;
 
     protected $casts = [
-        'meta_data' => 'array',
-        'billing' => 'array',
-        'shipping' => 'array',
+        'meta_data' => MetaData::class,
+        'billing' => Address::class,
+        'shipping' => Address::class,
         'date_created' => 'datetime',
         'date_modified' => 'datetime'
     ];
@@ -92,36 +90,12 @@ class Customer extends Model
         return $this->hasMany(Order::class);
     }
 
+    /**
+     * Service Related with this customer
+     * 
+     * @return Service
+     */
     public function service() {
         return $this->belongsTo(Service::class, 'service_id');
-    }
-
-    /**
-     * 
-     */
-    public function getMetaDataAttribute($meta_data) : DataCollection {
-        return $this->getDataCollectionFrom(MetaData::class, $meta_data);
-    }
-
-    public function setMetaDataAttribute($meta_data) {
-        $this->attributes['meta_data'] = $this->getCollectionJson(
-            MetaData::class, $meta_data
-        );
-    }
-
-    public function getShippingAttribute($shipping) : AddressData {
-        return $this->getAddressData($shipping);
-    }
-
-    public function setShippingAttribute($shipping) {
-        $this->attributes['shipping'] = $this->getAddressDataJson($shipping);
-    }
-
-    public function getBillingAttribute($billing) : AddressData {
-        return $this->getAddressData($billing);
-    }
-
-    public function setBillingAttribute($billing) {
-        $this->attributes['billing'] = $this->getAddressDataJson($billing);
     }
 }
