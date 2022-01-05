@@ -79,6 +79,8 @@ use App\Casts\MetaData;
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereVersion($value)
  * @mixin \Eloquent
+ * @property int|null $service_id
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereServiceId($value)
  */
 class Order extends Model
 {

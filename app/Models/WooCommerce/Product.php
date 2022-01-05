@@ -75,6 +75,8 @@ use App\Casts\MetaData;
  * @property-read int|null $attributes_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\WooCommerce\Tag[] $tags
  * @property-read int|null $tags_count
+ * @property int|null $service_id
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereServiceId($value)
  */
 class Product extends Model
 {

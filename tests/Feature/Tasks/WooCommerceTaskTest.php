@@ -76,6 +76,11 @@ class WooCommerceTaskTest extends TestCase {
         [$coupon] = $coupons;
         $id = $coupon->id;
 
+        // Assert that this customer is attached to a service
+        $this->assertEquals($this->service->id, $coupon->service->id);
+        $this->assertEquals($this->service->name, $coupon->service->name);
+        $this->assertEquals(2, $this->service->wooCoupons()->count());
+
         $this->assertNotNull($coupon);
         $this->assertEquals('free shipping', $coupon->code);
         $this->assertEquals('fixed_cart', $coupon->discount_type);

@@ -2,11 +2,12 @@
 
 namespace App\Models\WooCommerce;
 
+use App\Casts\CouponSetting;
+use App\Casts\MetaData;
+use App\Data\Coupon\CouponSettingData;
+use App\Models\Service;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Data\Coupon\CouponSettingData;
-use App\Casts\MetaData;
-use App\Casts\CouponSetting;
 
 /**
  * App\Models\WooCommerce\Coupon
@@ -45,6 +46,8 @@ use App\Casts\CouponSetting;
  * @method static \Illuminate\Database\Eloquent\Builder|Coupon whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Coupon whereUsageCount($value)
  * @mixin \Eloquent
+ * @property int|null $service_id
+ * @method static \Illuminate\Database\Eloquent\Builder|Coupon whereServiceId($value)
  */
 class Coupon extends Model
 {
@@ -72,4 +75,8 @@ class Coupon extends Model
         'settings',
         'meta_data'
     ];
+
+    public function service() {
+        return $this->belongsTo(Service::class, 'service_id');
+    }
 }

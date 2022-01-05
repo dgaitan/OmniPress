@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
+use App\Data\Service\WooCommerceAccessData;
+use App\Enums\ServiceType;
+use App\Models\WooCommerce\Coupon;
+use App\Models\WooCommerce\Customer;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Enums\ServiceType;
-use App\Data\Service\WooCommerceAccessData;
-use App\Models\WooCommerce\Customer;
 
 /**
  * App\Models\Service
@@ -37,6 +38,8 @@ use App\Models\WooCommerce\Customer;
  * @method static \Illuminate\Database\Eloquent\Builder|Service whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Service whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|Customer[] $wooCustomers
+ * @property-read int|null $woo_customers_count
  */
 class Service extends Model
 {
@@ -74,6 +77,15 @@ class Service extends Model
      */
     public function wooCustomers() {
         return $this->hasMany(Customer::class, 'service_id');
+    }
+
+    /**
+     * Retrieve the woo coupons related to this service
+     * 
+     * @return \Illuminate\Database\Eloquent\Collection|Coupon[]
+     */
+    public function wooCoupons() {
+        return $this->hasMany(Coupon::class, 'service_id');
     }
 
     public function getAccessAttribute(string $access) {
