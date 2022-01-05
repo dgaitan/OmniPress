@@ -35,7 +35,12 @@ class WooCommerceTaskTest extends TestCase {
         // Assert that this customer is attached to a service
         $this->assertEquals($this->service->id, $customer->service->id);
         $this->assertEquals($this->service->name, $customer->service->name);
+        $this->assertEquals(2, $this->service->wooCustomers()->count());
 
+        $customerFromService = $this->service->wooCustomers()->whereCustomerId(26)->first();
+        $this->assertEquals($customer->id, $customerFromService->id);
+
+        // Assert Customer Synced
         $this->assertEquals('joao.silva@example.com', $customer->email);
         $this->assertEquals('Rio de Janeiro', $customer->billing->city);
         $this->assertFalse($customer->is_paying_customer);

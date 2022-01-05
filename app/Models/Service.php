@@ -70,9 +70,9 @@ class Service extends Model
     }
 
     /**
-     * Retrieve the customers related to this service.
+     * Retrieve the woo customers related to this service.
      */
-    public function customers() {
+    public function wooCustomers() {
         return $this->hasMany(Customer::class, 'service_id');
     }
 
