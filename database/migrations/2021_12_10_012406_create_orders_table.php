@@ -45,6 +45,10 @@ class CreateOrdersTable extends Migration
             $table->jsonb('meta_data')->nullable(true);
             $table->jsonb('billing');
             $table->jsonb('shipping');
+            $table->jsonb('tax_lines')->nullable();
+            $table->jsonb('shipping_lines')->nullable();
+            $table->jsonb('coupon_lines')->nullable();
+            $table->jsonb('fee_lines')->nullable();
         });
     }
 

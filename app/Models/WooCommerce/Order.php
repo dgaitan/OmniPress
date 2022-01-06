@@ -4,6 +4,7 @@ namespace App\Models\WooCommerce;
 
 use App\Casts\Address;
 use App\Casts\MetaData;
+use App\Casts\OrderLines;
 use App\Models\Service;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -83,6 +84,16 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $service_id
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereServiceId($value)
  * @property-read Service|null $service
+ * @property mixed|null $tax_lines
+ * @property mixed|null $shipping_lines
+ * @property mixed|null $coupon_lines
+ * @property mixed|null $fee_lines
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\WooCommerce\OrderLine[] $items
+ * @property-read int|null $items_count
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereCouponLines($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereFeeLines($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereShippingLines($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereTaxLines($value)
  */
 class Order extends Model
 {
@@ -99,7 +110,11 @@ class Order extends Model
         'total_tax' => 'decimal:0',
         'billing' => Address::class,
         'shipping' => Address::class,
-        'meta_data' => MetaData::class
+        'meta_data' => MetaData::class,
+        'tax_lines' => OrderLines::class,
+        'shipping_lines' => OrderLines::class,
+        'fee_lines' => OrderLines::class,
+        'coupon_lines' => OrderLines::class,
     ];
 
     protected $fillable = [
@@ -131,7 +146,11 @@ class Order extends Model
         'meta_data',
         'billing',
         'shipping',
-        'customer_id'
+        'customer_id',
+        'tax_lines',
+        'shipping_lines',
+        'fee_lines',
+        'coupon_lines'
     ];
 
     /**

@@ -260,5 +260,15 @@ class WooCommerceTaskTest extends TestCase {
         $this->assertEquals("Woo Album #2", $orderItem->name);
         $this->assertEquals(1, $orderItem->quantity);
         $this->assertEquals(9.00, $orderItem->total);
+
+        // Test Shipping Lines
+        $this->assertEquals(1, count($order->shipping_lines));
+        [$shippingLine] = $order->shipping_lines;
+
+        $this->assertEquals(312, $shippingLine->shipping_line_id);
+        $this->assertEquals('Flat rate', $shippingLine->method_title);
+        $this->assertEquals('flat_rate:25', $shippingLine->method_id);
+        $this->assertEquals('10.00', $shippingLine->total);
+        $this->assertEquals(1, count($shippingLine->meta_data));
     }
 }
