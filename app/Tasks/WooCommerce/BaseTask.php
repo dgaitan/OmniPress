@@ -75,7 +75,7 @@ abstract class BaseTask {
             $endpoint->retrieveDataFromAPI($this->retrieveFromAPI);
         }
         
-        $this->results = $endpoint->get(...$syncArgs);
+        $this->results = $endpoint->get($syncArgs);
         
         if ($this->results) {
             // Iterate the page result

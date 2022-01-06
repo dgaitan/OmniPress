@@ -26,6 +26,14 @@ class WooCommerceTaskTest extends TestCase {
         $this->wooTask->setTestingCollectionData(WooCommerceClientTestResponses::data());
     }
 
+    public function test_customers_from_api_task(): void {
+        $this->wooTask->retrieveDataFromAPI(true);
+        $this->wooTask->syncCustomers(['take' => 2]);
+
+        $customers = Customer::all();
+        $this->assertEquals(2, $customers->count());
+    }
+
     public function test_customers_task(): void {
         $this->wooTask->syncCustomers();
 
@@ -64,6 +72,14 @@ class WooCommerceTaskTest extends TestCase {
             $customer->avatar_url
         );
         $this->assertEquals('customer', $customer->role);
+    }
+
+    public function test_coupons_from_api_task(): void {
+        $this->wooTask->retrieveDataFromAPI(true);
+        $this->wooTask->syncCoupons(['take' => 2]);
+
+        $coupons = Coupon::all();
+        $this->assertEquals(2, $coupons->count());
     }
 
     public function test_coupon_task(): void {
@@ -180,6 +196,14 @@ class WooCommerceTaskTest extends TestCase {
         $this->assertTrue($colorAttribute->variation);
         $this->assertIsArray($colorAttribute->options);
         $this->assertSame('Black', $colorAttribute->options[0]);
+    }
+
+    public function test_products_from_api_task(): void {
+        $this->wooTask->retrieveDataFromAPI(true);
+        $this->wooTask->syncProducts(['take' => 2]);
+
+        $products = Product::all();
+        $this->assertEquals(2, $products->count());
     }
 
     public function test_order_task() : void {

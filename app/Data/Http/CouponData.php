@@ -24,7 +24,7 @@ class CouponData extends BaseData {
         public ?string $description,
         public ?string $discount_type,
         public ?CouponSettingData $settings,
-        /** @var \App\Data\Coupon\CouponMetaData[] */
+        /** @var \App\Data\Shared\MetaData[] */
         public ?DataCollection $meta_data 
     ) {
 

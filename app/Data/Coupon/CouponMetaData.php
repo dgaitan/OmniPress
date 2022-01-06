@@ -2,12 +2,12 @@
 
 namespace App\Data\Coupon;
 
-use Spatie\LaravelData\Data;
+use App\Data\BaseData;
 
-class CouponMetaData extends Data {
+class CouponMetaData extends BaseData {
     
     public function __construct(
-        public int $id,
+        public int $meta_id,
         public string $key,
         public mixed $value
     ) {
