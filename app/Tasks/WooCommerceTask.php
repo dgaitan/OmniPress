@@ -10,6 +10,8 @@ use App\Tasks\WooCommerce\CouponTask;
 use App\Tasks\WooCommerce\OrderTask;
 use App\Tasks\WooCommerce\ProductTask;
 use App\Helpers\API\Testeable;
+use Illuminate\Support\Facades\Log;
+
 
 class WooCommerceTask {
 
@@ -76,6 +78,7 @@ class WooCommerceTask {
      * @return void
      */
     public function syncCustomers(array $syncArgs = []): void {
+        Log::info('Syncing Customers');
         $this->sync('customers', $syncArgs);
     }
 

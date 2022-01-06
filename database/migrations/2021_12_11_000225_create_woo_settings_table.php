@@ -22,6 +22,7 @@ class CreateWooSettingsTable extends Migration
             $table->text('description');
             $table->foreignId('parent_id')->nullable();
             $table->string('sub_groups')->nullable();
+            $table->foreignId('service_id')->nullable();
 
             $table->index(['setting_id', 'label']);
         });

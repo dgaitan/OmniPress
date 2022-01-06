@@ -26,6 +26,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereWooCategoryId($value)
  * @mixin \Eloquent
+ * @property int|null $service_id
+ * @method static \Illuminate\Database\Eloquent\Builder|Category whereServiceId($value)
  */
 class Category extends Model
 {

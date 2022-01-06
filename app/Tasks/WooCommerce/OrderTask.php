@@ -2,8 +2,10 @@
 
 namespace App\Tasks\WooCommerce;
 
-use App\Models\WooCommerce\Order;
 use App\Models\WooCommerce\Customer;
+use App\Models\WooCommerce\Order;
+use App\Models\WooCommerce\OrderLine;
+use App\Models\WooCommerce\Product;
 
 class OrderTask extends BaseTask {
     
@@ -22,15 +24,31 @@ class OrderTask extends BaseTask {
      */
     protected function handle($data): void {
         $order = Order::firstOrNew(['order_id' => $data->order_id]);
-        $data = $data->toStoreData();
+        $order->fill($data->toStoreData());
+        $order->service_id = $this->service->id;
 
         // Maybe get the customer
-        if ($customer = Customer::where('customer_id', $data['customer_id'])->first()) {
-            $data['customer_id'] = $customer->id;
+        if ($customer = Customer::where('customer_id', $data->customer_id)->first()) {
+            $order->customer_id = $customer->id;
         }
 
-        $order->fill($data);
-        $order->service_id = $this->service->id;
         $order->save();
+
+        // Sync Order Lines
+        if ($data->line_items) {
+            
+            foreach ($data->line_items as $item) {
+                $orderLine = OrderLine::firstOrNew(['order_line_id' => $item->line_item_id]);
+                $orderLine->fill($item->toStoreData());
+                $product = Product::whereProductId($item->product_id)->first();
+
+                if ($product) {
+                    $orderLine->product_id = $product->id;
+                }
+
+                $orderLine->order_id = $order->id;
+                $orderLine->save();
+            }
+        }
     }
 }

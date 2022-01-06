@@ -144,4 +144,8 @@ class Order extends Model
     public function service() {
         return $this->belongsTo(Service::class, 'service_id');
     }
+
+    public function items() {
+        return $this->hasMany(OrderLine::class, 'order_id');
+    }
 }

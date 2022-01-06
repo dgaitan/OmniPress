@@ -14,7 +14,8 @@
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
         "myclabs/php-enum": "^1.8",
-        "spatie/laravel-data": "^1.2"
+        "spatie/laravel-data": "^1.2",
+        "web64/laravel-cli-colors": "^0.20.0"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.10",

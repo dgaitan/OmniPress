@@ -115,6 +115,11 @@ class WooCommerceTaskTest extends TestCase {
         $this->assertEquals('Ship Your Idea', $product->name);
         $this->assertEquals('ship-your-idea-22', $product->slug);
 
+        // Assert PRoduct Meta
+        $this->assertEquals(13023, $product->meta_data[0]->meta_id);
+        $this->assertTrue('yes' === $product->meta_data[0]->value);
+        $this->assertEquals('_download_permissions_granted', $product->meta_data[0]->key);
+
         $images = $product->images();
         $this->assertEquals(4, $images->count());
         
@@ -179,6 +184,7 @@ class WooCommerceTaskTest extends TestCase {
 
     public function test_order_task() : void {
         $this->wooTask->syncCustomers(); // Is necesary to attach customer to order
+        $this->wooTask->syncProducts(); // Is necessary to attach products to order lines
         $this->wooTask->syncOrders();
 
         $orders = Order::all();
@@ -221,5 +227,14 @@ class WooCommerceTaskTest extends TestCase {
         // test meta data
         $this->assertTrue(1 === count($order->meta_data));
         $this->assertEquals(13023, $order->meta_data[0]->meta_id);
+
+        // Test Order Lines
+        $this->assertEquals(2, $order->items()->count());
+
+        $orderItem = $order->items()->whereOrderLineId(311)->first();
+        $this->assertEquals(799, $orderItem->product->product_id);
+        $this->assertEquals("Woo Album #2", $orderItem->name);
+        $this->assertEquals(1, $orderItem->quantity);
+        $this->assertEquals(9.00, $orderItem->total);
     }
 }

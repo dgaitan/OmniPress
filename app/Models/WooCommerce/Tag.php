@@ -26,6 +26,8 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\WooCommerce\Product[] $products
  * @property-read int|null $products_count
+ * @property int|null $service_id
+ * @method static \Illuminate\Database\Eloquent\Builder|Tag whereServiceId($value)
  */
 class Tag extends Model
 {

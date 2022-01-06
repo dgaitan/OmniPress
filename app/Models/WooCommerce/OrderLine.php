@@ -45,6 +45,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|OrderLine whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|OrderLine whereVariationId($value)
  * @mixin \Eloquent
+ * @property int|null $order_id
+ * @property-read \App\Models\WooCommerce\Order|null $order
+ * @method static \Illuminate\Database\Eloquent\Builder|OrderLine whereOrderId($value)
  */
 class OrderLine extends Model
 {
@@ -76,5 +79,9 @@ class OrderLine extends Model
 
     public function product() {
         return $this->belongsTo(Product::class, 'product_id');
+    }
+
+    public function order() {
+        return $this->belongsTo(Order::class, 'order_id');
     }
 }

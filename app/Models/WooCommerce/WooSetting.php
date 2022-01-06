@@ -28,6 +28,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|WooSetting whereSubGroups($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WooSetting whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property int|null $service_id
+ * @method static \Illuminate\Database\Eloquent\Builder|WooSetting whereServiceId($value)
  */
 class WooSetting extends Model
 {

@@ -21,6 +21,7 @@ class CreateOrderLinesTable extends Migration
             $table->string('name', 255)->nullable();
             $table->foreignId('product_id')->nullable();
             $table->foreignId('variation_id')->nullable();
+            $table->foreignId('order_id')->nullable();
             $table->integer('quantity')->default(1);
             $table->string('tax_class', 255)->nullable();
             $table->decimal('subtotal')->default(0)->nullable();

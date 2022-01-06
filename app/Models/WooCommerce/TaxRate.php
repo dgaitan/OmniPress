@@ -42,6 +42,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|TaxRate whereTaxRateId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|TaxRate whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property int|null $service_id
+ * @method static \Illuminate\Database\Eloquent\Builder|TaxRate whereServiceId($value)
  */
 class TaxRate extends Model
 {

@@ -19,6 +19,7 @@ class CreateTaxRatesTable extends Migration
 
             $table->integer('tax_rate_id')->unique(); // The tax id in woo
 
+            $table->foreignId('service_id')->nullable();
             $table->string('country', 2)->default('US');
             $table->string('postcode', 100)->nullable(true);
             $table->string('city', 100)->nullable(true);

@@ -282,7 +282,7 @@ class WooCommerceClientTestResponses {
             {
               "id": 315,
               "name": "Woo Single #1",
-              "product_id": 93,
+              "product_id": 799,
               "variation_id": 0,
               "quantity": 2,
               "tax_class": "",
@@ -304,8 +304,8 @@ class WooCommerceClientTestResponses {
             {
               "id": 316,
               "name": "Ship Your Idea &ndash; Color: Black, Size: M Test",
-              "product_id": 22,
-              "variation_id": 23,
+              "product_id": 794,
+              "variation_id": 0,
               "quantity": 1,
               "tax_class": "",
               "subtotal": "12.00",
@@ -442,7 +442,7 @@ class WooCommerceClientTestResponses {
             {
               "id": 311,
               "name": "Woo Album #2",
-              "product_id": 87,
+              "product_id": 799,
               "variation_id": 0,
               "quantity": 1,
               "tax_class": "",
@@ -458,7 +458,7 @@ class WooCommerceClientTestResponses {
             {
               "id": 313,
               "name": "Woo Ninja",
-              "product_id": 34,
+              "product_id": 794,
               "variation_id": 0,
               "quantity": 1,
               "tax_class": "",
@@ -683,7 +683,13 @@ class WooCommerceClientTestResponses {
           "variations": [],
           "grouped_products": [],
           "menu_order": 0,
-          "meta_data": [],
+          "meta_data": [
+            {
+              "id": 13023,
+              "key": "_download_permissions_granted",
+              "value": "yes"
+            }
+          ],
           "_links": {
             "self": [
               {
