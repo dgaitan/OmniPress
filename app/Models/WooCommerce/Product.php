@@ -2,10 +2,11 @@
 
 namespace App\Models\WooCommerce;
 
+use App\Casts\MetaData;
+use App\Casts\ProductSetting;
+use App\Models\Service;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Casts\ProductSetting;
-use App\Casts\MetaData;
 
 /**
  * App\Models\WooCommerce\Product
@@ -77,6 +78,7 @@ use App\Casts\MetaData;
  * @property-read int|null $tags_count
  * @property int|null $service_id
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereServiceId($value)
+ * @property-read Service|null $service
  */
 class Product extends Model
 {
@@ -147,5 +149,14 @@ class Product extends Model
 
     public function attributes() {
         return $this->hasMany(ProductAttribute::class, 'product_id');
+    }
+
+    /**
+     * Service who this product belongs to
+     * 
+     * @return Service
+     */
+    public function service() {
+        return $this->belongsTo(Service::class, 'service_id');
     }
 }

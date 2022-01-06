@@ -26,6 +26,7 @@ class ProductTask extends BaseTask {
     protected function handle($data): void {
         $product = Product::firstOrNew(['product_id' => $data->product_id]);
         $product->fill($data->toStoreData());
+        $product->service_id = $this->service->id;
         $product->save();
 
         $this->syncCollection(

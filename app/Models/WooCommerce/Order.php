@@ -82,6 +82,7 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  * @property int|null $service_id
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereServiceId($value)
+ * @property-read Service|null $service
  */
 class Order extends Model
 {

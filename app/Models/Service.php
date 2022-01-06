@@ -7,6 +7,7 @@ use App\Enums\ServiceType;
 use App\Models\WooCommerce\Coupon;
 use App\Models\WooCommerce\Customer;
 use App\Models\WooCommerce\Order;
+use App\Models\WooCommerce\Product;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -41,6 +42,10 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  * @property-read \Illuminate\Database\Eloquent\Collection|Customer[] $wooCustomers
  * @property-read int|null $woo_customers_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|Coupon[] $wooCoupons
+ * @property-read int|null $woo_coupons_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|Order[] $wooOrders
+ * @property-read int|null $woo_orders_count
  */
 class Service extends Model
 {
@@ -76,8 +81,12 @@ class Service extends Model
     /**
      * Retrieve the woo customers related to this service.
      */
-    public function wooCustomers() {
-        return $this->hasMany(Customer::class, 'service_id');
+    public function customers() {
+        if ($this->type === ServiceType::WOOCOMMERCE) {
+            return $this->hasMany(Customer::class, 'service_id');
+        }
+
+        return null;
     }
 
     /**
@@ -85,8 +94,12 @@ class Service extends Model
      * 
      * @return \Illuminate\Database\Eloquent\Collection|Coupon[]
      */
-    public function wooCoupons() {
-        return $this->hasMany(Coupon::class, 'service_id');
+    public function coupons() {
+        if ($this->type === ServiceType::WOOCOMMERCE) {
+            return $this->hasMany(Coupon::class, 'service_id');
+        }
+
+        return null;
     }
 
     /**
@@ -94,8 +107,25 @@ class Service extends Model
      * 
      * @return \Illuminate\Database\Eloquent\Collection|Order[]
      */
-    public function wooOrders() {
-        return $this->hasMany(Order::class, 'service_id');
+    public function orders() {
+        if ($this->type === ServiceType::WOOCOMMERCE) {
+            return $this->hasMany(Order::class, 'service_id');
+        }
+
+        return null;
+    }
+
+    /**
+     * Produdts related to this service
+     * 
+     * @return mixed
+     */
+    public function products() {
+        if ($this->type === ServiceType::WOOCOMMERCE) {
+            return $this->hasMany(Product::class, 'service_id');
+        }
+
+        return null;
     }
 
     public function getAccessAttribute(string $access) {

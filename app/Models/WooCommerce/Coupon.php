@@ -48,6 +48,7 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  * @property int|null $service_id
  * @method static \Illuminate\Database\Eloquent\Builder|Coupon whereServiceId($value)
+ * @property-read Service|null $service
  */
 class Coupon extends Model
 {

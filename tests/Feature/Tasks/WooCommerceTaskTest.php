@@ -35,9 +35,9 @@ class WooCommerceTaskTest extends TestCase {
         // Assert that this customer is attached to a service
         $this->assertEquals($this->service->id, $customer->service->id);
         $this->assertEquals($this->service->name, $customer->service->name);
-        $this->assertEquals(2, $this->service->wooCustomers()->count());
+        $this->assertEquals(2, $this->service->customers()->count());
 
-        $customerFromService = $this->service->wooCustomers()->whereCustomerId(26)->first();
+        $customerFromService = $this->service->customers()->whereCustomerId(26)->first();
         $this->assertEquals($customer->id, $customerFromService->id);
 
         // Assert Customer Synced
@@ -79,7 +79,7 @@ class WooCommerceTaskTest extends TestCase {
         // Assert that this customer is attached to a service
         $this->assertEquals($this->service->id, $coupon->service->id);
         $this->assertEquals($this->service->name, $coupon->service->name);
-        $this->assertEquals(2, $this->service->wooCoupons()->count());
+        $this->assertEquals(2, $this->service->coupons()->count());
 
         $this->assertNotNull($coupon);
         $this->assertEquals('free shipping', $coupon->code);
@@ -106,6 +106,12 @@ class WooCommerceTaskTest extends TestCase {
 
         $product = Product::whereProductId(799)->first();
 
+        // Assert that this customer is attached to a service
+        $this->assertEquals($this->service->id, $product->service->id);
+        $this->assertEquals($this->service->name, $product->service->name);
+        $this->assertEquals(2, $this->service->products()->count());
+
+        // Assert Product
         $this->assertEquals('Ship Your Idea', $product->name);
         $this->assertEquals('ship-your-idea-22', $product->slug);
 
@@ -183,7 +189,7 @@ class WooCommerceTaskTest extends TestCase {
         // Assert that this customer is attached to a service
         $this->assertEquals($this->service->id, $order->service->id);
         $this->assertEquals($this->service->name, $order->service->name);
-        $this->assertEquals(2, $this->service->wooOrders()->count());
+        $this->assertEquals(2, $this->service->orders()->count());
 
         // Assert Order
         $this->assertEquals('wc_order_58d17c18352', $order->order_key);
