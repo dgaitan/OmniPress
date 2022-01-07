@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\ServiceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,8 +35,6 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('dashboard')->group(func
     })->name('dashboard');
 
     Route::prefix('services')->group(function () {
-        Route::get('/', function () {
-            return Inertia::render('Services/Index');
-        })->name('services');
+        Route::get('/', [ServiceController::class, 'index'])->name('services');
     });
 });
