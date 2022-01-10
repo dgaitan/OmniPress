@@ -25,9 +25,6 @@ Route::get('/', function () {
     ]);
 });
 
-// Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-//     return Inertia::render('Dashboard');
-// })->name('dashboard');
 
 Route::middleware(['auth:sanctum', 'verified'])->prefix('dashboard')->group(function () {
     Route::get('/', function () {
@@ -38,3 +35,5 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('dashboard')->group(func
         Route::get('/', [ServiceController::class, 'index'])->name('services');
     });
 });
+
+require __DIR__ . '/auth.php';

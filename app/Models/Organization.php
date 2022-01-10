@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 /**
  * App\Models\Organization
@@ -55,5 +57,34 @@ class Organization extends Model
             'organization_id',
             'user_id'
         );
+    }
+
+    protected function getAccessPermissions(): array {
+        $guest = ['can_see_basic', 'can_edit_profile'];
+        $analyzer = ['can_see_analytics', 'can_see_insigths'];
+        $manager = ['can_add_user', 'can_delete_user', 'can_send_invites'];
+        $admin_perms = ['can_sync'];
+        
+        $roles = [
+            'admin' => [...$admin_perms, ...$manager, ...$analyzer, ...$guest],
+            'manager' => [...$manager, ...$analyzer, ...$guest],
+            'analyzer' => [...$analyzer, ...$guest],
+            'guest' => [...$guest]
+        ];
+
+        return $roles;
+    }
+
+    public function createRolesAndPermissions(): void {
+        foreach ($this->getAccessPermissions() as $role => $perms) {
+            $_role = Role::firstOrCreate(['name' => $role, 'team_id' => $this->id]);
+
+            $_perms = [];
+            foreach ($perms as $perm) {
+                $_perms[] = Permission::firstOrCreate(['name' => $perm]);
+            }
+
+            $_role->syncPermissions($_perms);
+        }
     }
 }
