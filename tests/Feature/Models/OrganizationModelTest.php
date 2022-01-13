@@ -13,7 +13,6 @@ class OrganizationModelTest extends BaseModelTest {
 
         $org = new Organization();
         $org->name = "Org 1";
-        $org->owner_id = $user->id;
         $org->is_default = true;
         $org->status = 1;
         $org->save();

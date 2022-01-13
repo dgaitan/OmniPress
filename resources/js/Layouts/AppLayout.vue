@@ -23,11 +23,6 @@
                                     Dashboard
                                 </jet-nav-link>
                             </div>
-                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <jet-nav-link :href="route('services')" :active="route().current('services')">
-                                    Services
-                                </jet-nav-link>
-                            </div>
                         </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ml-6">
@@ -70,7 +65,7 @@
                                                     Switch Teams
                                                 </div>
 
-                                                <template v-for="team in $page.props.user.all_teams" :key="team.id">
+                                                <template v-if="$page.props.user.all_teams" v-for="team in $page.props.user.all_teams" :key="team.id">
                                                     <form @submit.prevent="switchToTeam(team)">
                                                         <jet-dropdown-link as="button">
                                                             <div class="flex items-center">

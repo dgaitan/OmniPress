@@ -3,7 +3,6 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Http\Controllers\ServiceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,15 +24,8 @@ Route::get('/', function () {
     ]);
 });
 
-
-Route::middleware(['auth:sanctum', 'verified'])->prefix('dashboard')->group(function () {
-    Route::get('/', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
-
-    Route::prefix('services')->group(function () {
-        Route::get('/', [ServiceController::class, 'index'])->name('services');
-    });
-});
+Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
+    return Inertia::render('Dashboard');
+})->name('dashboard');
 
 require __DIR__ . '/auth.php';
