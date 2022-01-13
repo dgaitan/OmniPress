@@ -46,4 +46,8 @@ class Organization extends Model
     public function team() {
         return $this->belongsTo(Team::class, 'organization_id');
     }
+
+    public function services() {
+        return $this->hasMany(Service::class);
+    }
 }
