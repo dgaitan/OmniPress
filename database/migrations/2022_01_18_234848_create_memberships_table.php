@@ -1,0 +1,48 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreateMembershipsTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('memberships', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+
+            $table->foreignId('customer_id');
+            $table->string('customer_email')->index();
+            $table->date('start_at');
+            $table->date('end_at');
+            $table->decimal('price', 9, 3)->default(0);
+            $table->string('shipping_status', 100)->default('pending');
+            $table->string('status', 100)->default('active');
+            $table->bigInteger('pending_order_id')->nullable();
+            $table->date('last_payment_intent')->nullable();
+            $table->integer('payment_intents')->default(0);
+            $table->foreignId('kind_cash_id');
+        });
+
+        Schema::table('orders', function (Blueprint $table) {
+            $table->foreignId('membership_id')->nullable();
+            $table->boolean('has_membership')->default(false);
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('memberships');
+    }
+}
