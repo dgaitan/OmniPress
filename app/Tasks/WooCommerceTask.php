@@ -44,11 +44,9 @@ class WooCommerceTask {
      * 
      * @param Service
      */
-    public function __construct(
-        protected Service $service
-    ) {
+    public function __construct() {
         $this->client = new WooCommerceClient(
-            Client::initialize($this->service)
+            new Client
         );
         
         $this->loadTasks();
@@ -103,7 +101,6 @@ class WooCommerceTask {
             ->retrieveDataFromAPI($this->retrieveFromAPI);
         }
 
-        $task->setService($this->service);
         $task->sync($syncArgs);
     }
 }

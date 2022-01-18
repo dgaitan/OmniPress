@@ -22,7 +22,6 @@ class CustomerTask extends BaseTask {
     protected function handle($data): void {
         $customer = Customer::firstOrNew(['customer_id' => $data->customer_id]);
         $customer->fill($data->toStoreData());
-        $customer->service_id = $this->service->id;
         $customer->save();
     }
 }

@@ -20,7 +20,6 @@ class WooCommerceTaskTest extends TestCase {
     protected function setUp(): void {
         parent::setUp();
 
-        $this->service = $this->create_service();
         $this->wooTask = new WooCommerceTask($this->service);
         $this->wooTask->setTestingMode(true);
         $this->wooTask->setTestingCollectionData(WooCommerceClientTestResponses::data());
@@ -39,14 +38,6 @@ class WooCommerceTaskTest extends TestCase {
 
         $customer = Customer::whereCustomerId(26)->first();
         $id = $customer->id;
-
-        // Assert that this customer is attached to a service
-        $this->assertEquals($this->service->id, $customer->service->id);
-        $this->assertEquals($this->service->name, $customer->service->name);
-        $this->assertEquals(2, $this->service->customers()->count());
-
-        $customerFromService = $this->service->customers()->whereCustomerId(26)->first();
-        $this->assertEquals($customer->id, $customerFromService->id);
 
         // Assert Customer Synced
         $this->assertEquals('joao.silva@example.com', $customer->email);
@@ -92,11 +83,6 @@ class WooCommerceTaskTest extends TestCase {
         [$coupon] = $coupons;
         $id = $coupon->id;
 
-        // Assert that this customer is attached to a service
-        $this->assertEquals($this->service->id, $coupon->service->id);
-        $this->assertEquals($this->service->name, $coupon->service->name);
-        $this->assertEquals(2, $this->service->coupons()->count());
-
         $this->assertNotNull($coupon);
         $this->assertEquals('free shipping', $coupon->code);
         $this->assertEquals('fixed_cart', $coupon->discount_type);
@@ -121,11 +107,6 @@ class WooCommerceTaskTest extends TestCase {
         $this->assertTrue(2 === $products->count());
 
         $product = Product::whereProductId(799)->first();
-
-        // Assert that this customer is attached to a service
-        $this->assertEquals($this->service->id, $product->service->id);
-        $this->assertEquals($this->service->name, $product->service->name);
-        $this->assertEquals(2, $this->service->products()->count());
 
         // Assert Product
         $this->assertEquals('Ship Your Idea', $product->name);
@@ -215,11 +196,6 @@ class WooCommerceTaskTest extends TestCase {
         $this->assertNotNull($orders);
 
         $order = Order::where('order_id', 723)->with('customer')->first();
-
-        // Assert that this customer is attached to a service
-        $this->assertEquals($this->service->id, $order->service->id);
-        $this->assertEquals($this->service->name, $order->service->name);
-        $this->assertEquals(2, $this->service->orders()->count());
 
         // Assert Order
         $this->assertEquals('wc_order_58d17c18352', $order->order_key);

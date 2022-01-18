@@ -17,8 +17,8 @@ class Client {
 
     protected function setCredentials() {
         $this->domain = env('WOO_CUSTOMER_DOMAIN');
-        $this->secret = env('WOO_CUSTOMER_KEY');
-        $this->key = env('WOO_CUSTOMER_SECRET');
+        $this->secret = env('WOO_CUSTOMER_SECRET');
+        $this->key = env('WOO_CUSTOMER_KEY');
     }
 
     protected function loadApi() {

@@ -24,8 +24,7 @@ class OrderTask extends BaseTask {
      */
     protected function handle($data): void {
         $order = Order::firstOrNew(['order_id' => $data->order_id]);
-        $order->fill($data->toStoreData());
-        $order->service_id = $this->service->id;
+        $order->fill($data->toStoreData());        
 
         // Maybe get the customer
         if ($customer = Customer::where('customer_id', $data->customer_id)->first()) {
