@@ -20,7 +20,6 @@ class CreateCategoriesTable extends Migration
             $table->bigInteger('woo_category_id')->nullable(false)->unique();
             $table->string('name')->nullable();
             $table->string('slug')->nullable();
-            $table->foreignId('service_id')->nullable();
 
             $table->index(['woo_category_id']);
         });

@@ -16,8 +16,11 @@ class CreateOrdersTable extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+
+            $table->bigInteger('order_id')->unique()->nullable(false);
             $table->bigInteger('parent_id')->default(0);
             $table->bigInteger('number')->default(0);
+            $table->foreignId('customer_id')->nullable();
             $table->string('order_key');
             $table->string('created_via', 256)->default('checkout');
             $table->string('version', 100);
@@ -49,6 +52,9 @@ class CreateOrdersTable extends Migration
             $table->jsonb('shipping_lines')->nullable();
             $table->jsonb('coupon_lines')->nullable();
             $table->jsonb('fee_lines')->nullable();
+
+            // add indexes
+            $table->index(['order_id', 'number', 'status']);
         });
     }
 

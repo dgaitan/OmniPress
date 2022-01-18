@@ -3,7 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Http\Controllers\ServiceController;
+use JoelButcher\Socialstream\Http\Controllers\OAuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,17 +25,12 @@ Route::get('/', function () {
     ]);
 });
 
-// Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-//     return Inertia::render('Dashboard');
-// })->name('dashboard');
 
-Route::middleware(['auth:sanctum', 'verified'])->prefix('/dashboard')->group(function () {
-    Route::get('/', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
+Route::get(
+    '/oauth/{provider}/callback', 
+    [OAuthController::class, 'handleProviderCallback']
+)->middleware('kindhumans.email')->name('oauth.callback');
 
-    Route::get('/services', [ServiceController::class, 'index'])->name('services');
-    Route::get('/services/create', [ServiceController::class, 'create'])->name('services.create');
-});
-
-require __DIR__ . '/auth.php';
+Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
+    return Inertia::render('Dashboard');
+})->name('dashboard');
