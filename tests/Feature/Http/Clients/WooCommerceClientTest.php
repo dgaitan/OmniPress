@@ -9,7 +9,6 @@ use App\Http\Clients\WooCommerce\WooCommerceClient;
 
 class WooCommerceClientTest extends TestCase {
 
-    protected $service;
     protected $client;
     protected $wooClient;
     protected $retrieveFromAPI = false;
@@ -17,8 +16,7 @@ class WooCommerceClientTest extends TestCase {
     protected function setUp(): void {
         parent::setUp();
 
-        $this->service = $this->create_service();
-        $this->client = Client::initialize($this->service);
+        $this->client = new Client;
         $this->wooClient = new WooCommerceClient($this->client);
         $this->wooClient->setTestingMode(true);
         $this->wooClient->setTestingCollectionData(WooCommerceClientTestResponses::data());
@@ -87,7 +85,7 @@ class WooCommerceClientTest extends TestCase {
         $this->assertEquals(727, $order1->order_id);
         $this->assertEquals('727', $order1->number);
         $this->assertEquals('processing', $order1->status);
-        $this->assertEquals('1.35', $order1->cart_tax);
+        $this->assertEquals('1.0', $order1->cart_tax);
         $this->assertFalse($order1->prices_include_tax);
         
         // Billing and Shipping
@@ -103,7 +101,7 @@ class WooCommerceClientTest extends TestCase {
         $this->assertEquals(2, count($order1->line_items));
         $line_item = $order1->line_items[0];
         $this->assertEquals(315, $line_item->line_item_id);
-        $this->assertEquals(93, $line_item->product_id);
+        $this->assertEquals(799, $line_item->product_id);
         $this->assertEquals('Woo Single #1', $line_item->name);
         $this->assertEquals(2, $line_item->quantity);
         $this->assertEquals(6.00, $line_item->subtotal);

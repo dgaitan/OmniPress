@@ -8,23 +8,17 @@ class Client {
     protected $domain;
     protected $secret;
     protected $key;
-    protected $service;
     protected $api;
 
-    public function __construct(\App\Models\Service $service) {
-        $this->service = $service;
+    public function __construct() {
         $this->setCredentials();
         $this->loadApi();
     }
 
-    public static function initialize(\App\Models\Service $service) {
-        return new self($service);
-    }
-
     protected function setCredentials() {
-        $this->domain = $this->service->access->domain;
-        $this->secret = $this->service->access->customer_secret;
-        $this->key = $this->service->access->customer_key;
+        $this->domain = env('WOO_CUSTOMER_DOMAIN');
+        $this->secret = env('WOO_CUSTOMER_KEY');
+        $this->key = env('WOO_CUSTOMER_SECRET');
     }
 
     protected function loadApi() {
