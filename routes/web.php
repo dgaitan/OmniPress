@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use JoelButcher\Socialstream\Http\Controllers\OAuthController;
 use App\Http\Controllers\SyncController;
+use App\Http\Controllers\CustomerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,4 +42,7 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('/dashboard')->group(fun
     // Sync Routes
     Route::get('/sync', [SyncController::class, 'index'])->name('kinja.sync.index');
     Route::post('/sync/execute', [SyncController::class, 'execute'])->name('kinja.sync.execute');
+
+    // Customers
+    Route::get('/customers', [CustomerController::class, 'index'])->name('kinja.customers.index');
 });

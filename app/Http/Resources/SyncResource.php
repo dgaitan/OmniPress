@@ -17,7 +17,7 @@ class SyncResource extends JsonResource
         return [
             'id' => $this->id,
             'info' => $this->info,
-            'created_at' => $this->created_at->format('F j, Y'),
+            'created_at' => $this->created_at->format('F j, Y @ H:m:s'),
             'user' => array(
                 'id' => $this->user->id,
                 'name' => $this->user->name

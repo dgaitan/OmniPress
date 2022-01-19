@@ -13,7 +13,7 @@ class SyncController extends Controller
 {
     public function index() {
         return Inertia::render('Sync/Index', [
-            'syncs' => SyncResource::collection(Sync::all())
+            'syncs' => SyncResource::collection(Sync::take(10)->orderBy('id', 'desc')->get())
         ]);
     }
 
