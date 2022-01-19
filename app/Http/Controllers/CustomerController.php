@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\WooCommerce\Customer;
+use Inertia\Inertia;
 
 class CustomerController extends Controller
 {
     public function index() {
-        return Customer::take(10)->get();
+        return Inertia::render('Customers/Index', [
+            'customers' => Customer::take(40)->orderBy('id', 'desc')->get()
+        ]);
     }
 }
