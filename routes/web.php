@@ -4,6 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use JoelButcher\Socialstream\Http\Controllers\OAuthController;
+use App\Http\Controllers\SyncController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +32,13 @@ Route::get(
     [OAuthController::class, 'handleProviderCallback']
 )->middleware('kindhumans.email')->name('oauth.callback');
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->name('dashboard');
+
+Route::middleware(['auth:sanctum', 'verified'])->prefix('/dashboard')->group(function () {
+    Route::get('/', function () {
+        return Inertia::render('Dashboard');
+    })->name('dashboard');
+
+    // Sync Routes
+    Route::get('/sync', [SyncController::class, 'index'])->name('kinja.sync.index');
+    Route::post('/sync/execute', [SyncController::class, 'execute'])->name('kinja.sync.execute');
+});

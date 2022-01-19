@@ -10,8 +10,8 @@ class CustomerData extends BaseData {
     
     public function __construct(
         public int $customer_id,
-        public string $date_created,
-        public string $date_modified,
+        public ?string $date_created,
+        public ?string $date_modified,
         public string $email,
         public ?string $first_name,
         public ?string $last_name,
@@ -52,10 +52,20 @@ class CustomerData extends BaseData {
                 if ($key === 'meta_data' && $value) {
                     $meta_data = array();
                     foreach ($data[$key] as $meta) {
-                        $meta_data[] = (array) $meta;
+                        $meta = (array) $meta;
+
+                        if ($meta['key'] === '_stripe_customer') {
+                            continue;
+                        }
+                        
+                        $meta_data[] = $meta;
                     }
 
                     $value = $meta_data;
+                }
+
+                if (in_array($key, array('date_created', 'date_modified'))) {
+                    $value = null;
                 }
 
                 $_data[$key] = $value;

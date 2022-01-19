@@ -20,7 +20,10 @@ class CustomerTask extends BaseTask {
      * @return void
      */
     protected function handle($data): void {
-        $customer = Customer::firstOrNew(['customer_id' => $data->customer_id]);
+        $customer = Customer::firstOrNew([
+            'customer_id' => $data->customer_id,
+            'email' => $data->email
+        ]);
         $customer->fill($data->toStoreData());
         $customer->save();
     }

@@ -103,6 +103,16 @@
                                     <template #content>
                                         <!-- Account Management -->
                                         <div class="block px-4 py-2 text-xs text-gray-400">
+                                            Admin
+                                        </div>
+
+                                        <jet-dropdown-link :href="route('kinja.sync.index')">
+                                            Sync
+                                        </jet-dropdown-link>
+
+
+                                        <!-- Account Management -->
+                                        <div class="block px-4 py-2 text-xs text-gray-400">
                                             Manage Account
                                         </div>
 

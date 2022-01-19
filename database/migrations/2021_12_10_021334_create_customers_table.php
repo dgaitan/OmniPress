@@ -19,7 +19,7 @@ class CreateCustomersTable extends Migration
             $table->bigInteger('customer_id')->default(0)->unique();
             $table->dateTime('date_created')->nullable(true);
             $table->dateTime('date_modified')->nullable(true);
-            $table->string('email', 255)->unique()->ind;
+            $table->string('email', 255)->index();
             $table->string('first_name', 255)->nullable(true);
             $table->string('last_name', 255)->nullable(true);
             $table->string('role', 255)->default('customer');

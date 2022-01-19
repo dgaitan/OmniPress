@@ -94,6 +94,10 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereFeeLines($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereShippingLines($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereTaxLines($value)
+ * @property int|null $membership_id
+ * @property bool $has_membership
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereHasMembership($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereMembershipId($value)
  */
 class Order extends Model
 {
