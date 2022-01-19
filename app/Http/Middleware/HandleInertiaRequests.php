@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
 use Inertia\Middleware;
+use App\Models\User;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -35,9 +36,22 @@ class HandleInertiaRequests extends Middleware
      * @return array
      */
     public function share(Request $request): array
-    {
+    {   
         return array_merge(parent::share($request), [
-            //
+            'perms' => $this->getUserPermissions($request->user())
         ]);
+    }
+
+    protected function getUserPermissions(User|null $user): array {
+        $perms = [];
+
+        if (!is_null($user)) {
+            foreach ($user->getPermissionsViaRoles()->toArray() as $perm) {
+                $perms[] = $perm['name'];
+            }
+        }
+
+
+        return $perms;
     }
 }

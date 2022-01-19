@@ -107,11 +107,11 @@
 
                                     <template #content>
                                         <!-- Account Management -->
-                                        <div class="block px-4 py-2 text-xs text-gray-400">
+                                        <div v-if="userCan('run_sync')" class="block px-4 py-2 text-xs text-gray-400">
                                             Admin
                                         </div>
 
-                                        <jet-dropdown-link :href="route('kinja.sync.index')">
+                                        <jet-dropdown-link v-if="userCan('run_sync')" :href="route('kinja.sync.index')">
                                             Sync
                                         </jet-dropdown-link>
 
@@ -125,7 +125,7 @@
                                             Profile
                                         </jet-dropdown-link>
 
-                                        <jet-dropdown-link :href="route('api-tokens.index')" v-if="$page.props.jetstream.hasApiFeatures">
+                                        <jet-dropdown-link :href="route('api-tokens.index')" v-if="$page.props.jetstream.hasApiFeatures && userCan('manage_api_tokens')">
                                             API Tokens
                                         </jet-dropdown-link>
 
@@ -258,7 +258,7 @@
 
     export default defineComponent({
         props: {
-            title: String,
+            title: String
         },
 
         components: {
