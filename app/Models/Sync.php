@@ -27,6 +27,16 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Sync whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Sync whereUserId($value)
  * @mixin \Eloquent
+ * @property string $name
+ * @property string $content_type
+ * @property int|null $intents
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\SyncLog[] $logs
+ * @property-read int|null $logs_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\SyncNote[] $notes
+ * @property-read int|null $notes_count
+ * @method static \Illuminate\Database\Eloquent\Builder|Sync whereContentType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Sync whereIntents($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Sync whereName($value)
  */
 class Sync extends Model
 {
@@ -40,12 +50,35 @@ class Sync extends Model
 
     protected $casts = [
         'created_at' => 'datetime',
-        'info' => 'array'
     ];
 
-    protected $fillable = ['description', 'user_id', 'info', 'status'];
+    protected $fillable = [
+        'name', 'description', 
+        'user_id', 'status',
+        'content_type', 'intents'
+    ];
 
+    /**
+     * User triggered the sync
+     * @return [type] [description]
+     */
     public function user() {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Notes related to this Sync
+     * @return [type] [description]
+     */
+    public function notes() {
+        return $this->hasMany(SyncNote::class, 'sync_id');
+    }
+
+    /**
+     * Logs related to this Sync
+     * @return [type] [description]
+     */
+    public function logs() {
+        return $this->hasMany(SyncLog::class, 'sync_id');
     }
 }

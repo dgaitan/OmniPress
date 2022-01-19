@@ -92,6 +92,10 @@ class WooCommerceTask {
         $this->sync('products', $syncArgs);
     }
 
+    public function _sync(string $type, array $syncArgs = []) {
+        $this->sync($type, $syncArgs);
+    }
+
     protected function sync(string $task, array $syncArgs = []): void {
         $task = $this->tasks[$task];
         
