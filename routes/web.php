@@ -6,6 +6,7 @@ use Inertia\Inertia;
 use JoelButcher\Socialstream\Http\Controllers\OAuthController;
 use App\Http\Controllers\SyncController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\CouponController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,4 +46,7 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('/dashboard')->group(fun
 
     // Customers
     Route::get('/customers', [CustomerController::class, 'index'])->name('kinja.customers.index');
+
+    // Coupons
+    Route::get('/coupons', [CouponController::class, 'index'])->name('kinja.coupons.index');
 });

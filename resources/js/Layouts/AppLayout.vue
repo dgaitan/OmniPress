@@ -23,6 +23,11 @@
                                     Customers
                                 </jet-nav-link>
                             </div>
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <jet-nav-link :href="route('kinja.coupons.index')" :active="route().current('kinja.coupons.index')">
+                                    Coupons
+                                </jet-nav-link>
+                            </div>
                         </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ml-6">
