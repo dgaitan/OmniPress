@@ -2,7 +2,7 @@
     <app-layout title="Sync">
 
         <template #header>
-            <div class="w-full flex justify-between">
+            <div class="w-full flex justify-between items-center">
                 <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                     Syncronization
                 </h2>
