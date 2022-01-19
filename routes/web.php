@@ -40,13 +40,32 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('/dashboard')->group(fun
         return Inertia::render('Dashboard');
     })->name('dashboard');
 
-    // Sync Routes
-    Route::get('/sync', [SyncController::class, 'index'])->name('kinja.sync.index');
-    Route::post('/sync/execute', [SyncController::class, 'execute'])->name('kinja.sync.execute');
+    // Admin Views
+    Route::prefix('/admin')->group(function () {
+        // Sync Routes
+        Route::controller(SyncController::class)->prefix('/sync')->group(function () {
+            Route::get('/', 'index')->name('kinja.sync.index');
+            Route::post('/execute', 'execute')->name('kinja.sync.execute');
+        });
+    });
 
-    // Customers
-    Route::get('/customers', [CustomerController::class, 'index'])->name('kinja.customers.index');
+    // Store Views
+    Route::prefix('/store')->group(function () {
+        // Customers
+        Route::get('/customers', [CustomerController::class, 'index'])->name('kinja.customers.index');
 
-    // Coupons
-    Route::get('/coupons', [CouponController::class, 'index'])->name('kinja.coupons.index');
+        // Coupons
+        Route::get('/coupons', [CouponController::class, 'index'])->name('kinja.coupons.index');
+    });
+
+    // Analytics View
+    Route::prefix('/analytics')->group(function () {
+
+    });
+
+    // Crm Views
+    Route::prefix('/crm')->group(function () {
+
+    });
+
 });
