@@ -15,8 +15,10 @@ let permsMixin = {
         }
 
         var hasPermission = false;
-        permissions.forEach(function(item){
-            if(allPermissions[item]) hasPermission = true;     
+        permissions.forEach(function(perm){
+            if(!hasPermission && allPermissions.includes(perm)) {
+                hasPermission = true;
+            }
         });
 
         return hasPermission;

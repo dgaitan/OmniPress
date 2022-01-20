@@ -1,5 +1,5 @@
 <template>
-    <app-layout title="Sync">
+    <layout title="Sync">
 
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -7,7 +7,7 @@
             </h2>
         </template>
 
-        <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
             <!-- Manage API Tokens -->
             <div class="mt-10 sm:mt-0">
@@ -135,12 +135,12 @@
                 </jet-button>
             </template>
         </jet-confirmation-modal>
-    </app-layout>
+    </layout>
 </template>
 
 <script>
     import { defineComponent } from 'vue'
-    import AppLayout from '@/Layouts/AppLayout.vue'
+    import Layout from '@/Layouts/Layout.vue'
     import JetButton from '@/Jetstream/Button.vue'
     import JetConfirmationModal from '@/Jetstream/ConfirmationModal.vue'
     import JetActionSection from '@/Jetstream/ActionSection.vue'
@@ -151,7 +151,7 @@
         props: ['sessions', 'syncs'],
 
         components: {
-            AppLayout,
+            Layout,
             JetActionSection,
             JetButton,
             JetConfirmationModal,

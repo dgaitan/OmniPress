@@ -10,8 +10,8 @@
             </div>
         </template>
 
-        <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
-            <section class="py-8">
+        <div class="max-w-7xl mx-auto pb-10 sm:px-6">
+            <section class="pb-8">
               <div class="container mx-auto">
                 <div class="p-4 mb-6 bg-white shadow rounded overflow-x-auto">
                   <table class="table-auto w-full">
@@ -104,33 +104,12 @@
               </div>
             </section>
         </div>
-
-        <!-- Sync Confirmation Modal -->
-        <!-- <jet-confirmation-modal :show="showSyncConfirmation" @close="showSyncConfirmation = false">
-            <template #title>
-                Are you sure?
-            </template>
-
-            <template #content>
-                Are you sure you would like to make a new sync?
-            </template>
-
-            <template #footer>
-                <jet-secondary-button @click="showSyncConfirmation = false">
-                    Cancel
-                </jet-secondary-button>
-
-                <jet-button class="ml-3" @click="syncNow" :class="{ 'opacity-25': syncForm.processing }" :disabled="syncForm.processing">
-                    Confirm
-                </jet-button>
-            </template>
-        </jet-confirmation-modal> -->
     </app-layout>
 </template>
 
 <script>
     import { defineComponent } from 'vue'
-    import AppLayout from '@/Layouts/AppLayout.vue'
+    import AppLayout from '@/Layouts/Layout.vue'
     import JetButton from '@/Jetstream/Button.vue'
     import JetConfirmationModal from '@/Jetstream/ConfirmationModal.vue'
 
