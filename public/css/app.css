@@ -1093,12 +1093,6 @@ select {
 .-mt-px {
   margin-top: -1px;
 }
-.mr-4 {
-  margin-right: 1rem;
-}
-.mb-10 {
-  margin-bottom: 2.5rem;
-}
 .mb-2 {
   margin-bottom: 0.5rem;
 }
@@ -1108,8 +1102,11 @@ select {
 .mb-8 {
   margin-bottom: 2rem;
 }
-.mt-12 {
-  margin-top: 3rem;
+.mr-4 {
+  margin-right: 1rem;
+}
+.mb-10 {
+  margin-bottom: 2.5rem;
 }
 .block {
   display: block;
@@ -1161,9 +1158,6 @@ select {
 }
 .h-3 {
   height: 0.75rem;
-}
-.h-11 {
-  height: 2.75rem;
 }
 .min-h-screen {
   min-height: 100vh;
@@ -1483,10 +1477,6 @@ select {
   --tw-bg-opacity: 1;
   background-color: rgb(34 197 94 / var(--tw-bg-opacity));
 }
-.bg-cyan-600 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(8 145 178 / var(--tw-bg-opacity));
-}
 .bg-opacity-25 {
   --tw-bg-opacity: 0.25;
 }
@@ -1616,8 +1606,11 @@ select {
 .pt-8 {
   padding-top: 2rem;
 }
-.pl-6 {
-  padding-left: 1.5rem;
+.pr-1 {
+  padding-right: 0.25rem;
+}
+.pb-12 {
+  padding-bottom: 3rem;
 }
 .pb-8 {
   padding-bottom: 2rem;
@@ -1628,20 +1621,11 @@ select {
 .pr-2 {
   padding-right: 0.5rem;
 }
-.pr-1 {
-  padding-right: 0.25rem;
-}
-.pb-12 {
-  padding-bottom: 3rem;
-}
 .pb-10 {
   padding-bottom: 2.5rem;
 }
-.pb-9 {
-  padding-bottom: 2.25rem;
-}
-.pb-0 {
-  padding-bottom: 0px;
+.pl-6 {
+  padding-left: 1.5rem;
 }
 .text-left {
   text-align: left;
@@ -1798,20 +1782,8 @@ select {
 .opacity-10 {
   opacity: 0.1;
 }
-.opacity-5 {
-  opacity: 0.05;
-}
-.opacity-70 {
-  opacity: 0.7;
-}
-.opacity-60 {
-  opacity: 0.6;
-}
 .opacity-40 {
   opacity: 0.4;
-}
-.opacity-30 {
-  opacity: 0.3;
 }
 .shadow-sm {
   --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
@@ -2355,12 +2327,12 @@ select {
     grid-column: span 4 / span 4;
   }
 
-  .lg\:mb-0 {
-    margin-bottom: 0px;
-  }
-
   .lg\:ml-80 {
     margin-left: 20rem;
+  }
+
+  .lg\:mb-0 {
+    margin-bottom: 0px;
   }
 
   .lg\:block {
@@ -2371,20 +2343,20 @@ select {
     display: none;
   }
 
-  .lg\:w-1\/3 {
-    width: 33.333333%;
-  }
-
-  .lg\:w-auto {
-    width: auto;
+  .lg\:w-1\/4 {
+    width: 25%;
   }
 
   .lg\:w-80 {
     width: 20rem;
   }
 
-  .lg\:w-1\/4 {
-    width: 25%;
+  .lg\:w-1\/3 {
+    width: 33.333333%;
+  }
+
+  .lg\:w-auto {
+    width: auto;
   }
 
   .lg\:border-b {

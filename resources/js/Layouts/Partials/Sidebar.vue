@@ -10,34 +10,51 @@
 	            </div>
 	            <div class="px-4 pb-6">
 	            	<SidebarNav>
-	            		<SidebarNavLink :href="route('dashboard')" :active="route().current('dashboard')">Dashboard</SidebarNavLink>
+	            		<SidebarNavLink :href="route('dashboard')" :active="route().current('dashboard')">
+	            			<template #icon><unicon name="tachometer-fast"></unicon></template>
+	            			Dashboard
+	            		</SidebarNavLink>
 	            	</SidebarNav>
 	              	
 	              	<SidebarNav>
 	              		<template #title>Store</template>
-	              		<SidebarNavLink :href="route('kinja.customers.index')" :active="route().current('kinja.customers.index')">Customers</SidebarNavLink>
-	              		<SidebarNavLink :href="route('kinja.coupons.index')" :active="route().current('kinja.coupons.index')">Coupons</SidebarNavLink>
+	              		<SidebarNavLink :href="route('kinja.customers.index')" :active="route().current('kinja.customers.index')">
+	              			<template #icon><unicon name="users-alt"></unicon></template>
+	              			Customers
+	              		</SidebarNavLink>
+	              		<SidebarNavLink :href="route('kinja.coupons.index')" :active="route().current('kinja.coupons.index')">
+	              			<template #icon><unicon name="gift"></unicon></template>
+	              			Coupons
+	              		</SidebarNavLink>
 	              	</SidebarNav>
 
 	              	<SidebarNav v-if="userCan(['run_sync'])">
 	              		<template #title>Admin</template>
-	              		<SidebarNavLink :href="route('kinja.sync.index')" :active="route().current('kinja.sync.index')">Sync</SidebarNavLink>
+	              		<SidebarNavLink :href="route('kinja.sync.index')" :active="route().current('kinja.sync.index')">
+	              			<template #icon><unicon name="sync"></unicon></template>
+	              			Sync
+	              		</SidebarNavLink>
 	              		<SidebarNavLink 
 	              			:href="route('api-tokens.index')" 
 	              			:active="route().current('api-tokens.index')" 
 	              			v-if="userCan('manage_api_tokens')">
+	              			<template #icon><unicon name="key-skeleton"></unicon></template>
 	              			Api Tokens
 	              		</SidebarNavLink>
 	              	</SidebarNav>
 
 	              	<SidebarNav>
 	              		<template #title>Account</template>
-	              		<SidebarNavLink :href="route('profile.show')" :active="route().current('profile.show')">Profile</SidebarNavLink>
+	              		<SidebarNavLink :href="route('profile.show')" :active="route().current('profile.show')">
+	              			<template #icon><unicon name="user-circle"></unicon></template>
+	              			Profile
+	              		</SidebarNavLink>
 	              		
 	              		<!-- Authentication -->
 	              		<li>
                             <form @submit.prevent="logout">
-                                <button type="button" class="flex items-center pl-3 py-3 pr-2 text-gray-500 hover:bg-cyan-400 hover:text-white transition-all rounded w-full">
+                                <button type="button" class="logout flex items-center pl-3 py-3 pr-2 text-gray-500 hover:bg-cyan-400 hover:text-white transition-all rounded w-full">
+                                	<unicon name="signout" class="mr-3"></unicon>
                                 	Log Out
                                 </button>
                             </form>
@@ -48,6 +65,10 @@
 	    </div>
 	</div>
 </template>
+
+<style type="text/css">
+	.logout:hover svg { transition: all .4s; fill: #FFFFFF }
+</style>
 
 <script>
 	import { defineComponent } from 'vue';

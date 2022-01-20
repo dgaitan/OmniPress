@@ -19,7 +19,7 @@
 <script>
     import { defineComponent } from 'vue'
     import ApiTokenManager from '@/Pages/API/Partials/ApiTokenManager.vue'
-    import AppLayout from '@/Layouts/AppLayout.vue'
+    import AppLayout from '@/Layouts/Layout.vue'
 
     export default defineComponent({
         props: [

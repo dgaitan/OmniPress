@@ -6,6 +6,10 @@
 	  	</Link>
 	</li>
 </template>
+<style type="text/css">
+	.active svg,
+	.link:hover svg { transition: all .4s; fill: #FFFFFF }
+</style>
 <script>
 	import { defineComponent } from 'vue'
 	import { Link } from '@inertiajs/inertia-vue3';
@@ -20,8 +24,8 @@
 		computed: {
 			classes() {
 				return this.active
-					? 'flex items-center pl-3 py-3 pr-2 text-white bg-cyan-400 rounded transition-all'
-					: 'flex items-center pl-3 py-3 pr-2 text-gray-500 hover:bg-cyan-400 hover:text-white transition-all rounded'
+					? 'active flex items-center pl-3 py-3 pr-2 text-white bg-cyan-400 rounded transition-all'
+					: 'link flex items-center pl-3 py-3 pr-2 text-gray-500 hover:bg-cyan-400 hover:text-white transition-all rounded'
 			}
 		}
 	})
