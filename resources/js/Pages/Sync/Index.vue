@@ -36,6 +36,7 @@
                                       <option value="">Select sync content type</option>
                                       <option value="customers">Customers</option>
                                       <option value="coupons">Coupons</option>
+                                      <option value="products">Products</option>
                                       <option value="orders">Orders</option>
                                     </select>
                                     <!-- <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
@@ -71,7 +72,7 @@
                 <div class="">
                     <div class="py-4 bg-white rounded">
                         <div class="flex px-6 pb-4 border-b">
-                            <h3 class="text-xl font-bold">Sales History</h3>
+                            <h3 class="text-xl font-bold">Sync History</h3>
                             <div class="ml-auto">
                                 <button class="py-2 px-3 text-xs text-gray-400 font-medium">Daily</button>
                                 <button class="py-2 px-3 text-xs text-gray-400 font-medium">Weekly</button>
@@ -83,6 +84,7 @@
                                 <thead>
                                     <tr class="text-xs text-gray-500 text-left">
                                         <th class="font-medium">Info</th>
+                                        <th class="font-medium">Date</th>
                                         <th class="font-medium">Run by</th>
                                         <th class="font-medium">Content Synced</th>
                                         <th class="font-medium">Status</th>
@@ -92,16 +94,16 @@
                                 <tbody>
                                     <tr class="text-xs bg-gray-50" v-for="sync in syncs.data">
                                         <td class="flex px-4 py-3">
-                                            <img class="w-8 h-8 mr-4 object-cover rounded-md" src="https://images.unsplash.com/photo-1575537302964-96cd47c06b1b?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;ixlib=rb-1.2.1&amp;auto=format&amp;fit=crop&amp;w=1050&amp;q=80" alt="">
                                             <div>
                                                 <p class="font-medium">{{ sync.name }}</p>
                                                 <p class="text-gray-500">{{ sync.description }}</p>
                                             </div>
                                         </td>
+                                        <td class="font-medium">{{ sync.created_at }}</td>
                                         <td class="font-medium">{{ sync.user.name }}</td>
                                         <td class="font-medium">{{ sync.content_type }}</td>
                                         <td>
-                                            <span class="inline-block py-1 px-2 text-white bg-green-500 rounded-full">{{ sync.status }}</span>
+                                            <span :class="`status ${sync.status}`">{{ sync.status }}</span>
                                         </td>
                                         <td>
                                             

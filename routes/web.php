@@ -7,6 +7,7 @@ use JoelButcher\Socialstream\Http\Controllers\OAuthController;
 use App\Http\Controllers\SyncController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\CouponController;
+use App\Http\Controllers\ProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,7 +42,9 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('/dashboard')->group(fun
     })->name('dashboard');
 
     // Admin Views
-    Route::prefix('/admin')->group(function () {
+    Route::prefix('/admin')
+        ->middleware(['role:super_admin|admin'])
+        ->group(function () {
         // Sync Routes
         Route::controller(SyncController::class)->prefix('/sync')->group(function () {
             Route::get('/', 'index')->name('kinja.sync.index');
@@ -56,6 +59,9 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('/dashboard')->group(fun
 
         // Coupons
         Route::get('/coupons', [CouponController::class, 'index'])->name('kinja.coupons.index');
+
+        // Products
+        Route::get('/products', [ProductController::class, 'index'])->name('kinja.products.index');
     });
 
     // Analytics View

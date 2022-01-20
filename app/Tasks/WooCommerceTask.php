@@ -53,6 +53,15 @@ class WooCommerceTask {
     }
 
     /**
+     * Return the available tasks
+     * 
+     * @return array
+     */
+    public function getAvailableTasks(): array {
+        return array_keys($this->tasks);
+    }
+
+    /**
      * Load the tasks registered
      * 
      * @return void

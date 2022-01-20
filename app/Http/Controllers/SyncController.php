@@ -8,12 +8,15 @@ use App\Models\Sync;
 use App\Tasks\WooCommerceTask;
 use Carbon\Carbon;
 use App\Http\Resources\SyncResource;
+use App\Rules\SyncContentType;
 
 class SyncController extends Controller
 {
     public function index() {
         return Inertia::render('Sync/Index', [
-            'syncs' => SyncResource::collection(Sync::take(10)->orderBy('id', 'desc')->get())
+            'syncs' => SyncResource::collection(
+                Sync::with('users')->take(10)->orderBy('id', 'desc')->get()
+            )
         ]);
     }
 
@@ -24,14 +27,9 @@ class SyncController extends Controller
      */
     public function execute(Request $request) {
         $request->validateWithBag('syncForm', [
-            'content_type' => ['required'],
+            'content_type' => ['required', new SyncContentType],
             'description' => ['max:500']
-        ]);
-
-        $contentTypes = ['customers', 'coupons', 'orders'];
-        if (!in_array($request->content_type, $contentTypes)) {
-            return redirect(route('kinja.sync.index'))->with('message', 'Invalid Content Type');
-        }
+        ]);        
 
         $sync = Sync::create([
             'name' => sprintf('%s sync', ucwords($request->content_type)),

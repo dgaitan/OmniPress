@@ -8,7 +8,7 @@ class Client {
     protected $domain;
     protected $secret;
     protected $key;
-    protected $api;
+    protected $api = null;
 
     public function __construct() {
         $this->setCredentials();

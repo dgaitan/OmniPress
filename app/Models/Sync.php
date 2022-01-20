@@ -58,6 +58,10 @@ class Sync extends Model
         'content_type', 'intents'
     ];
 
+    public function getContentTypeAttribute($value): string {
+        return ucfirst($value);
+    }
+
     /**
      * User triggered the sync
      * @return [type] [description]

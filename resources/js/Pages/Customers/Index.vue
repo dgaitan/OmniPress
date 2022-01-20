@@ -31,8 +31,8 @@
                             </td>
                             <td class="font-medium">09/04/2021</td>
                             <td>
-                                <span class="inline-block py-1 px-2 text-white bg-green-500 rounded-full">
-                                    {{ customer.role }}
+                                <span :class="`status ${customer.role}`">
+                                    {{ parseRole(customer.role) }}
                                 </span>
                             </td>
                             <td>
@@ -129,14 +129,9 @@
         // },
 
         methods: {
-            // syncNow() {
-            //     this.syncForm.post(route('kinja.sync.execute'), {
-            //         preserveScroll: true,
-            //         onSuccess: () => {
-            //             this.showSyncConfirmation = false
-            //         }
-            //     })
-            // }
+            parseRole(role) {
+              return role.split('_').join(' ')
+            }
         }
     })
 </script>
