@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Tasks\WooCommerceTask;
+use Carbon\Carbon;
 
 /**
  * App\Models\Sync
@@ -84,5 +86,31 @@ class Sync extends Model
      */
     public function logs() {
         return $this->hasMany(SyncLog::class, 'sync_id');
+    }
+
+    /**
+     * Execute sync
+     * @return [type] [description]
+     */
+    public function execute() {
+        $task = new WooCommerceTask;
+        $task->_sync(strtolower($this->content_type));
+
+        $this->status = self::COMPLETED;
+        $this->save();
+
+        $this->add_log(sprintf(
+            'Task completed with success at %s',
+            Carbon::now()->format('F j, Y @ H:i:s')
+        ));
+    }
+
+    /**
+     * Add a new log
+     * 
+     * @param string $message [description]
+     */
+    public function add_log(string $message) {
+        $this->logs()->create(['description' => $message]);
     }
 }

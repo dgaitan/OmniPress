@@ -1,16 +1,57 @@
 <template>
-    <button :type="type" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150">
+    <button :type="type" :class="classes">
         <slot />
     </button>
 </template>
 
 <script>
-export default {
+import { defineComponent } from 'vue'
+
+export default defineComponent({
     props: {
         type: {
             type: String,
             default: 'submit',
         },
+        size: {
+            type: String,
+            default: 'md'
+        },
+        color: {
+            type: String,
+            default: 'primary'
+        }
+    },
+
+    computed: {
+        classes() {
+            return `${this.baseClasses()} ${this.sizeClasses()} ${this.colorClasses()}`
+        }
+    },
+
+    methods: {
+        baseClasses() {
+            return `inline-flex items-center border border-transparent rounded-md font-semibold focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150`
+        },
+
+        sizeClasses() {
+            const classes = {
+                'sm': 'px-2 py-1 text-sm',
+                'md': 'px-4 py-2 text-xs',
+                'lg': 'px-6 py-3 text-lg'
+            }
+
+            return classes[this.size]
+        },
+
+        colorClasses() {
+            const classes = {
+                'primary': 'text-white bg-cyan-400 hover:bg-cyan-600 active:bg-cyan-600 foucs:border-cyan-900',
+                'secondary': 'text-white bg-gray-500 hover:bg-gray-600 active:bg-gray-600 foucs:border-gray-900'
+            }            
+            
+            return classes[this.color]
+        }
     }
-}
+})
 </script>

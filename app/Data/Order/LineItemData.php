@@ -33,7 +33,7 @@ class LineItemData extends BaseData {
         public array $taxes,
         /** @var \App\Data\Shared\MetaData[] */
         public ?DataCollection $meta_data,
-        public string $sku,
+        public ?string $sku,
         public ?float $product_price = 0
     ) {
 

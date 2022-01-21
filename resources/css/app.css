@@ -16,19 +16,19 @@
 .status.active,
 .status.subscriber {
 	color: #064e3b;
-	background-color: #34d399;
+	background-color: #d1fae5;
 }
 
 .status.completed,
 .status.kh_affiliate {
 	color: #0c4a6e;
-	background-color: #7dd3fc;
+	background-color: #e0f2fe;
 }
 
 .status.pending,
 .status.adminstrator {
 	color: #164e63;
-	background-color: #67e8f9;
+	background-color: #cffafe;
 }
 
 .status.error,

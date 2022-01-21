@@ -33,7 +33,7 @@ class SyncController extends Controller
 
         $sync = Sync::create([
             'name' => sprintf('%s sync', ucwords($request->content_type)),
-            'status' => Sync::PENDING,
+            'status' => Sync::FAILED,
             'content_type' => $request->content_type,
             'user_id' => $request->user()->id,
             'description' => $request->description,
@@ -60,17 +60,48 @@ class SyncController extends Controller
             $sync->logs()->create(['description' => $completedLog]);
         } catch (Exception $e) {
             $sync->logs()->create([
-                'description' => sprintf('%s sync failed', ucfirst($request->content_type));
+                'description' => sprintf('%s sync failed', ucfirst($request->content_type))
             ]);
             $sync->logs()->create([
-                'description' => sprintf('Error: %s', $e->getMessage());
+                'description' => sprintf('Error: %s', $e->getMessage())
             ]);
 
             $sync->status = Sync::FAILED;
             $sync->save();
+
+            return redirect(route('kinja.sync.index'))
+                ->withErrors(['message' => 'Sync Failed']);
         }
 
         return redirect(route('kinja.sync.index'))
             ->with('message', 'Sync Completed!');
+    }
+
+    public function intent(Request $request) {
+        $request->validateWithBag('syncIntentError', [
+            'sync_id' => ['required']
+        ]);
+
+        $sync = Sync::findOrFail($request->sync_id);
+
+        if ($sync->user_id !== $request->user()->id) {
+            throw new Exception("Invalid Request. You are not the owner");
+        }
+
+        $sync->add_log(sprintf(
+            'Running another sync intent at %s',
+            Carbon::now()->format('F j, Y @ H:i:s')
+        ));
+
+        $sync->execute();
+
+        return redirect(route('kinja.sync.index'));
+
+        try {
+
+        } catch (Exception $e) {
+            return redirect(route('kinja.sync.index'))
+                ->withErrors(['message' => $e->getMessage()]);
+        }
     }
 }

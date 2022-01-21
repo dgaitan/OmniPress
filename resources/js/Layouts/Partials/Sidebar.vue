@@ -16,11 +16,16 @@
 	            		</SidebarNavLink>
 	            	</SidebarNav>
 	              	
+	              	<!-- Store -->
 	              	<SidebarNav>
 	              		<template #title>Store</template>
 	              		<SidebarNavLink :href="route('kinja.products.index')" :active="route().current('kinja.customers.index')">
 	              			<template #icon><unicon name="archive"></unicon></template>
 	              			Products
+	              		</SidebarNavLink>
+	              		<SidebarNavLink :href="route('kinja.products.index')" :active="route().current('kinja.customers.index')">
+	              			<template #icon><unicon name="store"></unicon></template>
+	              			Orders
 	              		</SidebarNavLink>
 	              		<SidebarNavLink :href="route('kinja.customers.index')" :active="route().current('kinja.customers.index')">
 	              			<template #icon><unicon name="users-alt"></unicon></template>
@@ -30,8 +35,30 @@
 	              			<template #icon><unicon name="gift"></unicon></template>
 	              			Coupons
 	              		</SidebarNavLink>
+	              		<SidebarNavLink :href="route('kinja.coupons.index')" :active="route().current('kinja.coupons.index')">
+	              			<template #icon><unicon name="transaction"></unicon></template>
+	              			Payment Methods
+	              		</SidebarNavLink>
 	              	</SidebarNav>
 
+	              	<!-- Kindhumans -->
+	              	<SidebarNav>
+	              		<template #title>Kindhumans</template>
+	              		<SidebarNavLink :href="route('kinja.products.index')" :active="route().current('kinja.customers.index')">
+	              			<template #icon><unicon name="user-plus"></unicon></template>
+	              			Memberships
+	              		</SidebarNavLink>
+	              		<SidebarNavLink :href="route('kinja.customers.index')" :active="route().current('kinja.customers.index')">
+	              			<template #icon><unicon name="shopping-cart"></unicon></template>
+	              			Drosphip
+	              		</SidebarNavLink>
+	              		<SidebarNavLink :href="route('kinja.coupons.index')" :active="route().current('kinja.coupons.index')">
+	              			<template #icon><unicon name="location-arrow"></unicon></template>
+	              			Subscriptions
+	              		</SidebarNavLink>
+	              	</SidebarNav>
+
+	              	<!-- Admin -->
 	              	<SidebarNav v-if="userCan(['run_sync'])">
 	              		<template #title>Admin</template>
 	              		<SidebarNavLink :href="route('kinja.sync.index')" :active="route().current('kinja.sync.index')">
@@ -47,6 +74,7 @@
 	              		</SidebarNavLink>
 	              	</SidebarNav>
 
+	              	<!-- Account -->
 	              	<SidebarNav>
 	              		<template #title>Account</template>
 	              		<SidebarNavLink :href="route('profile.show')" :active="route().current('profile.show')">

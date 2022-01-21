@@ -49,6 +49,7 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('/dashboard')->group(fun
         Route::controller(SyncController::class)->prefix('/sync')->group(function () {
             Route::get('/', 'index')->name('kinja.sync.index');
             Route::post('/execute', 'execute')->name('kinja.sync.execute');
+            Route::post('/intent', 'intent')->name('kinja.sync.intent');
         });
     });
 

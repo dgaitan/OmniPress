@@ -39,20 +39,26 @@
                                       <option value="products">Products</option>
                                       <option value="orders">Orders</option>
                                     </select>
-                                    <!-- <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
-                                      <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"></path>
-                                      </svg>
-                                    </div> -->
                                 </div>
                                 <jet-input-error :message="syncForm.errors.content_type" class="mt-2" />
                             </div>
 
+                            <!-- Offset (optional) -->
+                            <!-- <div class="col-span-6 sm:col-span-4">
+                                <label class="block text-sm font-medium mb-2" for="offset">Offset (optional)</label>
+                                <div class="relative">
+                                    <textarea v-model="syncForm.description" class="w-full border-gray-300 focus:border-cyan-600 focus:ring focus:ring-cyan-400 focus:ring-opacity-50 rounded-md shadow-sm" name="offset" rows="4"></textarea>
+                                    <jet-input id="offset" type="text" class="mt-1 block w-full" v-model="form.name" autocomplete="name" />
+                                </div>
+                                <jet-input-error :message="syncForm.errors.description" class="mt-2" />
+                            </div> -->
+
+
                             <!-- Sync Description (optional) -->
                             <div class="col-span-6 sm:col-span-4">
-                                <label class="block text-sm font-medium mb-2" for="content_type">Description (optional)</label>
+                                <label class="block text-sm font-medium mb-2" for="description">Description (optional)</label>
                                 <div class="relative">
-                                    <textarea v-model="syncForm.description" class="w-full border-gray-300 focus:border-cyan-600 focus:ring focus:ring-cyan-400 focus:ring-opacity-50 rounded-md shadow-sm" name="descirption" rows="4"></textarea>
+                                    <textarea v-model="syncForm.description" class="w-full border-gray-300 focus:border-cyan-600 focus:ring focus:ring-cyan-400 focus:ring-opacity-50 rounded-md shadow-sm" name="description" rows="4"></textarea>
                                 </div>
                                 <jet-input-error :message="syncForm.errors.description" class="mt-2" />
                             </div>
@@ -106,7 +112,14 @@
                                             <span :class="`status ${sync.status}`">{{ sync.status }}</span>
                                         </td>
                                         <td>
-                                            
+                                            <Button 
+                                                v-if="sync.status === 'pending' || sync.status === 'failed'"
+                                                type="button" 
+                                                color="secondary" 
+                                                size="sm"
+                                                @click="tryAgain(sync.id, $event)">
+                                                Try Again
+                                            </Button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -147,7 +160,9 @@
     import JetConfirmationModal from '@/Jetstream/ConfirmationModal.vue'
     import JetActionSection from '@/Jetstream/ActionSection.vue'
     import JetFormSection from '@/Jetstream/FormSection.vue'
+    import JetInput from '@/Jetstream/Input.vue'
     import JetSectionBorder from '@/Jetstream/SectionBorder'
+    import Button from '@/Components/Button.vue';
 
     export default defineComponent({
         props: ['sessions', 'syncs'],
@@ -158,7 +173,9 @@
             JetButton,
             JetConfirmationModal,
             JetFormSection,
-            JetSectionBorder
+            JetSectionBorder,
+            Button,
+            JetInput
         },
 
         data() {
@@ -168,7 +185,7 @@
                     _method: 'POST',
                     content_type: '',
                     description: ''
-                }),
+                })
             }
         },
 
@@ -181,7 +198,21 @@
                         this.showSyncConfirmation = false
                     }
                 })
+            },
+
+            tryAgain(sync_id, e) {
+                e.target.disable = true
+                e.target.textContent = 'Executing...'
+                this.$inertia.post(route('kinja.sync.intent'), {sync_id},{
+                    preserveScroll: true,
+                    errorBar: 'syncIntentError',
+                    onSuccess: () => {
+                        e.target.disable = false
+                        e.target.textContent = 'Try Again'
+                    }
+                })
             }
+
         }
     })
 </script>
