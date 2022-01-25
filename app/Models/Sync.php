@@ -4,8 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Tasks\WooCommerceTask;
 use Carbon\Carbon;
+use App\Tasks\WooCommerceTask;
 
 /**
  * App\Models\Sync
@@ -93,16 +93,8 @@ class Sync extends Model
      * @return [type] [description]
      */
     public function execute() {
-        $task = new WooCommerceTask;
-        $task->_sync(strtolower($this->content_type));
-
-        $this->status = self::COMPLETED;
-        $this->save();
-
-        $this->add_log(sprintf(
-            'Task completed with success at %s',
-            Carbon::now()->format('F j, Y @ H:i:s')
-        ));
+        $task = new WooCommerceTask($this);
+        $task->dispatch();
     }
 
     /**
@@ -112,5 +104,37 @@ class Sync extends Model
      */
     public function add_log(string $message) {
         $this->logs()->create(['description' => $message]);
+    }
+
+    /**
+     * Initialize a new sync
+     * @param  string $content_type [description]
+     * @param  int    $user_id      [description]
+     * @param  string $description  [description]
+     * @return [type]               [description]
+     */
+    public static function initialize(
+        string $content_type, 
+        User $user, 
+        string $description = ''
+    ) {
+        $sync = self::create([
+            'name' => sprintf('%s sync', ucwords($content_type)),
+            'status' => self::PENDING,
+            'content_type' => $content_type,
+            'user_id' => $user->id,
+            'description' => $description,
+            'intents' => 1
+        ]);
+
+        $sync->add_log(sprintf(
+            'Sync started by %s at %s',
+            $user->name,
+            Carbon::now()->format('F j, Y @ H:i:s')
+        ));
+
+        $sync->execute();
+
+        return $sync;
     }
 }

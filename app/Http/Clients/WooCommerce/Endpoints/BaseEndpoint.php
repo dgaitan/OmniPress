@@ -82,7 +82,6 @@ abstract class BaseEndpoint {
 
                 $results[$page] = $this->getDataProcessor()::collectFromResponse($response);
                 $page++;
-                sleep(2);
             }
 
         }

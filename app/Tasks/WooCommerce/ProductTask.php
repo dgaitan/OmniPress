@@ -23,7 +23,7 @@ class ProductTask extends BaseTask {
      * @param mixed $data
      * @return void
      */
-    protected function handle($data): void {
+    public function handle($data): void {
         $product = Product::firstOrNew(['product_id' => $data->product_id]);
         $product->fill($data->toStoreData());
         $product->save();

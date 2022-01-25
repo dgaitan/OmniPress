@@ -21,6 +21,7 @@ class SyncResource extends JsonResource
             'name' => $this->name,
             'description' => $this->description,
             'status' => $this->status,
+            'batch_id' => $this->batch_id,
             'user' => array(
                 'id' => $this->user->id,
                 'name' => $this->user->name

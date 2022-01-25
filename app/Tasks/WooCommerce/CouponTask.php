@@ -19,7 +19,7 @@ class CouponTask extends BaseTask {
      * @param mixed $data
      * @return void
      */
-    protected function handle($data): void {
+    public function handle($data): void {
         $coupon = Coupon::firstOrNew(['coupon_id' => $data->coupon_id]);
         $coupon->fill($data->toStoreData());
         $coupon->save();

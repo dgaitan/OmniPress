@@ -50,6 +50,7 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('/dashboard')->group(fun
             Route::get('/', 'index')->name('kinja.sync.index');
             Route::post('/execute', 'execute')->name('kinja.sync.execute');
             Route::post('/intent', 'intent')->name('kinja.sync.intent');
+            Route::get('/resume/{id}', 'resume')->name('kinja.sync.resume');
         });
     });
 

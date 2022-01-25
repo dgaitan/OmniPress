@@ -2,15 +2,20 @@
 
 namespace App\Tasks;
 
-use App\Models\Service;
+use Throwable;
+use App\Models\Sync;
 use App\Http\Clients\Client;
 use App\Http\Clients\WooCommerce\WooCommerceClient;
+use App\Jobs\SyncKindhumansData;
 use App\Tasks\WooCommerce\CustomerTask;
 use App\Tasks\WooCommerce\CouponTask;
 use App\Tasks\WooCommerce\OrderTask;
 use App\Tasks\WooCommerce\ProductTask;
 use App\Helpers\API\Testeable;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Bus\Batch;
+use Carbon\Carbon;
 
 
 class WooCommerceTask {
@@ -23,6 +28,8 @@ class WooCommerceTask {
      * @var WooCommerceClient
      */
     protected WooCommerceClient $client;
+
+    protected Sync|null $sync = null;
 
     /**
      * Tasks registered to this task manager
@@ -42,14 +49,15 @@ class WooCommerceTask {
      * Is necessary a service to can run tasks because we to attach the data
      * retrieved from sync to a service.
      * 
-     * @param Service
+     * @param Sync
      */
-    public function __construct() {
+    public function __construct(Sync|null $sync = null) {
+        $this->sync = $sync;
         $this->client = new WooCommerceClient(
             new Client
         );
         
-        $this->loadTasks();
+        // $this->loadTasks();
     }
 
     /**
@@ -105,15 +113,64 @@ class WooCommerceTask {
         $this->sync($type, $syncArgs);
     }
 
-    protected function sync(string $task, array $syncArgs = []): void {
-        $task = $this->tasks[$task];
-        
-        if ($this->isTesting) {
-            $task->setTestingMode($this->isTesting)
-            ->setTestingCollectionData($this->testingCollectionData)
-            ->retrieveDataFromAPI($this->retrieveFromAPI);
-        }
+    public function dispatch(array $syncArgs = []) {
+        $this->sync(strtolower($this->sync->content_type), $syncArgs);
+    }
 
-        $task->sync($syncArgs);
+    protected function sync(string $task, array $syncArgs = []): void {
+        if (!$this->sync) return;
+        
+        // if ($this->isTesting) {
+        //     $task->setTestingMode($this->isTesting)
+        //     ->setTestingCollectionData($this->testingCollectionData)
+        //     ->retrieveDataFromAPI($this->retrieveFromAPI);
+        // }
+
+        $endpoint = $this->client->getEndpoint($task);
+        $results = $endpoint->get($syncArgs);
+        $sync = $this->sync;
+        // $task->sync($this->sync, $syncArgs);
+        // 
+        if ($results) {
+            if ($this->isTesting) {
+                // Iterate the page result
+                foreach ($results as $page => $results) {
+        
+                    // Iterate the results in a page
+                    foreach ($results as $result) {
+                        (new $this->tasks[$task])->handle($result);
+                    }
+                }
+            } else {
+                $batch = Bus::batch([]);
+
+                $batches = [];
+                foreach ( $results as $page => $results ) {
+                    $batches[] = new SyncKindhumansData($results, $this->tasks[$task]);
+                }
+
+                $batch = Bus::batch($batches)
+                    ->then(function (Batch $batch) use ($sync) {
+                        $sync->status = Sync::COMPLETED;
+                        $sync->add_log(sprintf(
+                            'Task completed with success at %s',
+                            Carbon::now()->format('F j, Y @ H:i:s')
+                        ));
+                        $sync->save();
+
+                    })->catch(function (Batch $batch, Throwable $e) use ($sync) {
+                        $sync->status = Sync::FAILED;
+                        $sync->add_log(sprintf(
+                            'Task completed with success at %s',
+                            Carbon::now()->format('F j, Y @ H:i:s')
+                        ));
+                        $sync->save();
+                        
+                    })->dispatch();
+                
+                $sync->batch_id = $batch->id;
+                $sync->save();
+            }
+        }
     }
 }

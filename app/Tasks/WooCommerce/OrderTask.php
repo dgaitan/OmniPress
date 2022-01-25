@@ -22,7 +22,7 @@ class OrderTask extends BaseTask {
      * @param mixed $data
      * @return void
      */
-    protected function handle($data): void {
+    public function handle($data): void {
         $order = Order::firstOrNew(['order_id' => $data->order_id]);
         $order->fill($data->toStoreData());        
 

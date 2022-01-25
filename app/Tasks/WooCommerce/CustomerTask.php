@@ -19,7 +19,7 @@ class CustomerTask extends BaseTask {
      * @param mixed $data
      * @return void
      */
-    protected function handle($data): void {
+    public function handle($data): void {
         $customer = Customer::firstOrNew([
             'customer_id' => $data->customer_id,
             'email' => $data->email

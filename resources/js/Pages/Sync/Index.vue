@@ -66,6 +66,10 @@
                             <div class="col-span-6 sm:col-span-4 flex justify-end">
                                 <jet-button @click="showSyncConfirmation = true">Sync Now</jet-button>
                             </div>
+
+                            <div class="col-span-6">
+                                {{ sessions }}
+                            </div>
                         </div>
                     </template>
                 </jet-action-section>
@@ -165,7 +169,7 @@
     import Button from '@/Components/Button.vue';
 
     export default defineComponent({
-        props: ['sessions', 'syncs'],
+        props: ['sessions', 'syncs', 'sync'],
 
         components: {
             Layout,
@@ -195,7 +199,9 @@
                     preserveScroll: true,
                     errorBag: 'syncError',
                     onSuccess: () => {
-                        this.showSyncConfirmation = false
+                        this.showSyncConfirmation = false,
+                        this.syncForm.content_type = ''
+                        this.syncForm.description = ''
                     }
                 })
             },
