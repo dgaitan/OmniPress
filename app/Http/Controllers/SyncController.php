@@ -10,6 +10,7 @@ use App\Models\Sync;
 use App\Tasks\WooCommerceTask;
 use App\Http\Resources\SyncResource;
 use App\Rules\SyncContentType;
+use App\Jobs\WooCommerceSyncJob;
 
 class SyncController extends Controller
 {
@@ -38,6 +39,8 @@ class SyncController extends Controller
             $request->user(), 
             $request->description
         );
+
+        WooCommerceSyncJob::dispatch($sync->id);
 
         return redirect(route('kinja.sync.index'))
             ->with('message', 'Sync Initialized!');

@@ -119,18 +119,17 @@ class WooCommerceTask {
 
     protected function sync(string $task, array $syncArgs = []): void {
         if (!$this->sync) return;
-        
-        // if ($this->isTesting) {
-        //     $task->setTestingMode($this->isTesting)
-        //     ->setTestingCollectionData($this->testingCollectionData)
-        //     ->retrieveDataFromAPI($this->retrieveFromAPI);
-        // }
 
         $endpoint = $this->client->getEndpoint($task);
         $results = $endpoint->get($syncArgs);
         $sync = $this->sync;
-        // $task->sync($this->sync, $syncArgs);
-        // 
+
+        if ($this->isTesting) {
+            $endpoint->setTestingMode($this->isTesting);
+            $endpoint->setTestingData($this->testingCollectionData[$task]);
+            $endpoint->retrieveDataFromAPI($this->retrieveFromAPI);
+        }
+        
         if ($results) {
             if ($this->isTesting) {
                 // Iterate the page result
@@ -142,8 +141,6 @@ class WooCommerceTask {
                     }
                 }
             } else {
-                $batch = Bus::batch([]);
-
                 $batches = [];
                 foreach ( $results as $page => $results ) {
                     $batches[] = new SyncKindhumansData($results, $this->tasks[$task]);
@@ -161,7 +158,8 @@ class WooCommerceTask {
                     })->catch(function (Batch $batch, Throwable $e) use ($sync) {
                         $sync->status = Sync::FAILED;
                         $sync->add_log(sprintf(
-                            'Task completed with success at %s',
+                            'Task failed with error %s at %s',
+                            $e->getMessage(),
                             Carbon::now()->format('F j, Y @ H:i:s')
                         ));
                         $sync->save();

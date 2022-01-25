@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
-use App\Tasks\WooCommerceTask;
 
 /**
  * App\Models\Sync
@@ -89,15 +88,6 @@ class Sync extends Model
     }
 
     /**
-     * Execute sync
-     * @return [type] [description]
-     */
-    public function execute() {
-        $task = new WooCommerceTask($this);
-        $task->dispatch();
-    }
-
-    /**
      * Add a new log
      * 
      * @param string $message [description]
@@ -132,8 +122,6 @@ class Sync extends Model
             $user->name,
             Carbon::now()->format('F j, Y @ H:i:s')
         ));
-
-        $sync->execute();
 
         return $sync;
     }
