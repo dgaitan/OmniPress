@@ -57,17 +57,26 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('/dashboard')->group(fun
     // Store Views
     Route::prefix('/store')->group(function () {
         // Customers
-        Route::get('/customers', [CustomerController::class, 'index'])->name('kinja.customers.index');
+        Route::controller(CustomerController::class)->prefix('/customers')->group(function () {
+            Route::get('/', 'index')->name('kinja.customers.index');
+            Route::get('/{id}', 'show')->name('kinja.customers.show');
+        });
 
         // Coupons
-        Route::get('/coupons', [CouponController::class, 'index'])->name('kinja.coupons.index');
+        Route::controller(CouponController::class)->prefix('/coupons')->group(function () {
+            Route::get('/coupons', 'index')->name('kinja.coupons.index');
+        });
 
         // Products
-        Route::get('/products', [ProductController::class, 'index'])->name('kinja.products.index');
+        Route::controller(ProductController::class)->prefix('/products')->group(function () {
+            Route::get('/', 'index')->name('kinja.products.index');
+            Route::get('/{id}', 'show')->name('kinja.products.show');
+        });
 
         // Orders
         Route::controller(OrderController::class)->prefix('/orders')->group(function () {
             Route::get('/', 'index')->name('kinja.orders.index');
+            Route::get('/{id}', 'show')->name('kinja.orders.show');
         });
     });
 
