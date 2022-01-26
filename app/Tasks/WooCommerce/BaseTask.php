@@ -4,6 +4,7 @@ namespace App\Tasks\WooCommerce;
 
 use App\Helpers\API\Testeable;
 use App\Http\Clients\WooCommerce\WooCommerceClient;
+use App\Models\Sync;
 
 
 abstract class BaseTask {
@@ -25,6 +26,8 @@ abstract class BaseTask {
      */
     protected string $name;
 
+    protected WooCommerceClient $client;
+
     /**
      * The Constructor
      * 
@@ -32,7 +35,9 @@ abstract class BaseTask {
      * 
      * @param WooCommerceClient $client
      */
-    public function __construct() {}
+    public function __construct(WooCommerceClient $client) {
+        $this->client = $client;
+    }
 
     /**
      * Main task after running initial tasks
@@ -48,60 +53,29 @@ abstract class BaseTask {
      * @param array $syncArgs
      * @return void
      */
-    // public function sync(Sync $sync, array $syncArgs = []): void {
-    //     $endpoint = $this->client->getEndpoint($this->name);
+    public function sync(array $syncArgs = [], Sync $sync): void {
+        $endpoint = $this->client->getEndpoint($this->name);
 
-    //     if ($this->isTesting) {
-    //         $endpoint->setTestingMode($this->isTesting);
-    //         $endpoint->setTestingData($this->testingCollectionData[$this->name]);
-    //         $endpoint->retrieveDataFromAPI($this->retrieveFromAPI);
-    //     }
+        if ($this->isTesting) {
+            $endpoint->setTestingMode($this->isTesting);
+            $endpoint->setTestingData($this->testingCollectionData[$this->name]);
+            $endpoint->retrieveDataFromAPI($this->retrieveFromAPI);
+        }
         
-    //     $this->results = $endpoint->get($syncArgs);
+        $this->results = $endpoint->get($syncArgs, $sync);
         
-    //     if ($this->results) {
-    //         if ($this->isTesting) {
-    //             // Iterate the page result
-    //             foreach ($this->results as $page => $results) {
-        
-    //                 // Iterate the results in a page
-    //                 foreach ($results as $result) {
-    //                     $this->handle($result);
-    //                 }
-        
-    //                 sleep(2);
-    //             }
-    //         } else {
-    //             $batch = Bus::batch([])->dispatch();
+        if ($this->results) {
+            // Iterate the page result
+            foreach ($this->results as $page => $results) {
+    
+                // Iterate the results in a page
+                foreach ($results as $result) {
+                    $this->handle($result);
+                }
+            }
+        }
+    }
 
-    //             foreach ( $this->results as $page => $results ) {
-    //                 $batch->add(new SyncKindhumansData($results, $this));
-    //             }
-
-    //             $batch->then(function (Batch $batch) {
-    //                 $sync->status = Sync::COMPLETED;
-    //                 $sync->add_log(sprintf(
-    //                     'Task completed with success at %s',
-    //                     Carbon::now()->format('F j, Y @ H:i:s')
-    //                 ));
-    //                 $sync->save();
-    //             });
-
-    //             $batch->catch(function (Batch $batch, Throwable $e) {
-    //                 $sync->status = Sync::FAILED;
-    //                 $sync->add_log(sprintf(
-    //                     'Task completed with success at %s',
-    //                     Carbon::now()->format('F j, Y @ H:i:s')
-    //                 ));
-    //                 $sync->save();
-    //             });
-                
-    //             $batch->dispatch();
-    //             $sync->batch_id = $batch->id;
-    //             $sync->save();
-    //         }
-    //     }
-    // }
 
     public function syncCollection(
         string $collectionName,

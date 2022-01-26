@@ -18,8 +18,8 @@ class SyncController extends Controller
         $syncs = Sync::with('user')->take(10)->orderBy('id', 'desc')->get();
         
         return Inertia::render('Sync/Index', [
-            'syncs' => SyncResource::collection($syncs),
-            'sync' => new SyncResource($syncs->first())
+            'syncs' => count($syncs) > 0 ? SyncResource::collection($syncs) : [],
+            'sync' => count($syncs) > 0 ? new SyncResource($syncs->first()) : []
         ]);
     }
 
@@ -46,35 +46,9 @@ class SyncController extends Controller
             ->with('message', 'Sync Initialized!');
     }
 
-    public function intent(Request $request) {
-        $request->validateWithBag('syncIntentError', [
-            'sync_id' => ['required']
-        ]);
+    public function logs(Request $request, $id) {
+        $sync = Sync::find($id);
 
-        $sync = Sync::findOrFail($request->sync_id);
-
-        if ($sync->user_id !== $request->user()->id) {
-            throw new Exception("Invalid Request. You are not the owner");
-        }
-
-        $sync->add_log(sprintf(
-            'Running another sync intent at %s',
-            Carbon::now()->format('F j, Y @ H:i:s')
-        ));
-
-        $sync->execute();
-
-        return redirect(route('kinja.sync.index'));
-
-        try {
-
-        } catch (Exception $e) {
-            return redirect(route('kinja.sync.index'))
-                ->withErrors(['message' => $e->getMessage()]);
-        }
-    }
-
-    public function resume(Request $request, $id) {
-        return dd(Bus::findBatch($id));
+        dd($sync->logs()->get()->toArray());
     }
 }

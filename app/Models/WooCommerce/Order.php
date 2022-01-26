@@ -8,6 +8,7 @@ use App\Casts\OrderLines;
 use App\Models\Service;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
 
 /**
  * App\Models\WooCommerce\Order
@@ -102,15 +103,17 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
     use HasFactory;
+    use Searchable;
 
     protected $casts = [
         'date_created' => 'datetime',
+        'date_completed' => 'datetime',
         'date_modified' => 'datetime',
         'shipping_total' => 'decimal:0',
         'discount_total' => 'decimal:0',
         'discount_tax' => 'decimal:0',
         'shipping_tax' => 'decimal:0',
-        'total' => 'decimal:0',
+        'total' => 'decimal:2',
         'total_tax' => 'decimal:0',
         'billing' => Address::class,
         'shipping' => Address::class,
@@ -161,7 +164,7 @@ class Order extends Model
      * An order can have a customer, yes
      */
     public function customer() {
-        return $this->belongsTo(Customer::class);
+        return $this->belongsTo(Customer::class, 'customer_id');
     }
 
     public function service() {
@@ -170,5 +173,40 @@ class Order extends Model
 
     public function items() {
         return $this->hasMany(OrderLine::class, 'order_id');
+    }
+
+    /**
+     * Get the name of the index associated with the model.
+     *
+     * @return string
+     */
+    public function searchableAs()
+    {
+        return 'woocommerce_orders_index';
+    }
+
+    /**
+     * Get the indexable data array for the model.
+     *
+     * @return array
+     */
+    public function toSearchableArray()
+    {
+        $array = $this->toArray();
+
+        $customer = $this->customer ? [
+            'customer_id' => $this->customer->id,
+            'name' => $this->customer->getFullName(),
+            'email' => $this->customer->email
+        ] : [
+            'id' => 0,
+            'name' => sprintf('%s %s', $this->billing->first_name, $this->billing->last_name),
+            'email' => $this->billing->email
+        ];
+
+        $array['customer'] = $customer;
+        $array['date_created'] = $this->date_created->format('F j, Y');
+
+        return $array;
     }
 }

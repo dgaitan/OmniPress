@@ -23,7 +23,7 @@
 	              			<template #icon><unicon name="archive"></unicon></template>
 	              			Products
 	              		</SidebarNavLink>
-	              		<SidebarNavLink :href="route('kinja.products.index')" :active="route().current('kinja.customers.index')">
+	              		<SidebarNavLink :href="route('kinja.orders.index')" :active="route().current('kinja.orders.index')">
 	              			<template #icon><unicon name="store"></unicon></template>
 	              			Orders
 	              		</SidebarNavLink>

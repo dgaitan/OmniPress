@@ -2,7 +2,6 @@
 
 namespace App\Tasks;
 
-use Throwable;
 use App\Models\Sync;
 use App\Http\Clients\Client;
 use App\Http\Clients\WooCommerce\WooCommerceClient;
@@ -13,8 +12,6 @@ use App\Tasks\WooCommerce\OrderTask;
 use App\Tasks\WooCommerce\ProductTask;
 use App\Helpers\API\Testeable;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Bus;
-use Illuminate\Bus\Batch;
 use Carbon\Carbon;
 
 
@@ -57,7 +54,7 @@ class WooCommerceTask {
             new Client
         );
         
-        // $this->loadTasks();
+        $this->loadTasks();
     }
 
     /**
@@ -118,57 +115,44 @@ class WooCommerceTask {
     }
 
     protected function sync(string $task, array $syncArgs = []): void {
-        if (!$this->sync) return;
-
-        $endpoint = $this->client->getEndpoint($task);
-        $results = $endpoint->get($syncArgs);
-        $sync = $this->sync;
-
+        $task = $this->tasks[$task];
+        
         if ($this->isTesting) {
-            $endpoint->setTestingMode($this->isTesting);
-            $endpoint->setTestingData($this->testingCollectionData[$task]);
-            $endpoint->retrieveDataFromAPI($this->retrieveFromAPI);
+            $task->setTestingMode($this->isTesting)
+            ->setTestingCollectionData($this->testingCollectionData)
+            ->retrieveDataFromAPI($this->retrieveFromAPI);
         }
-        
-        if ($results) {
-            if ($this->isTesting) {
-                // Iterate the page result
-                foreach ($results as $page => $results) {
-        
-                    // Iterate the results in a page
-                    foreach ($results as $result) {
-                        (new $this->tasks[$task])->handle($result);
-                    }
-                }
-            } else {
-                $batches = [];
-                foreach ( $results as $page => $results ) {
-                    $batches[] = new SyncKindhumansData($results, $this->tasks[$task]);
-                }
 
-                $batch = Bus::batch($batches)
-                    ->then(function (Batch $batch) use ($sync) {
-                        $sync->status = Sync::COMPLETED;
-                        $sync->add_log(sprintf(
-                            'Task completed with success at %s',
-                            Carbon::now()->format('F j, Y @ H:i:s')
-                        ));
-                        $sync->save();
+        $task->sync($syncArgs, $this->sync);
+        
+        // if (!$this->sync) return;
 
-                    })->catch(function (Batch $batch, Throwable $e) use ($sync) {
-                        $sync->status = Sync::FAILED;
-                        $sync->add_log(sprintf(
-                            'Task failed with error %s at %s',
-                            $e->getMessage(),
-                            Carbon::now()->format('F j, Y @ H:i:s')
-                        ));
-                        $sync->save();
-                        
-                    })->dispatch();
+        // $endpoint = $this->client->getEndpoint($task);
+        // $results = $endpoint->get($syncArgs);
+        // $sync = $this->sync;
+
+        // if ($this->isTesting) {
+        //     $endpoint->setTestingMode($this->isTesting);
+        //     $endpoint->setTestingData($this->testingCollectionData[$task]);
+        //     $endpoint->retrieveDataFromAPI($this->retrieveFromAPI);
+        // }
+        
+        // if ($results) {
+        //     if ($this->isTesting) {
+        //     } else {
                 
-                $sync->batch_id = $batch->id;
-                $sync->save();
-            }
-        }
+                
+        //         // Iterate the page result
+        //         foreach ($results as $page => $results) {
+        
+        //             // Iterate the results in a page
+        //             foreach ($results as $result) {
+        //                 (new $this->tasks[$task])->handle($result);
+        //             }
+        //         }
+
+        //         $sync->save();
+        //     }
+        // }
     }
 }

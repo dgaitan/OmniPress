@@ -98,4 +98,8 @@ class Customer extends Model
     public function service() {
         return $this->belongsTo(Service::class, 'service_id');
     }
+
+    public function getfullName() {
+        return sprintf('%s %s', $this->first_name, $this->last_name);
+    }
 }

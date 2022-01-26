@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "8.1",
+        "algolia/algoliasearch-client-php": "^3.2",
         "automattic/woocommerce": "^3.0",
         "cknow/laravel-money": "^6.1",
         "fruitcake/laravel-cors": "^2.0",
@@ -15,6 +16,7 @@
         "laravel/framework": "^8.75",
         "laravel/jetstream": "^2.5",
         "laravel/sanctum": "^2.8",
+        "laravel/scout": "^9.4",
         "laravel/tinker": "^2.5",
         "myclabs/php-enum": "^1.8",
         "spatie/laravel-data": "^1.2",

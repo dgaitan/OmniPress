@@ -2,9 +2,10 @@
 
 namespace App\Http\Clients\WooCommerce\Endpoints;
 
+use Exception;
 use Automattic\WooCommerce\Client as WooCommerce;
 use App\Helpers\API\Testeable;
-use Exception;
+use App\Models\Sync;
 
 abstract class BaseEndpoint {
 
@@ -44,7 +45,7 @@ abstract class BaseEndpoint {
      * @var array $params
      * @return array
      */
-    public function get(array $params = array()): array {
+    public function get(array $params = array(), Sync $sync): array {
         $results = array();
         $params = $this->getParams($params);
 
@@ -66,7 +67,7 @@ abstract class BaseEndpoint {
             $results[1] = $this->getDataProcessor()::collectFromResponse($response);
         } else {
             $hasResults = true; // This helps to know if still we need to loop
-            $page = $params['page']; // Store the current page to autoincremente later
+            $page = $sync->current_page; // Store the current page to autoincremente later
 
             // While still we have results. lets loop on coming pages
             while ($hasResults) {
@@ -77,6 +78,14 @@ abstract class BaseEndpoint {
                 // it means we should stop the loop
                 if (!$response) {
                     $hasResults = false;
+                    $sync->complete();
+                    break;
+                }
+
+                if ($sync->shouldStop($page)) {
+                    $hasResults = false;
+                    $sync->update(['current_page' => $page - 1]);
+                    $sync->add_log(sprintf("Sync paused in page %s", $page - 1));
                     break;
                 }
 

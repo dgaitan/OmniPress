@@ -56,7 +56,7 @@ class Sync extends Model
     protected $fillable = [
         'name', 'description', 
         'user_id', 'status',
-        'content_type', 'intents'
+        'content_type', 'intents', 'current_page'
     ];
 
     public function getContentTypeAttribute($value): string {
@@ -96,6 +96,18 @@ class Sync extends Model
         $this->logs()->create(['description' => $message]);
     }
 
+    public function shouldStop(int $page = 1) {
+        return ($this->current_page + 5) === $page;
+    }
+
+    public function complete() {
+        $this->update(['status' => self::COMPLETED]);
+        $this->add_log(sprintf(
+            "Sync Completed by %s",
+            Carbon::now()->format('F j, Y @ H:i:s')
+        ));
+    }
+
     /**
      * Initialize a new sync
      * @param  string $content_type [description]
@@ -106,7 +118,7 @@ class Sync extends Model
     public static function initialize(
         string $content_type, 
         User $user, 
-        string $description = ''
+        ?string $description = ''
     ) {
         $sync = self::create([
             'name' => sprintf('%s sync', ucwords($content_type)),
@@ -114,7 +126,8 @@ class Sync extends Model
             'content_type' => $content_type,
             'user_id' => $user->id,
             'description' => $description,
-            'intents' => 1
+            'intents' => 1,
+            'current_page' => 1
         ]);
 
         $sync->add_log(sprintf(

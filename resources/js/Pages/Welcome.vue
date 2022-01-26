@@ -172,7 +172,7 @@
     }
 
     .home {
-        background-image: url(https://kindhumans.com/wp-content/uploads/2021/10/recycled-trucker-hats-hero-01.jpg);
+        background-image: url(/images/ROKHero.jpeg);
         background-size: cover;
         position:  relative;
     }

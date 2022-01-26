@@ -255,5 +255,11 @@
                 showingNavigationDropdown: false,
             }
         },
+
+        methods: {
+        	logout() {
+                this.$inertia.post(route('logout'));
+            },
+        }
     })
 </script>

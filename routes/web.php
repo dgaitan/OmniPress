@@ -8,6 +8,7 @@ use App\Http\Controllers\SyncController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\OrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,8 +50,7 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('/dashboard')->group(fun
         Route::controller(SyncController::class)->prefix('/sync')->group(function () {
             Route::get('/', 'index')->name('kinja.sync.index');
             Route::post('/execute', 'execute')->name('kinja.sync.execute');
-            Route::post('/intent', 'intent')->name('kinja.sync.intent');
-            Route::get('/resume/{id}', 'resume')->name('kinja.sync.resume');
+            Route::get('/logs/{id}', 'logs')->name('kinja.sync.logs');
         });
     });
 
@@ -64,6 +64,11 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('/dashboard')->group(fun
 
         // Products
         Route::get('/products', [ProductController::class, 'index'])->name('kinja.products.index');
+
+        // Orders
+        Route::controller(OrderController::class)->prefix('/orders')->group(function () {
+            Route::get('/', 'index')->name('kinja.orders.index');
+        });
     });
 
     // Analytics View

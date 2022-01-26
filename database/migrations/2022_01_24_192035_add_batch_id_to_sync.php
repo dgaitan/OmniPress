@@ -15,6 +15,7 @@ class AddBatchIdToSync extends Migration
     {
         Schema::table('syncs', function (Blueprint $table) {
             $table->string('batch_id', 500)->nullable()->default('');
+            $table->integer('current_page')->nullable()->default(1);
         });
     }
 
