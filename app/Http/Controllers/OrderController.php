@@ -26,8 +26,8 @@ class OrderController extends Controller
             $orders = Order::with('customer')->orderBy('date_created', 'desc');
         }
 
-        if ($request->input('filterByState')) {
-            $orders->where('status', $request->input('filterByState'));
+        if ($request->input('filterByStatus')) {
+            $orders->where('status', $request->input('filterByStatus'));
         }
         
         $orders = $orders->paginate($perPage);
@@ -60,7 +60,7 @@ class OrderController extends Controller
             'perPage' => $orders->perPage(),
             'currentPage' => $orders->currentPage(),
             's' => $request->input('s') ?? '',
-            'filterByState' => $request->input('filterByState') ?? ''
+            'filterByStatus' => $request->input('filterByStatus') ?? ''
         ]);
     }
 }

@@ -16,25 +16,9 @@
                 <div class="p-4 mb-6 bg-white shadow rounded overflow-x-auto">
                   <!-- Filters -->
                   <div class="flex justify-between mb-5 w-full">
-                    <div>
-                      <select 
-                          v-model="filterByState" 
-                          @change="filter"
-                          class="appearance-none block w-full px-4 py-3 mb-2 border-gray-300 focus:border-cyan-600 focus:ring focus:ring-cyan-400 focus:ring-opacity-50 rounded-md shadow-sm"
-                          style="min-width: 220px" 
-                          name="filter_by_state"
-                          id="filter_by_state">
-                        <option value="" disabled>Filter By Status</option>
-                        <option value="processing">Processing</option>
-                        <option value="pending">Pending</option>
-                        <option value="failed">Failed</option>
-                        <option value="completed">Completed</option>
-                      </select>
-                    </div>
-                    <div>
-                      <jet-input v-model="q" type="search" v-on:keyup.enter="search" />
-                    </div>
+                      <jet-input v-model="q" type="search" v-on:keyup.enter="search" placeholder="Search..." class="w-full" />
                   </div>
+                  
                   <table class="table-auto w-full">
                     <thead>
                       <tr class="text-xs text-gray-500 text-left">
@@ -120,7 +104,7 @@
         props: [
           'sessions', 'orders', 'total', 
           'nextUrl', 'prevUrl', 'perPage', 
-          'currentPage', 's', 'filterByState'],
+          'currentPage', 's', 'filterByStatus'],
 
         components: {
             Layout,
@@ -154,12 +138,6 @@
                 s: this.q
               }, { replace: true })
             },
-
-            filter() {
-              this.$inertia.get(route('kinja.orders.index'), {
-                filterByState: this.filterByState
-              }, { replace: true })
-            }
         }
     })
 </script>

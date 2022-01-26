@@ -45,6 +45,6 @@ class Category extends Model
             'product_category', 
             'category_id', 
             'product_id'
-        );
+        )->as('products')->withTimestamps();
     }
 }

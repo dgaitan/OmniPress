@@ -7,6 +7,7 @@ use App\Casts\ProductSetting;
 use App\Models\Service;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
 
 /**
  * App\Models\WooCommerce\Product
@@ -83,13 +84,15 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     use HasFactory;
+    use Searchable;
 
     protected $casts = [
-        'price' => 'decimal:0',
-        'regular_price' => 'decimal:0',
-        'sale_price' => 'decimal:0',
+        'price' => 'decimal:2',
+        'regular_price' => 'decimal:2',
+        'sale_price' => 'decimal:2',
         'settings' => ProductSetting::class,
-        'meta_data' => MetaData::class
+        'meta_data' => MetaData::class,
+        'date_created' => 'datetime'
     ];
 
     protected $fillable = [
@@ -135,7 +138,7 @@ class Product extends Model
             'product_category', 
             'product_id', 
             'category_id'
-        );
+        )->as('categories')->withTimestamps();
     }
 
     public function tags() {
@@ -144,7 +147,7 @@ class Product extends Model
             'product_tag',
             'product_id',
             'tag_id'
-        );
+        )->as('tags')->withTimestamps();
     }
 
     public function attributes() {
@@ -152,11 +155,83 @@ class Product extends Model
     }
 
     /**
-     * Service who this product belongs to
-     * 
-     * @return Service
+     * Get the name of the index associated with the model.
+     *
+     * @return string
      */
-    public function service() {
-        return $this->belongsTo(Service::class, 'service_id');
+    public function searchableAs()
+    {
+        return 'woocommerce_products_index';
+    }
+
+    /**
+     * Get the indexable data array for the model.
+     *
+     * @return array
+     */
+    public function toSearchableArray()
+    {
+        $array = $this->toArray();
+
+        return $array;
+    }
+
+    /**
+     * Modify the query used to retrieve models when making all of the models searchable.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    protected function makeAllSearchableUsing($query) {
+        return $query->with(['categories', 'tags', 'images']);
+    }
+
+    public function toArray(array $args = []) {
+        $array = parent::toArray();
+        $args = array_replace([
+            'withImages' => false
+        ], $args);
+
+        $array['categories'] = collect($this->categories)->map(function ($cat) {
+            return $cat->toArray();
+        });
+
+        $array['tags'] = collect($this->tags)->map(function ($tag) {
+            return $tag->toArray();
+        });
+
+        $array['date_created'] = $this->date_created ? $this->date_created->format('F j, Y') : '';
+
+        if ($args['withImages']) {
+            $array['images'] = collect($this->images)->map(function ($image) {
+                return $image->toArray();
+            });
+        }
+
+        return $array;   
+    }
+
+    public static function searchByKey(string $q) {
+        $q = explode(':', $q);
+
+        if (count($q) === 1) {
+            return self::search(end($q));
+        }
+
+        $key = $q[0];
+        $query = trim($q[1]);
+        $searchBy = [
+            'product_id', 'name', 'slug',
+            'sku', 'type', 'status'
+        ];
+
+        $products = self::with(['categories', 'images', 'tags'])
+            ->orderBy('date_created', 'desc');
+
+        if (in_array($key, $searchBy)) {
+            return $products->where($key, 'LIKE', "$query%");
+        }
+
+        return $products;
     }
 }

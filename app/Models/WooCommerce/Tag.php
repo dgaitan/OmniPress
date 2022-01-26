@@ -45,6 +45,6 @@ class Tag extends Model
             'product_tag', 
             'tag_id', 
             'product_id'
-        );
+        )->as('products')->withTimestamps();
     }
 }

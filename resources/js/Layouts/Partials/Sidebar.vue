@@ -19,7 +19,7 @@
 	              	<!-- Store -->
 	              	<SidebarNav>
 	              		<template #title>Store</template>
-	              		<SidebarNavLink :href="route('kinja.products.index')" :active="route().current('kinja.customers.index')">
+	              		<SidebarNavLink :href="route('kinja.products.index')" :active="route().current('kinja.products.index')">
 	              			<template #icon><unicon name="archive"></unicon></template>
 	              			Products
 	              		</SidebarNavLink>

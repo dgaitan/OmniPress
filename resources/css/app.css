@@ -14,7 +14,8 @@
 }
 
 .status.active,
-.status.subscriber {
+.status.subscriber,
+.status.publish {
 	color: #064e3b;
 	background-color: #d1fae5;
 }
