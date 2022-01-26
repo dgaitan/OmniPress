@@ -19,7 +19,7 @@ class ProductController extends Controller
             $products = Product::searchByKey($request->input('s'));
         } else {
             $products = Product::with(['categories', 'tags', 'images'])->orderBy('date_created', 'desc');
-            $products = $products->where('status', 'publish')->paginate($perPage);
+            $products = $products->where('status', 'publish');
         }
 
         $products = $products->paginate($perPage);
