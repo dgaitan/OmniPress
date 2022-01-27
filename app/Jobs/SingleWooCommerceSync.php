@@ -36,7 +36,7 @@ class SingleWooCommerceSync implements ShouldQueue
     public function handle()
     {
         $task = new WooCommerceTask();
-        $task->setId($this->element_id);
+        $task->setId($this->id);
         $task->_sync($this->content_type);
     }
 }

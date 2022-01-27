@@ -22,10 +22,12 @@ Route::middleware('auth:sanctum')->name('kinja.api.v1.')->group(function () {
 	Route::controller(MembershipController::class)->name('memberships.')->prefix('/memberships')->group(function () {
 
 		Route::get('/', 'index')->name('index');
+		Route::get('/{id}', 'show')->name('show');
 		Route::post('/new', 'new')->name('create');
 	});
 
 	Route::controller(ProductController::class)->name('products.')->prefix('/products')->group(function () {
 		Route::get('/', 'index')->name('index');
 	});
+
 });

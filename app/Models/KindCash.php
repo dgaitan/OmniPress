@@ -37,7 +37,7 @@ class KindCash extends Model
     ];
 
     public function membership() {
-        return $this->belongsTo(Membership::class, 'membership_id');
+        return $this->belongsTo(Membership::class);
     }
 
     /**
@@ -61,7 +61,7 @@ class KindCash extends Model
      * @param string $description [description]
      */
     public function addInitialLog(string $description = '') {
-        $this->addLog('initialize', $points, $description);
+        $this->addLog('initialize', $this->points, $description);
     }
 
     /**

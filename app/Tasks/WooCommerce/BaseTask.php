@@ -72,21 +72,23 @@ abstract class BaseTask {
             $endpoint->retrieveDataFromAPI($this->retrieveFromAPI);
         }
         
-        $this->results = $endpoint->get($syncArgs, $sync, $this->id);
+        $results = $endpoint->get($syncArgs, $sync, $this->id);
 
         // If id is greater than one, it means that we are trying to get a simple element
         if ($this->id > 0) {
-            if ($this->results) {
-                $this->handle($this->results);
+            if ($results) {
+                $this->handle($results);
             }
+
+            return;
         }
         
-        if ($this->results) {
+        if ($results) {
             // Iterate the page result
-            foreach ($this->results as $page => $results) {
+            foreach ($results as $page => $r) {
     
                 // Iterate the results in a page
-                foreach ($results as $result) {
+                foreach ($r as $result) {
                     $this->handle($result);
                 }
             }

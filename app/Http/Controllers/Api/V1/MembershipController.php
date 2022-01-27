@@ -9,7 +9,9 @@ use App\Models\WooCommerce\Customer;
 use App\Models\WooCommerce\Order;
 use App\Jobs\SingleWooCommerceSync;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
+use Exception;
 
 class MembershipController extends Controller
 {
@@ -20,7 +22,29 @@ class MembershipController extends Controller
      * @return [type]           [description]
      */
     public function index(Request $request) {
-        return ['data' => 'foo'];
+        $memberships = Membership::with('customer')->orderBy('start_at', 'desc')->get()->map(function ($m) {
+            $data = $m->toArray();
+            $data['customer'] = $m->customer;
+            $data['cash'] = $m->kindCash;
+
+            return $data;
+        });
+        return response()->json([
+            'data' => $memberships
+        ]);
+    }
+
+    public function show(Request $request, $id) {
+        try {
+            $membership = Membership::findOrFail($id);
+            return response()->json([
+                'data' => $membership->toArray()
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'data' => $e->getMessage()
+            ]);
+        }
     }
 
     /**
@@ -29,13 +53,22 @@ class MembershipController extends Controller
      * @return [type]           [description]
      */
     public function new(Request $request) {
-        $request->validate([
-            'price' => ['required'],
-            'customer_id' => ['required'],            
-            'email' => ['required', 'email:rfc,dns'],
-            'username' => ['required'],
-            'order_id' => ['required']
+        $validator = Validator::make($request->all(), [
+            'price' => 'required|integer',
+            'customer_id' => 'required|integer',    
+            'email' => 'required|email:rfc,dns',
+            'username' => 'required|string',
+            'order_id' => 'required|integer',
+            'points' => 'required|integer'
         ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors()
+            ]);
+        }
+
+        $validatedData = $validator->validated();
 
         $customer = Customer::firstOrNew([
             'customer_id' => $request->customer_id,
@@ -50,7 +83,7 @@ class MembershipController extends Controller
         ]);
         
         $membership = Membership::create([
-            'price' => $request->price,
+            'price' => (int) $request->price,
             'customer_id' => $customer->id,
             'customer_email' => $customer->email,
             'start_at' => Carbon::now(),
@@ -61,8 +94,8 @@ class MembershipController extends Controller
         ]);
 
         $kindCash = KindCash::create([
-            'points' => 2.0,
-            'last_earned' => 2.0
+            'points' => (int) $request->points,
+            'last_earned' => (int) $request->points
         ]);
 
         $membership->kindCash()->save($kindCash);
@@ -70,8 +103,8 @@ class MembershipController extends Controller
 
         $order->update(['membership_id' => $membership->id]);
 
-        SingleWooCommerceSync::dispatch('customers', $customer->customer_id);
-        SingleWooCommerceSync::dispatch('orders', $request->order_id);
+        SingleWooCommerceSync::dispatch($customer->customer_id, 'customers');
+        SingleWooCommerceSync::dispatch($order->order_id, 'orders');
 
         return response()->json(['membership' => $membership->toArray()]);
     }

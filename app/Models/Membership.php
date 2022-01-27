@@ -51,8 +51,7 @@ class Membership extends Model
     protected $casts = [
         'start_at' => 'date',
         'end_at' => 'date',
-        'last_payment_intent' => 'date',
-        'price' => 'decimal:2'
+        'last_payment_intent' => 'date'
     ];
 
     protected $fillable = [
@@ -68,6 +67,6 @@ class Membership extends Model
     }
 
     public function kindCash() {
-        return $this->hasOne(KindCash::class, 'kind_cash_id');
+        return $this->hasOne(KindCash::class);
     }
 }
