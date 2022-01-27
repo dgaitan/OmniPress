@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\MembershipController;
+use App\Http\Controllers\Api\V1\ProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,5 +23,9 @@ Route::middleware('auth:sanctum')->name('kinja.api.v1.')->group(function () {
 
 		Route::get('/', 'index')->name('index');
 		Route::post('/new', 'new')->name('create');
+	});
+
+	Route::controller(ProductController::class)->name('products.')->prefix('/products')->group(function () {
+		Route::get('/', 'index')->name('index');
 	});
 });
