@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\WooCommerce\Customer;
 
 /**
  * App\Models\Membership
@@ -44,4 +45,26 @@ use Illuminate\Database\Eloquent\Model;
 class Membership extends Model
 {
     use HasFactory;
+
+    protected $casts = [
+        'start_at' => 'date',
+        'end_at' => 'date',
+        'last_payment_intent' => 'date',
+        'price' => 'decimal:2'
+    ];
+
+    protected $fillable = [
+        'customer_email', 'start_at',
+        'end_at', 'price', 'shipping_status',
+        'status', 'pending_order_id', 'last_payment_intent',
+        'payment_intents'
+    ];
+
+    public function customer() {
+        return $this->belongsTo(Customer::class, 'customer_id');
+    }
+
+    public function kindCash() {
+        return $this->hasOne(KindCash::class, 'kind_cash_id');
+    }
 }

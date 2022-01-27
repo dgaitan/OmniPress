@@ -30,4 +30,16 @@ use Illuminate\Database\Eloquent\Model;
 class KindCashLog extends Model
 {
     use HasFactory;
+
+    protected $casts = [
+        'date' => 'datetime'
+    ];
+
+    protected $fillable = [
+        'event', 'date', 'order_id'
+    ];
+
+    public function kindCash() {
+        return $this->belongsTo(KindCash::class, 'kind_cash_id');
+    }
 }

@@ -28,4 +28,16 @@ use Illuminate\Database\Eloquent\Model;
 class KindCash extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'points', 'last_earned'
+    ];
+
+    public function membership() {
+        return $this->belongsTo(Membership::class, 'membership_id');
+    }
+
+    public function logs() {
+        return $this->hasMany(KindCashLog::class, 'kind_cash_id');
+    }
 }

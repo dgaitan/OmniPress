@@ -38,6 +38,10 @@ use Carbon\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|Sync whereContentType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Sync whereIntents($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Sync whereName($value)
+ * @property string|null $batch_id
+ * @property int|null $current_page
+ * @method static \Illuminate\Database\Eloquent\Builder|Sync whereBatchId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Sync whereCurrentPage($value)
  */
 class Sync extends Model
 {

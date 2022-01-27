@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|SyncLog whereSyncId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SyncLog whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read \App\Models\Sync|null $sync
  */
 class SyncLog extends Model
 {
