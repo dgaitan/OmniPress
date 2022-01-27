@@ -26,6 +26,11 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|KindCashLog whereOrderId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|KindCashLog whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property int|null $points
+ * @property string|null $description
+ * @property-read \App\Models\KindCash|null $kindCash
+ * @method static \Illuminate\Database\Eloquent\Builder|KindCashLog whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|KindCashLog wherePoints($value)
  */
 class KindCashLog extends Model
 {
@@ -36,7 +41,8 @@ class KindCashLog extends Model
     ];
 
     protected $fillable = [
-        'event', 'date', 'order_id'
+        'event', 'date', 'order_id',
+        'points', 'description'
     ];
 
     public function kindCash() {

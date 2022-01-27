@@ -45,8 +45,16 @@ abstract class BaseEndpoint {
      * @var array $params
      * @return array
      */
-    public function get(array $params = array(), Sync $sync): array {
+    public function get(array $params = array(), Sync|null $sync = null, int $id = 0): array {
         $results = array();
+        
+        // If id is greater than one, it means that we are trying to retrieve a simple element
+        if ( $id > 0 ) {
+            $response = $this->api->get(sprintf('%s/%s', $this->endpoint, $id));
+
+            return $response ?? $results;
+        }
+
         $params = $this->getParams($params);
 
         if ($this->isTesting && !$this->retrieveFromAPI) {

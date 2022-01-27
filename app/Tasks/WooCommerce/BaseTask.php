@@ -28,6 +28,8 @@ abstract class BaseTask {
 
     protected WooCommerceClient $client;
 
+    protected $id = 0;
+
     /**
      * The Constructor
      * 
@@ -37,6 +39,14 @@ abstract class BaseTask {
      */
     public function __construct(WooCommerceClient $client) {
         $this->client = $client;
+    }
+
+    /**
+     * [setId description]
+     * @param int $id [description]
+     */
+    public function setId(int $id) {
+        $this->id = $id;
     }
 
     /**
@@ -53,7 +63,7 @@ abstract class BaseTask {
      * @param array $syncArgs
      * @return void
      */
-    public function sync(array $syncArgs = [], Sync $sync): void {
+    public function sync(array $syncArgs = [], Sync|null $sync = null): void {
         $endpoint = $this->client->getEndpoint($this->name);
 
         if ($this->isTesting) {
@@ -62,7 +72,14 @@ abstract class BaseTask {
             $endpoint->retrieveDataFromAPI($this->retrieveFromAPI);
         }
         
-        $this->results = $endpoint->get($syncArgs, $sync);
+        $this->results = $endpoint->get($syncArgs, $sync, $this->id);
+
+        // If id is greater than one, it means that we are trying to get a simple element
+        if ($this->id > 0) {
+            if ($this->results) {
+                $this->handle($this->results);
+            }
+        }
         
         if ($this->results) {
             // Iterate the page result

@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Membership;
 use App\Models\KindCash;
 use App\Models\WooCommerce\Customer;
+use App\Models\WooCommerce\Order;
+use App\Jobs\SingleWooCommerceSync;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -29,14 +31,10 @@ class MembershipController extends Controller
     public function new(Request $request) {
         $request->validate([
             'price' => ['required'],
-            'customer_id' => ['required'],
-            'date_created' => ['nullable', 'date'],
-            'billing' => ['required'],
-            'shipping' => ['required'],
+            'customer_id' => ['required'],            
             'email' => ['required', 'email:rfc,dns'],
-            'first_name' => ['required'],
-            'last_name' => ['required'],
-            'username' => ['required']
+            'username' => ['required'],
+            'order_id' => ['required']
         ]);
 
         $customer = Customer::firstOrNew([
@@ -44,12 +42,11 @@ class MembershipController extends Controller
             'email' => $request->email
         ]);
 
-        $customer->fill($request->only(['date_created', 'first_name', 'last_name', 'username', 'billing', 'shipping']));
+        $customer->fill($request->only(['username']));
         $customer->save();
 
-        $kindCash = KindCash::create([
-            'points' => 2.0,
-            'last_earned' => 2.0
+        $order = Order::firstOrNew([
+            'order_id' => $request->order_id
         ]);
         
         $membership = Membership::create([
@@ -61,8 +58,20 @@ class MembershipController extends Controller
             'status' => 'active',
             'shipping_status' => 'pending',
             'pending_order_id' => 0,
-            'kind_cash_id' => $kindCash->id
         ]);
+
+        $kindCash = KindCash::create([
+            'points' => 2.0,
+            'last_earned' => 2.0
+        ]);
+
+        $membership->kindCash()->save($kindCash);
+        $kindCash->addInitialLog();
+
+        $order->update(['membership_id' => $membership->id]);
+
+        SingleWooCommerceSync::dispatch('customers', $customer->customer_id);
+        SingleWooCommerceSync::dispatch('orders', $request->order_id);
 
         return response()->json(['membership' => $membership->toArray()]);
     }

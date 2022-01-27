@@ -28,6 +28,8 @@ class WooCommerceTask {
 
     protected Sync|null $sync = null;
 
+    protected $id = 0;
+
     /**
      * Tasks registered to this task manager
      * 
@@ -64,6 +66,16 @@ class WooCommerceTask {
      */
     public function getAvailableTasks(): array {
         return array_keys($this->tasks);
+    }
+
+    /**
+     * Set if a request is single
+     * 
+     * @param  bool    $isSingle [description]
+     * @return boolean           [description]
+     */
+    public function setId(int $id) {
+        $this->id = $id;
     }
 
     /**
@@ -123,6 +135,7 @@ class WooCommerceTask {
             ->retrieveDataFromAPI($this->retrieveFromAPI);
         }
 
+        $task->setId($this->id);
         $task->sync($syncArgs, $this->sync);
         
         // if (!$this->sync) return;

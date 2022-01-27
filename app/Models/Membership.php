@@ -41,6 +41,8 @@ use App\Models\WooCommerce\Customer;
  * @method static \Illuminate\Database\Eloquent\Builder|Membership whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Membership whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read Customer|null $customer
+ * @property-read \App\Models\KindCash|null $kindCash
  */
 class Membership extends Model
 {
