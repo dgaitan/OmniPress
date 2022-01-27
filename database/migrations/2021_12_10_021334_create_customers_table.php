@@ -22,11 +22,11 @@ class CreateCustomersTable extends Migration
             $table->string('email', 255)->index();
             $table->string('first_name', 255)->nullable(true);
             $table->string('last_name', 255)->nullable(true);
-            $table->string('role', 255)->default('customer');
+            $table->string('role', 255)->default('customer')->nullable();
             $table->string('username', 255)->unique();
-            $table->jsonb('billing');
-            $table->jsonb('shipping');
-            $table->boolean('is_paying_customer')->default(false);
+            $table->jsonb('billing')->nullable();
+            $table->jsonb('shipping')->nullable();
+            $table->boolean('is_paying_customer')->nullable()->default(false);
             $table->string('avatar_url', 500)->nullable(true);
             $table->jsonb('meta_data')->nullable(true);
 

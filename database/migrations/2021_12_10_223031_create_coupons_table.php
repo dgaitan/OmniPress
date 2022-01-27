@@ -20,9 +20,9 @@ class CreateCouponsTable extends Migration
             $table->bigInteger('coupon_id'); // Coupon ID on Woo
 
             $table->string('code', 100);
-            $table->decimal('amount', 9, 3)->default(0);
-            $table->dateTime('date_created');
-            $table->dateTime('date_modified');
+            $table->integer('amount')->default(0);
+            $table->dateTime('date_created')->nullable();
+            $table->dateTime('date_modified')->nullable();
             $table->string('discount_type', 100)->default('fixed_cart');
             $table->text('description')->nullable(true);
             $table->dateTime('date_expires')->nullable(true);

@@ -20,7 +20,7 @@
                     </thead>
                     <tbody>
                         <tr class="text-xs bg-gray-50" v-for="customer in customers">
-                            <td class="py-5 px-6 font-medium">#{{ customer.id }}</td>
+                            <td class="py-5 px-6 font-medium">#{{ customer.customer_id }}</td>
                             <td class="flex px-4 py-3">
                                 <img v-if="!customer.avatar_url" class="w-8 h-8 mr-4 object-cover rounded-md" src="https://images.unsplash.com/photo-1559893088-c0787ebfc084?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;ixlib=rb-1.2.1&amp;auto=format&amp;fit=crop&amp;w=1050&amp;q=80" alt="">
                                 <img v-else :src="customer.avatar_url" class="w-8 h-8 mr-4 object-cover rounded-md" >

@@ -38,9 +38,9 @@ class CreateProductsTable extends Migration
             $table->boolean('sold_individually')->default(false);
 
             // Prices
-            $table->decimal('price', 9, 3)->default(0);
-            $table->decimal('regular_price', 9, 3)->default(0);
-            $table->decimal('sale_price', 9, 3)->default(0);
+            $table->integer('price')->default(0);
+            $table->integer('regular_price')->default(0);
+            $table->integer('sale_price')->default(0);
 
             
             $table->jsonb('settings');

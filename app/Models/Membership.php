@@ -54,6 +54,7 @@ class Membership extends Model
     ];
 
     protected $fillable = [
+        'customer_id',
         'customer_email', 'start_at',
         'end_at', 'price', 'shipping_status',
         'status', 'pending_order_id', 'last_payment_intent',

@@ -21,18 +21,18 @@ class CreateMembershipsTable extends Migration
             $table->string('customer_email')->index();
             $table->date('start_at');
             $table->date('end_at');
-            $table->decimal('price', 9, 3)->default(0);
+            $table->integer('price')->default(0);
             $table->string('shipping_status', 100)->default('pending');
             $table->string('status', 100)->default('active');
             $table->bigInteger('pending_order_id')->nullable();
             $table->date('last_payment_intent')->nullable();
             $table->integer('payment_intents')->default(0);
-            $table->foreignId('kind_cash_id');
+            $table->foreignId('kind_cash_id')->nullable();
         });
 
         Schema::table('orders', function (Blueprint $table) {
             $table->foreignId('membership_id')->nullable();
-            $table->boolean('has_membership')->default(false);
+            $table->boolean('has_membership')->default(false)->nullable();
         });
     }
 

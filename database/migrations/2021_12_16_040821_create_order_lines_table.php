@@ -24,13 +24,13 @@ class CreateOrderLinesTable extends Migration
             $table->foreignId('order_id')->nullable();
             $table->integer('quantity')->default(1);
             $table->string('tax_class', 255)->nullable();
-            $table->decimal('subtotal')->default(0)->nullable();
-            $table->decimal('subtotal_tax')->default(0)->nullable();
-            $table->decimal('total')->default(0)->nullable();
+            $table->integer('subtotal')->default(0)->nullable();
+            $table->integer('subtotal_tax')->default(0)->nullable();
+            $table->integer('total')->default(0)->nullable();
             $table->jsonb('taxes')->nullable();
             $table->jsonb('meta_data')->nullable();
             $table->string('sku', 200)->nullable();
-            $table->decimal('price')->default(0)->nullable();
+            $table->integer('price')->default(0)->nullable();
         });
     }
 

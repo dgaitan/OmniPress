@@ -20,13 +20,13 @@ class CreateSubscriptionItemsTable extends Migration
             $table->foreignId('product_subscription_id');
             $table->foreignId('variation_id')->nullable();
             $table->foreignId('product_id')->nullable();
-            $table->decimal('price', 9, 3)->default(0);
+            $table->integer('price')->default(0);
             $table->string('product_admin_slug', 255)->nullable();
             $table->text('image')->nullable();
             $table->date('expiration_date')->nullable();
             $table->integer('quantity')->default(0);
-            $table->decimal('fee', 9, 3)->default(0);
-            $table->decimal('total', 9, 3)->default(0);
+            $table->integer('fee')->default(0);
+            $table->integer('total')->default(0);
             $table->jsonb('interval_choices')->nullable();
         });
     }

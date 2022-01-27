@@ -17,9 +17,9 @@ class CreateKindCashesTable extends Migration
             $table->id();
             $table->timestamps();
 
-            $table->foreignId('membership_id');
-            $table->float('points')->default(0);
-            $table->float('last_earned')->default(0)->nullable();
+            $table->foreignId('membership_id')->nullable();
+            $table->integer('points')->default(0);
+            $table->integer('last_earned')->default(0)->nullable();
         });
     }
 

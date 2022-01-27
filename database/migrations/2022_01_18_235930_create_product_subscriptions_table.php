@@ -21,7 +21,7 @@ class CreateProductSubscriptionsTable extends Migration
             $table->string('uuid', 255);
             $table->foreignId('customer_id');
             $table->string('customer_email', 255);
-            $table->decimal('total', 9, 3)->default(0);
+            $table->integer('total')->default(0);
             $table->foreignId('payment_method_id')->nullable();
             $table->date('start_date');
             $table->date('end_date')->nullable();
