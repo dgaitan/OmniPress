@@ -179,7 +179,7 @@ abstract class BaseData extends Data {
             return 0;
         }
         
-        return (int) $value;
+        return (int) ((float) $value * 100);
     }
 
     /**
