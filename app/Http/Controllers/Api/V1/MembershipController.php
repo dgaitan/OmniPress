@@ -7,6 +7,7 @@ use App\Models\Membership;
 use App\Models\KindCash;
 use App\Models\WooCommerce\Customer;
 use App\Models\WooCommerce\Order;
+use App\Models\WooCommerce\Product;
 use App\Jobs\SingleWooCommerceSync;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -22,29 +23,33 @@ class MembershipController extends Controller
      * @return [type]           [description]
      */
     public function index(Request $request) {
-        $memberships = Membership::with('customer')->orderBy('start_at', 'desc')->get()->map(function ($m) {
-            $data = $m->toArray();
-            $data['customer'] = $m->customer;
-            $data['cash'] = $m->kindCash;
+        $memberships = Membership::with('customer', 'kindCash')
+            ->orderBy('start_at', 'desc')
+            ->get();
 
-            return $data;
-        });
-        return response()->json([
-            'data' => $memberships
-        ]);
+        $data = [];
+        
+        if ($memberships->count() > 0) {
+            $data = $memberships->map(fn($m) => $m->toArray());
+        }
+
+        return response()->json($data, 200);
     }
 
+    /**
+     * [show description]
+     * @param  Request $request [description]
+     * @param  [type]  $id      [description]
+     * @return [type]           [description]
+     */
     public function show(Request $request, $id) {
-        try {
-            $membership = Membership::findOrFail($id);
-            return response()->json([
-                'data' => $membership->toArray()
-            ]);
-        } catch (Exception $e) {
-            return response()->json([
-                'data' => $e->getMessage()
-            ]);
+        $membership = Membership::find($id);
+
+        if (!is_null($membership)) {
+            return response()->json($membership->toArray(true), 200);
         }
+
+        return response()->json(['message' => "Membership not found"], 404);
     }
 
     /**
@@ -59,13 +64,14 @@ class MembershipController extends Controller
             'email' => 'required|email:rfc,dns',
             'username' => 'required|string',
             'order_id' => 'required|integer',
-            'points' => 'required|integer'
+            'points' => 'required|integer',
+            'gift_product_id' => 'nullable|integer'
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'errors' => $validator->errors()
-            ]);
+            ], 400);
         }
 
         $validatedData = $validator->validated();
@@ -91,6 +97,8 @@ class MembershipController extends Controller
             'status' => 'active',
             'shipping_status' => 'pending',
             'pending_order_id' => 0,
+            'user_picked_gift' => !is_null($request->gift_product_id),
+            'gift_product_id' => $request->gift_product_id
         ]);
 
         $kindCash = KindCash::create([
@@ -103,9 +111,29 @@ class MembershipController extends Controller
 
         $order->update(['membership_id' => $membership->id]);
 
+        if (!is_null($request->gift_product_id)) {
+            $giftProduct = Product::firstOrCreate(['product_id' => $request->gift_product_id]);
+            $membership->giftProducts()->attach($giftProduct);
+            $membership->save();
+            
+            SingleWooCommerceSync::dispatch($giftProduct->product_id, 'products');
+        }
+
         SingleWooCommerceSync::dispatch($customer->customer_id, 'customers');
         SingleWooCommerceSync::dispatch($order->order_id, 'orders');
 
-        return response()->json(['membership' => $membership->toArray()]);
+        return response()->json([
+            'membership' => [
+                'id' => $membership->id,
+                'start_at' => $membership->start_at,
+                'end_at' => $membership->end_at,
+                'status' => $membership->status,
+                'shipping_status' => $membership->shipping_status
+            ],
+            'kind_cash' => [
+                'points' => $kindCash->points,
+                'last_earned' => $kindCash->last_earned
+            ]
+        ]);
     }
 }

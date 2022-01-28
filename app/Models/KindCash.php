@@ -87,4 +87,20 @@ class KindCash extends Model
             'description' => $description
         ]);
     }
+
+    /**
+     * [toArray description]
+     * @return [type] [description]
+     */
+    public function toArray($isSingle = false) {
+        $cash = parent::toArray();
+
+        if ($isSingle) {
+            $cash['logs'] = $this->logs;
+        }
+        
+        unset($cash['membership_id']);
+
+        return $cash;
+    }
 }

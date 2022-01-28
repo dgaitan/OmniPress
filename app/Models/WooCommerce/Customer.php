@@ -99,7 +99,23 @@ class Customer extends Model
         return $this->belongsTo(Service::class, 'service_id');
     }
 
+    /**
+     * [getfullName description]
+     * @return [type] [description]
+     */
     public function getfullName() {
         return sprintf('%s %s', $this->first_name, $this->last_name);
+    }
+
+    public function toArray($isSingle = false) {
+        $data = parent::toArray();
+
+        if (!$isSingle) {
+            unset($data['shipping']);
+            unset($data['billing']);
+            unset($data['meta_data']);
+        }
+
+        return $data;
     }
 }

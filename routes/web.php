@@ -47,10 +47,11 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('/dashboard')->group(fun
         ->middleware(['role:super_admin|admin'])
         ->group(function () {
         // Sync Routes
-        Route::controller(SyncController::class)->prefix('/sync')->group(function () {
-            Route::get('/', 'index')->name('kinja.sync.index');
-            Route::post('/execute', 'execute')->name('kinja.sync.execute');
-            Route::get('/logs/{id}', 'logs')->name('kinja.sync.logs');
+        Route::controller(SyncController::class)->name('kinja.sync.')->prefix('/sync')->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::post('/execute', 'execute')->name('execute');
+            Route::get('/logs/{id}', 'logs')->name('logs');
+            Route::get('/check', 'check')->name('check');
         });
     });
 

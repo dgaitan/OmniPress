@@ -20,31 +20,31 @@ class CreateProductsTable extends Migration
             $table->bigInteger('product_id')->unique(); // Product ID on Woo
 
             $table->foreignId('parent_id')->nullable(true);
-            $table->string('name', 500);
-            $table->string('slug', 500);
-            $table->string('permalink', 500);
-            $table->string('sku', 100);
-            $table->dateTime('date_created');
+            $table->string('name', 500)->nullable();
+            $table->string('slug', 500)->nullable();
+            $table->string('permalink', 500)->nullable();
+            $table->string('sku', 100)->nullable();
+            $table->dateTime('date_created')->nullable();
             $table->dateTime('date_modified')->nullable(true);
-            $table->string('type', 100)->default('simple');
-            $table->string('status', 100)->default('publish');
-            $table->boolean('featured')->default(false);
-            $table->boolean('on_sale')->default(false);
-            $table->boolean('purchasable')->default(false);
-            $table->boolean('virtual')->default(false);
-            $table->boolean('manage_stock')->default(false);
-            $table->integer('stock_quantity')->default(0);
-            $table->string('stock_status', 100)->default('instock');
-            $table->boolean('sold_individually')->default(false);
+            $table->string('type', 100)->default('simple')->nullable();
+            $table->string('status', 100)->default('publish')->nullable();
+            $table->boolean('featured')->default(false)->nullable();
+            $table->boolean('on_sale')->default(false)->nullable();
+            $table->boolean('purchasable')->default(false)->nullable();
+            $table->boolean('virtual')->default(false)->nullable();
+            $table->boolean('manage_stock')->default(false)->nullable();
+            $table->integer('stock_quantity')->default(0)->nullable();
+            $table->string('stock_status', 100)->default('instock')->nullable();
+            $table->boolean('sold_individually')->default(false)->nullable();
 
             // Prices
-            $table->integer('price')->default(0);
-            $table->integer('regular_price')->default(0);
-            $table->integer('sale_price')->default(0);
+            $table->integer('price')->default(0)->nullable();
+            $table->integer('regular_price')->default(0)->nullable();
+            $table->integer('sale_price')->default(0)->nullable();
 
             
-            $table->jsonb('settings');
-            $table->jsonb('meta_data');
+            $table->jsonb('settings')->nullable();
+            $table->jsonb('meta_data')->nullable();
 
             $table->index(['slug', 'sku', 'status', 'stock_status', 'product_id']);
 

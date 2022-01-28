@@ -46,6 +46,17 @@ class SyncController extends Controller
             ->with('message', 'Sync Initialized!');
     }
 
+    /**
+     * [check description]
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
+    public function check(Request $request) {
+        $data = \App\Http\Clients\Client::checkConnection();
+
+        return $data['environment'];
+    }
+
     public function logs(Request $request, $id) {
         $sync = Sync::find($id);
 

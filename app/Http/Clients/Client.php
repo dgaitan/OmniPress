@@ -36,5 +36,11 @@ class Client {
     public function getApi() {
         return $this->api;
     }
+
+    public static function checkConnection() {
+        $client = new self();
+
+        return (array) $client->getApi()->get('system_status');
+    }
 }
 

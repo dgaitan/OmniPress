@@ -4,7 +4,7 @@ namespace App\Models\WooCommerce;
 
 use App\Casts\MetaData;
 use App\Casts\ProductSetting;
-use App\Models\Service;
+use App\Models\Membership;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Scout\Searchable;
@@ -80,6 +80,8 @@ use Laravel\Scout\Searchable;
  * @property int|null $service_id
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereServiceId($value)
  * @property-read Service|null $service
+ * @property-read \Illuminate\Database\Eloquent\Collection|Membership[] $memberships
+ * @property-read int|null $memberships_count
  */
 class Product extends Model
 {
@@ -132,6 +134,10 @@ class Product extends Model
         return $this->hasMany(ProductImage::class, 'product_id');
     }
 
+    /**
+     * [categories description]
+     * @return [type] [description]
+     */
     public function categories() {
         return $this->belongsToMany(
             Category::class, 
@@ -141,6 +147,10 @@ class Product extends Model
         )->as('categories')->withTimestamps();
     }
 
+    /**
+     * [tags description]
+     * @return [type] [description]
+     */
     public function tags() {
         return $this->belongsToMany(
             Tag::class,
@@ -148,6 +158,19 @@ class Product extends Model
             'product_id',
             'tag_id'
         )->as('tags')->withTimestamps();
+    }
+
+    /**
+     * [memberships description]
+     * @return [type] [description]
+     */
+    public function memberships() {
+        return $this->belongsToMany(
+            Membership::class, 
+            'membership_product', 
+            'product_id', 
+            'membership_id'
+        )->as('memberships')->withTimestamps();
     }
 
     public function attributes() {
