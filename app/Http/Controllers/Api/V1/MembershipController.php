@@ -158,6 +158,12 @@ class MembershipController extends Controller
         ], 200);
     }
 
+    /**
+     * [addCash description]
+     * 
+     * @param Request $request [description]
+     * @param [type]  $id      [description]
+     */
     public function addCash(Request $request, $id) {
         $membership = Membership::find($id);
 
@@ -181,5 +187,19 @@ class MembershipController extends Controller
         $membership->kindCash->addCash($request->points, $request->message);
 
         return response()->json($membership->kindCash->toArray(), 200);
+    }
+
+
+    /**
+     * Check if an email has an active membership
+     * 
+     * @param  Request $request [description]
+     * @param  [type]  $email   [description]
+     * @return [type]           [description]
+     */
+    public function checkMembershipEmail(Request $request, $email) {
+        $memberships = Membership::whereCustomerEmail($email)->where('status', '!=', 'expired');
+
+        return response()->json(['exists' => $memberships->exists()], 200);
     }
 }

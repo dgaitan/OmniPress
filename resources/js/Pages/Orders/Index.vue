@@ -50,7 +50,7 @@
                             <span class="inline-block py-1 px-2 text-purple-500 bg-purple-50 rounded-full">{{ order.date }}</span>
                           </td>
                           <td>
-                            <span class="font-medium">$ {{ order.total }}</span>
+                            <span class="font-medium">$ {{ moneyFormat(order.total) }}</span>
                           </td>
                           <td>
                           

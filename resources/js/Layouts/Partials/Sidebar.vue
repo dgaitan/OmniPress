@@ -44,7 +44,7 @@
 	              	<!-- Kindhumans -->
 	              	<SidebarNav>
 	              		<template #title>Kindhumans</template>
-	              		<SidebarNavLink :href="route('kinja.products.index')" :active="route().current('kinja.customers.index')">
+	              		<SidebarNavLink :href="route('kinja.memberships.index')" :active="route().current('kinja.memberships.index')">
 	              			<template #icon><unicon name="user-plus"></unicon></template>
 	              			Memberships
 	              		</SidebarNavLink>

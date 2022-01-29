@@ -1,4 +1,5 @@
 require('./bootstrap');
+const numeral = require('numeral')
 
 import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/inertia-vue3';
@@ -28,6 +29,10 @@ let permsMixin = {
         });
 
         return hasPermission;
+    },
+
+    moneyFormat(value) {
+        return numeral(value / 100).format('0.00');
     }
 };
 

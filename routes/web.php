@@ -9,6 +9,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\MembershipController;
 
 /*
 |--------------------------------------------------------------------------
@@ -78,6 +79,13 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('/dashboard')->group(fun
         Route::controller(OrderController::class)->prefix('/orders')->group(function () {
             Route::get('/', 'index')->name('kinja.orders.index');
             Route::get('/{id}', 'show')->name('kinja.orders.show');
+        });
+    });
+
+    Route::prefix('/kindhumans')->name('kinja.')->group(function () {
+        // Memberships
+        Route::controller(MembershipController::class)->prefix('/memberships')->name('memberships.')->group(function () {
+            Route::get('/', 'index')->name('index');
         });
     });
 

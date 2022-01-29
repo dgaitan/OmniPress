@@ -113,7 +113,6 @@ class Order extends Model
         'discount_total' => 'decimal:0',
         'discount_tax' => 'decimal:0',
         'shipping_tax' => 'decimal:0',
-        'total' => 'decimal:2',
         'total_tax' => 'decimal:0',
         'billing' => Address::class,
         'shipping' => Address::class,
