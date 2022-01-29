@@ -58,6 +58,7 @@ class MembershipController extends Controller
      * @return [type]           [description]
      */
     public function new(Request $request) {
+        // Validate the params
         $validator = Validator::make($request->all(), [
             'price' => 'required|integer',
             'customer_id' => 'required|integer',    
@@ -68,26 +69,31 @@ class MembershipController extends Controller
             'gift_product_id' => 'nullable|integer'
         ]);
 
+        // If validation fails, return error listed with 400 http code
         if ($validator->fails()) {
             return response()->json([
                 'errors' => $validator->errors()
             ], 400);
         }
 
+        // Get the validated data
         $validatedData = $validator->validated();
 
+        // Get or create the customer
         $customer = Customer::firstOrNew([
             'customer_id' => $request->customer_id,
             'email' => $request->email
         ]);
-
         $customer->fill($request->only(['username']));
         $customer->save();
 
+        // Get or create the order. Probably at this instance
+        // the order will not exists.
         $order = Order::firstOrNew([
             'order_id' => $request->order_id
         ]);
         
+        // Create Membership
         $membership = Membership::create([
             'price' => (int) $request->price,
             'customer_id' => $customer->id,
@@ -101,16 +107,27 @@ class MembershipController extends Controller
             'gift_product_id' => $request->gift_product_id
         ]);
 
+        // Initialize the params to add a log to membership.
+        $logParams = [
+            'customer_id' => $customer->id,
+            'order_id' => $order->id
+        ];
+
+        // Create the kind cash related to this membeship
         $kindCash = KindCash::create([
             'points' => (int) $request->points,
             'last_earned' => (int) $request->points
         ]);
 
+
+        // Attach it to membership
         $membership->kindCash()->save($kindCash);
         $kindCash->addInitialLog();
 
+        // Attach membership to order
         $order->update(['membership_id' => $membership->id]);
 
+        // Is user picked gift product, attach it to membership as well
         if (!is_null($request->gift_product_id)) {
             $giftProduct = Product::firstOrCreate(['product_id' => $request->gift_product_id]);
             $membership->giftProducts()->attach($giftProduct);
@@ -118,6 +135,10 @@ class MembershipController extends Controller
             
             SingleWooCommerceSync::dispatch($giftProduct->product_id, 'products');
         }
+
+        // Create the initial log for membership
+        $logParams['description'] = Membership::logMessages('created_by_checkout');
+        $membership->logs()->create($logParams);
 
         SingleWooCommerceSync::dispatch($customer->customer_id, 'customers');
         SingleWooCommerceSync::dispatch($order->order_id, 'orders');
@@ -134,6 +155,31 @@ class MembershipController extends Controller
                 'points' => $kindCash->points,
                 'last_earned' => $kindCash->last_earned
             ]
+        ], 200);
+    }
+
+    public function addCash(Request $request, $id) {
+        $membership = Membership::find($id);
+
+        if (is_null($membership)) {
+            return response()->json(['error' => 'Membership not found'], 404);
+        }
+
+        // Validate the params
+        $validator = Validator::make($request->all(), [
+            'points' => 'required|integer',
+            'message' => 'required'
         ]);
+
+        // If validation fails, return error listed with 400 http code
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors()
+            ], 400);
+        }
+
+        $membership->kindCash->addCash($request->points, $request->message);
+
+        return response()->json($membership->kindCash->toArray(), 200);
     }
 }

@@ -51,6 +51,8 @@ use App\Casts\Money;
  * @property-read int|null $gift_products_count
  * @method static \Illuminate\Database\Eloquent\Builder|Membership whereGiftProductId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Membership whereUserPickedGift($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\MembershipLog[] $logs
+ * @property-read int|null $logs_count
  */
 class Membership extends Model
 {
@@ -90,6 +92,14 @@ class Membership extends Model
      */
     public function kindCash() {
         return $this->hasOne(KindCash::class);
+    }
+
+    /**
+     * [logs description]
+     * @return [type] [description]
+     */
+    public function logs() {
+        return $this->hasMany(MembershipLog::class, 'membership_id');
     }
 
     /**
@@ -165,5 +175,18 @@ class Membership extends Model
      */
     public function isExpired() : bool {
         return $this->status === self::EXPIRED_STATUS;
+    }
+
+    /**
+     * Get a message to log
+     * @param  string $code [description]
+     * @return string
+     */
+    public static function logMessages(string $code): string {
+        $messages = [
+            'created_by_checkout' => 'Membership created via kindhumans checkout'
+        ];
+
+        return array_key_exists($code, $messages) ? $messages[$code] : '';
     }
 }

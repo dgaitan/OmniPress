@@ -88,6 +88,17 @@ class KindCash extends Model
         ]);
     }
 
+    public function addCash(int $points, string $message) {
+        $newPoints = $points + $this->points;
+
+        $this->update([
+            'points' => $newPoints,
+            'last_earned' => $points
+        ]);
+
+        $this->addEarnLog($points, $message);
+    }
+
     /**
      * [toArray description]
      * @return [type] [description]
