@@ -137,4 +137,35 @@ class Customer extends Model
         // Return email address and name...
         return [$this->email => $this->getFullName()];
     }
+
+    /**
+     * Add a new payment method and assign it as default payment method.
+     * 
+     * @param string $token [description]
+     * @return array - The new payment method resume
+     */
+    public function addAndAssignDefaultPaymentMethod(string $token): array {
+        $paymentMethod = $this->addPaymentMethod($token);
+        $defaultCard = $this->updateDefaultPaymentMethod($paymentMethod->id);
+
+        return [
+            'card' => self::getCardResume($paymentMethod),
+            'payment_method' => $paymentMethod->toArray()
+        ];
+    }
+
+    /**
+     * Get Card Resume
+     * 
+     * @param  [type] $paymentMethod [description]
+     * @return [type]                [description]
+     */
+    public static function getCardResume($paymentMethod) {
+        return [
+            'brand' => $paymentMethod->card->brand,
+            'exp_month' => $paymentMethod->card->exp_month,
+            'exp_year' => $paymentMethod->card->exp_year,
+            'last4' => $paymentMethod->card->last4
+        ];
+    }
 }

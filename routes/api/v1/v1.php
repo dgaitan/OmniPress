@@ -42,6 +42,9 @@ Route::middleware('auth:sanctum')->name('kinja.api.v1.')->group(function () {
 		Route::post('/intent', 'intent')->name('intent');
 		Route::post('/direct', 'direct')->name('direct');
 		Route::get('/{customer_id}/payment-methods', 'paymentMethods')->name('paymentMethods');
+		Route::post('/add', 'addPaymentMethod')->name('add');
+		Route::post('/delete', 'deletePaymentMethod')->name('delete');
+		Route::post('/set-default', 'setDefaultPaymentMethod')->name('setDefault');
 	});
 
 });

@@ -54,12 +54,7 @@ class PaymentController extends Controller
                     $defaultCard = $customer->findPaymentMethod($request->token)->id;
                     $defaultCard = $customer->updateDefaultPaymentMethod($defaultCard);
 
-                    $defaultCard = [
-                        'brand' => $defaultCard->card->brand,
-                        'exp_month' => $defaultCard->card->exp_month,
-                        'exp_year' => $defaultCard->card->exp_year,
-                        'last4' => $defaultCard->card->last4
-                    ];
+                    $defaultCard = Customer::getCardResume($defaultCard);
                 }
             }
             
@@ -123,6 +118,137 @@ class PaymentController extends Controller
                 'status' => $exception->payment->status
             ], 200);
         }
+    }
+
+    /**
+     * [addPaymentMethod description]
+     * @param Request $request [description]
+     */
+    public function addPaymentMethod(Request $request) {
+        // Validate the params
+        $validator = Validator::make($request->all(), [
+            'token' => 'required|string',
+            'customer_id' => 'required|integer'
+        ]);
+
+        // If validation fails, return error listed with 400 http code
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors()
+            ], 400);
+        }
+
+        $customer = Customer::whereCustomerId($request->customer_id)->first();
+
+        if (is_null($customer)) {
+            return response()->json([
+                'status' => 'failed', 
+                'error' => 'Customer not found'
+            ], 404);
+        }
+
+        $card = $customer->addAndAssignDefaultPaymentMethod($request->token);
+
+        return response()->json([
+            'status' => 'succeeded',
+            'result' => $card
+        ]);
+
+    }
+
+    /**
+     * [deletePaymentMethod description]
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
+    public function deletePaymentMethod(Request $request) {
+        // Validate the params
+        $validator = Validator::make($request->all(), [
+            'token' => 'required|string',
+            'customer_id' => 'required|integer',
+            'is_default' => 'required|boolean'
+        ]);
+
+        // If validation fails, return error listed with 400 http code
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors()
+            ], 400);
+        }
+
+        $customer = Customer::whereCustomerId($request->customer_id)->first();
+
+        if (is_null($customer)) {
+            return response()->json([
+                'status' => 'failed', 
+                'error' => 'Customer not found'
+            ], 404);
+        }
+        
+        // Deleting payment method
+        $customer->findPaymentMethod($request->token)->delete();
+
+        if (!$request->is_default) {
+            return response()->json([
+                'status' => 'succeeded'
+            ], 200);
+        }
+
+        // But we need to assign a new default payment method if there's another one
+        $paymentMethod = $customer->paymentMethods()->first();
+
+        if ($paymentMethod) {
+            $customer->updateDefaultPaymentMethod($paymentMethod->id);
+            $card = Customer::getCardResume($paymentMethod);
+            $paymentMethod = $paymentMethod->toArray();
+            $paymentMethod['is_default'] = true;
+
+            return response()->json([
+                'status' => 'succeeded',
+                'card' => $card,
+                'payment_method' => $paymentMethod
+            ], 200);
+        }
+
+        return response()->json([
+            'status' => 'succeeded'
+        ], 200);
+
+    }
+
+    public function setDefaultPaymentMethod(Request $request) {
+        // Validate the params
+        $validator = Validator::make($request->all(), [
+            'token' => 'required|string',
+            'customer_id' => 'required|integer'
+        ]);
+
+        // If validation fails, return error listed with 400 http code
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors()
+            ], 400);
+        }
+
+        $customer = Customer::whereCustomerId($request->customer_id)->first();
+
+        if (is_null($customer)) {
+            return response()->json([
+                'status' => 'failed', 
+                'error' => 'Customer not found'
+            ], 404);
+        }
+
+        $paymentMethod = $customer->updateDefaultPaymentMethod($request->token);
+        $card = Customer::getCardResume($paymentMethod);
+        $paymentMethod = $paymentMethod->toArray();
+        $paymentMethod['is_default'] = true;
+
+        return response()->json([
+            'status' => 'succeeded',
+            'card' => $card,
+            'payment_method' => $paymentMethod
+        ], 200);
     }
 
     /**
