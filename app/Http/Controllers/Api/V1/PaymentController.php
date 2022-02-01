@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Cashier\Exceptions\IncompletePayment;
@@ -70,10 +71,10 @@ class PaymentController extends Controller
                 'card' => $defaultCard ? $defaultCard['card'] : []
             ], 200);
 
-        } catch (IncompletePayment $exception) {
+        } catch (Exception $e) {
             return response()->json([
-                'status' => $exception->payment->status,
-                'error' => $exception->getMessage()
+                'status' => 'failed',
+                'error' => $e->getMessage()
             ], 200);
         }
     }
