@@ -53,6 +53,10 @@ class CreateOrdersTable extends Migration
             $table->jsonb('coupon_lines')->nullable();
             $table->jsonb('fee_lines')->nullable();
 
+            // Memembership Things
+            $table->foreignId('membership_id')->nullable();
+            $table->boolean('has_membership')->default(false)->nullable();
+
             // add indexes
             $table->index(['order_id', 'number', 'status']);
         });

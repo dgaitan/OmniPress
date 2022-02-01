@@ -18,7 +18,7 @@ class MetaData implements CastsAttributes
      */
     public function get($model, $key, $value, $attributes)
     {
-        return MetaDataHandler::collection(json_decode($value, true));
+        return !is_null($value) ? MetaDataHandler::collection(json_decode($value, true)) : [];
     }
 
     /**

@@ -30,6 +30,12 @@ class CreateCustomersTable extends Migration
             $table->string('avatar_url', 500)->nullable(true);
             $table->jsonb('meta_data')->nullable(true);
 
+            // Stripe
+            $table->string('stripe_id')->nullable()->index();
+            $table->string('pm_type')->nullable();
+            $table->string('pm_last_four', 4)->nullable();
+            $table->timestamp('trial_ends_at')->nullable();
+
             // Add indexes
             $table->index(['customer_id', 'email', 'username']);
         });

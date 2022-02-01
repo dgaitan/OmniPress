@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\MembershipController;
 use App\Http\Controllers\Api\V1\ProductController;
 use App\Http\Controllers\Api\V1\SyncController;
+use App\Http\Controllers\Api\V1\PaymentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +36,12 @@ Route::middleware('auth:sanctum')->name('kinja.api.v1.')->group(function () {
 	Route::controller(SyncController::class)->name('syncs.')->prefix('/sync')->group(function () {
 		Route::get('/', 'index')->name('index');
 		Route::post('/update', 'update')->name('update');
+	});
+
+	Route::controller(PaymentController::class)->name('payments.')->prefix('/payments')->group(function () {
+		Route::post('/intent', 'intent')->name('intent');
+		Route::post('/direct', 'direct')->name('direct');
+		Route::get('/{customer_id}/payment-methods', 'paymentMethods')->name('paymentMethods');
 	});
 
 });

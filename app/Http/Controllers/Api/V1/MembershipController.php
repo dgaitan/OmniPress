@@ -8,7 +8,7 @@ use App\Models\KindCash;
 use App\Models\WooCommerce\Customer;
 use App\Models\WooCommerce\Order;
 use App\Models\WooCommerce\Product;
-use App\Jobs\SingleWooCommerceSync;
+use App\Jobs\Memberships\NewMembershipJob;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
@@ -132,16 +132,18 @@ class MembershipController extends Controller
             $giftProduct = Product::firstOrCreate(['product_id' => $request->gift_product_id]);
             $membership->giftProducts()->attach($giftProduct);
             $membership->save();
-            
-            SingleWooCommerceSync::dispatch($giftProduct->product_id, 'products');
         }
 
         // Create the initial log for membership
         $logParams['description'] = Membership::logMessages('created_by_checkout');
         $membership->logs()->create($logParams);
 
-        SingleWooCommerceSync::dispatch($customer->customer_id, 'customers');
-        SingleWooCommerceSync::dispatch($order->order_id, 'orders');
+        NewMembershipJob::dispatch(
+            $membership->customer_email,
+            $customer->customer_id,
+            $order->order_id,
+            $membership->user_picked_gift ? $membership->gift_product_id : null
+        );
 
         return response()->json([
             'membership' => [

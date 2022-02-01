@@ -1,10 +1,11 @@
 require('./bootstrap');
-const numeral = require('numeral')
+const numeral = require('numeral');
 
 import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/inertia-vue3';
 import { InertiaProgress } from '@inertiajs/progress';
 import Unicon from 'vue-unicons';
+import moment from 'moment';
 import { uniUserPlus, uniUserMinus, uniUserCircle, uniUsersAlt, uniBox, uniEdit, uniKeySkeleton, uniLayerGroup, uniLinkH, uniSetting, uniSignout, uniSync, uniThumbsUp, uniThumbsDown, uniTachometerFast, uniClock, uniHeartSign, uniPricetagAlt, uniStoreAlt, uniStore, uniShoppingCart, uniTransaction, uniCreditCardSearch, uniArchive, uniGift, uniLock, uniImage, uniLocationArrow, uniFileExport, uniApps, uniChat, uniCommentAltChartLines, uniBug, uniArrowCircleRight, uniArrowCircleLeft, uniArrowCircleUp, uniArrowCircleDown, uniMicroscope, uniEnvelopeAdd, uniChartLine, uniAnalytics, uniPercentage } from 'vue-unicons/dist/icons'
 
 
@@ -33,6 +34,14 @@ let permsMixin = {
 
     moneyFormat(value) {
         return numeral(value / 100).format('0.00');
+    },
+
+    displayMoment(value, format) {
+        return moment(value).format(format)
+    },
+
+    friendlyDate(value) {
+        return moment(value).startOf('hour').fromNow();;
     }
 };
 

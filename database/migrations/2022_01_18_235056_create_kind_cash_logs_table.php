@@ -21,6 +21,8 @@ class CreateKindCashLogsTable extends Migration
             $table->text('event')->nullable();
             $table->dateTime('date')->nullable();
             $table->foreignId('order_id')->nullable();
+            $table->integer('points')->nullable()->default(0);
+            $table->text('description')->nullable();
         });
     }
 

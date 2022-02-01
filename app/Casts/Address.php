@@ -18,7 +18,7 @@ class Address implements CastsAttributes
      */
     public function get($model, $key, $value, $attributes)
     {
-        return AddressData::from(json_decode($value, true));
+        return !is_null( $value ) ? AddressData::from(json_decode($value, true)) : array();
     }
 
     /**

@@ -4,9 +4,11 @@ namespace App\Models\WooCommerce;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 use App\Models\Service;
 use App\Casts\MetaData;
 use App\Casts\Address;
+use Laravel\Cashier\Billable;
 
 /**
  * App\Models\WooCommerce\Customer
@@ -56,6 +58,8 @@ use App\Casts\Address;
 class Customer extends Model
 {
     use HasFactory;
+    use Notifiable;
+    use Billable;
 
     protected $casts = [
         'meta_data' => MetaData::class,
@@ -117,5 +121,20 @@ class Customer extends Model
         }
 
         return $data;
+    }
+
+    /**
+     * Route notifications for the mail channel.
+     *
+     * @param  \Illuminate\Notifications\Notification  $notification
+     * @return array|string
+     */
+    public function routeNotificationForMail($notification)
+    {
+        // Return email address only...
+        return $this->email;
+
+        // Return email address and name...
+        return [$this->email => $this->getFullName()];
     }
 }

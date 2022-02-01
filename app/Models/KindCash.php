@@ -105,6 +105,8 @@ class KindCash extends Model
      */
     public function toArray($isSingle = false) {
         $cash = parent::toArray();
+        $cash['last_earned'] = is_null($cash['last_earned']) ? 0 : $cash['last_earned'];
+        $cash['points'] = is_null($cash['points']) ? 0 : $cash['points'];
 
         if ($isSingle) {
             $cash['logs'] = $this->logs;

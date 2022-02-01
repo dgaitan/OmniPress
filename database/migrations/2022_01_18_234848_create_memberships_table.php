@@ -29,11 +29,6 @@ class CreateMembershipsTable extends Migration
             $table->integer('payment_intents')->default(0);
             $table->foreignId('kind_cash_id')->nullable();
         });
-
-        Schema::table('orders', function (Blueprint $table) {
-            $table->foreignId('membership_id')->nullable();
-            $table->boolean('has_membership')->default(false)->nullable();
-        });
     }
 
     /**

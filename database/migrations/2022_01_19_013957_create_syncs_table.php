@@ -23,6 +23,8 @@ class CreateSyncsTable extends Migration
             $table->foreignId('user_id');
             $table->string('status', 100)->default('completed');
             $table->integer('intents')->default(0)->nullable();
+            $table->string('batch_id', 500)->nullable()->default('');
+            $table->integer('current_page')->nullable()->default(1);
         });
     }
 

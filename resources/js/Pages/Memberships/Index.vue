@@ -1,5 +1,5 @@
 <template>
-    <layout title="Sync">
+    <layout title="Memberships">
 
         <template #header>
             <div class="w-full flex justify-between items-center">
@@ -25,6 +25,7 @@
                         <th class="pb-3 font-medium">Customer</th>
                         <th class="pb-3 font-medium">Status</th>
                         <th class="pb-3 font-medium">Shipping Status</th>
+                        <th class="pb-3 font-medium">Kind Cash</th>
                         <th class="pb-3 font-medium">Start At</th>
                         <th class="pb-3 font-medium">End At</th>
                       </tr>
@@ -49,11 +50,14 @@
                               {{ parseRole(membership.shipping_status) }}
                             </span> 
                           </td>
-                          <td>
-                            <span class="inline-block py-1 px-2 text-purple-500 bg-purple-50 rounded-full">{{ membership.start_at }}</span>
+                          <td class="font-medium">
+                            $ {{ moneyFormat(membership.cash.points) }}
                           </td>
                           <td>
-                            <span class="inline-block py-1 px-2 text-purple-500 bg-purple-50 rounded-full">{{ membership.end_at }}</span>
+                            <span class="inline-block py-1 px-2 text-purple-500 bg-purple-50 rounded-full">{{ displayMoment(membership.start_at, 'LL') }}</span>
+                          </td>
+                          <td>
+                            <span class="inline-block py-1 px-2 text-purple-500 bg-purple-50 rounded-full">{{ displayMoment(membership.end_at, 'LL') }}</span>
                           </td>
                           <td>
                           
