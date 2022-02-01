@@ -49,12 +49,7 @@ class PaymentController extends Controller
 
                 if ($request->save) {
                     $customer->createOrGetStripeCustomer();
-                    $customer->addPaymentMethod($request->token);
-
-                    $defaultCard = $customer->findPaymentMethod($request->token)->id;
-                    $defaultCard = $customer->updateDefaultPaymentMethod($defaultCard);
-
-                    $defaultCard = Customer::getCardResume($defaultCard);
+                    $defaultCard = $customer->addAndAssignDefaultPaymentMethod($request->token);
                 }
             }
             
@@ -64,7 +59,7 @@ class PaymentController extends Controller
 
             return response()->json([
                 'status' => 'succeeded',
-                'default_card' => $defaultCard
+                'default_card' => $defaultCard['card']
             ], 200);
 
         } catch (IncompletePayment $exception) {
@@ -138,13 +133,9 @@ class PaymentController extends Controller
             ], 400);
         }
 
-        $customer = Customer::whereCustomerId($request->customer_id)->first();
-
-        if (is_null($customer)) {
-            return response()->json([
-                'status' => 'failed', 
-                'error' => 'Customer not found'
-            ], 404);
+        // If the customer is an array it means that it wasn't found.
+        if (is_array($customer = $this->getCustomer($request->customer_id))) {
+            return response()->json($customer, 404);
         }
 
         $card = $customer->addAndAssignDefaultPaymentMethod($request->token);
@@ -176,13 +167,9 @@ class PaymentController extends Controller
             ], 400);
         }
 
-        $customer = Customer::whereCustomerId($request->customer_id)->first();
-
-        if (is_null($customer)) {
-            return response()->json([
-                'status' => 'failed', 
-                'error' => 'Customer not found'
-            ], 404);
+        // If the customer is an array it means that it wasn't found.
+        if (is_array($customer = $this->getCustomer($request->customer_id))) {
+            return response()->json($customer, 404);
         }
         
         // Deleting payment method
@@ -199,15 +186,11 @@ class PaymentController extends Controller
 
         if ($paymentMethod) {
             $customer->updateDefaultPaymentMethod($paymentMethod->id);
-            $card = Customer::getCardResume($paymentMethod);
-            $paymentMethod = $paymentMethod->toArray();
-            $paymentMethod['is_default'] = true;
 
-            return response()->json([
-                'status' => 'succeeded',
-                'card' => $card,
-                'payment_method' => $paymentMethod
-            ], 200);
+            return response()->json(
+                $this->prepareResponseData($paymentMethod), 
+                200
+            );
         }
 
         return response()->json([
@@ -230,25 +213,17 @@ class PaymentController extends Controller
             ], 400);
         }
 
-        $customer = Customer::whereCustomerId($request->customer_id)->first();
-
-        if (is_null($customer)) {
-            return response()->json([
-                'status' => 'failed', 
-                'error' => 'Customer not found'
-            ], 404);
+        // If the customer is an array it means that it wasn't found.
+        if (is_array($customer = $this->getCustomer($request->customer_id))) {
+            return response()->json($customer, 404);
         }
 
         $paymentMethod = $customer->updateDefaultPaymentMethod($request->token);
-        $card = Customer::getCardResume($paymentMethod);
-        $paymentMethod = $paymentMethod->toArray();
-        $paymentMethod['is_default'] = true;
 
-        return response()->json([
-            'status' => 'succeeded',
-            'card' => $card,
-            'payment_method' => $paymentMethod
-        ], 200);
+        return response()->json(
+            $this->prepareResponseData($paymentMethod), 
+            200
+        );
     }
 
     /**
@@ -275,5 +250,44 @@ class PaymentController extends Controller
 
             return $m;
         }));
+    }
+
+    /**
+     * [getCustomer description]
+     * @param  int    $customerId [description]
+     * @return [type]             [description]
+     */
+    protected function getCustomer($customerId) {
+        $customer = Customer::whereCustomerId((int) $customerId)->first();
+
+        if (is_null($customer)) {
+            return [
+                'status' => 'failed', 
+                'error' => 'Customer not found'
+            ];
+        }
+
+        return $customer;
+    }
+
+    /**
+     * [prepareResponseData description]
+     * @param  [type]  $paymentMethod [description]
+     * @param  boolean $isDefault     [description]
+     * @return [type]                 [description]
+     */
+    protected function prepareResponseData($paymentMethod, $isDefault = true) {
+        $card = Customer::getCardResume($paymentMethod);
+        $paymentMethod = $paymentMethod->toArray();
+
+        if ($isDefault) {
+            $paymentMethod['is_default'] = true;
+        }
+
+        return [
+            'status' => 'succeeded',
+            'card' => $card,
+            'payment_method' => $paymentMethod
+        ];
     }
 }
