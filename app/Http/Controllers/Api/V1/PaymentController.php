@@ -48,8 +48,16 @@ class PaymentController extends Controller
                 ]);
 
                 if ($request->save) {
-                    $customer->createOrGetStripeCustomer();
-                    $defaultCard = $customer->addAndAssignDefaultPaymentMethod($request->token);
+                    if (is_null($customer->stripe_id)) {
+                        $customer->createOrGetStripeCustomer();
+                    }
+
+                    try {
+                        $customer->findPaymentMethod($request->token);
+                    } catch (\Laravel\Cashier\Exceptions\InvalidPaymentMethod $e) {
+                        $defaultCard = $customer->addAndAssignDefaultPaymentMethod($request->token);
+                    }
+        
                 }
             }
             
@@ -59,11 +67,14 @@ class PaymentController extends Controller
 
             return response()->json([
                 'status' => 'succeeded',
-                'default_card' => $defaultCard['card']
+                'card' => $defaultCard ? $defaultCard['card'] : []
             ], 200);
 
         } catch (IncompletePayment $exception) {
-            return response()->json(['status' => $exception->payment->status], 200);
+            return response()->json([
+                'status' => $exception->payment->status,
+                'error' => $exception->getMessage()
+            ], 200);
         }
     }
 
@@ -199,6 +210,10 @@ class PaymentController extends Controller
 
     }
 
+    /**
+     * [setDefaultPaymentMethod description]
+     * @param Request $request [description]
+     */
     public function setDefaultPaymentMethod(Request $request) {
         // Validate the params
         $validator = Validator::make($request->all(), [
@@ -224,6 +239,34 @@ class PaymentController extends Controller
             $this->prepareResponseData($paymentMethod), 
             200
         );
+    }
+
+    /**
+     * [getDefaultPaymentMethod description]
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
+    public function getDefaultPaymentMethod(Request $request, $customer_id) {
+
+        // If validation fails, return error listed with 400 http code
+        if (!$customer_id) {
+            return response()->json([
+                'errors' => ['Customer Id is required']
+            ], 400);
+        }
+
+        // If the customer is an array it means that it wasn't found.
+        if (is_array($customer = $this->getCustomer($customer_id))) {
+            return response()->json($customer, 404);
+        }
+
+        $paymentMethod = $customer->defaultPaymentMethod();
+
+        return response()->json([
+            'card' => $paymentMethod 
+                ? Customer::getCardResume($paymentMethod) 
+                : []
+        ], 200);
     }
 
     /**
