@@ -9,7 +9,7 @@ class MetaData extends BaseData {
     
     public function __construct(
         public int|null $id,
-        public string $key,
+        public ?string $key,
         public mixed $value
     ) {
 

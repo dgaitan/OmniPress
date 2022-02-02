@@ -24,7 +24,18 @@ class CustomerTask extends BaseTask {
             'customer_id' => $data->customer_id,
             'email' => $data->email
         ]);
-        $customer->fill($data->toStoreData());
+        $data = $data->toStoreData();
+
+        $meta_data = [];
+        if ($data['meta_data'] && is_array($data['meta_data'])) {
+            foreach ($data['meta_data'] as $meta) {
+                if ($meta->key === '_stripe_customer') continue;
+                $meta_data[] = $meta;
+            }
+        }
+        
+        $data['meta_data'] = $meta_data;
+        $customer->fill($data);
         $customer->save();
     }
 }

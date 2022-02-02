@@ -18,7 +18,7 @@ class ProductSetting implements CastsAttributes
      */
     public function get($model, $key, $value, $attributes)
     {
-        return ProductSettingData::from(json_decode($value, true));
+        return !is_null($value) ? ProductSettingData::from(json_decode($value, true)) : $value;
     }
 
     /**

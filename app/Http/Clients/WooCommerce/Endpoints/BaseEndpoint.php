@@ -61,6 +61,8 @@ abstract class BaseEndpoint {
 
         $params = $this->getParams($params);
 
+        if ($this->endpoint === 'products') $params['status'] = 'publish';
+
         if ($this->isTesting && !$this->retrieveFromAPI) {
             $response = $this->testingData;
             $results[1] = $this->getDataProcessor()::collectFromResponse($response);
@@ -72,7 +74,6 @@ abstract class BaseEndpoint {
         // it means that we only want that quantity of results.
         if (isset($params['take'])) {
             $params['per_page'] = $params['take'];
-
             // Make the request
             $response = $this->api->get($this->endpoint, $params);
             // Add it like page one only

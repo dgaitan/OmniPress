@@ -10,7 +10,7 @@ class CustomerController extends Controller
 {
     public function index() {
         return Inertia::render('Customers/Index', [
-            'customers' => Customer::take(40)->orderBy('id', 'desc')->get()
+            'customers' => Customer::take(40)->orderBy('customer_id', 'desc')->get()
         ]);
     }
 }

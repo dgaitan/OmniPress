@@ -101,7 +101,7 @@ class Sync extends Model
     }
 
     public function shouldStop(int $page = 1) {
-        return ($this->current_page + 5) === $page;
+        return ($this->current_page + env('KINDHUMANS_SYNC_PAGINATE', 10)) === $page;
     }
 
     public function complete() {

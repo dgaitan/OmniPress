@@ -6,6 +6,7 @@ use App\Http\Clients\WooCommerce\Endpoints\CustomerEndpoint;
 use App\Http\Clients\WooCommerce\Endpoints\CouponEndpoint;
 use App\Http\Clients\WooCommerce\Endpoints\OrderEndpoint;
 use App\Http\Clients\WooCommerce\Endpoints\ProductEndpoint;
+use App\Http\Clients\WooCommerce\Endpoints\MembershipEndpoint;
 use App\Helpers\API\Testeable;
 
 class WooCommerceClient {
@@ -41,7 +42,8 @@ class WooCommerceClient {
             'customers' => CustomerEndpoint::class,
             'coupons' => CouponEndpoint::class,
             'orders' => OrderEndpoint::class,
-            'products' => ProductEndpoint::class
+            'products' => ProductEndpoint::class,
+            'memberships' => MembershipEndpoint::class
         ];
     }
 

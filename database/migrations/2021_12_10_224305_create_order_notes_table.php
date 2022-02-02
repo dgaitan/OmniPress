@@ -18,7 +18,7 @@ class CreateOrderNotesTable extends Migration
             $table->id();
             $table->timestamps();
 
-            $table->foreignIdFor(Order::class);
+            $table->foreignIdFor(Order::class)->constrained()->onDelete('cascade');
             $table->string('author', 255)->default('system')->nullable();
             $table->dateTime('date_created');
             $table->text('note')->nullable();

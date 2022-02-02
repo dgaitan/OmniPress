@@ -17,7 +17,11 @@ class CreateProductImagesTable extends Migration
             $table->id();
             $table->timestamps();
 
-            $table->bigInteger('product_image_id')->nullable(false)->unique();
+            $table->bigInteger('product_image_id')
+                ->nullable(false)
+                ->unique()
+                ->constrained('products')
+                ->onDelete('cascade');
             $table->dateTime('date_created')->nullable();
             $table->dateTime('date_modified')->nullable();
             $table->text('src')->nullable();

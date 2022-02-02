@@ -10,6 +10,7 @@ use App\Tasks\WooCommerce\CustomerTask;
 use App\Tasks\WooCommerce\CouponTask;
 use App\Tasks\WooCommerce\OrderTask;
 use App\Tasks\WooCommerce\ProductTask;
+use App\Tasks\WooCommerce\MembershipTask;
 use App\Helpers\API\Testeable;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
@@ -39,7 +40,8 @@ class WooCommerceTask {
         'customers' => CustomerTask::class,
         'products' => ProductTask::class,
         'coupons' => CouponTask::class,
-        'orders' => OrderTask::class
+        'orders' => OrderTask::class,
+        'memberships' => MembershipTask::class
     ];
 
     /**

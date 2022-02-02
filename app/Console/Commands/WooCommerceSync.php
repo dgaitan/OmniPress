@@ -3,8 +3,10 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Models\Sync;
 use Carbon\Carbon;
+use App\Models\Sync;
+use App\Models\User;
+use App\Tasks\WooCommerceTask;
 
 class WooCommerceSync extends Command
 {
@@ -46,25 +48,29 @@ class WooCommerceSync extends Command
             return $this->error('Content type is necessary');
         }
 
+        $user = User::whereEmail('dgaitan@kindhumans.com')->first();
 
-        $sync = Sync::create([
-            'name' => sprintf('%s sync', ucwords($content_type)),
-            'status' => Sync::FAILED,
-            'content_type' => $content_type,
-            'user_id' => 1,
-            'description' => '',
-            'intents' => 1
-        ]);
+        $sync = Sync::where('content_type', $content_type)->where('status', Sync::PENDING);
 
-        $firstSyncLog = sprintf(
-            'Sync executed from console at %s',
-            Carbon::now()->format('F j, Y @ H:i:s')
-        );
-        $sync->add_log($firstSyncLog);
+        if ($sync->exists()) {
+            $sync = $sync->first();
+        } else {
+            $sync = Sync::initialize(
+                $content_type, 
+                $user, 
+                "Sync Run from console"
+            );
+        }
 
         $this->info(sprintf('Starting sync of %s', $content_type));
 
-        $sync->execute();
+        $task = (new WooCommerceTask($sync))->dispatch(['per_page' => env('KINDHUMANS_SYNC_PER_PAGE', 100)]);
+
+        while ($sync->status === Sync::PENDING) {
+            $this->info(sprintf('Starting sync of %s page %s', $content_type, $sync->current_page));
+            $task = (new WooCommerceTask($sync))->dispatch(['per_page' => env('KINDHUMANS_SYNC_PER_PAGE', 100)]);            
+        }
+        
         $this->info('Sync completed!');
     }
 }

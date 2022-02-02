@@ -199,12 +199,12 @@ class Order extends Model
             'email' => $this->customer->email
         ] : [
             'id' => 0,
-            'name' => sprintf('%s %s', $this->billing->first_name, $this->billing->last_name),
-            'email' => $this->billing->email
+            'name' => $this->billing ? sprintf('%s %s', $this->billing->first_name, $this->billing->last_name) : '',
+            'email' => $this->billing ? $this->billing->email : ''
         ];
 
         $array['customer'] = $customer;
-        $array['date_created'] = $this->date_created->format('F j, Y');
+        $array['date_created'] = $this->date_created ? $this->date_created->format('F j, Y') : '';
 
         return $array;
     }

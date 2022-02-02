@@ -7,6 +7,11 @@ use App\Data\Shared\AddressData;
 use App\Data\BaseData;
 
 class CustomerData extends BaseData {
+    public static $id_field = 'customer_id';
+
+    protected static $collectionFields = [
+        'meta_data' => \App\Data\Shared\MetaData::class
+    ];
     
     public function __construct(
         public int $customer_id,
@@ -21,57 +26,57 @@ class CustomerData extends BaseData {
         public ?AddressData $billing,
         public bool $is_paying_customer,
         public ?string $avatar_url,
-        /** @var \App\Data\Customer\MetaData[] */
+        /** @var \App\Data\Shared\MetaData[] */
         public ?DataCollection $meta_data 
     ) {
 
     }
 
-    public static function _fromResponse(array $data) : static { 
-        $attributes = static::getAttributes();
-        $_data = [];
+    // public static function _fromResponse(array $data) : static { 
+    //     $attributes = static::getAttributes();
+    //     $_data = [];
         
-        if ($data) {
-            foreach ($data as $key => $value) {
-                if ($key === 'id') {
-                    $_data['customer_id'] = $value;
-                }
+    //     if ($data) {
+    //         foreach ($data as $key => $value) {
+    //             if ($key === 'id') {
+    //                 $_data['customer_id'] = $value;
+    //             }
                 
-                if (!in_array($key, $attributes)) {
-                    continue;
-                }
+    //             if (!in_array($key, $attributes)) {
+    //                 continue;
+    //             }
                 
-                if (is_null($value)) {
-                    $value = "N/A";
-                }
+    //             if (is_null($value)) {
+    //                 $value = "N/A";
+    //             }
                 
-                if ($key === 'shipping' || $key === 'billing') {
-                    $value = (array) $value;
-                }
+    //             if ($key === 'shipping' || $key === 'billing') {
+    //                 $value = (array) $value;
+    //             }
 
-                if ($key === 'meta_data' && $value) {
-                    $meta_data = array();
-                    foreach ($data[$key] as $meta) {
-                        $meta = (array) $meta;
+    //             if ($key === 'meta_data' && $value) {
+    //                 $meta_data = array();
+    //                 foreach ($data[$key] as $meta) {
+    //                     $meta = (array) $meta;
 
-                        if ($meta['key'] === '_stripe_customer') {
-                            continue;
-                        }
+    //                     if (isset($meta['key']) && $meta['key'] === '_stripe_customer') {
+    //                         continue;
+    //                     }
                         
-                        $meta_data[] = $meta;
-                    }
+    //                     $meta_data[] = $meta;
+    //                 }
 
-                    $value = $meta_data;
-                }
+    //                 $value = $meta_data;
+    //             }
 
-                if (in_array($key, array('date_created', 'date_modified'))) {
-                    $value = null;
-                }
+    //             if (in_array($key, array('date_created', 'date_modified'))) {
+    //                 $value = null;
+    //             }
 
-                $_data[$key] = $value;
-            }
-        }
+    //             $_data[$key] = $value;
+    //         }
+    //     }
 
-        return static::from($_data);
-    }
+    //     return static::from($_data);
+    // }
 }

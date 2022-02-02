@@ -52,16 +52,16 @@ class KindCash extends Model
      * [addRedeemedLog description]
      * @param int $points [description]
      */
-    public function addRedeemedLog(int $points) {
-        $this->addLog('redeem', $points);
+    public function addRedeemedLog(int $points, string $description = '', $date = null) {
+        $this->addLog('redeem', $points, $description, $date);
     }
 
     /**
      * [addInitialLog description]
      * @param string $description [description]
      */
-    public function addInitialLog(string $description = '') {
-        $this->addLog('initialize', $this->points, $description);
+    public function addInitialLog(string $description = '', $date = null) {
+        $this->addLog('initialize', $this->points, $description, $date);
     }
 
     /**
@@ -69,8 +69,8 @@ class KindCash extends Model
      * @param int    $points      [description]
      * @param string $description [description]
      */
-    public function addEarnLog(int $points, string $description = '') {
-        $this->addLog('earned', $points, $description);
+    public function addEarnLog(int $points, string $description = '', $date = null) {
+        $this->addLog('earned', $points, $description, $date);
     }
 
     /**
@@ -79,12 +79,28 @@ class KindCash extends Model
      * @param int    $points      [description]
      * @param string $description [description]
      */
-    public function addLog(string $event, int $points, string $description = '') {
+    public function addLog(string $event, int $points, string $description = '', $date = null) {
         $this->logs()->create([
-            'date' => \Carbon\Carbon::now(),
+            'date' => $date ? (new \Carbon\Carbon(strtotime($date)))->toDateTimeString() : \Carbon\Carbon::now(),
             'event' => $event,
             'points' => $points,
             'description' => $description
+        ]);
+    }
+
+    /**
+     * [addOrderLog description]
+     * @param int    $points   [description]
+     * @param int    $order_id [description]
+     * @param [type] $date     [description]
+     */
+    public function addOrderLog(int $points, int $order_id, $date = null) {
+        $this->logs()->create([
+            'date' => $date ? (new \Carbon\Carbon(strtotime($date)))->toDateTimeString() : \Carbon\Carbon::now(),
+            'event' => 'earned',
+            'points' => $points,
+            'order_id' => $order_id,
+            'description' => 'Earned by order purchase.'
         ]);
     }
 
