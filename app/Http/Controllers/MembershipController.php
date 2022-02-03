@@ -24,7 +24,7 @@ class MembershipController extends Controller
 
         if ($request->input('status') && 'all' !== $request->input('status')) {
             $status = $request->input('status');
-            $memberships->orWhere('status', $status);
+            $memberships->where('status', $status);
         }
 
         // if ($request->input('s') && !empty($request->input('s'))) {

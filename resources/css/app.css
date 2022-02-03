@@ -13,6 +13,7 @@
 	font-size:  12px;
 }
 
+.status.processing,
 .status.active,
 .status.subscriber,
 .status.publish {

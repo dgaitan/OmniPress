@@ -104,6 +104,7 @@ class Order extends Model
     use HasFactory;
 
     protected $casts = [
+        'created_at' => 'datetime',
         'date_created' => 'datetime',
         'date_completed' => 'datetime',
         'date_modified' => 'datetime',
@@ -170,6 +171,32 @@ class Order extends Model
 
     public function items() {
         return $this->hasMany(OrderLine::class, 'order_id');
+    }
+
+    public function shippingAddress():string {
+        $shipping = '';
+        
+        if ($this->shipping) {
+            $shipping = sprintf(
+                '<p>%s %s<br>%s<br>%s %s %s</p>',
+                $this->shipping->first_name,
+                $this->shipping->last_name,
+                $this->shipping->address_1,
+                $this->shipping->city,
+                $this->shipping->state,
+                $this->shipping->postcode,
+            );
+        }
+
+        return $shipping;
+    }
+
+    public function getDateCompleted(): string {
+        if ($this->date_created->diffInDays(\Carbon\Carbon::now()) > 1) {
+            return $this->date_created->format('F j, Y');
+        }
+
+        return $this->date_created->diffForHumans();
     }
 
     /**

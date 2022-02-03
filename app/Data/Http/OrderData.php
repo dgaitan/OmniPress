@@ -35,7 +35,14 @@ class OrderData extends BaseData {
         'set_paid'
     ];
 
-    protected static $keepPriceValue = true;
+    /**
+     * Keep Price Value
+     * 
+     * Change it if you will import data from a csv
+     * 
+     * @var boolean
+     */
+    protected static $keepPriceValue = false;
     
     public function __construct(
         public int $order_id,

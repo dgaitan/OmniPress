@@ -26,6 +26,7 @@ Route::middleware('auth:sanctum')->name('kinja.api.v1.')->group(function () {
 		Route::get('/{id}', 'show')->name('show');
 		Route::post('/new', 'new')->name('create');
 		Route::post('/{id}/cash/add', 'addCash')->name('add_cash');
+		Route::post('/{id}/cash/redeem', 'redeemCash')->name('redeem_cash');
 		Route::get('/{email}/check', 'checkMembershipEmail')->name('check_email');
 	});
 

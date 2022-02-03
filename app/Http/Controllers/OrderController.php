@@ -15,6 +15,13 @@ class OrderController extends Controller
      */
     public function index(Request $request) {
         $perPage = 50;
+        $statuses = [
+            ['slug' => 'processing', 'label' => 'Processing'],
+            ['slug' => 'completed', 'label' => 'Completed'],
+            ['slug' => 'pending', 'label' => 'Pending'],
+            ['slug' => 'failed', 'label' => 'Failed']
+        ];
+        $status = '';
 
         if ($request->input('perPage')) {
             $perPage = $request->input('perPage');
@@ -28,6 +35,11 @@ class OrderController extends Controller
 
         if ($request->input('filterByStatus')) {
             $orders->where('status', $request->input('filterByStatus'));
+        }
+
+        if ($request->input('status') && 'all' !== $request->input('status')) {
+            $status = $request->input('status');
+            $memberships->where('status', $status);
         }
         
         $orders = $orders->paginate($perPage);
@@ -49,8 +61,8 @@ class OrderController extends Controller
                     'order_id' => $order->order_id,
                     'status' => $order->status,
                     'total' => $order->total,
-                    'shipping' => $order->shipping,
-                    'date' => $order->date_created ? $order->date_created->format('F j, Y @ H:i:s a') : null,
+                    'shipping' => $order->ShippingAddress(),
+                    'date' => $order->getDateCompleted(),
                     'customer' => $customer
                 ];
             }),
@@ -60,7 +72,8 @@ class OrderController extends Controller
             'perPage' => $orders->perPage(),
             'currentPage' => $orders->currentPage(),
             's' => $request->input('s') ?? '',
-            'filterByStatus' => $request->input('filterByStatus') ?? ''
+            'status' => $status,
+            'statuses' => $statuses
         ]);
     }
 }

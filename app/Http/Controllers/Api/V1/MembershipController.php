@@ -191,6 +191,36 @@ class MembershipController extends Controller
         return response()->json($membership->kindCash->toArray(), 200);
     }
 
+    public function redeemCash(Request $request, $id) {
+        $membership = Membership::find($id);
+
+        if (is_null($membership)) {
+            return response()->json(['error' => 'Membership not found'], 404);
+        }
+
+        // Validate the params
+        $validator = Validator::make($request->all(), [
+            'points' => 'required|integer',
+            'order_id' => 'required|integer',
+            'message' => 'required'
+        ]);
+
+        // If validation fails, return error listed with 400 http code
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors()
+            ], 400);
+        }
+
+        $membership->kindCash->redeemCash(
+            $request->points, 
+            $request->message, 
+            $request->order_id
+        );
+
+        return response()->json($membership->kindCash->toArray(), 200);
+    }
+
 
     /**
      * Check if an email has an active membership

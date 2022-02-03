@@ -115,6 +115,22 @@ class KindCash extends Model
         $this->addEarnLog($points, $message);
     }
 
+    public function redeemCash(int $points, string $message, int $order_id) {
+        $newPoints = (int) ($this->points - $points);
+
+        $this->update([
+            'points' => $newPoints
+        ]);
+
+        $this->logs()->create([
+            'date' => \Carbon\Carbon::now(),
+            'event' => 'redeem',
+            'points' => $points,
+            'order_id' => $order_id,
+            'description' => $message
+        ]);
+    }
+
     /**
      * [toArray description]
      * @return [type] [description]
