@@ -21,17 +21,20 @@
 }
 
 .status.completed,
+.status.shipped,
 .status.kh_affiliate {
 	color: #0c4a6e;
 	background-color: #e0f2fe;
 }
 
 .status.pending,
+.status.in_renewal,
 .status.adminstrator {
 	color: #164e63;
 	background-color: #cffafe;
 }
 
+.status.cancelled,
 .status.error,
 .status.failed {
 	color: #881337;

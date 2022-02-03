@@ -123,11 +123,8 @@ class Membership extends Model
     public function toArray($isSingle = false) : array {
         $data = parent::toArray();
 
-        if ($isSingle) {
-            $data['customer'] = $this->customer;
-            $data['cash'] = $this->kindCash->toArray(true);
-        }
-
+        $data['customer'] = $this->customer;
+        $data['cash'] = $this->kindCash->toArray($isSingle);
         $data['is_active'] = $this->isActive();
         $data['is_in_renewal'] = $this->isInRenewal();
         $data['is_awaiting_pick_gift'] = $this->isAwaitingPickGift();
@@ -175,6 +172,37 @@ class Membership extends Model
      */
     public function isExpired() : bool {
         return $this->status === self::EXPIRED_STATUS;
+    }
+
+    /**
+     * [getStatuses description]
+     * @return [type] [description]
+     */
+    public static function getStatuses(): array {
+        $statuses = [];
+
+        $status[] = [
+            'slug' => self::ACTIVE_STATUS, 
+            'label' => 'Active'
+        ];
+        $status[] = [
+            'slug' => self::IN_RENEWAL_STATUS, 
+            'label' => 'In Renewal'
+        ];
+        $status[] = [
+            'slug' => self::AWAITING_PICK_GIFT_STATUS, 
+            'label' => 'Awaiting Pick Gift'
+        ];
+        $status[] = [
+            'slug' => self::CANCELLED_STATUS, 
+            'label' => 'Cancelled'
+        ];
+        $status[] = [
+            'slug' => self::EXPIRED_STATUS, 
+            'label' => 'Expired'
+        ];
+
+        return $status;
     }
 
     /**

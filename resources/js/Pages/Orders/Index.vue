@@ -11,6 +11,7 @@
         </template>
 
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+
             <section class="pb-8">
               <div class="container px-4 mx-auto">
                 <div class="p-4 mb-6 bg-white shadow rounded overflow-x-auto">

@@ -42,6 +42,10 @@ let permsMixin = {
 
     friendlyDate(value) {
         return moment(value).startOf('hour').fromNow();;
+    },
+
+    isOdd(num) {
+        return num % 2;
     }
 };
 

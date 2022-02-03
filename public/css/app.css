@@ -1107,6 +1107,12 @@ select {
 .mb-10 {
   margin-bottom: 2.5rem;
 }
+.mr-1 {
+  margin-right: 0.25rem;
+}
+.mb-3 {
+  margin-bottom: 0.75rem;
+}
 .block {
   display: block;
 }
@@ -1205,6 +1211,9 @@ select {
 }
 .w-3 {
   width: 0.75rem;
+}
+.w-40 {
+  width: 10rem;
 }
 .min-w-0 {
   min-width: 0px;
@@ -1435,6 +1444,10 @@ select {
   --tw-border-opacity: 1;
   border-color: rgb(239 246 255 / var(--tw-border-opacity));
 }
+.border-cyan-500 {
+  --tw-border-opacity: 1;
+  border-color: rgb(6 182 212 / var(--tw-border-opacity));
+}
 .bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
@@ -1482,6 +1495,10 @@ select {
 .bg-sky-100 {
   --tw-bg-opacity: 1;
   background-color: rgb(224 242 254 / var(--tw-bg-opacity));
+}
+.bg-cyan-500 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(6 182 212 / var(--tw-bg-opacity));
 }
 .bg-opacity-25 {
   --tw-bg-opacity: 0.25;
@@ -1775,6 +1792,10 @@ select {
   --tw-text-opacity: 1;
   color: rgb(14 165 233 / var(--tw-text-opacity));
 }
+.text-cyan-500 {
+  --tw-text-opacity: 1;
+  color: rgb(6 182 212 / var(--tw-text-opacity));
+}
 .underline {
   -webkit-text-decoration-line: underline;
           text-decoration-line: underline;
@@ -1901,15 +1922,18 @@ select {
 	background-color: #d1fae5;
 }
 .status.completed,
+.status.shipped,
 .status.kh_affiliate {
 	color: #0c4a6e;
 	background-color: #e0f2fe;
 }
 .status.pending,
+.status.in_renewal,
 .status.adminstrator {
 	color: #164e63;
 	background-color: #cffafe;
 }
+.status.cancelled,
 .status.error,
 .status.failed {
 	color: #881337;
