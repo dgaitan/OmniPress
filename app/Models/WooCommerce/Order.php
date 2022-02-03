@@ -8,7 +8,6 @@ use App\Casts\OrderLines;
 use App\Models\Service;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Laravel\Scout\Searchable;
 
 /**
  * App\Models\WooCommerce\Order
@@ -103,7 +102,6 @@ use Laravel\Scout\Searchable;
 class Order extends Model
 {
     use HasFactory;
-    use Searchable;
 
     protected $casts = [
         'date_created' => 'datetime',

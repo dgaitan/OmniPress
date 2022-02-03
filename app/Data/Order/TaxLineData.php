@@ -17,6 +17,10 @@ class TaxLineData extends BaseData {
         'meta_data' => \App\Data\Shared\MetaData::class,
     ];
 
+    protected static $booleanFields = [
+        'compound'
+    ];
+
     public function __construct(
         public int $tax_line_id,
         public string $rate_code,

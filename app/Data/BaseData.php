@@ -35,6 +35,13 @@ abstract class BaseData extends Data {
     protected static $floatFields = [];
 
     /**
+     * Fields that should be converted to boolean values
+     * 
+     * @var array
+     */
+    protected static $booleanFields = [];
+
+    /**
      * Fields that should be collection.
      * 
      * ie: MetaData, LineItems, etc...
@@ -48,12 +55,26 @@ abstract class BaseData extends Data {
     protected static $collectionFields = [];
 
     /**
+     * [$objectFields description]
+     * @var array
+     */
+    protected static $objectFields = [];
+
+    /**
      * Data Attributes of this data class.
      * This will be loaded dinamicly.
      * 
      * @var array
      */
     protected static $dataAttributes = [];
+
+    /**
+     * Should the importer keep the value that comes 
+     * in the data or convert it?
+     * 
+     * @var boolean
+     */
+    protected static $keepPriceValue = false;
     
     /**
      * Collect the data from API response.
@@ -83,6 +104,77 @@ abstract class BaseData extends Data {
         $data = json_encode($data);
         $data = json_decode($data, true);
         return static::from(static::_processResponse($data));
+    }
+
+    /**
+     * [_fromCSV description]
+     * @param  array  $data [description]
+     * @return [type]       [description]
+     */
+    public static function _fromCSV(array $data) : static {
+        return static::from(static::_processRow($data));
+    }
+
+    /**
+     * [_processRow description]
+     * @param  array  $data [description]
+     * @return [type]       [description]
+     */
+    public static function _processRow(array $data) : array {
+        $_data = [];
+
+        foreach ($data as $key => $value) {
+            if ($key === 'id') {
+                $_data[static::$id_field] = $value;
+                continue;
+            }
+
+            $value = self::_processRowItem($key, $value);
+            
+            $_data[$key] = $value;
+
+            if (!is_null($value)) {
+                $_data[$key] = $value;
+            }
+        }
+
+        return $_data;
+    }
+
+    /**
+     * [_processRowItem description]
+     * @param  [type] $key   [description]
+     * @param  [type] $value [description]
+     * @return [type]        [description]
+     */
+    public static function _processRowItem($key, $value) {
+        if (!in_array($key, static::getAttributes())) {
+            return null;
+        }
+
+        if (static::isPriceField($key)) {
+            return static::processPriceField($value);
+        }
+
+        if (static::shouldBeBoolean($key)) {
+            return 'yes' === $value;
+        }
+
+        if (static::shouldUnserialize($key)) {
+            if (is_string($value)) {
+                $value = unserialize($value);
+            }
+        }
+        
+        if (static::isCollectionField($key)) {
+            return static::processRowCollection($key, $value);
+        }
+
+        if (is_null($value)) {
+            return null;
+        }
+
+        return $value;
     }
 
     /**
@@ -169,14 +261,42 @@ abstract class BaseData extends Data {
     }
 
     /**
+     * [shouldBeBoolean description]
+     * @param  string $field [description]
+     * @return [type]        [description]
+     */
+    public static function shouldBeBoolean(string $field): bool {
+        return in_array($field, static::$booleanFields);
+    }
+
+    /**
+     * [shouldUnserialize description]
+     * @param  string $field [description]
+     * @return [type]        [description]
+     */
+    public static function shouldUnserialize(string $field): bool {
+
+        return in_array(
+            $field, array_merge(
+                array_keys(static::$collectionFields),
+                static::$objectFields
+            )
+        );
+    }
+
+    /**
      * Process Price Field
      * 
      * @var string|int|float $value
      * @return int
      */
-    public static function processPriceField(string|int|float $value): float {
+    public static function processPriceField(string|int|float|null $value): float {
         if (empty($value) || is_null($value)) {
             return 0;
+        }
+
+        if (static::$keepPriceValue) {
+            return (int) $value;
         }
         
         return (int) ((float) $value * 100);
@@ -205,6 +325,25 @@ abstract class BaseData extends Data {
         if ($data) {
             foreach ($data as $value) {
                 $collection[] = static::$collectionFields[$collectionName]::_processResponse($value);
+            }
+        }
+        
+        return $collection;
+    }
+
+    /**
+     * Process the collection class
+     * 
+     * @param string $collectioName - the collection name
+     * @param array $data - the data attached to the collection
+     * @param array the collection processed.
+     */
+    public static function processRowCollection(string $collectionName, array $data): array {
+        $collection = [];
+
+        if ($data) {
+            foreach ($data as $value) {
+                $collection[] = static::$collectionFields[$collectionName]::_processRow($value);
             }
         }
         

@@ -16,6 +16,16 @@ class ProductData extends BaseData {
         'sale_price'
     ];
 
+    protected static $booleanFields = [
+        'featured',
+        'on_sale',
+        'purchasable',
+        'virtual',
+        'downloadable',
+        'sold_individually',
+        'manage_stock'
+    ];
+
     protected static $collectionFields = [
         'meta_data' => \App\Data\Shared\MetaData::class,
         'categories' => \App\Data\Product\CategoryData::class,
@@ -26,12 +36,12 @@ class ProductData extends BaseData {
     
     public function __construct(
         public int $product_id,
-        public string $name,
-        public string $slug,
+        public ?string $name,
+        public ?string $slug,
         public ?string $permalink = '',
         public ?string $date_created,
         public ?string $date_modified,
-        public string $type,
+        public ?string $type,
         public string $status,
         public bool $featured,
         public ?string $sku,
@@ -60,6 +70,9 @@ class ProductData extends BaseData {
         public ProductSettingData $settings,
     ) {
         $this->stock_quantity = $stock_quantity ?? 0;
+        $this->name = $name ?? "";
+        $this->slug = $slug ?? "";
+        $this->type = $type ?? "";
     }
 
     public static function _processResponse(array $data): array {
@@ -67,6 +80,16 @@ class ProductData extends BaseData {
         $_data['settings'] = ProductSettingData::_fromResponse($data);
         
         return $_data;
+    }
+
+    public static function _processRow(array $data): array {
+        $_data = parent::_processRow($data);
+        $_data['settings'] = ProductSettingData::_fromCSV($data);
+
+        if (empty($_data['meta_data'])) {
+            $_data['meta_data'] = [];
+        }
         
+        return $_data;
     }
 }

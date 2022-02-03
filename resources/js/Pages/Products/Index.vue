@@ -77,7 +77,8 @@
                           <div class="py-4 flex flex-wrap items-center" style="max-width: 200px">
                             <a 
                               v-if="product.categories.length > 0" 
-                              v-for="category in product.categories" 
+                              v-for="category in product.categories"
+                              :data-product-id="category.id"
                               class="py-1 px-2 text-xs text-sky-500 bg-sky-100 mr-2 mb-2 rounded-full"
                               href="#">
                               {{ category.name }}
@@ -89,6 +90,7 @@
                             <a 
                               v-for="(tag, i) in product.tags"
                               v-if="product.tags.length > 0"
+                              :data-tag-id="tag.id"
                               class="py-1 px-2 mr-2 mb-2 text-xs border rounded" href="#">
                                 {{ tag.name }}
                               </a>

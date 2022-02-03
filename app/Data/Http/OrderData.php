@@ -28,30 +28,38 @@ class OrderData extends BaseData {
         'coupon_lines' => \App\Data\Order\CouponLineData::class,
         'refunds' => \App\Data\Order\RefundData::class
     ];
+
+    protected static $objectFields = ['billing', 'shipping'];
+
+    protected static $booleanFields = [
+        'set_paid'
+    ];
+
+    protected static $keepPriceValue = true;
     
     public function __construct(
         public int $order_id,
         public ?int $parent_id,
         public int $number,
         public string $order_key,
-        public string $created_via,
+        public ?string $created_via,
         public string $version,
         public string $status,
         public string $currency,
         public string $date_created,
         public ?string $date_modified = null,
-        public float $discount_total,
-        public float $discount_tax,
-        public float $shipping_total,
-        public float $shipping_tax,
-        public float $cart_tax,
-        public float $total,
-        public float $total_tax,
-        public bool $prices_include_tax,
+        public int $discount_total,
+        public int $discount_tax,
+        public int $shipping_total,
+        public int $shipping_tax,
+        public int $cart_tax,
+        public int $total,
+        public int $total_tax,
+        public ?bool $prices_include_tax,
         public int $customer_id,
         public string $customer_ip_address,
         public string $customer_user_agent,
-        public string $customer_note,
+        public ?string $customer_note,
         public AddressData $billing,
         public AddressData $shipping,
         public ?string $payment_method = null,
@@ -76,5 +84,7 @@ class OrderData extends BaseData {
         public ?DataCollection $refunds,
     ) {
         $this->set_paid = $this->set_paid ?? false;
+        $this->prices_include_tax = $this->prices_include_tax ?? false;
+        $this->created_via = $this->created_via ?? '';
     }
 }

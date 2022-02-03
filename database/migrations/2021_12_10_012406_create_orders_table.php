@@ -37,7 +37,7 @@ class CreateOrdersTable extends Migration
             $table->integer('total_tax')->default(0)->nullable();
             $table->boolean('prices_include_tax')->default(true)->nullable();
             $table->string('customer_ip_address', 50)->default('')->nullable(true);
-            $table->string('customer_user_agent', 255)->default('')->nullable(true);
+            $table->text('customer_user_agent')->default('')->nullable(true);
             $table->string('transaction_id', 255)->default('')->nullable(true);
             $table->dateTime('date_paid')->nullable(true);
             $table->dateTime('date_completed')->nullable(true);

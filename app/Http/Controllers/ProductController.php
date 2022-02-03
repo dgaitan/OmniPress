@@ -22,7 +22,7 @@ class ProductController extends Controller
             $products = $products->where('status', 'publish');
         }
 
-        $products = $products->paginate($perPage);
+        $products = $products->where('type', '!=', 'variation')->paginate($perPage);
         
         
         return Inertia::render('Products/Index', [

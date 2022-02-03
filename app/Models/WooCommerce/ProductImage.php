@@ -56,4 +56,19 @@ class ProductImage extends Model
     public function product() {
         return $this->belongsTo(Product::class, 'product_id');
     }
+
+    public function toArray() {
+        $data = parent::toArray();
+
+        if ($data['src']) {
+            $src = explode('wp-content/', $data['src']);            
+            $data['src'] = sprintf(
+                '%s/wp-content/%s',
+                env('ASSET_DOMAIN', 'https://kindhumans.com'),
+                end($src)
+            );
+        }
+
+        return $data;
+    }
 }

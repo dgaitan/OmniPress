@@ -15,13 +15,21 @@ class ProductSettingData extends BaseData {
     protected static $collectionFields = [
         'downloads' => \App\Data\Product\DownloadData::class,
     ];
+
+    protected static $booleanFields = [
+        'backorders_allowed',
+        'backordered',
+        'shipping_required',
+        'shipping_taxable',
+        'reviews_allowed'
+    ];
     
     public function __construct(
         public ?string $date_on_sale_from,
         public ?string $date_on_sale_to,
         public ?string $price_html,
         public ?string $short_description,
-        public string $catalog_visibility,
+        public ?string $catalog_visibility,
         public ?string $description,
         public ?int $total_sales = 0,
         public ?int $download_limit = 0,
@@ -33,14 +41,14 @@ class ProductSettingData extends BaseData {
         public ?string $backorders,
         public bool $backorders_allowed,
         public bool $backordered,
-        public float $weight,
+        public ?float $weight,
         public ?DimensionsData $dimensionsData,
         public bool $shipping_required,
         public bool $shipping_taxable,
-        public int $shipping_class_id,
+        public ?int $shipping_class_id,
         public bool $reviews_allowed,
-        public string $average_rating,
-        public int $rating_count,
+        public ?string $average_rating,
+        public ?int $rating_count,
         public ?array $related_ids,
         public ?array $upsell_ids,
         public ?array $cross_sell_ids,
