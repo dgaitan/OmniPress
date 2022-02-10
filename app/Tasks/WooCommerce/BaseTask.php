@@ -95,6 +95,21 @@ abstract class BaseTask {
         }
     }
 
+    /**
+     * Post an element and store the response
+     * 
+     * @param  array  $params [description]
+     * @return int         
+     */
+    public function pushAndSync(array $params = []) {
+        $endpoint = $this->client->getEndpoint($this->name);
+        $result = $endpoint->post($params);
+
+        $this->handle($result);
+
+        return $result;
+    }
+
 
     public function syncCollection(
         string $collectionName,

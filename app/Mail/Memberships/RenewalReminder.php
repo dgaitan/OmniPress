@@ -1,0 +1,45 @@
+<?php
+
+namespace App\Mail\Memberships;
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Mail\Mailable;
+use Illuminate\Queue\SerializesModels;
+use App\Models\Membership;
+
+class RenewalReminder extends Mailable
+{
+    use Queueable, SerializesModels;
+
+    protected $membership;
+
+    /**
+     * Create a new message instance.
+     *
+     * @return void
+     */
+    public function __construct(Membership $membership)
+    {
+        $this->membership = $membership;
+    }
+
+    /**
+     * Build the message.
+     *
+     * @return $this
+     */
+    public function build()
+    {
+        return $this->subject(sprintf("Your membership will renew in %s days", $this->membership->daysUntilRenewal()))
+            ->view('emails.memberships.renewal-reminder')
+            ->with([
+                'customerName' => $this->membership->customer->getFullName(),
+                'days' => $this->membership->daysUntilRenewal(),
+                'memberSince' => $this->membership->start_at->format('F j, Y'),
+                'memberEnd' => $this->membership->end_at->format('F j, Y'),
+                'kindCash' => $this->membership->kindCash->cashForHuman(),
+                'accountUrl' => sprintf('%s/my-account/account-settings/', env('https://kind.humans', 'https://kindhumans.com')),
+            ]);
+    }
+}

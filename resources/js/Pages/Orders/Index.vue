@@ -24,7 +24,11 @@
               <template #table>
                 <ListTable :columns="columns">
                   <template #body>
-                    <tr class="text-xs" v-for="(order, i) in orders" v-bind:class="[isOdd(i) ? '' : 'bg-gray-50']">
+                    <tr 
+                      class="text-xs" 
+                      v-for="(order, i) in orders" 
+                      v-bind:class="[isOdd(i) ? '' : 'bg-gray-50']"
+                      :key="order.id">
                       <!-- Order ID -->
                       <td class="flex items-center py-5 px-6 font-medium">
                         <input class="mr-3" type="checkbox" name="" id="">

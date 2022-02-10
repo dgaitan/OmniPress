@@ -40,6 +40,10 @@ class KindCash extends Model
         return $this->belongsTo(Membership::class);
     }
 
+    public function cashForHuman(): float {
+        return (float) ($this->price / 100);
+    }
+
     /**
      * [logs description]
      * @return [type] [description]

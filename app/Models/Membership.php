@@ -2,11 +2,17 @@
 
 namespace App\Models;
 
+use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\Memberships\RenewalReminder;
+use App\Mail\Memberships\PaymentNotFound;
 use App\Models\WooCommerce\Customer;
 use App\Models\WooCommerce\Product;
 use App\Casts\Money;
+use App\Models\WooCommerce\Order;
+use App\Http\Clients\WooCommerceClient;
 
 /**
  * App\Models\Membership
@@ -172,6 +178,180 @@ class Membership extends Model
      */
     public function isExpired() : bool {
         return $this->status === self::EXPIRED_STATUS;
+    }
+
+    /**
+     * [daysUntilRenewal description]
+     * @return [type] [description]
+     */
+    public function daysUntilRenewal(): int {
+        return \Carbon\Carbon::now()->diffInDays($this->end_at);
+    }
+
+    /**
+     * [daysExpired description]
+     * @return [type] [description]
+     */
+    public function daysExpired(): int {
+        return $this->end_at->diffInDays(\Carbon\Carbon::now());
+    }
+
+    /**
+     * [daysAfterRenewal description]
+     * @return [type] [description]
+     */
+    public function daysAfterRenewal(): int {
+        return $this->start_at->diffInDays(\Carbon\Carbon::now());
+    }
+
+    /**
+     * Send renewal reminder emails or what ever.
+     * 
+     * @return void
+     */
+    public function sendRenewalReminder(): void {
+        Mail::to($this->customer->email)
+            ->send(new RenewalReminder($this));
+    }
+
+    /**
+     * [sendPaymentNotFoundNotification description]
+     * @return [type] [description]
+     */
+    public function sendPaymentNotFoundNotification(): void {
+        Mail::to($this->customer->email)
+            ->send(new PaymentNotFound($this));
+    }
+
+    /**
+     * Maybe Renew a Membership.
+     * 
+     * Normally, the customers should has a card stored to can make
+     * the auto-payment. The Membership should be in active or in-renewal status.
+     * 
+     * Since 2021, kindhumans gives a gift when the users buy or renewal their 
+     * membership. So we have a flow to know what the customer picks. This
+     * auto-renew trigger create the new order and if all happens with success
+     * the membership will change to awaiting-pick-gift status. This will change
+     * until user select a product. 
+     * 
+     * @param boolean $force - Normally the trigger will validate if the membership is expired unless we force it.
+     * @param string $stripe_token - Is possible the user does not store the card, so is necessary pass the stripe_token to make one time payment.
+     * @throws if Membership isn't expired unless we force it.
+     * @throws if Membership has a status different that active or in-renewal.
+     * @throws if ocurred an error during auto payment.
+     * @throws if customer doesn't have a payment method.
+     * @return Membership
+     */
+    public function maybeRenew($force = false) {
+        try {
+            if ( ! $force && $this->daysUntilRenewal() >= 0 ) {
+                throw new Exception(
+                    sprintf(
+                        "Membership with ID #%s isn't expired.",
+                        $this->id
+                    )
+                );
+            }
+
+            // If the customer doesn't have a payment method. Cancell this
+            // Renovation
+            if (!$this->customer->hasStripeId()) {
+                if ($this->daysExpired() > 30) {
+                    $this->status = self::EXPIRED_STATUS;
+                    $this->logs()->create([
+                        'description' => "Membership expired because was impossible find a payment method in 30 days."
+                    ]);
+                } else {
+                    $this->sendPaymentNotFoundNotification();
+                    $this->status = self::IN_RENEWAL_STATUS;
+                    $this->logs()->create([
+                        'description' => "Mebership renewal failed because we wasn't able to find a payment method for the customer."
+                    ]);
+                }
+
+                $this->shipping_status = 'N/A';
+                $this->save();
+            }
+
+            /**
+             * Membership can renewal only if is active or in renewal status.
+             * 
+             * Active means that currently is active (of course) and will
+             * auto-renewal. This is the simple and normal flow.
+             * 
+             * In-Renewal means that this isn't the first we're trying to renew
+             * this membership. Maybe the renewal fail in the past because a 
+             * failed payment intent. So, this is the flow for members
+             * with more that one intent.
+             */
+            if (!in_array($this->status, [self::ACTIVE_STATUS, self::IN_RENEWAL_STATUS])) {
+                throw new Exception('Membership must be active or in-renewal to be able to create another order');
+            }
+
+            // Initialize renewal intent.
+            $this->status = self::IN_RENEWAL_STATUS;
+            $this->shiping_status = 'N/A';
+
+            try {
+                $this->customer->charge(
+                    $this->price ?? 3500, 
+                    $this->customer->defaultPaymentMethod()->id, 
+                    ['description' => "Membership Renewal"]
+                );
+
+                $this->status = self::AWAITING_PICK_GIFT_STATUS;
+                $this->last_payment_intent = \Carbon\Carbon::now();
+                $this->end_at = $this->end_at->addYear();
+                $this->payment_intents = 0;
+
+                $orderParams = [
+                    'payment_method' => 'kindhumans_stripe_gatewaay',
+                    'payment_method_title' => 'Credit Card',
+                    'set_paid' => true,
+                    'billing' => $this->customer->billing->toArray(),
+                    'shipping' => $this->customer->shipping->toArray(),
+                    'line_items' => [
+                        [
+                            'product_id' => 93,
+                            'quantity' => 2
+                        ],
+                        [
+                            'product_id' => 22,
+                            'variation_id' => 23,
+                            'quantity' => 1
+                        ]
+                    ],
+                    'shipping_lines' => [
+                        [
+                            'method_id' => 'flat_rate',
+                            'method_title' => 'Flat Rate',
+                            'total' => '10.00'
+                        ]
+                    ]
+                ];
+                
+            } catch (\Laravel\Cashier\Exceptions\IncompletePayment $exception) {
+                $this->last_payment_intent = \Carbon\Carbon::now();
+                $this->payment_intents = $this->payment_intents + 1;
+
+                if ($this->daysExpired() > 30) {
+                    $this->status = self::EXPIRED_STATUS;
+                }
+
+                $this->save();
+                $this->logs()->create([
+                    'description' => sprintf(
+                        "Membership Renewal Failed with error: %s", 
+                        $exception->payment->status
+                    )
+                ]);
+            }
+            
+
+        } catch ( Exception $e ) {
+            return false;
+        }
     }
 
     /**

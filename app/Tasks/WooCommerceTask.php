@@ -128,6 +128,30 @@ class WooCommerceTask {
         $this->sync(strtolower($this->sync->content_type), $syncArgs);
     }
 
+    /**
+     * [push description]
+     * @param  string $task   [description]
+     * @param  array  $params [description]
+     * @return [type]         [description]
+     */
+    public function push(string $task, array $params = []) {
+        $task = $this->tasks[$task];
+
+        if ($this->isTesting) {
+            $task->setTestingMode($this->isTesting)
+            ->setTestingCollectionData($this->testingCollectionData)
+            ->retrieveDataFromAPI($this->retrieveFromAPI);
+        }
+
+        return $task->pushAndSync($params);
+    }
+
+    /**
+     * [sync description]
+     * @param  string $task     [description]
+     * @param  array  $syncArgs [description]
+     * @return [type]           [description]
+     */
     protected function sync(string $task, array $syncArgs = []): void {
         $task = $this->tasks[$task];
         

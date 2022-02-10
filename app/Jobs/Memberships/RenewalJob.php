@@ -34,10 +34,29 @@ class RenewalJob implements ShouldQueue
     {
         $aMonthAgo = Carbon::now()->subMonth();
         $oneMonth = Carbon::now()->addMonth();
-        $memberships = Membership::whereBetween('end_at', [$aMonthAgo, $oneMonth])->get();
+        $memberships = Membership::with(['customer', 'kindCash'])->whereBetween('end_at', [$aMonthAgo, $oneMonth]);
 
-        if (!is_null($memberships)) {
+        if ($memberships->exists()) {
+            $memberships = $memberships->paginate(50);
             
+            while ($memberships->hasMorePages()) {
+                
+                foreach ($memberships->items() as $membership) {
+                
+                    if ($membership->isActive()) {
+                
+                        if (in_array($membership->daysUntilRenewal(), array( 15, 5, 3 ) )) {
+                            $membership->sendRenewalReminder();
+                        }
+
+                        if ($membership->daysUntilRenewal() === 0) {
+
+                        }
+                    }
+                }
+
+                $memberships->nextCursor();
+            }
         }
     }
 }

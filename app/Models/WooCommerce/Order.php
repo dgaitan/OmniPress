@@ -103,6 +103,11 @@ class Order extends Model
 {
     use HasFactory;
 
+    /**
+     * Order Casting
+     *
+     * @var array
+     */
     protected $casts = [
         'created_at' => 'datetime',
         'date_created' => 'datetime',
