@@ -5,9 +5,10 @@ namespace App\Models\WooCommerce;
 use App\Casts\Address;
 use App\Casts\MetaData;
 use App\Casts\OrderLines;
-use App\Models\Service;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * App\Models\WooCommerce\Order
@@ -40,8 +41,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $cart_hash
  * @property bool $set_paid
  * @property array|null $meta_data
- * @property array $billing
- * @property array $shipping
+ * @property \App\Casts\Address $billing
+ * @property \App\Casts\Address $shipping
  * @property int $order_id
  * @property int|null $customer_id
  * @property-read \App\Models\WooCommerce\Customer|null $customer
@@ -165,19 +166,27 @@ class Order extends Model
 
     /**
      * An order can have a customer, yes
+     * 
+     * @return BelongsTo
      */
-    public function customer() {
+    public function customer(): BelongsTo {
         return $this->belongsTo(Customer::class, 'customer_id');
     }
 
-    public function service() {
-        return $this->belongsTo(Service::class, 'service_id');
-    }
-
-    public function items() {
+    /**
+     * Order Items
+     *
+     * @return HasMany
+     */
+    public function items(): HasMany {
         return $this->hasMany(OrderLine::class, 'order_id');
     }
 
+    /**
+     * Return the shipping address formatted
+     *
+     * @return string
+     */
     public function shippingAddress():string {
         $shipping = '';
         
@@ -196,6 +205,11 @@ class Order extends Model
         return $shipping;
     }
 
+    /**
+     * Get ORder Date Completed
+     *
+     * @return string
+     */
     public function getDateCompleted(): string {
         if ($this->date_created->diffInDays(\Carbon\Carbon::now()) > 1) {
             return $this->date_created->format('F j, Y');
@@ -219,7 +233,7 @@ class Order extends Model
      *
      * @return array
      */
-    public function toSearchableArray()
+    public function toSearchableArray(): array
     {
         $array = $this->toArray();
 

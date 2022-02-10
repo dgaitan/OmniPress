@@ -5,9 +5,9 @@ namespace App\Models\WooCommerce;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
-use App\Models\Service;
 use App\Casts\MetaData;
 use App\Casts\Address;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Cashier\Billable;
 
 /**
@@ -54,6 +54,18 @@ use Laravel\Cashier\Billable;
  * @method static \Illuminate\Database\Eloquent\Builder|Customer whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Customer whereUsername($value)
  * @mixin \Eloquent
+ * @property string|null $stripe_id
+ * @property string|null $pm_type
+ * @property string|null $pm_last_four
+ * @property string|null $trial_ends_at
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
+ * @property-read int|null $notifications_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Cashier\Subscription[] $subscriptions
+ * @property-read int|null $subscriptions_count
+ * @method static \Illuminate\Database\Eloquent\Builder|Customer wherePmLastFour($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Customer wherePmType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Customer whereStripeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Customer whereTrialEndsAt($value)
  */
 class Customer extends Model
 {
@@ -61,6 +73,11 @@ class Customer extends Model
     use Notifiable;
     use Billable;
 
+    /**
+     * Model Casts
+     *
+     * @var array
+     */
     protected $casts = [
         'meta_data' => MetaData::class,
         'billing' => Address::class,
@@ -69,6 +86,11 @@ class Customer extends Model
         'date_modified' => 'datetime'
     ];
 
+    /**
+     * Model Fillables
+     *
+     * @var array
+     */
     protected $fillable = [
         'customer_id',
         'date_created',
@@ -88,19 +110,10 @@ class Customer extends Model
     /**
      * Relation with order
      * 
-     * @return Order
+     * @return HasMany
      */
-    public function orders() {
+    public function orders(): HasMany {
         return $this->hasMany(Order::class);
-    }
-
-    /**
-     * Service Related with this customer
-     * 
-     * @return Service
-     */
-    public function service() {
-        return $this->belongsTo(Service::class, 'service_id');
     }
 
     /**
@@ -111,7 +124,13 @@ class Customer extends Model
         return sprintf('%s %s', $this->first_name, $this->last_name);
     }
 
-    public function toArray($isSingle = false) {
+    /**
+     * Convert Model To Array
+     *
+     * @param boolean $isSingle
+     * @return array
+     */
+    public function toArray($isSingle = false): array {
         $data = parent::toArray();
 
         if (!$isSingle) {

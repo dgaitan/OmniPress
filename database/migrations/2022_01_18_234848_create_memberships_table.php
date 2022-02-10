@@ -19,6 +19,7 @@ class CreateMembershipsTable extends Migration
 
             $table->foreignId('customer_id');
             $table->string('customer_email')->index();
+            $table->foreignId('product_id')->nullable();
             $table->date('start_at');
             $table->date('end_at');
             $table->integer('price')->default(0);

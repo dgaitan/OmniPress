@@ -22,8 +22,8 @@ use App\Http\Clients\WooCommerceClient;
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property int $customer_id
  * @property string $customer_email
- * @property string $start_at
- * @property string $end_at
+ * @property \Illuminate\Support\Carbon $start_at
+ * @property \Illuminate\Support\Carbon $end_at
  * @property string $price
  * @property string $shipping_status
  * @property string $status
@@ -59,6 +59,8 @@ use App\Http\Clients\WooCommerceClient;
  * @method static \Illuminate\Database\Eloquent\Builder|Membership whereUserPickedGift($value)
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\MembershipLog[] $logs
  * @property-read int|null $logs_count
+ * @property int|null $product_id
+ * @method static \Illuminate\Database\Eloquent\Builder|Membership whereProductId($value)
  */
 class Membership extends Model
 {

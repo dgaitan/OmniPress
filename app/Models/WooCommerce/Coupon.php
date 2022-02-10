@@ -4,8 +4,6 @@ namespace App\Models\WooCommerce;
 
 use App\Casts\CouponSetting;
 use App\Casts\MetaData;
-use App\Data\Coupon\CouponSettingData;
-use App\Models\Service;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -76,8 +74,4 @@ class Coupon extends Model
         'settings',
         'meta_data'
     ];
-
-    public function service() {
-        return $this->belongsTo(Service::class, 'service_id');
-    }
 }
