@@ -166,7 +166,7 @@ abstract class BaseData extends Data {
             }
         }
         
-        if (static::isCollectionField($key)) {
+        if (static::isCollectionField($key) && is_array($value)) {
             return static::processRowCollection($key, $value);
         }
 

@@ -28,7 +28,7 @@ class MembershipImport implements ToModel, WithProgressBar, WithHeadingRow
             'customer_id' => $row['customer_id'],
             'email' => $row['customer_email']
         ]);
-
+        
         if ($customer->customer_id === 1187) {
             $customer->email = 'sinstone@sandiego.edu';
             $customer->username = $customer->email;
@@ -56,7 +56,8 @@ class MembershipImport implements ToModel, WithProgressBar, WithHeadingRow
             'shipping_status' => $row['shipping_status'],
             'pending_order_id' => $row['pending_order_id'],
             'user_picked_gift' => true,
-            'gift_product_id' => $row['gift_product_id']
+            'gift_product_id' => $row['gift_product_id'],
+            'product_id' => $row['product_id']
         ]);
 
         $kind_cash = json_decode($row['kind_cash'], true);

@@ -84,4 +84,10 @@ class OrderLine extends Model
     public function order() {
         return $this->belongsTo(Order::class, 'order_id');
     }
+
+    public function setNameAttribute($value) {
+        $value = explode('-', $value);
+
+        $this->attributes['name'] = implode(' ', $value);
+    }
 }

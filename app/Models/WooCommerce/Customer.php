@@ -5,10 +5,11 @@ namespace App\Models\WooCommerce;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
-use App\Casts\MetaData;
-use App\Casts\Address;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Cashier\Billable;
+use App\Casts\MetaData;
+use App\Casts\Address;
+use App\Models\Membership;
 
 /**
  * App\Models\WooCommerce\Customer
@@ -28,11 +29,10 @@ use Laravel\Cashier\Billable;
  * @property AddressData $shipping
  * @property bool $is_paying_customer
  * @property string|null $avatar_url
- * @property DataCollection $meta_data
+ * @property DataCollection|null $meta_data
  * @property int|null $service_id
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\WooCommerce\Order[] $orders
  * @property-read int|null $orders_count
- * @property-read Service|null $service
  * @method static \Illuminate\Database\Eloquent\Builder|Customer newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Customer newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Customer query()
@@ -117,6 +117,37 @@ class Customer extends Model
     }
 
     /**
+     * Customer Memberships
+     *
+     * @return HasMany
+     */
+    public function memberships(): HasMany {
+        return $this->hasMany(Membership::class);
+    }
+
+    /**
+     * This customer has an active membership?
+     *
+     * @return boolean
+     */
+    public function hasMemberships(): bool {
+        return $this->memberships()
+            ->where('status', '!=', 'expired')
+            ->exists();
+    }
+
+    /**
+     * Retrieve the current membership
+     *
+     * @return Membership
+     */
+    public function membership(): Membership {
+        return $this->memberships()
+            ->where('status', '!=', 'expired')
+            ->first();
+    }
+
+    /**
      * [getfullName description]
      * @return [type] [description]
      */
@@ -138,6 +169,11 @@ class Customer extends Model
             unset($data['billing']);
             unset($data['meta_data']);
         }
+
+        unset($data['stripe_id']);
+        unset($data['pm_type']);
+        unset($data['pm_last_four']);
+        unset($data['trial_ends_at']);
 
         return $data;
     }

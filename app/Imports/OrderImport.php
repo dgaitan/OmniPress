@@ -23,7 +23,7 @@ class OrderImport implements ToModel, WithProgressBar, WithHeadingRow
     * @return \Illuminate\Database\Eloquent\Model|null
     */
     public function model(array $row)
-    {
+    {   
         $row['meta_data'] = json_decode($row['meta_data'], true);
         $row['line_items'] = json_decode($row['line_items'], true);
         $row['tax_lines'] = json_decode($row['tax_lines'], true);

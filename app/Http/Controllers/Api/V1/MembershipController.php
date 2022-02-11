@@ -12,7 +12,6 @@ use App\Jobs\Memberships\NewMembershipJob;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
-use Exception;
 
 class MembershipController extends Controller
 {
@@ -54,6 +53,26 @@ class MembershipController extends Controller
 
     /**
      * Create a new membership
+     * 
+     * To create a new membership we need the following params:
+     * 
+     * price - integer
+     * customer_id - integer
+     * email - string
+     * username - string
+     * order_id - integer
+     * points - integer
+     * gift_product_id - integer
+     * product_id - integer
+     * 
+     * The Customer.
+     * After validated the data we try to get the customer.
+     * In most general cases the customer will not exists.
+     * So having said this, probably we're going to create
+     * the new customer.
+     * 
+     * 
+     * 
      * @param  Request $request [description]
      * @return [type]           [description]
      */
@@ -66,7 +85,8 @@ class MembershipController extends Controller
             'username' => 'required|string',
             'order_id' => 'required|integer',
             'points' => 'required|integer',
-            'gift_product_id' => 'nullable|integer'
+            'gift_product_id' => 'nullable|integer',
+            'product_id' => 'nullable|integer'
         ]);
 
         // If validation fails, return error listed with 400 http code
@@ -76,10 +96,11 @@ class MembershipController extends Controller
             ], 400);
         }
 
-        // Get the validated data
-        $validatedData = $validator->validated();
-
-        // Get or create the customer
+        /**
+         * Probably the customer will not exists.
+         * So, let's create one. We'll to sync it
+         * later.
+         */
         $customer = Customer::firstOrNew([
             'customer_id' => $request->customer_id,
             'email' => $request->email
@@ -104,7 +125,8 @@ class MembershipController extends Controller
             'shipping_status' => 'pending',
             'pending_order_id' => 0,
             'user_picked_gift' => !is_null($request->gift_product_id),
-            'gift_product_id' => $request->gift_product_id
+            'gift_product_id' => $request->gift_product_id,
+            'product_id' => $request->product_id
         ]);
 
         // Initialize the params to add a log to membership.
@@ -142,7 +164,10 @@ class MembershipController extends Controller
             $membership->customer_email,
             $customer->customer_id,
             $order->order_id,
-            $membership->user_picked_gift ? $membership->gift_product_id : null
+            $membership->user_picked_gift 
+                ? $membership->gift_product_id 
+                : null,
+            $membership->product_id ?? null
         );
 
         return response()->json([

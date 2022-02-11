@@ -17,6 +17,7 @@ class MembershipData extends BaseData {
         public string $status,
         public ?string $order_ids,
         public string $shipping_status,
+        public ?string $product_id,
         public int $gift_product_id,
         public ?string $pending_order_id,
         public ?string $last_payment_intent,

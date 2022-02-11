@@ -20,18 +20,25 @@ class NewMembershipJob implements ShouldQueue
     protected $customerEmail;
     protected $orderId;
     protected $giftProductId;
+    protected $membershipProductId;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(string $customerEmail, int $customerId, int $orderId, int|null $giftProductId = null)
-    {   
+    public function __construct(
+        string $customerEmail, 
+        int $customerId, 
+        int $orderId, 
+        int|null $giftProductId = null,
+        int|null $membershipProductId = null
+    ) {   
         $this->customerEmail = $customerEmail;
         $this->customerId = $customerId;
         $this->orderId = $orderId;
         $this->giftProductId = $giftProductId;
+        $this->membershipProductId = $membershipProductId;
     }
 
     /**
@@ -45,6 +52,13 @@ class NewMembershipJob implements ShouldQueue
 
         if (!is_null($this->giftProductId)) {
             SingleWooCommerceSync::dispatch($this->giftProductId, 'products');
+        }
+
+        if (!is_null($this->membershipProductId)) {
+            SingleWooCommerceSync::dispatch(
+                $this->membershipProductId, 
+                'products'
+            );
         }
 
         SingleWooCommerceSync::dispatch($this->customerId, 'customers');

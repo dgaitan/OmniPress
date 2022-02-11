@@ -161,7 +161,8 @@ class Order extends Model
         'tax_lines',
         'shipping_lines',
         'fee_lines',
-        'coupon_lines'
+        'coupon_lines',
+        'membership_id'
     ];
 
     /**

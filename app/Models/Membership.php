@@ -10,9 +10,8 @@ use App\Mail\Memberships\RenewalReminder;
 use App\Mail\Memberships\PaymentNotFound;
 use App\Models\WooCommerce\Customer;
 use App\Models\WooCommerce\Product;
-use App\Casts\Money;
-use App\Models\WooCommerce\Order;
-use App\Http\Clients\WooCommerceClient;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * App\Models\Membership
@@ -81,7 +80,7 @@ class Membership extends Model
     protected $fillable = [
         'customer_id',
         'customer_email', 'start_at',
-        'end_at', 'price', 'shipping_status',
+        'end_at', 'price', 'shipping_status', 'product_id',
         'status', 'pending_order_id', 'last_payment_intent',
         'payment_intents', 'user_picked_gift', 'gift_product_id'
     ];
@@ -111,6 +110,25 @@ class Membership extends Model
     }
 
     /**
+     * Membership Product Related to this Membership.
+     *
+     * @return BelongsTo
+     */
+    public function product(): BelongsTo {
+        return $this->belongsTo(Product::class, 'product_id');
+    }
+
+    /**
+     * Get Order related to this membership
+     *
+     * @return Collection
+     */
+    public function orders(): Collection {
+        return \App\Models\WooCommerce\Order::where('membership_id', $this->id)
+            ->get();
+    }
+
+    /**
      * [giftProducts description]
      * @return [type] [description]
      */
@@ -131,7 +149,7 @@ class Membership extends Model
     public function toArray($isSingle = false) : array {
         $data = parent::toArray();
 
-        $data['customer'] = $this->customer;
+        $data['customer'] = $this->customer->toArray();
         $data['cash'] = $this->kindCash->toArray($isSingle);
         $data['is_active'] = $this->isActive();
         $data['is_in_renewal'] = $this->isInRenewal();

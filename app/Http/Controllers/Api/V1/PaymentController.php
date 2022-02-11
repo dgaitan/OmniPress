@@ -23,7 +23,7 @@ class PaymentController extends Controller
                 'amount' => 'required|integer',
                 'token' => 'required|string',
                 'customer_id' => 'nullable|integer',
-                'customer_email' => 'nullable|email:rfc,dns',
+                'customer_email' => 'nullable|email',
                 'customer_username' => 'nullable|string',
                 'description' => 'required|string',
                 'save' => 'nullable|boolean'
@@ -44,8 +44,7 @@ class PaymentController extends Controller
             if ($request->customer_id) {
                 $customer = Customer::firstOrCreate([
                     'customer_id' => $request->customer_id,
-                    'email'       => $request->customer_email,
-                    'username'    => $request->customer_username
+                    'email'       => $request->customer_email
                 ]);
 
                 if ($request->save) {

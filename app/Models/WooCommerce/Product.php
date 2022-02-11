@@ -21,7 +21,7 @@ use Laravel\Scout\Searchable;
  * @property string $slug
  * @property string $permalink
  * @property string $sku
- * @property string $date_created
+ * @property \Illuminate\Support\Carbon|null $date_created
  * @property string|null $date_modified
  * @property string $type
  * @property string $status
@@ -219,11 +219,15 @@ class Product extends Model
             return $cat->toArray();
         });
 
-        $array['tags'] = collect($this->tags)->map(function ($tag) {
-            return $tag->toArray();
-        });
+        if (isset($args['withTags']) && $args['withTags']) {
+            $array['tags'] = collect($this->tags)->map(function ($tag) {
+                return $tag->toArray();
+            });
+        }
 
-        $array['date_created'] = $this->date_created ? $this->date_created->format('F j, Y') : '';
+        $array['date_created'] = $this->date_created 
+            ? $this->date_created->format('F j, Y') 
+            : '';
 
         if ($args['withImages']) {
             $array['images'] = collect($this->images)->map(function ($image) {

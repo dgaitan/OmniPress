@@ -16,6 +16,7 @@
                 <ListFilter 
                   v-for="s in statuses"
                   @click="filterStatus(s.slug)"
+                  :key="s.slug"
                   :active="s.slug === status">
                   {{ s.label }}
                 </ListFilter>
@@ -24,7 +25,10 @@
               <template #table>
                 <ListTable :columns="columns">
                   <template #body>
-                    <tr class="text-xs" v-for="(membership, i) in memberships" v-bind:class="[isOdd(i) ? '' : 'bg-gray-50']">
+                    <tr class="text-xs" 
+                      v-for="(membership, i) in memberships" 
+                      :key="membership.id"
+                      v-bind:class="[isOdd(i) ? '' : 'bg-gray-50']">
                       <!-- MEmbership ID -->
                       <td class="flex items-center py-5 px-6 font-medium">
                         <input class="mr-3" type="checkbox" name="" id="">
@@ -164,7 +168,7 @@
             },
 
             search() {
-              this.$inertia.get(route('kinja.orders.index'), {
+              this.$inertia.get(route('kinja.memberships.index'), {
                 s: this.q
               }, { replace: true })
             },

@@ -1,11 +1,11 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\MembershipController;
 use App\Http\Controllers\Api\V1\ProductController;
 use App\Http\Controllers\Api\V1\SyncController;
 use App\Http\Controllers\Api\V1\PaymentController;
+use App\Http\Controllers\Api\V1\CustomerController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,4 +49,9 @@ Route::middleware('auth:sanctum')->name('kinja.api.v1.')->group(function () {
 		Route::get('/{customer_id}/default-payment-method', 'getDefaultPaymentMethod')->name('defaultPaymentMethod');
 	});
 
+	Route::controller(CustomerController::class)->name('customers.')
+		->prefix('/customers')
+		->group(function () {
+			Route::post('/profile', 'profile')->name('profile');
+		});
 });

@@ -42,9 +42,6 @@
                         <th class="py-4 font-medium" width="200px">
                           Categories
                         </th>
-                        <th class="py-4 font-medium" width="300px">
-                          Tags
-                        </th>
                       </tr>
                     </thead>
                     <tbody>
@@ -74,26 +71,15 @@
                           <span class="inline-block py-1 px-2 text-sm text-purple-500 bg-purple-50 rounded-full">{{ product.date_created }}</span>
                         </td>
                         <td width="150px">
-                          <div class="py-4 flex flex-wrap items-center" style="max-width: 200px">
+                          <div class="py-4 flex flex-wrap items-center" style="max-width: 200px" v-if="product.categories.length > 0">
                             <a 
-                              v-if="product.categories.length > 0" 
                               v-for="category in product.categories"
                               :data-product-id="category.id"
+                              :key="category.id"
                               class="py-1 px-2 text-xs text-sky-500 bg-sky-100 mr-2 mb-2 rounded-full"
                               href="#">
                               {{ category.name }}
                             </a>
-                          </div>
-                        </td>
-                        <td style="width: 300px">
-                          <div class="py-4 flex flex-wrap items-center" style="max-width: 300px">
-                            <a 
-                              v-for="(tag, i) in product.tags"
-                              v-if="product.tags.length > 0"
-                              :data-tag-id="tag.id"
-                              class="py-1 px-2 mr-2 mb-2 text-xs border rounded" href="#">
-                                {{ tag.name }}
-                              </a>
                           </div>
                         </td>
                       </tr>

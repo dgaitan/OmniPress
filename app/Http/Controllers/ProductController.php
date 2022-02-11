@@ -8,6 +8,12 @@ use App\Models\WooCommerce\Product;
 
 class ProductController extends Controller
 {
+    /**
+     * Product Index View
+     *
+     * @param Request $request
+     * @return array
+     */
     public function index(Request $request) {
         $perPage = 50;
 

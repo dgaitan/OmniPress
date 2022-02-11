@@ -27,6 +27,11 @@ class MembershipController extends Controller
             $memberships->where('status', $status);
         }
 
+        if ($request->input('s') && ! empty($request->input('s'))) {
+            $s = $request->input('s');
+            $memberships->where('customer_email', 'ilike', "%$s%");
+        }
+
         // if ($request->input('s') && !empty($request->input('s'))) {
         //     $memberships = Membership::search($request->input('s'))->orderBy('date_created', 'desc');
         // } else {
