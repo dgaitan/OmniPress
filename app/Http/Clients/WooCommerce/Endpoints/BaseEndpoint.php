@@ -41,7 +41,7 @@ abstract class BaseEndpoint {
 
     public function post(array $params = []) {
         $request = $this->api->post($this->endpoint, $params);
-        $result = $this->getDataProcessor()::_fromResponse((array) $response);
+        $result = $this->getDataProcessor()::_fromResponse((array) $request);
 
         return $result;
     }

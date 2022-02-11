@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Mail\Memberships\MembershipRenewed;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,6 +11,7 @@ use App\Mail\Memberships\RenewalReminder;
 use App\Mail\Memberships\PaymentNotFound;
 use App\Models\WooCommerce\Customer;
 use App\Models\WooCommerce\Product;
+use App\Tasks\WooCommerceTask;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -205,7 +207,7 @@ class Membership extends Model
      * @return [type] [description]
      */
     public function daysUntilRenewal(): int {
-        return \Carbon\Carbon::now()->diffInDays($this->end_at);
+        return \Carbon\Carbon::now()->diffInDays($this->end_at, false);
     }
 
     /**
@@ -241,6 +243,16 @@ class Membership extends Model
     public function sendPaymentNotFoundNotification(): void {
         Mail::to($this->customer->email)
             ->send(new PaymentNotFound($this));
+    }
+
+    /**
+     * Send membership renewed mail
+     *
+     * @return void
+     */
+    public function sendMembershipRenewedMail(): void {
+        Mail::to($this->customer->email)
+            ->send(new MembershipRenewed($this));
     }
 
     /**
@@ -292,6 +304,8 @@ class Membership extends Model
 
                 $this->shipping_status = 'N/A';
                 $this->save();
+
+                throw new Exception("Customer does not have a payment method");
             }
 
             /**
@@ -311,7 +325,7 @@ class Membership extends Model
 
             // Initialize renewal intent.
             $this->status = self::IN_RENEWAL_STATUS;
-            $this->shiping_status = 'N/A';
+            $this->shipping_status = 'N/A';
 
             try {
                 $this->customer->charge(
@@ -326,30 +340,43 @@ class Membership extends Model
                 $this->payment_intents = 0;
 
                 $orderParams = [
-                    'payment_method' => 'kindhumans_stripe_gatewaay',
+                    'payment_method' => 'kindhumans_stripe_gateway',
                     'payment_method_title' => 'Credit Card',
+                    'customer_id' => $this->customer->customer_id,
                     'set_paid' => true,
+                    'status' => 'kh-awm',
                     'billing' => $this->customer->billing->toArray(),
                     'shipping' => $this->customer->shipping->toArray(),
                     'line_items' => [
                         [
-                            'product_id' => 93,
-                            'quantity' => 2
+                            'product_id' => $this->product_id,
+                            'quantity' => 1
+                        ],
+                    ],
+                    'total' => $this->price,
+                    'meta_data' => [
+                        [
+                            'key' => '_created_from_kinja_api',
+                            'value' => 'yes'
                         ],
                         [
-                            'product_id' => 22,
-                            'variation_id' => 23,
-                            'quantity' => 1
-                        ]
-                    ],
-                    'shipping_lines' => [
-                        [
-                            'method_id' => 'flat_rate',
-                            'method_title' => 'Flat Rate',
-                            'total' => '10.00'
+                            'key' => '_status',
+                            'value' => 'kh-awm'
                         ]
                     ]
                 ];
+
+                $woo = new WooCommerceTask();
+                $order = $woo->push('orders', $orderParams);
+                
+                if ($order->order_id) {
+                    $order = \App\Models\WooCommerce\Order::whereOrderId($order->order_id)
+                        ->first();
+                    $order->update(['membership_id' => $this->id]);
+                }
+
+                $this->sendMembershipRenewedMail();
+                $this->save();
                 
             } catch (\Laravel\Cashier\Exceptions\IncompletePayment $exception) {
                 $this->last_payment_intent = \Carbon\Carbon::now();
@@ -367,10 +394,11 @@ class Membership extends Model
                     )
                 ]);
             }
-            
 
+            $this->save();
+            return $this;
         } catch ( Exception $e ) {
-            return false;
+            return $e->getMessage();
         }
     }
 

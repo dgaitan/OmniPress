@@ -34,7 +34,8 @@ class RenewalJob implements ShouldQueue
     {
         $aMonthAgo = Carbon::now()->subMonth();
         $oneMonth = Carbon::now()->addMonth();
-        $memberships = Membership::with(['customer', 'kindCash'])->whereBetween('end_at', [$aMonthAgo, $oneMonth]);
+        $memberships = Membership::with(['customer', 'kindCash'])
+            ->whereBetween('end_at', [$aMonthAgo, $oneMonth]);
 
         if ($memberships->exists()) {
             $memberships = $memberships->paginate(50);
