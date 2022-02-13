@@ -46,7 +46,7 @@ class RenewalJob implements ShouldQueue
                 
                     if ($membership->isActive()) {
                 
-                        if (in_array($membership->daysUntilRenewal(), array( 15, 5, 3 ) )) {
+                        if (in_array($membership->daysUntilRenewal(), [15, 5, 3])) {
                             $membership->sendRenewalReminder();
                         }
 

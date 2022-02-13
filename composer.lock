@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9630ceb3863bb12d8600bcebdd260d17",
+    "content-hash": "71cb809ff59778956b4df1ee10924674",
     "packages": [
         {
             "name": "algolia/algoliasearch-client-php",
@@ -1940,6 +1940,67 @@
                 }
             ],
             "time": "2022-01-27T16:44:10+00:00"
+        },
+        {
+            "name": "juststeveking/laravel-toolkit",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/JustSteveKing/laravel-toolkit.git",
+                "reference": "a614f59eca4a34db20f18c13dd6cbf232748c123"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/JustSteveKing/laravel-toolkit/zipball/a614f59eca4a34db20f18c13dd6cbf232748c123",
+                "reference": "a614f59eca4a34db20f18c13dd6cbf232748c123",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.0|^8.1"
+            },
+            "require-dev": {
+                "laravel/laravel": "^8.6",
+                "phpstan/phpstan": "^1.4"
+            },
+            "default-branch": true,
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "JustSteveKing\\LaravelToolkit\\Providers\\BusServiceProvider",
+                        "JustSteveKing\\LaravelToolkit\\Providers\\LaravelToolkitServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "JustSteveKing\\LaravelToolkit\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Steve McDougall",
+                    "email": "juststevemcd@gmail.com",
+                    "homepage": "https://www.juststeveking.uk/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A simple toolkit package to help me do what I do with Laravel",
+            "support": {
+                "issues": "https://github.com/JustSteveKing/laravel-toolkit/issues",
+                "source": "https://github.com/JustSteveKing/laravel-toolkit/tree/main"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/JustSteveKing",
+                    "type": "github"
+                }
+            ],
+            "time": "2022-02-07T11:28:20+00:00"
         },
         {
             "name": "laravel/cashier",
@@ -11153,7 +11214,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "juststeveking/laravel-toolkit": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

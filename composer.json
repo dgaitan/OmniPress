@@ -12,6 +12,7 @@
         "guzzlehttp/guzzle": "^7.0.1",
         "inertiajs/inertia-laravel": "^0.5.2",
         "joelbutcher/socialstream": "^3.3",
+        "juststeveking/laravel-toolkit": "dev-main",
         "laravel/cashier": "^13.8",
         "laravel/framework": "^9.0",
         "laravel/jetstream": "^2.5",

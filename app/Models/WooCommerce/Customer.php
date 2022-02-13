@@ -66,6 +66,8 @@ use App\Models\Membership;
  * @method static \Illuminate\Database\Eloquent\Builder|Customer wherePmType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Customer whereStripeId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Customer whereTrialEndsAt($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|Membership[] $memberships
+ * @property-read int|null $memberships_count
  */
 class Customer extends Model
 {

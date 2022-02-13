@@ -62,6 +62,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property-read int|null $logs_count
  * @property int|null $product_id
  * @method static \Illuminate\Database\Eloquent\Builder|Membership whereProductId($value)
+ * @property-read Product|null $product
  */
 class Membership extends Model
 {
