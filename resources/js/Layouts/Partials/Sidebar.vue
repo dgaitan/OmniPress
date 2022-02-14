@@ -31,14 +31,14 @@
 	              			<template #icon><unicon name="users-alt"></unicon></template>
 	              			Customers
 	              		</SidebarNavLink>
-	              		<SidebarNavLink :href="route('kinja.coupons.index')" :active="route().current('kinja.coupons.index')">
+	              		<!-- <SidebarNavLink :href="route('kinja.coupons.index')" :active="route().current('kinja.coupons.index')">
 	              			<template #icon><unicon name="gift"></unicon></template>
 	              			Coupons
 	              		</SidebarNavLink>
 	              		<SidebarNavLink :href="route('kinja.coupons.index')" :active="route().current('kinja.coupons.index')">
 	              			<template #icon><unicon name="transaction"></unicon></template>
 	              			Payment Methods
-	              		</SidebarNavLink>
+	              		</SidebarNavLink> -->
 	              	</SidebarNav>
 
 	              	<!-- Kindhumans -->
@@ -48,14 +48,14 @@
 	              			<template #icon><unicon name="user-plus"></unicon></template>
 	              			Memberships
 	              		</SidebarNavLink>
-	              		<SidebarNavLink :href="route('kinja.customers.index')" :active="route().current('kinja.customers.index')">
+	              		<!-- <SidebarNavLink :href="route('kinja.customers.index')" :active="route().current('kinja.customers.index')">
 	              			<template #icon><unicon name="shopping-cart"></unicon></template>
 	              			Drosphip
 	              		</SidebarNavLink>
 	              		<SidebarNavLink :href="route('kinja.coupons.index')" :active="route().current('kinja.coupons.index')">
 	              			<template #icon><unicon name="location-arrow"></unicon></template>
 	              			Subscriptions
-	              		</SidebarNavLink>
+	              		</SidebarNavLink> -->
 	              	</SidebarNav>
 
 	              	<!-- Admin -->

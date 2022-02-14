@@ -2,13 +2,17 @@
 	<table class="table-auto w-full">
 		<thead>
 			<tr class="text-xs text-gray-500 text-left">
-              	<th 
+              	<th
               		v-for="(column, index) in columns"
 					:key="index"
 					class="py-4 font-medium" v-bind:class="[index === 0 ? 'flex items-center pl-6' : '']">
-                	
+
                 	<input v-if="index === 0" class="mr-3" type="checkbox" name="" id="">
-                	<a v-if="column.sortable" class="flex items-center" :href="column.link">
+                	<a
+                        v-if="column.sortable"
+                        @click="getOrderingLink($event, column.key)"
+                        class="flex items-center cursor-pointer"
+                        v-bind:class="[column.key === stateData.orderBy ? 'font-bold text-black' : '']">
 	                  	<span>{{ column.name }}</span>
 	                  	<span class="ml-2">
 	                    	<svg width="9" height="12" viewBox="0 0 9 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -33,7 +37,28 @@
 
 	export default defineComponent({
 		props: {
-			columns: Array
+			columns: Array,
+            stateData: Object
 		},
+
+		methods: {
+			/**
+			 * Trigger order link
+			 *
+			 * @param string link - the order by link
+			 * @returns string
+			 */
+			getOrderingLink(e, key) {
+				e.preventDefault();
+				let currentUrl = window.location.href.split('?')[0];
+                this.stateData.orderBy = key;
+                this.stateData.order = this.stateData.order === 'desc' ? 'asc' : 'desc'
+
+                this.$inertia.get(currentUrl, {
+                    ...this.stateData
+                }, { replace: true });
+			}
+		}
+
 	})
 </script>

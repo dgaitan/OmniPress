@@ -74,6 +74,12 @@ class Membership extends Model
     const IN_RENEWAL_STATUS = 'in_renewal';
     const AWAITING_PICK_GIFT_STATUS = 'awaiting_pick_gift';
 
+    // Shipping Statuses
+    const SHIPPING_PENDING_STATUS = 'pending';
+    const SHIPPING_CANCELLED_STATUS = 'cancelled';
+    const SHIPPING_SHIPPED_STATUS = 'shipped';
+    const SHIPPING_NO_SHIP_STATUS = 'no_ship';
+
     protected $casts = [
         'start_at' => 'date',
         'end_at' => 'date',
@@ -137,9 +143,9 @@ class Membership extends Model
      */
     public function giftProducts() {
         return $this->belongsToMany(
-            Product::class, 
-            'membership_product', 
-            'membership_id', 
+            Product::class,
+            'membership_product',
+            'membership_id',
             'product_id'
         )->as('products')->withTimestamps();
     }
@@ -229,7 +235,7 @@ class Membership extends Model
 
     /**
      * Send renewal reminder emails or what ever.
-     * 
+     *
      * @return void
      */
     public function sendRenewalReminder(): void {
@@ -258,16 +264,16 @@ class Membership extends Model
 
     /**
      * Maybe Renew a Membership.
-     * 
+     *
      * Normally, the customers should has a card stored to can make
      * the auto-payment. The Membership should be in active or in-renewal status.
-     * 
-     * Since 2021, kindhumans gives a gift when the users buy or renewal their 
+     *
+     * Since 2021, kindhumans gives a gift when the users buy or renewal their
      * membership. So we have a flow to know what the customer picks. This
      * auto-renew trigger create the new order and if all happens with success
      * the membership will change to awaiting-pick-gift status. This will change
-     * until user select a product. 
-     * 
+     * until user select a product.
+     *
      * @param boolean $force - Normally the trigger will validate if the membership is expired unless we force it.
      * @param string $stripe_token - Is possible the user does not store the card, so is necessary pass the stripe_token to make one time payment.
      * @throws if Membership isn't expired unless we force it.
@@ -311,12 +317,12 @@ class Membership extends Model
 
             /**
              * Membership can renewal only if is active or in renewal status.
-             * 
+             *
              * Active means that currently is active (of course) and will
              * auto-renewal. This is the simple and normal flow.
-             * 
+             *
              * In-Renewal means that this isn't the first we're trying to renew
-             * this membership. Maybe the renewal fail in the past because a 
+             * this membership. Maybe the renewal fail in the past because a
              * failed payment intent. So, this is the flow for members
              * with more that one intent.
              */
@@ -330,8 +336,8 @@ class Membership extends Model
 
             try {
                 $this->customer->charge(
-                    $this->price ?? 3500, 
-                    $this->customer->defaultPaymentMethod()->id, 
+                    $this->price ?? 3500,
+                    $this->customer->defaultPaymentMethod()->id,
                     ['description' => "Membership Renewal"]
                 );
 
@@ -369,7 +375,7 @@ class Membership extends Model
 
                 $woo = new WooCommerceTask();
                 $order = $woo->push('orders', $orderParams);
-                
+
                 if ($order->order_id) {
                     $order = \App\Models\WooCommerce\Order::whereOrderId($order->order_id)
                         ->first();
@@ -378,7 +384,7 @@ class Membership extends Model
 
                 $this->sendMembershipRenewedMail();
                 $this->save();
-                
+
             } catch (\Laravel\Cashier\Exceptions\IncompletePayment $exception) {
                 $this->last_payment_intent = \Carbon\Carbon::now();
                 $this->payment_intents = $this->payment_intents + 1;
@@ -390,7 +396,7 @@ class Membership extends Model
                 $this->save();
                 $this->logs()->create([
                     'description' => sprintf(
-                        "Membership Renewal Failed with error: %s", 
+                        "Membership Renewal Failed with error: %s",
                         $exception->payment->status
                     )
                 ]);
@@ -411,27 +417,69 @@ class Membership extends Model
         $statuses = [];
 
         $status[] = [
-            'slug' => self::ACTIVE_STATUS, 
+            'slug' => self::ACTIVE_STATUS,
             'label' => 'Active'
         ];
         $status[] = [
-            'slug' => self::IN_RENEWAL_STATUS, 
+            'slug' => self::IN_RENEWAL_STATUS,
             'label' => 'In Renewal'
         ];
         $status[] = [
-            'slug' => self::AWAITING_PICK_GIFT_STATUS, 
+            'slug' => self::AWAITING_PICK_GIFT_STATUS,
             'label' => 'Awaiting Pick Gift'
         ];
         $status[] = [
-            'slug' => self::CANCELLED_STATUS, 
+            'slug' => self::CANCELLED_STATUS,
             'label' => 'Cancelled'
         ];
         $status[] = [
-            'slug' => self::EXPIRED_STATUS, 
+            'slug' => self::EXPIRED_STATUS,
             'label' => 'Expired'
         ];
 
         return $status;
+    }
+
+    /**
+     * Get the Membership Shipping Status availables
+     *
+     * @return array
+     */
+    public static function getShippingStatuses(): array {
+        $statuses = [
+            [
+                'slug' => self::SHIPPING_SHIPPED_STATUS,
+                'label' => 'Shipped'
+            ],
+            [
+                'slug' => self::SHIPPING_NO_SHIP_STATUS,
+                'label' => 'No Ship'
+            ],
+            [
+                'slug' => self::SHIPPING_PENDING_STATUS,
+                'label' => 'Pending'
+            ],
+            [
+                'slug' => self::SHIPPING_CANCELLED_STATUS,
+                'label' => 'Cancelled'
+            ]
+        ];
+        return $statuses;
+    }
+
+    /**
+     * Is the status a valid membership shipping status?
+     *
+     * @param string $status
+     * @return boolean
+     */
+    public static function isValidShippingStatus(string $status): bool {
+        return in_array($status, [
+            self::SHIPPING_CANCELLED_STATUS,
+            self::SHIPPING_NO_SHIP_STATUS,
+            self::SHIPPING_SHIPPED_STATUS,
+            self::SHIPPING_PENDING_STATUS
+        ]);
     }
 
     /**

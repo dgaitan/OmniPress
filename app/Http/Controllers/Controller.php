@@ -17,8 +17,8 @@ class Controller extends BaseController
             'total' => $pagination->total(),
             'nextUrl' => $pagination->nextPageUrl(),
             'prevUrl' => $pagination->previousPageUrl(),
-            'perPage' => $pagination->perPage(),
-            'currentPage' => $pagination->currentPage(),
+            '_perPage' => $pagination->perPage(),
+            '_currentPage' => $pagination->currentPage(),
         ];
     }
 }
