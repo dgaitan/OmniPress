@@ -40,6 +40,7 @@
                             <option value="status_to_expired">Change Status to Expired</option>
                         </optgroup>
                         <optgroup label="Actions">
+                            <option value="expire">Cancell Membership</option>
                             <option value="run_cron">Run Renewal Cron</option>
                         </optgroup>
                     </select>
@@ -254,7 +255,7 @@
 
             search() {
                 this.$inertia.get(route('kinja.memberships.index'), {
-                    s: this.s
+                    s: this.filters.s
                 }, { replace: true })
             },
 
@@ -284,7 +285,8 @@
 
                 this.$inertia.post(route('kinja.memberships.actions'), {
                     ids: this.ids,
-                    action: this.action
+                    action: this.action,
+                    filters: this.filters
                 }, {
                     replace: true,
                     onSuccess: () => {

@@ -103,7 +103,8 @@ class MembershipController extends Controller
         $action = $request->input('action');
         $action = explode( '_to_', $action );
 
-        if ( count( $action ) === 2 && in_array( $action[0], ['shipping_status', 'status'] ) ) {
+        // Update Shipping or Status
+        if (count($action) === 2 && in_array($action[0], ['shipping_status', 'status'])) {
             $memberships = Membership::whereIn('id', $request->input('ids'));
 
             if ($memberships->exists()) {
@@ -111,6 +112,25 @@ class MembershipController extends Controller
             }
         }
 
-        return to_route('kinja.memberships.index');
+        // Expering Memberships
+        if (count($action) === 1) {
+            $action = end($action);
+            $memberships = Membership::whereIn('id', $request->input('ids'));
+
+            if ($action === 'expire' && $memberships->exists()) {
+                $memberships->get()->map(function($m) use ($request) {
+                    $m->update([
+                        'shipping_status' => Membership::SHIPPING_CANCELLED_STATUS,
+                        'status' => Membership::EXPIRED_STATUS
+                    ]);
+
+                    $m->logs()->create([
+                        'description' => sprintf("Membership Expired by %s", $request->user()->email)
+                    ]);
+                });
+            }
+        }
+
+        return to_route('kinja.memberships.index', $request->input('filters', []));
     }
 }

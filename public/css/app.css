@@ -1786,17 +1786,13 @@ select {
   --tw-text-opacity: 1;
   color: rgb(6 182 212 / var(--tw-text-opacity));
 }
-.text-sky-500 {
-  --tw-text-opacity: 1;
-  color: rgb(14 165 233 / var(--tw-text-opacity));
-}
 .text-black {
   --tw-text-opacity: 1;
   color: rgb(0 0 0 / var(--tw-text-opacity));
 }
-.text-cyan-600 {
+.text-sky-500 {
   --tw-text-opacity: 1;
-  color: rgb(8 145 178 / var(--tw-text-opacity));
+  color: rgb(14 165 233 / var(--tw-text-opacity));
 }
 .underline {
   -webkit-text-decoration-line: underline;
@@ -1941,6 +1937,10 @@ select {
 .status.failed {
 	color: #881337;
 	background-color: #fda4af;
+}
+.status.expired {
+    color: rgb(136 19 55);
+    background-color: rgb(253 164 175);
 }
 .hover\:border-gray-300:hover {
   --tw-border-opacity: 1;
@@ -2458,3 +2458,4 @@ select {
     padding-right: 1rem;
   }
 }
+

@@ -41,3 +41,8 @@
 	color: #881337;
 	background-color: #fda4af;
 }
+
+.status.expired {
+    color: rgb(136 19 55);
+    background-color: rgb(253 164 175);
+}
