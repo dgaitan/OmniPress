@@ -20,6 +20,7 @@ class UserRolesSeeder extends Seeder
 
         $kindhumansTeam = [
             'see_users',
+            'see_memberships', 'analyze_memberships', 'export_memberships', 'edit_memberships',
             'see_customers', 'analyze_customers', 'export_customers',
             'see_coupons', 'analyze_coupons', 'export_coupons',
             'see_orders', 'analyze_orders', 'export_orders',
@@ -32,7 +33,7 @@ class UserRolesSeeder extends Seeder
             'add_user', 'assign_roles', 'run_sync', 'manage_api_tokens',
             'see_roles', 'add_external_user',...$kindhumansTeam
         ];
-        
+
         // Super Admin Abilities
         $superAdminPerms = [
             'maintenance', 'add_roles', 'add_super_admin',

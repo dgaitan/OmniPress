@@ -26,7 +26,7 @@
                     </select>
 
                     <!-- Actions -->
-                    <select class="border-gray-300 focus:border-cyan-600 focus:ring focus:ring-cyan-400 focus:ring-opacity-50 rounded-md shadow-sm ml-2" style="width:200px">
+                    <select v-model="action" @change="bulkActions()" class="border-gray-300 focus:border-cyan-600 focus:ring focus:ring-cyan-400 focus:ring-opacity-50 rounded-md shadow-sm ml-2" style="width:200px">
                         <option value="">Actions</option>
                         <optgroup label="Shipping Statuses">
                             <option value="shipping_status_to_cancelled">Change Shipping Status to Cancelled</option>
@@ -106,6 +106,11 @@
                       <td class="font-medium">
                         {{ displayMoment(membership.end_at, 'LL') }}
                       </td>
+
+                      <!-- Actions -->
+                      <td class="font-medium">
+                          <a href="javascript:void(0)" @click="showDetail(membership.id)" class="text-cyan-500 font-bold">Show</a>
+                      </td>
                     </tr>
                   </template>
                 </ListTable>
@@ -117,6 +122,15 @@
             </ListWrapper>
 
         </div>
+
+        <!-- Membership Detail Modal -->
+        <jet-modal :show="showDetailModal" @close="showDetailModal = false" maxWidth="7xl">
+            <div class="p-4">
+                <jet-button @click="showSyncConfirmation = false">
+                    Close
+                </jet-button>
+            </div>
+        </jet-modal>
     </layout>
 </template>
 
@@ -124,8 +138,8 @@
     import { defineComponent } from 'vue'
     import Layout from '@/Layouts/Layout.vue'
     import JetInput from '@/Jetstream/Input.vue'
-    import JetDropdown from '@/Jetstream/Dropdown.vue'
-    import JetDropdownLink from '@/Jetstream/DropdownLink.vue'
+    import JetButton from '@/Jetstream/Button.vue'
+    import JetModal from '@/Jetstream/Modal.vue'
     import ListWrapper from '@/Components/List/ListWrapper.vue'
     import ListFilter from '@/Components/List/ListFilter.vue'
     import ListTable from '@/Components/List/ListTable.vue'
@@ -144,12 +158,13 @@
         components: {
             Layout,
             JetInput,
-            JetDropdown,
-            JetDropdownLink,
+            JetButton,
+            JetModal,
             ListWrapper,
             ListFilter,
             ListTable,
-            ListPagination
+            ListPagination,
+
         },
 
         data() {
@@ -165,48 +180,55 @@
                     order: this._order,
                     orderBy: this._orderBy
                 },
-                ids: []
+                action: '',
+                ids: [],
+                showDetailModal: false
             }
         },
 
         computed: {
           columns() {
             return [
-              {
-                name: 'ID',
-                sortable: true,
-                key: 'id'
-              },
-              {
-                name: 'Customer',
-                sortable: false,
-                key: ''
-              },
-              {
-                name: 'Status',
-                sortable: false,
-                key: ''
-              },
-              {
-                name: 'Shipping Status',
-                sortable: false,
-                key: ''
-              },
-              {
-                name: 'Kind Cash',
-                sortable: true,
-                key: 'kind_cash'
-              },
-              {
-                name: 'Start At',
-                sortable: true,
-                key: 'start_at'
-              },
-              {
-                name: 'End At',
-                sortable: true,
-                key: 'end_at'
-              }
+                {
+                    name: 'ID',
+                    sortable: true,
+                    key: 'id'
+                },
+                {
+                    name: 'Customer',
+                    sortable: false,
+                    key: ''
+                },
+                {
+                    name: 'Status',
+                    sortable: false,
+                    key: ''
+                },
+                {
+                    name: 'Shipping Status',
+                    sortable: false,
+                    key: ''
+                },
+                {
+                    name: 'Kind Cash',
+                    sortable: true,
+                    key: 'kind_cash'
+                },
+                {
+                    name: 'Start At',
+                    sortable: true,
+                    key: 'start_at'
+                },
+                {
+                    name: 'End At',
+                    sortable: true,
+                    key: 'end_at'
+                },
+                {
+                    name: '',
+                    sortable: false,
+                    key: ''
+                }
             ]
           }
         },
@@ -236,6 +258,10 @@
                 }, { replace: true })
             },
 
+            showDetail(id) {
+                this.showDetailModal = true
+            },
+
             /**
              *
              */
@@ -251,6 +277,21 @@
 
             selectAllIds(checked) {
                 checked ? this.memberships.map(m => this.ids.push(m.id)) : this.ids = [];
+            },
+
+            bulkActions() {
+                if (!this.action) return false;
+
+                this.$inertia.post(route('kinja.memberships.actions'), {
+                    ids: this.ids,
+                    action: this.action
+                }, {
+                    replace: true,
+                    onSuccess: () => {
+                        this.ids = []
+                        this.action = ''
+                    }
+                });
             }
         }
     })

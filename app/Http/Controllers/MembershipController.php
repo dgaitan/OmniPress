@@ -84,4 +84,33 @@ class MembershipController extends Controller
 
         return Inertia::render('Memberships/Index', $data);
     }
+
+    /**
+     * Membership Actions
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function actions(Request $request) {
+        if (! $request->user()->hasPermissionTo('edit_memberships') ) {
+            abort(403);
+        }
+
+        if (! $request->has('ids')) {
+            abort(402);
+        }
+
+        $action = $request->input('action');
+        $action = explode( '_to_', $action );
+
+        if ( count( $action ) === 2 && in_array( $action[0], ['shipping_status', 'status'] ) ) {
+            $memberships = Membership::whereIn('id', $request->input('ids'));
+
+            if ($memberships->exists()) {
+                $memberships->get()->map(fn($m) => $m->update([$action[0] => $action[1]]));
+            }
+        }
+
+        return to_route('kinja.memberships.index');
+    }
 }

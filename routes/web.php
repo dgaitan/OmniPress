@@ -33,7 +33,7 @@ Route::get('/', function () {
 
 
 Route::get(
-    '/oauth/{provider}/callback', 
+    '/oauth/{provider}/callback',
     [OAuthController::class, 'handleProviderCallback']
 )->middleware('kindhumans.email')->name('oauth.callback');
 
@@ -86,6 +86,7 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('/dashboard')->group(fun
         // Memberships
         Route::controller(MembershipController::class)->prefix('/memberships')->name('memberships.')->group(function () {
             Route::get('/', 'index')->name('index');
+            Route::post('/actions', 'actions')->name('actions');
         });
     });
 
