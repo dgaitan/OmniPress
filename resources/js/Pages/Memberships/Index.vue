@@ -3,42 +3,64 @@
 
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <ListWrapper title="Memberships">
-              <!-- Actions -->
-              <template #actions>
-                <jet-input v-model="s" type="search" v-on:keyup.enter="search" placeholder="Search..." style="width:350px" />
-                <select
-                    v-model="shippingStatus"
-                    @change="changeShippingStatus()"
-                    class="border-gray-300 focus:border-cyan-600 focus:ring focus:ring-cyan-400 focus:ring-opacity-50 rounded-md shadow-sm ml-2"
-                    name="content_type"
-                    id="content_type">
-                    <option value="" :selected="shippingStatus === ''">Filter By Shipping Status</option>
-                    <option
-                        v-for="s in shippingStatuses"
-                        :key="s.slug"
-                        :value="s.slug"
-                        :selected="shippingStatus === s.slug">
-                        {{ s.label }}
-                    </option>
-                </select>
+                <!-- Actions -->
+                <template #actions>
+                    <!-- SearchBox -->
+                    <jet-input v-model="filters.s" type="search" v-on:keyup.enter="search" placeholder="Search..." style="width:350px" />
+
+                    <!-- Shipping Status Filter -->
+                    <select
+                        v-model="filters.shippingStatus"
+                        @change="changeShippingStatus()"
+                        class="border-gray-300 focus:border-cyan-600 focus:ring focus:ring-cyan-400 focus:ring-opacity-50 rounded-md shadow-sm ml-2"
+                        name="content_type"
+                        id="content_type">
+                        <option value="" :selected="filters.shippingStatus === ''">Filter By Shipping Status</option>
+                        <option
+                            v-for="s in shippingStatuses"
+                            :key="s.slug"
+                            :value="s.slug"
+                            :selected="filters.shippingStatus === s.slug">
+                            {{ s.label }}
+                        </option>
+                    </select>
+
+                    <!-- Actions -->
+                    <select class="border-gray-300 focus:border-cyan-600 focus:ring focus:ring-cyan-400 focus:ring-opacity-50 rounded-md shadow-sm ml-2" style="width:200px">
+                        <option value="">Actions</option>
+                        <optgroup label="Shipping Statuses">
+                            <option value="shipping_status_to_cancelled">Change Shipping Status to Cancelled</option>
+                            <option value="shipping_status_to_shipped">Change Shipping Status to Shipped</option>
+                            <option value="shipping_status_to_no_ship">Change Shipping Status to No Ship</option>
+                        </optgroup>
+                        <optgroup label="Membership Statuses">
+                            <option value="status_to_active">Change Status to Active</option>
+                            <option value="status_to_awaiting_pick_gift">Change Status to Awaiting Pick Gift</option>
+                            <option value="status_to_cancelled">Change Status to Cancelled</option>
+                            <option value="status_to_expired">Change Status to Expired</option>
+                        </optgroup>
+                        <optgroup label="Actions">
+                            <option value="run_cron">Run Renewal Cron</option>
+                        </optgroup>
+                    </select>
               </template>
 
               <!-- FIlters -->
               <template #filters>
-                <ListFilter @click="filterStatus('all')" :active="status === '' || status === 'all'">
+                <ListFilter @click="filterStatus('all')" :active="filters.status === '' || filters.status === 'all'">
                   All
                 </ListFilter>
                 <ListFilter
                   v-for="s in statuses"
                   @click="filterStatus(s.slug)"
                   :key="s.slug"
-                  :active="s.slug === status">
+                  :active="s.slug === filters.status">
                   {{ s.label }}
                 </ListFilter>
               </template>
 
               <template #table>
-                <ListTable :columns="columns" :stateData="this.$data">
+                <ListTable :columns="columns" :stateData="this.filters" :selectIds="selectAllIds">
                   <template #body>
                     <tr class="text-xs"
                       v-for="(membership, i) in memberships"
@@ -46,7 +68,7 @@
                       v-bind:class="[isOdd(i) ? '' : 'bg-gray-50']">
                       <!-- MEmbership ID -->
                       <td class="flex items-center py-5 px-6 font-medium">
-                        <input class="mr-3" type="checkbox" name="" id="">
+                        <input class="mr-3" type="checkbox" @change="setIds($event)" :checked="ids.includes(membership.id)" :value="membership.id">
                           <span>#{{ membership.id }}</span>
                       </td>
                       <!-- Customer -->
@@ -90,7 +112,7 @@
               </template>
 
               <template #pagination>
-                <ListPagination :url="route('kinja.memberships.index')" :params="this.$props" :stateData="this.$data" />
+                <ListPagination :url="route('kinja.memberships.index')" :params="this.$props" :stateData="this.filters" />
               </template>
             </ListWrapper>
 
@@ -131,17 +153,20 @@
         },
 
         data() {
-          return {
-            status: this._status ? this._status : 'all',
-            s: this._s,
-            shippingStatus: this._shippingStatus,
-            // Pagination Data
-            page: this._currentPage,
-            perPage: this._perPage,
-            // Ordering Data
-            order: this._order,
-            orderBy: this._orderBy
-          }
+            return {
+                filters: {
+                    status: this._status ? this._status : 'all',
+                    s: this._s,
+                    shippingStatus: this._shippingStatus,
+                    // Pagination Data
+                    page: this._currentPage,
+                    perPage: this._perPage,
+                    // Ordering Data
+                    order: this._order,
+                    orderBy: this._orderBy
+                },
+                ids: []
+            }
         },
 
         computed: {
@@ -194,14 +219,14 @@
 
             changeShippingStatus() {
                 this.$inertia.get(route('kinja.memberships.index'), {
-                    ...this.$data
+                    ...this.filters
                 }, { replace: true })
             },
 
             filterStatus(status) {
                 this.status = status
                 this.$inertia.get(route('kinja.memberships.index'), {
-                    ...this.$data
+                    ...this.filters
                 }, { replace: true });
             },
 
@@ -210,6 +235,23 @@
                     s: this.s
                 }, { replace: true })
             },
+
+            /**
+             *
+             */
+            setIds(e) {
+                const ID = parseInt(e.target.value);
+
+                if (e.target.checked) {
+                    this.ids.push(ID);
+                } else {
+                    this.ids.splice(this.ids.indexOf(ID), 1);
+                }
+            },
+
+            selectAllIds(checked) {
+                checked ? this.memberships.map(m => this.ids.push(m.id)) : this.ids = [];
+            }
         }
     })
 </script>

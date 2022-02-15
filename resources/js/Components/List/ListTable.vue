@@ -7,7 +7,7 @@
 					:key="index"
 					class="py-4 font-medium" v-bind:class="[index === 0 ? 'flex items-center pl-6' : '']">
 
-                	<input v-if="index === 0" class="mr-3" type="checkbox" name="" id="">
+                	<input v-if="index === 0" class="mr-3" type="checkbox" @click="(e) => selectIds(e.target.checked)">
                 	<a
                         v-if="column.sortable"
                         @click="getOrderingLink($event, column.key)"
@@ -38,7 +38,8 @@
 	export default defineComponent({
 		props: {
 			columns: Array,
-            stateData: Object
+            stateData: Object,
+            selectIds: Function
 		},
 
 		methods: {
