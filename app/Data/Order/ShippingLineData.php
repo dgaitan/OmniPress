@@ -22,7 +22,7 @@ class ShippingLineData extends BaseData {
         public string $method_title,
         public string $method_id,
         public float $total,
-        public ?float $total_tax = 0,
+        public float|null $total_tax,
         public array $taxes,
         /** @var \App\Data\Shared\MetaData[] */
         public ?DataCollection $meta_data,

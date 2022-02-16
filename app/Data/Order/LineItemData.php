@@ -24,17 +24,17 @@ class LineItemData extends BaseData {
         public int $line_item_id,
         public string $name,
         public int $product_id,
-        public ?int $variant_id = 0,
-        public int $quantity = 1,
-        public ?string $tax_class = '',
-        public ?float $subtotal = 0,
-        public ?float $subtotal_tax = 0,
-        public ?float $total = 0,
+        public int|null $variant_id,
+        public int $quantity,
+        public string|null $tax_class,
+        public float|null $subtotal,
+        public float|null $subtotal_tax,
+        public float|null $total,
         public array $taxes,
         /** @var \App\Data\Shared\MetaData[] */
         public ?DataCollection $meta_data,
-        public ?string $sku,
-        public ?float $product_price = 0
+        public string|null $sku,
+        public float|null $product_price
     ) {
 
     }

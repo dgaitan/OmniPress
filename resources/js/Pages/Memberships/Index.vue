@@ -41,6 +41,7 @@
                         </optgroup>
                         <optgroup label="Actions">
                             <option value="expire">Cancell Membership</option>
+                            <option value="renew">Renew Memberships</option>
                             <option value="run_cron">Run Renewal Cron</option>
                         </optgroup>
                     </select>

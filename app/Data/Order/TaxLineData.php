@@ -28,7 +28,7 @@ class TaxLineData extends BaseData {
         public string $label,
         public bool $compound,
         public float $tax_total,
-        public ?float $shipping_tax_total = 0,
+        public float|null $shipping_tax_total,
         /** @var \App\Data\Shared\MetaData[] */
         public ?DataCollection $meta_data,
     ) {

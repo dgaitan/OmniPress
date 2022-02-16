@@ -37,13 +37,13 @@ class OrderData extends BaseData {
 
     /**
      * Keep Price Value
-     * 
+     *
      * Change it if you will import data from a csv
-     * 
+     *
      * @var boolean
      */
     protected static $keepPriceValue = false;
-    
+
     public function __construct(
         public int $order_id,
         public ?int $parent_id,
@@ -53,8 +53,8 @@ class OrderData extends BaseData {
         public string $version,
         public string $status,
         public string $currency,
-        public string $date_created,
-        public ?string $date_modified = null,
+        public string|null $date_created,
+        public string $date_modified,
         public int $discount_total,
         public int $discount_tax,
         public int $shipping_total,
@@ -69,11 +69,11 @@ class OrderData extends BaseData {
         public ?string $customer_note,
         public AddressData $billing,
         public AddressData $shipping,
-        public ?string $payment_method = null,
-        public ?string $transaction_id = '',
-        public ?string $date_paid = '',
-        public ?string $date_completed = null,
-        public ?string $cart_hash = '',
+        public string|null $payment_method,
+        public string|null $transaction_id,
+        public string|null $date_paid,
+        public string|null $date_completed,
+        public string|null $cart_hash,
         public ?bool $set_paid,
         /** @var \App\Data\Shared\MetaData[] */
         public ?DataCollection $meta_data,

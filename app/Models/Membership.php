@@ -405,6 +405,10 @@ class Membership extends Model
             $this->save();
             return $this;
         } catch ( Exception $e ) {
+            $this->logs()->create([
+                'description' => sprintf("Renewal Error: %s", $e->getMessage())
+            ]);
+
             return $e->getMessage();
         }
     }

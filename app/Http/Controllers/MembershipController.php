@@ -130,6 +130,18 @@ class MembershipController extends Controller
                     ]);
                 });
             }
+
+            if ($action === 'renew' && $memberships->exists()) {
+                $memberships->get()->map(function ($m) use ($request) {
+                    $renew = $m->maybeRenew();
+
+                    if ($renew instanceof Membership) {
+                        $m->logs()->create([
+                            'description' => sprintf("Membership Renewed Manually by %s", $request->user()->email)
+                        ]);
+                    }
+                });
+            }
         }
 
         return to_route('kinja.memberships.index', $request->input('filters', []));
