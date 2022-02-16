@@ -247,7 +247,7 @@
             },
 
             filterStatus(status) {
-                this.status = status
+                this.filters.status = status
                 this.$inertia.get(route('kinja.memberships.index'), {
                     ...this.filters
                 }, { replace: true });

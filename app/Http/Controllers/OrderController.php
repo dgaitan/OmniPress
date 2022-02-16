@@ -13,38 +13,58 @@ class OrderController extends Controller
      * [index description]
      * @return [type] [description]
      */
-    public function index(Request $request) {
-        $perPage = 50;
+    public function index(Request $request)
+    {
         $statuses = [
             ['slug' => 'processing', 'label' => 'Processing'],
             ['slug' => 'completed', 'label' => 'Completed'],
-            ['slug' => 'pending', 'label' => 'Pending'],
+            ['slug' => 'pending', 'label' => 'Pending Payment'],
             ['slug' => 'failed', 'label' => 'Failed']
         ];
         $status = '';
+        $orders = Order::with('customer');
 
-        if ($request->input('perPage')) {
-            $perPage = $request->input('perPage');
-        }
+        // Ordering
+        $availableOrders = ['order_id', 'date_completed', 'total'];
+        if ($request->input('orderBy') && in_array($request->input('orderBy'), $availableOrders)) {
+            $ordering = in_array($request->input('order'), ['desc', 'asc'])
+                ? $request->input('order')
+                : 'desc';
 
-        if ($request->input('s') && !empty($request->input('s'))) {
-            $orders = Order::search($request->input('s'))->orderBy('date_created', 'desc');
+            $orders->orderBy($request->input('orderBy'), $ordering);
         } else {
-            $orders = Order::with('customer')->orderBy('date_created', 'desc');
+            $orders->orderBy('date_created', 'desc');
         }
 
-        if ($request->input('filterByStatus')) {
-            $orders->where('status', $request->input('filterByStatus'));
+        // Search
+        $search = $this->analyzeSearchQuery($request, ['order_id', 'total']);
+        if ($search->isValid) {
+            // If the search query isn't specific
+            if (!$search->specific) {
+                $s = $search->s;
+                $orders->orWhereHas('customer', function ($query) use ($s) {
+                    $query->where('first_name', 'ilike', "%$s%")
+                        ->orWhere('last_name', 'ilike', "%$s%")
+                        ->orWhere('email', 'ilike', "%$s%")
+                        ->orWhere('username', 'ilike', "%$s%");
+                });
+
+                $orders->orWhere('order_id', 'ilike', "%$s%");
+                $orders->orWhere('total', 'ilike', "%$s%");
+            } else {
+                $orders->where($search->key, 'ilike', "$search->s%");
+            }
         }
 
+        // Filter By Status
         if ($request->input('status') && 'all' !== $request->input('status')) {
             $status = $request->input('status');
-            $memberships->where('status', $status);
+            $orders->where('status', $status);
         }
-        
-        $orders = $orders->paginate($perPage);
 
-        return Inertia::render('Orders/Index', [
+        $orders = $this->paginate($request, $orders);
+        $data = $this->getPaginationResponse($orders);
+        $data = array_merge($data, [
             'orders' => collect($orders->items())->map(function ($order) {
                 $customer = $order->customer ? [
                     'customer_id' => $order->customer->id,
@@ -55,7 +75,7 @@ class OrderController extends Controller
                     'name' => sprintf('%s %s', $order->billing->first_name, $order->billing->last_name),
                     'email' => $order->billing->email
                 ];
-                
+
                 return [
                     'id' => $order->id,
                     'order_id' => $order->order_id,
@@ -66,14 +86,13 @@ class OrderController extends Controller
                     'customer' => $customer
                 ];
             }),
-            'total' => $orders->total(),
-            'nextUrl' => $orders->nextPageUrl(),
-            'prevUrl' => $orders->previousPageUrl(),
-            'perPage' => $orders->perPage(),
-            'currentPage' => $orders->currentPage(),
-            's' => $request->input('s') ?? '',
-            'status' => $status,
-            'statuses' => $statuses
+            '_s' => $request->input('s') ?? '',
+            '_status' => $status,
+            'statuses' => $statuses,
+            '_order' => $request->input('order') ?? 'desc',
+            '_orderBy' => $request->input('orderBy') ?? ''
         ]);
+
+        return Inertia::render('Orders/Index', $data);
     }
 }

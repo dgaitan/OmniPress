@@ -91,7 +91,8 @@ class MembershipController extends Controller
      * @param Request $request
      * @return void
      */
-    public function actions(Request $request) {
+    public function actions(Request $request)
+    {
         if (! $request->user()->hasPermissionTo('edit_memberships') ) {
             abort(403);
         }

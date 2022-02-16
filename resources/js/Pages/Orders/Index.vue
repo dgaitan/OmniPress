@@ -5,36 +5,37 @@
             <ListWrapper title="Orders">
               <!-- Actions -->
               <template #actions>
-                <jet-input v-model="q" type="search" v-on:keyup.enter="search" placeholder="Search..." />
+                <jet-input v-model="filters.s" type="search" v-on:keyup.enter="search" placeholder="Search..." />
               </template>
 
               <!-- FIlters -->
               <template #filters>
-                <ListFilter @click="filterStatus('all')" :active="status === '' || status === 'all'">
+                <ListFilter @click="filterStatus('all')" :active="filters.status === '' || filters.status === 'all'">
                   All
                 </ListFilter>
-                <ListFilter 
+                <ListFilter
                   v-for="s in statuses"
+                  :key="s.slug"
                   @click="filterStatus(s.slug)"
-                  :active="s.slug === status">
+                  :active="s.slug === filters.status">
                   {{ s.label }}
                 </ListFilter>
               </template>
 
               <template #table>
-                <ListTable :columns="columns">
+                <ListTable :columns="columns" :stateData="this.filters" :selectIds="selectAllIds">
                   <template #body>
-                    <tr 
-                      class="text-xs" 
-                      v-for="(order, i) in orders" 
+                    <tr
+                      class="text-xs"
+                      v-for="(order, i) in orders"
                       v-bind:class="[isOdd(i) ? '' : 'bg-gray-50']"
                       :key="order.id">
                       <!-- Order ID -->
-                      <td class="flex items-center py-5 px-6 font-medium">
-                        <input class="mr-3" type="checkbox" name="" id="">
-                          <span>#{{ order.order_id }}</span>
-                      </td>
-                      
+                        <td class="flex items-center py-5 px-6 font-medium">
+                            <input class="mr-3" type="checkbox" @change="setIds($event)" :checked="ids.includes(order.id)" :value="order.id">
+                            <span>#{{ order.order_id }}</span>
+                        </td>
+
                       <!-- Customer -->
                       <td class="font-medium">
                         <div v-if="order.customer">
@@ -71,7 +72,7 @@
               </template>
 
               <template #pagination>
-                <ListPagination :url="route('kinja.orders.index')" :params="this.$props" />
+                <ListPagination :url="route('kinja.orders.index')" :params="this.$props" :stateData="this.filters" />
               </template>
             </ListWrapper>
         </div>
@@ -89,10 +90,13 @@
 
     export default defineComponent({
         props: [
-          'sessions', 'orders', 'total', 
-          'nextUrl', 'prevUrl', 'perPage',
-          'status', 'statuses',
-          'currentPage', 's', 'filterByStatus'],
+            'sessions', 'orders',
+            // Pagination Props
+            'total', 'nextUrl', 'prevUrl', '_perPage', '_currentPage',
+            // Ordering Props
+            '_order', '_orderBy',
+            // Custom Props
+            '_status', 'statuses', '_s'],
 
         components: {
             Layout,
@@ -105,8 +109,17 @@
 
         data() {
           return {
-            page: this.currentPage,
-            q: this.s
+            filters: {
+                status: this._status ? this._status : 'all',
+                s: this._s,
+                // Pagination Data
+                page: this._currentPage,
+                perPage: this._perPage,
+                // Ordering Data
+                order: this._order,
+                orderBy: this._orderBy
+            },
+            ids: []
           }
         },
 
@@ -116,32 +129,32 @@
               {
                 name: 'Order ID',
                 sortable: true,
-                link: ''
+                key: 'order_id'
               },
               {
                 name: 'Customer',
                 sortable: false,
-                link: ''
+                key: ''
               },
               {
                 name: 'Status',
                 sortable: false,
-                link: ''
+                key: ''
               },
               {
                 name: 'Shipping',
                 sortable: false,
-                link: ''
+                key: ''
               },
               {
                 name: 'Date Completed',
                 sortable: true,
-                link: ''
+                key: 'date_created'
               },
               {
                 name: 'Total',
                 sortable: true,
-                link: ''
+                key: 'total'
               }
             ]
           }
@@ -153,15 +166,33 @@
             },
 
             filterStatus(status) {
-              this.$inertia.get(route('kinja.orders.index'), {
-                status: status
-              }, { replace: true });
+                this.filters.status = status
+                this.$inertia.get(route('kinja.orders.index'), {
+                    ...this.filters
+                }, { replace: true });
             },
 
             search() {
               this.$inertia.get(route('kinja.orders.index'), {
-                s: this.q
+                s: this.filters.s
               }, { replace: true })
+            },
+
+            /**
+             *
+             */
+            setIds(e) {
+                const ID = parseInt(e.target.value);
+
+                if (e.target.checked) {
+                    this.ids.push(ID);
+                } else {
+                    this.ids.splice(this.ids.indexOf(ID), 1);
+                }
+            },
+
+            selectAllIds(checked) {
+                checked ? this.memberships.map(m => this.ids.push(m.id)) : this.ids = [];
             },
         }
     })
