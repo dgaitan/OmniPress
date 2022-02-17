@@ -40,8 +40,13 @@ class KindCash extends Model
         return $this->belongsTo(Membership::class);
     }
 
+    /**
+     * Get kindcash readable for humans
+     *
+     * @return float
+     */
     public function cashForHuman(): float {
-        return (float) ($this->price / 100);
+        return (float) ($this->points / 100);
     }
 
     /**
@@ -147,7 +152,7 @@ class KindCash extends Model
         if ($isSingle) {
             $cash['logs'] = $this->logs;
         }
-        
+
         unset($cash['membership_id']);
 
         return $cash;

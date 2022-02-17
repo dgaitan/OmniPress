@@ -214,7 +214,7 @@ class Membership extends Model
      * @return [type] [description]
      */
     public function daysUntilRenewal(): int {
-        return \Carbon\Carbon::now()->diffInDays($this->end_at, false);
+        return max(\Carbon\Carbon::now()->diffInDays($this->end_at, false), 0);
     }
 
     /**
@@ -222,7 +222,7 @@ class Membership extends Model
      * @return [type] [description]
      */
     public function daysExpired(): int {
-        return $this->end_at->diffInDays(\Carbon\Carbon::now());
+        return max($this->end_at->diffInDays(\Carbon\Carbon::now(), false), 0);
     }
 
     /**
@@ -234,22 +234,40 @@ class Membership extends Model
     }
 
     /**
+     * Expire a membership
+     *
+     * @param string $reason
+     * @return self
+     */
+    public function expire(string $reason = '') {
+        $this->status = self::EXPIRED_STATUS;
+        $this->shipping_status = self::SHIPPING_CANCELLED_STATUS;
+        $this->save();
+
+        if ($reason) {
+            $this->logs()->create(['description' => $reason]);
+        }
+
+        return $this;
+    }
+
+    /**
      * Send renewal reminder emails or what ever.
      *
      * @return void
      */
-    public function sendRenewalReminder(): void {
+    public function sendRenewalReminder(int $time = 1): void {
         Mail::to($this->customer->email)
-            ->send(new RenewalReminder($this));
+            ->later(now()->addMinutes($time), new RenewalReminder($this));
     }
 
     /**
      * [sendPaymentNotFoundNotification description]
      * @return [type] [description]
      */
-    public function sendPaymentNotFoundNotification(): void {
+    public function sendPaymentNotFoundNotification(int $time = 1): void {
         Mail::to($this->customer->email)
-            ->send(new PaymentNotFound($this));
+            ->later(now()->addMinutes($time), new PaymentNotFound($this));
     }
 
     /**
@@ -257,9 +275,9 @@ class Membership extends Model
      *
      * @return void
      */
-    public function sendMembershipRenewedMail(): void {
+    public function sendMembershipRenewedMail(int $time = 1): void {
         Mail::to($this->customer->email)
-            ->send(new MembershipRenewed($this));
+            ->later(now()->addMinutes($time), new MembershipRenewed($this));
     }
 
     /**
@@ -275,6 +293,7 @@ class Membership extends Model
      * until user select a product.
      *
      * @param boolean $force - Normally the trigger will validate if the membership is expired unless we force it.
+     * @param integer $gift_product_id - Attach a Gift Product Id
      * @param string $stripe_token - Is possible the user does not store the card, so is necessary pass the stripe_token to make one time payment.
      * @throws if Membership isn't expired unless we force it.
      * @throws if Membership has a status different that active or in-renewal.
@@ -282,9 +301,13 @@ class Membership extends Model
      * @throws if customer doesn't have a payment method.
      * @return Membership
      */
-    public function maybeRenew($force = false) {
+    public function maybeRenew(
+        $force = false,
+        $gift_product_id = null,
+        string $payment_token = ''
+    ) {
         try {
-            if ( ! $force && $this->daysUntilRenewal() >= 0 ) {
+            if ( ! $force && $this->daysUntilRenewal() > 0 ) {
                 throw new Exception(
                     sprintf(
                         "Membership with ID #%s isn't expired.",
@@ -295,12 +318,9 @@ class Membership extends Model
 
             // If the customer doesn't have a payment method. Cancell this
             // Renovation
-            if (!$this->customer->hasStripeId()) {
+            if (empty($payment_token) && !$this->customer->hasPaymentMethod()) {
                 if ($this->daysExpired() > 30) {
-                    $this->status = self::EXPIRED_STATUS;
-                    $this->logs()->create([
-                        'description' => "Membership expired because was impossible find a payment method in 30 days."
-                    ]);
+                    $this->expire("Membership expired because was impossible find a payment method in 30 days.");
                 } else {
                     $this->sendPaymentNotFoundNotification();
                     $this->status = self::IN_RENEWAL_STATUS;
@@ -335,31 +355,54 @@ class Membership extends Model
             $this->shipping_status = 'N/A';
 
             try {
+                $payment_token = empty($payment_token)
+                    ? $this->customer->defaultPaymentMethod()->id
+                    : $payment_token;
+
                 $this->customer->charge(
                     $this->price ?? 3500,
-                    $this->customer->defaultPaymentMethod()->id,
+                    $payment_token,
                     ['description' => "Membership Renewal"]
                 );
 
                 $this->status = self::AWAITING_PICK_GIFT_STATUS;
+                $this->shipping_status = self::SHIPPING_PENDING_STATUS;
                 $this->last_payment_intent = \Carbon\Carbon::now();
                 $this->end_at = $this->end_at->addYear();
                 $this->payment_intents = 0;
+
+                $order_status = 'kh-awm';
+                $order_line_items = [
+                    [
+                        'product_id' => $this->product_id,
+                        'quantity' => 1
+                    ]
+                ];
+
+                if ($gift_product_id) {
+                    $gift_product = Product::whereProductId($gift_product_id)->first();
+                    $order_status = 'processing';
+
+                    if (! is_null($gift_product)) {
+                        $this->status = self::ACTIVE_STATUS;
+                        $this->gift_product_id = $gift_product_id;
+                        $this->user_picked_gift = true;
+                        $order_line_items[] = [
+                            'product_id' => $gift_product_id,
+                            'quantity' => 1
+                        ];
+                    }
+                }
 
                 $orderParams = [
                     'payment_method' => 'kindhumans_stripe_gateway',
                     'payment_method_title' => 'Credit Card',
                     'customer_id' => $this->customer->customer_id,
                     'set_paid' => true,
-                    'status' => 'kh-awm',
+                    'status' => $order_status,
                     'billing' => $this->customer->billing->toArray(),
                     'shipping' => $this->customer->shipping->toArray(),
-                    'line_items' => [
-                        [
-                            'product_id' => $this->product_id,
-                            'quantity' => 1
-                        ],
-                    ],
+                    'line_items' => $order_line_items,
                     'total' => $this->price,
                     'meta_data' => [
                         [
@@ -380,6 +423,7 @@ class Membership extends Model
                     $order = \App\Models\WooCommerce\Order::whereOrderId($order->order_id)
                         ->first();
                     $order->update(['membership_id' => $this->id]);
+                    $this->pending_order_id = $order->order_id;
                 }
 
                 $this->sendMembershipRenewedMail();

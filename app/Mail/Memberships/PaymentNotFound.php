@@ -21,7 +21,7 @@ class PaymentNotFound extends Mailable
      */
     public function __construct(Membership $membership)
     {
-        $this->membership = $Membership;
+        $this->membership = $membership;
     }
 
     /**

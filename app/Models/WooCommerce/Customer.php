@@ -111,7 +111,7 @@ class Customer extends Model
 
     /**
      * Relation with order
-     * 
+     *
      * @return HasMany
      */
     public function orders(): HasMany {
@@ -177,6 +177,14 @@ class Customer extends Model
         unset($data['pm_last_four']);
         unset($data['trial_ends_at']);
 
+        $data['has_payment_method'] = $this->hasDefaultPaymentMethod();
+
+        if ($data['has_payment_method']) {
+            $data['default_payment_method'] = self::getCardResume(
+                $this->defaultPaymentMethod()
+            );
+        }
+
         return $data;
     }
 
@@ -197,7 +205,7 @@ class Customer extends Model
 
     /**
      * Add a new payment method and assign it as default payment method.
-     * 
+     *
      * @param string $token [description]
      * @return array - The new payment method resume
      */
@@ -213,7 +221,7 @@ class Customer extends Model
 
     /**
      * Get Card Resume
-     * 
+     *
      * @param  [type] $paymentMethod [description]
      * @return [type]                [description]
      */

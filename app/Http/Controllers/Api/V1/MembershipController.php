@@ -9,6 +9,7 @@ use App\Models\WooCommerce\Customer;
 use App\Models\WooCommerce\Order;
 use App\Models\WooCommerce\Product;
 use App\Jobs\Memberships\NewMembershipJob;
+use App\Jobs\Memberships\SyncNewMemberOrder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
@@ -17,7 +18,7 @@ class MembershipController extends Controller
 {
     /**
      * Get membereships
-     * 
+     *
      * @param  Request $request [description]
      * @return [type]           [description]
      */
@@ -27,7 +28,7 @@ class MembershipController extends Controller
             ->get();
 
         $data = [];
-        
+
         if ($memberships->count() > 0) {
             $data = $memberships->map(fn($m) => $m->toArray());
         }
@@ -53,9 +54,9 @@ class MembershipController extends Controller
 
     /**
      * Create a new membership
-     * 
+     *
      * To create a new membership we need the following params:
-     * 
+     *
      * price - integer
      * customer_id - integer
      * email - string
@@ -64,15 +65,15 @@ class MembershipController extends Controller
      * points - integer
      * gift_product_id - integer
      * product_id - integer
-     * 
+     *
      * The Customer.
      * After validated the data we try to get the customer.
      * In most general cases the customer will not exists.
      * So having said this, probably we're going to create
      * the new customer.
-     * 
-     * 
-     * 
+     *
+     *
+     *
      * @param  Request $request [description]
      * @return [type]           [description]
      */
@@ -80,7 +81,7 @@ class MembershipController extends Controller
         // Validate the params
         $validator = Validator::make($request->all(), [
             'price' => 'required|integer',
-            'customer_id' => 'required|integer',    
+            'customer_id' => 'required|integer',
             'email' => 'required|email:rfc,dns',
             'username' => 'required|string',
             'order_id' => 'required|integer',
@@ -113,7 +114,7 @@ class MembershipController extends Controller
         $order = Order::firstOrNew([
             'order_id' => $request->order_id
         ]);
-        
+
         // Create Membership
         $membership = Membership::create([
             'price' => (int) $request->price,
@@ -164,8 +165,8 @@ class MembershipController extends Controller
             $membership->customer_email,
             $customer->customer_id,
             $order->order_id,
-            $membership->user_picked_gift 
-                ? $membership->gift_product_id 
+            $membership->user_picked_gift
+                ? $membership->gift_product_id
                 : null,
             $membership->product_id ?? null
         );
@@ -186,8 +187,57 @@ class MembershipController extends Controller
     }
 
     /**
+     * Renew a membership from kindhumans
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function renew(Request $request) {
+        // Validate the params
+        $validator = Validator::make($request->all(), [
+            'membership_id' => 'required|integer',
+            'order_id' => 'required|integer',
+            'gift_product_id' => 'required|integer',
+        ]);
+
+        // If validation fails, return error listed with 400 http code
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors()
+            ], 400);
+        }
+
+        $membership = Membership::find($request->membership_id);
+
+        if (is_null($membership)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Membership Not Found'
+            ]);
+        }
+
+        $membership->status = Membership::ACTIVE_STATUS;
+        $membership->shipping_status = Membership::SHIPPING_PENDING_STATUS;
+        $membership->pending_order_id = $request->order_id;
+        $membership->gift_product_id = $request->gift_product_id;
+        $membership->end_at = $membership->end_at->addYear();
+        $membership->payment_intents = 0;
+        $membership->save();
+        $membership->sendMembershipRenewedMail();
+
+        $membership->kindCash->addCash(70, "Cash earned by membership renewal");
+
+        SyncNewMemberOrder::dispatch($membership->id, $request->order_id);
+
+        return response()->json([
+            'status' => 'success',
+            'membership' => $membership->toArray(true)
+        ]);
+    }
+
+    /**
      * [addCash description]
-     * 
+     *
      * @param Request $request [description]
      * @param [type]  $id      [description]
      */
@@ -238,8 +288,8 @@ class MembershipController extends Controller
         }
 
         $membership->kindCash->redeemCash(
-            $request->points, 
-            $request->message, 
+            $request->points,
+            $request->message,
             $request->order_id
         );
 
@@ -249,7 +299,7 @@ class MembershipController extends Controller
 
     /**
      * Check if an email has an active membership
-     * 
+     *
      * @param  Request $request [description]
      * @param  [type]  $email   [description]
      * @return [type]           [description]
