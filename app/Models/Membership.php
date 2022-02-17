@@ -301,11 +301,7 @@ class Membership extends Model
      * @throws if customer doesn't have a payment method.
      * @return Membership
      */
-    public function maybeRenew(
-        $force = false,
-        $gift_product_id = null,
-        string $payment_token = ''
-    ) {
+    public function maybeRenew($force = false) {
         try {
             if ( ! $force && $this->daysUntilRenewal() > 0 ) {
                 throw new Exception(
@@ -318,7 +314,7 @@ class Membership extends Model
 
             // If the customer doesn't have a payment method. Cancell this
             // Renovation
-            if (empty($payment_token) && !$this->customer->hasPaymentMethod()) {
+            if (! $this->customer->hasPaymentMethod()) {
                 if ($this->daysExpired() > 30) {
                     $this->expire("Membership expired because was impossible find a payment method in 30 days.");
                 } else {
@@ -355,13 +351,9 @@ class Membership extends Model
             $this->shipping_status = 'N/A';
 
             try {
-                $payment_token = empty($payment_token)
-                    ? $this->customer->defaultPaymentMethod()->id
-                    : $payment_token;
-
                 $this->customer->charge(
                     $this->price ?? 3500,
-                    $payment_token,
+                    $this->customer->defaultPaymentMethod()->id,
                     ['description' => "Membership Renewal"]
                 );
 
@@ -370,6 +362,7 @@ class Membership extends Model
                 $this->last_payment_intent = \Carbon\Carbon::now();
                 $this->end_at = $this->end_at->addYear();
                 $this->payment_intents = 0;
+                $this->save();
 
                 $order_status = 'kh-awm';
                 $order_line_items = [
@@ -378,21 +371,6 @@ class Membership extends Model
                         'quantity' => 1
                     ]
                 ];
-
-                if ($gift_product_id) {
-                    $gift_product = Product::whereProductId($gift_product_id)->first();
-                    $order_status = 'processing';
-
-                    if (! is_null($gift_product)) {
-                        $this->status = self::ACTIVE_STATUS;
-                        $this->gift_product_id = $gift_product_id;
-                        $this->user_picked_gift = true;
-                        $order_line_items[] = [
-                            'product_id' => $gift_product_id,
-                            'quantity' => 1
-                        ];
-                    }
-                }
 
                 $orderParams = [
                     'payment_method' => 'kindhumans_stripe_gateway',
@@ -424,10 +402,10 @@ class Membership extends Model
                         ->first();
                     $order->update(['membership_id' => $this->id]);
                     $this->pending_order_id = $order->order_id;
+                    $this->save();
                 }
 
                 $this->sendMembershipRenewedMail();
-                $this->save();
 
             } catch (\Laravel\Cashier\Exceptions\IncompletePayment $exception) {
                 $this->last_payment_intent = \Carbon\Carbon::now();

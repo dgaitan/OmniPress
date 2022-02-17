@@ -133,7 +133,7 @@ class MembershipController extends Controller
 
             if ($action === 'renew' && $memberships->exists()) {
                 $memberships->get()->map(function ($m) use ($request) {
-                    $renew = $m->maybeRenew();
+                    $renew = $m->maybeRenew(true);
 
                     if ($renew instanceof Membership) {
                         $m->logs()->create([

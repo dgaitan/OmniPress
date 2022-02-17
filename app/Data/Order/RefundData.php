@@ -17,8 +17,8 @@ class RefundData extends BaseData {
 
     public function __construct(
         public int $refund_id,
-        public ?string $reason = '',
-        public ?float $total = 0
+        public string|null $reason,
+        public float|null $total
     ) {
 
     }
