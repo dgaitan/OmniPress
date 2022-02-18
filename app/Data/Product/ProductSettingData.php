@@ -23,7 +23,7 @@ class ProductSettingData extends BaseData {
         'shipping_taxable',
         'reviews_allowed'
     ];
-    
+
     public function __construct(
         public ?string $date_on_sale_from,
         public ?string $date_on_sale_to,
@@ -31,12 +31,12 @@ class ProductSettingData extends BaseData {
         public ?string $short_description,
         public ?string $catalog_visibility,
         public ?string $description,
-        public ?int $total_sales = 0,
-        public ?int $download_limit = 0,
-        public ?int $download_expiry = 0,
-        public ?string $external_url = '',
+        public int|null $total_sales,
+        public int|null $download_limit,
+        public int|null $download_expiry,
+        public string|null $external_url,
         public ?string $button_text,
-        public ?string $tax_status = 'taxable',
+        public string|null $tax_status,
         public ?string $tax_class,
         public ?string $backorders,
         public bool $backorders_allowed,
@@ -53,9 +53,9 @@ class ProductSettingData extends BaseData {
         public ?array $upsell_ids,
         public ?array $cross_sell_ids,
         public ?string $purchase_note,
-        public ?array $default_attributes = [],
-        public ?array $variations = [],
-        public ?array $grouped_products = [],
+        public array|null $default_attributes,
+        public array|null $variations,
+        public array|null $grouped_products,
         public ?int $menu_order,
         /** @var \App\Data\Product\DownloadData[] */
         public ?DataCollection $downloads,

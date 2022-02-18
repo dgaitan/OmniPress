@@ -119,13 +119,13 @@ class Order extends Model
         'discount_tax' => 'decimal:0',
         'shipping_tax' => 'decimal:0',
         'total_tax' => 'decimal:0',
-        'billing' => Address::class,
-        'shipping' => Address::class,
-        'meta_data' => MetaData::class,
-        'tax_lines' => OrderLines::class,
-        'shipping_lines' => OrderLines::class,
-        'fee_lines' => OrderLines::class,
-        'coupon_lines' => OrderLines::class,
+        'billing' => 'object',
+        'shipping' => 'object',
+        'meta_data' => 'array',
+        'tax_lines' => 'array',
+        'shipping_lines' => 'array',
+        'fee_lines' => 'array',
+        'coupon_lines' => 'array',
     ];
 
     protected $fillable = [
@@ -167,7 +167,7 @@ class Order extends Model
 
     /**
      * An order can have a customer, yes
-     * 
+     *
      * @return BelongsTo
      */
     public function customer(): BelongsTo {
@@ -190,7 +190,7 @@ class Order extends Model
      */
     public function shippingAddress():string {
         $shipping = '';
-        
+
         if ($this->shipping) {
             $shipping = sprintf(
                 '<p>%s %s<br>%s<br>%s %s %s</p>',

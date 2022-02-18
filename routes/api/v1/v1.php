@@ -21,6 +21,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->name('kinja.api.v1.')->group(function () {
 
+    // Quick Api Connection Check
+    Route::get('/check', function() {
+        return response()->json([
+            'domain' => env('APP_URL'),
+            'app_name' => env('APP_NAME'),
+            'status' => 'ok'
+        ], 200);
+    });
+
 	Route::controller(MembershipController::class)->name('memberships.')->prefix('/memberships')->group(function () {
 		Route::get('/', 'index')->name('index');
 		Route::get('/{id}', 'show')->name('show');
