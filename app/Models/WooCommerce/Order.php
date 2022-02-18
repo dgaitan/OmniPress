@@ -2,9 +2,6 @@
 
 namespace App\Models\WooCommerce;
 
-use App\Casts\Address;
-use App\Casts\MetaData;
-use App\Casts\OrderLines;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -84,7 +81,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @mixin \Eloquent
  * @property int|null $service_id
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereServiceId($value)
- * @property-read Service|null $service
  * @property mixed|null $tax_lines
  * @property mixed|null $shipping_lines
  * @property mixed|null $coupon_lines

@@ -6,6 +6,7 @@ use App\Services\Concerns\CanBeFaked;
 use App\Services\Contracts\ServiceContract;
 use App\Services\Contracts\ResourceContract;
 use App\Services\WooCommerce\Resources\OrderResource;
+use App\Services\WooCommerce\Resources\CustomerResource;
 use Automattic\WooCommerce\Client as WooCommerce;
 
 class WooCommerceService implements ServiceContract
@@ -49,5 +50,15 @@ class WooCommerceService implements ServiceContract
     public function orders(): ResourceContract
     {
         return new OrderResource(service: $this);
+    }
+
+    /**
+     * Customer Resource
+     *
+     * @return CustomerResource
+     */
+    public function customer(): CustomerResource
+    {
+        return new CustomerResource(service: $this);
     }
 }

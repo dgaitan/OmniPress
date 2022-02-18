@@ -81,9 +81,9 @@ class Customer extends Model
      * @var array
      */
     protected $casts = [
-        'meta_data' => MetaData::class,
-        'billing' => Address::class,
-        'shipping' => Address::class,
+        'meta_data' => 'array',
+        'billing' => 'object',
+        'shipping' => 'object',
         'date_created' => 'datetime',
         'date_modified' => 'datetime'
     ];

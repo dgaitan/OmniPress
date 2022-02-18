@@ -3,22 +3,22 @@
 namespace App\Services\WooCommerce\Resources;
 
 use App\Services\Contracts\ResourceContract;
-use App\Services\WooCommerce\Factories\OrderFactory;
+use App\Services\WooCommerce\Factories\CustomerFactory;
 use App\Services\Resources\BaseResource;
 
-class OrderResource extends BaseResource implements ResourceContract
+class CustomerResource extends BaseResource implements ResourceContract
 {
     /**
      * Endpoint Name
      *
      * @var string
      */
-    public string $endpoint = 'orders';
+    public string $endpoint = 'customers';
 
     /**
      * Order Factory
      *
      * @var string
      */
-    public string $factory = OrderFactory::class;
+    public string $factory = CustomerFactory::class;
 }
