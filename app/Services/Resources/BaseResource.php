@@ -85,20 +85,18 @@ abstract class BaseResource {
      * @param integer $per_page
      * @return void
      */
-    public function syncAll(int $per_page = 100): void {
-        $page = 1;
-        $hasResults = true;
-        $params = ['per_page' => $per_page, 'page' => $page];
+    public function syncAll(int|null $perPage, int $page = 1): void {
+        if (! $perPage) {
+            $perPage = env('KINDHUMANS_SYNC_PER_PAGE', 100);
+        }
 
-        while ($hasResults) {
-            $response = $this->all($params);
+        $params = ['per_page' => $perPage, 'page' => $page];
+        $response = $this->all($params);
 
-            if (! $response instanceof Collection) {
-                $hasResults = false;
-                break;
-            }
-
+        if ($response) {
             $response->map(fn($item) => $item->sync());
+            $page++;
+            \App\Jobs\WooCommerceSyncServiceJob::dispatch($this->endpoint, $perPage, $page);
         }
     }
 

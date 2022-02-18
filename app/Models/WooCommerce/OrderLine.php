@@ -58,7 +58,8 @@ class OrderLine extends Model
         'subtotal_tax' => 'decimal:0',
         'total' => 'decimal:0',
         'taxes' => 'array',
-        'price' => 'decimal:0'
+        'price' => 'decimal:0',
+        'meta_data' => 'array'
     ];
 
     protected $fillable = [

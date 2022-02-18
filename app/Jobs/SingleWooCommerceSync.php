@@ -15,17 +15,17 @@ class SingleWooCommerceSync implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $id = 0;
-    protected $content_type = '';
+    protected $resource = '';
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(int $element_id, string $content_type)
+    public function __construct(int $element_id, string $resource)
     {
         $this->id = $element_id;
-        $this->content_type = $content_type;
+        $this->content_type = $resource;
     }
 
     /**
@@ -35,8 +35,7 @@ class SingleWooCommerceSync implements ShouldQueue
      */
     public function handle()
     {
-        $task = new WooCommerceTask();
-        $task->setId($this->id);
-        $task->_sync($this->content_type);
+        $api = \App\Services\WooCommerce\WooCommerceService::make();
+        $api->{$this->resource}()->findAndSync($this->id);
     }
 }

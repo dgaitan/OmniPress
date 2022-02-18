@@ -377,9 +377,11 @@ class Membership extends Model
                     'payment_method_title' => 'Credit Card',
                     'customer_id' => $this->customer->customer_id,
                     'set_paid' => true,
+                    'date_completed' => \Carbon\Carbon::now(),
+                    'date_paid' => \Carbon\Carbon::now(),
                     'status' => $order_status,
-                    'billing' => $this->customer->billing->toArray(),
-                    'shipping' => $this->customer->shipping->toArray(),
+                    'billing' => (array) $this->customer->billing,
+                    'shipping' => (array) $this->customer->shipping,
                     'line_items' => $order_line_items,
                     'total' => $this->price,
                     'meta_data' => [
@@ -394,12 +396,13 @@ class Membership extends Model
                     ]
                 ];
 
-                $woo = new WooCommerceTask();
-                $order = $woo->push('orders', $orderParams);
+                $wooService = \App\Services\WooCommerce\WooCommerceService::make();
+                $order = $wooService->orders()->create(
+                    new \App\Services\WooCommerce\DataObjects\Order($orderParams),
+                    true
+                );
 
-                if ($order->order_id) {
-                    $order = \App\Models\WooCommerce\Order::whereOrderId($order->order_id)
-                        ->first();
+                if ($order->id) {
                     $order->update(['membership_id' => $this->id]);
                     $this->pending_order_id = $order->order_id;
                     $this->save();

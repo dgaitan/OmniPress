@@ -31,7 +31,6 @@ Route::get('/', function () {
     ]);
 });
 
-
 Route::get(
     '/oauth/{provider}/callback',
     [OAuthController::class, 'handleProviderCallback']

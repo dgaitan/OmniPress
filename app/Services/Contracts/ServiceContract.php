@@ -10,4 +10,11 @@ interface ServiceContract {
      * @return void
      */
     public function makeRequest();
+
+    /**
+     * A sttic method to access to this service
+     *
+     * @return ServiceContract
+     */
+    public static function make(): ServiceContract;
 }

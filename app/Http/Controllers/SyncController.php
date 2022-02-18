@@ -3,20 +3,17 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Bus;
 use Inertia\Inertia;
-use Carbon\Carbon;
 use App\Models\Sync;
-use App\Tasks\WooCommerceTask;
+use App\Jobs\WooCommerceSyncServiceJob;
 use App\Http\Resources\SyncResource;
 use App\Rules\SyncContentType;
-use App\Jobs\WooCommerceSyncJob;
 
 class SyncController extends Controller
 {
     public function index() {
         $syncs = Sync::with('user')->take(10)->orderBy('id', 'desc')->get();
-        
+
         return Inertia::render('Sync/Index', [
             'syncs' => count($syncs) > 0 ? SyncResource::collection($syncs) : [],
             'sync' => count($syncs) > 0 ? new SyncResource($syncs->first()) : []
@@ -32,15 +29,15 @@ class SyncController extends Controller
         $request->validateWithBag('syncForm', [
             'content_type' => ['required', new SyncContentType],
             'description' => ['max:500']
-        ]);  
+        ]);
 
         $sync = Sync::initialize(
-            $request->content_type, 
-            $request->user(), 
+            $request->content_type,
+            $request->user(),
             $request->description
         );
 
-        WooCommerceSyncJob::dispatch($sync->id);
+        WooCommerceSyncServiceJob::dispatch($sync->content_type);
 
         return redirect(route('kinja.sync.index'))
             ->with('message', 'Sync Initialized!');

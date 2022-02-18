@@ -36,7 +36,7 @@ class Customer extends BaseObject implements DataObjectContract
      */
     public function sync(): WooCustomer {
         $customer = WooCustomer::firstOrNew(['customer_id' => $this->id]);
-        $data = $this->toArray();
+        $data = $this->toArray('customer_id');
 
         if ($data['meta_data']) {
             $data['meta_data'] = collect($data['meta_data'])->map(function($meta) {

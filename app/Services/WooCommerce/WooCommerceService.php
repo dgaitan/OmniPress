@@ -37,7 +37,11 @@ class WooCommerceService implements ServiceContract
         $request = new WooCommerce(
             $this->domain,
             $this->key,
-            $this->secret
+            $this->secret,
+            [
+                'timeout' => env('WOO_TIMEOUT', 20),
+                'user_agent' => 'KinjaOmniClient'
+            ]
         );
 
         return $request;
@@ -71,5 +75,14 @@ class WooCommerceService implements ServiceContract
     public function products(): ProductResource
     {
         return new ProductResource(service: $this);
+    }
+
+    /**
+     * Resolve Service
+     *
+     * @return ServiceContract
+     */
+    public static function make(): ServiceContract {
+        return resolve(WooCommerceService::class);
     }
 }

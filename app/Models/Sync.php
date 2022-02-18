@@ -58,7 +58,7 @@ class Sync extends Model
     ];
 
     protected $fillable = [
-        'name', 'description', 
+        'name', 'description',
         'user_id', 'status',
         'content_type', 'intents', 'current_page'
     ];
@@ -93,7 +93,7 @@ class Sync extends Model
 
     /**
      * Add a new log
-     * 
+     *
      * @param string $message [description]
      */
     public function add_log(string $message) {
@@ -120,25 +120,30 @@ class Sync extends Model
      * @return [type]               [description]
      */
     public static function initialize(
-        string $content_type, 
-        User $user, 
+        string $content_type,
+        User|null $user,
         ?string $description = ''
     ) {
         $sync = self::create([
             'name' => sprintf('%s sync', ucwords($content_type)),
             'status' => self::PENDING,
             'content_type' => $content_type,
-            'user_id' => $user->id,
             'description' => $description,
             'intents' => 1,
             'current_page' => 1
         ]);
+
+        if ($user) {
+            $sync->user_id = $user->id;
+        }
 
         $sync->add_log(sprintf(
             'Sync started by %s at %s',
             $user->name,
             Carbon::now()->format('F j, Y @ H:i:s')
         ));
+
+        $sync->save();
 
         return $sync;
     }

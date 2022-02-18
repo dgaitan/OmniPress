@@ -61,7 +61,7 @@ class Order extends BaseObject implements DataObjectContract
      * @return WooOrder
      */
     public function sync(): WooOrder {
-        $data = $this->toArray();
+        $data = $this->toArray('order_id');
         unset($data['line_items']);
 
         $order = WooOrder::firstOrNew(['order_id' => $this->id]);
