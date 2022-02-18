@@ -38,7 +38,7 @@ class ProductAttribute extends Model
     use HasFactory;
 
     protected $casts = [
-        'options' => 'array'
+        'options' => 'object'
     ];
 
     protected $fillable = [
@@ -54,13 +54,4 @@ class ProductAttribute extends Model
     public function product() {
         return $this->belongTo(Product::class, 'product_id');
     }
-
-    // public function getOptionsAttribute(string $value) {
-    //     return json_decode($value, true);
-    // }
-
-    // public function setOptionsAttribute($value) {
-    //     dd($value);
-    //     $this->attributes['options'] = json_encode($value);
-    // }
 }

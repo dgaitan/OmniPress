@@ -7,8 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Cashier\Billable;
-use App\Casts\MetaData;
-use App\Casts\Address;
 use App\Models\Membership;
 
 /**

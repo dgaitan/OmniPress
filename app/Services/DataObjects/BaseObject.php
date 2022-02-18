@@ -2,6 +2,8 @@
 
 namespace App\Services\DataObjects;
 
+use Illuminate\Database\Eloquent\Model;
+
 abstract class BaseObject {
     /**
      * Field Schema
@@ -32,8 +34,11 @@ abstract class BaseObject {
      *
      * @return array
      */
-    public function toArray(): array {
-        return $this->attributes;
+    public function toArray(string $idField = 'id'): array {
+        $attributes = $this->attributes;
+        $attributes[$idField] = $this->id;
+
+        return $attributes;
     }
 
     /**
@@ -87,6 +92,56 @@ abstract class BaseObject {
         }
 
         return $value;
+    }
+
+    /**
+     * Get Meta Data Formatted
+     *
+     * @return array
+     */
+    protected function getMetaData(): array {
+        $meta_data = [];
+
+        if ($this->meta_data) {
+            $meta_data = collect($this->meta_data)->map(function($meta) {
+                return (array) $meta;
+            });
+        }
+
+        return $meta_data->toArray();
+    }
+
+    /**
+     * Sync Collection
+     *
+     * @param string $key
+     * @param string $fieldName
+     * @param string $dataObject
+     * @param Model $parent
+     * @return void
+     */
+    protected function syncCollection(
+        string $key,
+        string $fieldName,
+        string $dataObject,
+        Model $parent
+    ): void {
+        if (in_array($key, $this->attributes) && $this->attributes[$key]) {
+            $toAttach = [];
+
+            // First Sync the collection.
+            foreach ($this->attributes[$key] as $item) {
+                $object = (new $dataObject((array) $item))->sync();
+                $object->fill([$fieldName => $parent->id]);
+                $object->save();
+
+                $toAttach[] = $object->id;
+            }
+
+            if (method_exists($parent->{$key}(), 'sync')) {
+                $parent->{$key}()->sync($toAttach);
+            }
+        }
     }
 
     /**

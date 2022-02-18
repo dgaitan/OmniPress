@@ -7,6 +7,7 @@ use App\Services\Contracts\ServiceContract;
 use App\Services\Contracts\ResourceContract;
 use App\Services\WooCommerce\Resources\OrderResource;
 use App\Services\WooCommerce\Resources\CustomerResource;
+use App\Services\WooCommerce\Resources\ProductResource;
 use Automattic\WooCommerce\Client as WooCommerce;
 
 class WooCommerceService implements ServiceContract
@@ -60,5 +61,15 @@ class WooCommerceService implements ServiceContract
     public function customer(): CustomerResource
     {
         return new CustomerResource(service: $this);
+    }
+
+    /**
+     * Product Resource
+     *
+     * @return ProductResource
+     */
+    public function products(): ProductResource
+    {
+        return new ProductResource(service: $this);
     }
 }

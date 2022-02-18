@@ -2,8 +2,6 @@
 
 namespace App\Models\WooCommerce;
 
-use App\Casts\MetaData;
-use App\Casts\ProductSetting;
 use App\Models\Membership;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -92,8 +90,8 @@ class Product extends Model
         'price' => 'decimal:2',
         'regular_price' => 'decimal:2',
         'sale_price' => 'decimal:2',
-        'settings' => ProductSetting::class,
-        'meta_data' => MetaData::class,
+        'settings' => 'object',
+        'meta_data' => 'array',
         'date_created' => 'datetime'
     ];
 
@@ -140,9 +138,9 @@ class Product extends Model
      */
     public function categories() {
         return $this->belongsToMany(
-            Category::class, 
-            'product_category', 
-            'product_id', 
+            Category::class,
+            'product_category',
+            'product_id',
             'category_id'
         )->as('categories')->withTimestamps();
     }
@@ -166,9 +164,9 @@ class Product extends Model
      */
     public function memberships() {
         return $this->belongsToMany(
-            Membership::class, 
-            'membership_product', 
-            'product_id', 
+            Membership::class,
+            'membership_product',
+            'product_id',
             'membership_id'
         )->as('memberships')->withTimestamps();
     }
@@ -225,8 +223,8 @@ class Product extends Model
             });
         }
 
-        $array['date_created'] = $this->date_created 
-            ? $this->date_created->format('F j, Y') 
+        $array['date_created'] = $this->date_created
+            ? $this->date_created->format('F j, Y')
             : '';
 
         if ($args['withImages']) {
@@ -235,7 +233,7 @@ class Product extends Model
             });
         }
 
-        return $array;   
+        return $array;
     }
 
     public static function searchByKey(string $q) {
