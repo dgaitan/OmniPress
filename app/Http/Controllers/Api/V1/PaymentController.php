@@ -42,10 +42,12 @@ class PaymentController extends Controller
 
             // If is there present a customer id, let's create or retrieve it
             if ($request->customer_id) {
-                $customer = Customer::firstOrCreate([
+                $customer = Customer::firstOrNew([
                     'customer_id' => $request->customer_id,
                     'email'       => $request->customer_email
                 ]);
+                $customer->username = $request->customer_username;
+                $customer->save();
 
                 if ($request->save) {
                     if (is_null($customer->stripe_id)) {

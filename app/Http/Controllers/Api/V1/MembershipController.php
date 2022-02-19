@@ -106,7 +106,7 @@ class MembershipController extends Controller
             'customer_id' => $request->customer_id,
             'email' => $request->email
         ]);
-        $customer->fill($request->only(['username']));
+        $customer->username = $request->username;
         $customer->save();
 
         // Get or create the order. Probably at this instance
@@ -114,6 +114,7 @@ class MembershipController extends Controller
         $order = Order::firstOrNew([
             'order_id' => $request->order_id
         ]);
+        $order->save();
 
         // Create Membership
         $membership = Membership::create([
@@ -148,7 +149,10 @@ class MembershipController extends Controller
         $kindCash->addInitialLog();
 
         // Attach membership to order
-        $order->update(['membership_id' => $membership->id]);
+        $order->update([
+            'has_membership' => true,
+            'membership_id' => $membership->id
+        ]);
 
         // Is user picked gift product, attach it to membership as well
         if (!is_null($request->gift_product_id)) {

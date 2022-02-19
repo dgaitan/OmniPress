@@ -11,7 +11,7 @@ use App\Mail\Memberships\RenewalReminder;
 use App\Mail\Memberships\PaymentNotFound;
 use App\Models\WooCommerce\Customer;
 use App\Models\WooCommerce\Product;
-use App\Tasks\WooCommerceTask;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -132,7 +132,7 @@ class Membership extends Model
      *
      * @return Collection
      */
-    public function orders(): Collection {
+    public function orders(): Builder {
         return \App\Models\WooCommerce\Order::where('membership_id', $this->id);
     }
 
