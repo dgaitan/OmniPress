@@ -40,8 +40,10 @@ class WooCommerceSyncServiceJob implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(string $resource, int $perPage = 100, int $page = 1)
+    public function __construct(string $resource, int|null $perPage = null, int $page = 1)
     {
+        if (! $perPage) $perPage = env('KINDHUMANS_SYNC_PER_PAGE', 100);
+
         $this->resource = $resource;
         $this->perPage = $perPage;
         $this->page = $page;
