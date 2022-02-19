@@ -12,6 +12,13 @@ class MembershipRenewed extends Mailable
 {
     use Queueable, SerializesModels;
 
+    /**
+     * The number of times the job may be attempted.
+     *
+     * @var int
+     */
+    public $tries = 3;
+
     protected Membership $membership;
 
     /**
@@ -42,16 +49,26 @@ class MembershipRenewed extends Mailable
                 'customerName' => $this->membership->customer->getFullName(),
                 'pickGiftUrl' => sprintf(
                     '%s/my-account/membership/pick-your-hat/%s',
-                    env('https://kind.humans', 'https://kindhumans.com'),
+                    env('CLIENT_DOMAIN', 'https://kindhumans.com'),
                     $this->membership->id
                 ),
                 'accountSettingsUrl' => sprintf(
                     '%s/my-account/account-settings/',
-                    env('https://kind.humans', 'https://kindhumans.com')
+                    env('CLIENT_DOMAIN', 'https://kindhumans.com')
                 ),
                 'memberSince' => $this->membership->start_at->format('F j, Y'),
                 'memberEnds' => $this->membership->end_at->format('F j, Y'),
                 'kindCash' => $this->membership->kindCash->cashForHuman()
             ]);
+    }
+
+    /**
+     * Determine the time at which the job should timeout.
+     *
+     * @return \DateTime
+     */
+    public function retryUntil()
+    {
+        return now()->addMinutes(5);
     }
 }

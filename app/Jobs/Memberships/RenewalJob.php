@@ -39,14 +39,12 @@ class RenewalJob implements ShouldQueue
         $currentPage = 1;
         $hasMorePages = true;
         $items = [];
+        $memberships = Membership::with(['customer', 'kindCash']);
 
         if (! $this->everything) {
             $aMonthAgo = Carbon::now()->subMonth();
             $oneMonth = Carbon::now()->addMonth();
-            $memberships = Membership::with(['customer', 'kindCash'])
-                ->whereBetween('end_at', [$aMonthAgo, $oneMonth]);
-        } else {
-            $memberships = Membership::with(['customer', 'kindCash']);
+            $memberships = $memberships->whereBetween('end_at', [$aMonthAgo, $oneMonth]);
         }
 
         if ($memberships->exists()) {
@@ -73,7 +71,7 @@ class RenewalJob implements ShouldQueue
                     // If is in renewal, it means that the first renewal failed
                     // So we're going to make another intent.
                     if ($membership->isInRenewal()) {
-                        if (in_array($membership->daysExpired(), [15, 5, 3])) {
+                        if (in_array($membership->daysExpired(), [15, 5, 3, 0])) {
                             $membership->maybeRenew($this->everything);
                         }
                     }
@@ -83,6 +81,9 @@ class RenewalJob implements ShouldQueue
                     }
 
                     if ($membership->isAwaitingPickGift()) {
+                        $membership->shipping_status = 'N/A';
+                        $membership->save();
+
                         if (in_array($membership->daysAfterRenewal(), [1, 2, 5, 20, 30])) {
                             $membership->sendMembershipRenewedMail();
                         }
@@ -90,7 +91,7 @@ class RenewalJob implements ShouldQueue
                 }
 
                 // Increment the page
-                $currentPage++;
+                $currentPage = $currentPage + 1;
                 Paginator::currentPageResolver(function() use ($currentPage) {
                     return $currentPage;
                 });

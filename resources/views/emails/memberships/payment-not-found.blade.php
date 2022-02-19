@@ -228,7 +228,7 @@ a:hover {
                   <td align="center"><span style="font-size:16px;display:block;margin-top:15px;margin-bottom:35px;">We can’t find a payment method associated with your account. Please enter a valid payment method in your Kindhumans profile so we can process your membership renewal</span></td>
                 </tr>
                 <tr>
-                  <td align="center" width="100%"><a href="{{ $renewUrl }}" target="_blank" style="text-decoration:none;color:#172936;"><span style="color:#172936;display:block;padding:15px 5px;border:1px solid;width:220px;border-radius: 10px; -webkit-border-radius: 10px; -moz-border-radius: 10px;font-size:16px;">Update Payment Info and Renew it</span></a></td>
+                  <td align="center" width="100%"><a href="{{ $paymentMethodUrl }}" target="_blank" style="text-decoration:none;color:#172936;"><span style="color:#172936;display:block;padding:15px 5px;border:1px solid;width:220px;border-radius: 10px; -webkit-border-radius: 10px; -moz-border-radius: 10px;font-size:16px;">Update Payment Info and Renew it</span></a></td>
                 </tr>
               </table>
             </td>

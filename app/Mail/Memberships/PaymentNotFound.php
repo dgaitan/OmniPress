@@ -12,6 +12,13 @@ class PaymentNotFound extends Mailable
 {
     use Queueable, SerializesModels;
 
+    /**
+     * The number of times the job may be attempted.
+     *
+     * @var int
+     */
+    public $tries = 3;
+
     protected Membership $membership;
 
     /**
@@ -35,7 +42,17 @@ class PaymentNotFound extends Mailable
             ->view('emails.memberships.payment-not-found')
             ->with([
                 'customerName' => $this->membership->customer->getFullName(),
-                'renewUrl' => sprintf('%s/my-account/membership/renew', env('https://kind.humans', 'https://kindhumans.com')),
+                'paymentMethodUrl' => sprintf('%s/my-account/payment-methods/', env('CLIENT_DOMAIN', 'https://kindhumans.com')),
             ]);
+    }
+
+    /**
+     * Determine the time at which the job should timeout.
+     *
+     * @return \DateTime
+     */
+    public function retryUntil()
+    {
+        return now()->addMinutes(5);
     }
 }

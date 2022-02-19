@@ -57,10 +57,10 @@ class PaymentController extends Controller
                     } catch (\Laravel\Cashier\Exceptions\InvalidPaymentMethod $e) {
                         $defaultCard = $customer->addAndAssignDefaultPaymentMethod($request->token);
                     }
-        
+
                 }
             }
-            
+
             $customer->charge($request->amount, $request->token, [
                 'description' => $request->description
             ]);
@@ -105,14 +105,14 @@ class PaymentController extends Controller
 
             if (!$customer->hasDefaultPaymentMethod()) {
                 return response()->json([
-                    'status' => 'failed', 
+                    'status' => 'failed',
                     'error' => 'Customer has not default payment method'
                 ], 200);
             }
 
             $customer->charge(
-                $request->amount, 
-                $customer->defaultPaymentMethod()->id, 
+                $request->amount,
+                $customer->defaultPaymentMethod()->id,
                 ['description' => $request->description]
             );
 
@@ -149,6 +149,10 @@ class PaymentController extends Controller
             return response()->json($customer, 404);
         }
 
+        if (! $customer->stripeId()) {
+            $customer->createOrGetStripeCustomer();
+        }
+
         $card = $customer->addAndAssignDefaultPaymentMethod($request->token);
 
         return response()->json([
@@ -182,7 +186,7 @@ class PaymentController extends Controller
         if (is_array($customer = $this->getCustomer($request->customer_id))) {
             return response()->json($customer, 404);
         }
-        
+
         // Deleting payment method
         $customer->findPaymentMethod($request->token)->delete();
 
@@ -199,7 +203,7 @@ class PaymentController extends Controller
             $customer->updateDefaultPaymentMethod($paymentMethod->id);
 
             return response()->json(
-                $this->prepareResponseData($paymentMethod), 
+                $this->prepareResponseData($paymentMethod),
                 200
             );
         }
@@ -236,7 +240,7 @@ class PaymentController extends Controller
         $paymentMethod = $customer->updateDefaultPaymentMethod($request->token);
 
         return response()->json(
-            $this->prepareResponseData($paymentMethod), 
+            $this->prepareResponseData($paymentMethod),
             200
         );
     }
@@ -263,8 +267,8 @@ class PaymentController extends Controller
         $paymentMethod = $customer->defaultPaymentMethod();
 
         return response()->json([
-            'card' => $paymentMethod 
-                ? Customer::getCardResume($paymentMethod) 
+            'card' => $paymentMethod
+                ? Customer::getCardResume($paymentMethod)
                 : []
         ], 200);
     }
@@ -305,7 +309,7 @@ class PaymentController extends Controller
 
         if (is_null($customer)) {
             return [
-                'status' => 'failed', 
+                'status' => 'failed',
                 'error' => 'Customer not found'
             ];
         }
