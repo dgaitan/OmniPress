@@ -41,8 +41,9 @@ class MembershipRenewed extends Mailable
             ->with([
                 'customerName' => $this->membership->customer->getFullName(),
                 'pickGiftUrl' => sprintf(
-                    '%s/my-account/membership/pick-your-hat/',
-                    env('https://kind.humans', 'https://kindhumans.com')
+                    '%s/my-account/membership/pick-your-hat/%s',
+                    env('https://kind.humans', 'https://kindhumans.com'),
+                    $this->membership->id
                 ),
                 'accountSettingsUrl' => sprintf(
                     '%s/my-account/account-settings/',

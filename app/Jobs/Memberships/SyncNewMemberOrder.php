@@ -39,6 +39,9 @@ class SyncNewMemberOrder implements ShouldQueue
         SingleWooCommerceSync::dispatchSync($this->order_id, 'orders');
 
         $order = Order::whereOrderId($this->order_id)->first();
-        $order->update(['membership_id' => $this->membership_id]);
+        $order->update([
+            'has_membership' => true,
+            'membership_id' => $this->membership_id
+        ]);
     }
 }

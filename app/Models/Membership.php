@@ -29,7 +29,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $shipping_status
  * @property string $status
  * @property int|null $pending_order_id
- * @property string|null $last_payment_intent
+ * @property \Illuminate\Support\Carbon|null $last_payment_intent
  * @property int $payment_intents
  * @property int $kind_cash_id
  * @method static \Illuminate\Database\Eloquent\Builder|Membership newModelQuery()
@@ -230,7 +230,7 @@ class Membership extends Model
      * @return [type] [description]
      */
     public function daysAfterRenewal(): int {
-        return $this->start_at->diffInDays(\Carbon\Carbon::now());
+        return max($this->last_payment_intent->diffInDays(\Carbon\Carbon::now(), false), 0);
     }
 
     /**
@@ -302,140 +302,7 @@ class Membership extends Model
      * @return Membership
      */
     public function maybeRenew($force = false) {
-        try {
-            if ( ! $force && $this->daysUntilRenewal() > 0 ) {
-                throw new Exception(
-                    sprintf(
-                        "Membership with ID #%s isn't expired.",
-                        $this->id
-                    )
-                );
-            }
-
-            // If the customer doesn't have a payment method. Cancell this
-            // Renovation
-            if (! $this->customer->hasPaymentMethod()) {
-                if ($this->daysExpired() > 30) {
-                    $this->expire("Membership expired because was impossible find a payment method in 30 days.");
-                } else {
-                    $this->sendPaymentNotFoundNotification();
-                    $this->status = self::IN_RENEWAL_STATUS;
-                    $this->logs()->create([
-                        'description' => "Mebership renewal failed because we wasn't able to find a payment method for the customer."
-                    ]);
-                }
-
-                $this->shipping_status = 'N/A';
-                $this->save();
-
-                throw new Exception("Customer does not have a payment method");
-            }
-
-            /**
-             * Membership can renewal only if is active or in renewal status.
-             *
-             * Active means that currently is active (of course) and will
-             * auto-renewal. This is the simple and normal flow.
-             *
-             * In-Renewal means that this isn't the first we're trying to renew
-             * this membership. Maybe the renewal fail in the past because a
-             * failed payment intent. So, this is the flow for members
-             * with more that one intent.
-             */
-            if (!in_array($this->status, [self::ACTIVE_STATUS, self::IN_RENEWAL_STATUS])) {
-                throw new Exception('Membership must be active or in-renewal to be able to create another order');
-            }
-
-            // Initialize renewal intent.
-            $this->status = self::IN_RENEWAL_STATUS;
-            $this->shipping_status = 'N/A';
-
-            try {
-                $this->customer->charge(
-                    $this->price ?? 3500,
-                    $this->customer->defaultPaymentMethod()->id,
-                    ['description' => "Membership Renewal"]
-                );
-
-                $this->status = self::AWAITING_PICK_GIFT_STATUS;
-                $this->shipping_status = self::SHIPPING_PENDING_STATUS;
-                $this->last_payment_intent = \Carbon\Carbon::now();
-                $this->end_at = $this->end_at->addYear();
-                $this->payment_intents = 0;
-                $this->save();
-
-                $order_status = 'kh-awm';
-                $order_line_items = [
-                    [
-                        'product_id' => $this->product_id,
-                        'quantity' => 1
-                    ]
-                ];
-
-                $orderParams = [
-                    'payment_method' => 'kindhumans_stripe_gateway',
-                    'payment_method_title' => 'Credit Card',
-                    'customer_id' => $this->customer->customer_id,
-                    'set_paid' => true,
-                    'date_completed' => \Carbon\Carbon::now(),
-                    'date_paid' => \Carbon\Carbon::now(),
-                    'status' => $order_status,
-                    'billing' => (array) $this->customer->billing,
-                    'shipping' => (array) $this->customer->shipping,
-                    'line_items' => $order_line_items,
-                    'total' => $this->price,
-                    'meta_data' => [
-                        [
-                            'key' => '_created_from_kinja_api',
-                            'value' => 'yes'
-                        ],
-                        [
-                            'key' => '_status',
-                            'value' => 'kh-awm'
-                        ]
-                    ]
-                ];
-
-                $wooService = \App\Services\WooCommerce\WooCommerceService::make();
-                $order = $wooService->orders()->create(
-                    new \App\Services\WooCommerce\DataObjects\Order($orderParams),
-                    true
-                );
-
-                if ($order->id) {
-                    $order->update(['membership_id' => $this->id]);
-                    $this->pending_order_id = $order->order_id;
-                    $this->save();
-                }
-
-                $this->sendMembershipRenewedMail();
-
-            } catch (\Laravel\Cashier\Exceptions\IncompletePayment $exception) {
-                $this->last_payment_intent = \Carbon\Carbon::now();
-                $this->payment_intents = $this->payment_intents + 1;
-
-                if ($this->daysExpired() > 30) {
-                    $this->status = self::EXPIRED_STATUS;
-                }
-
-                $this->save();
-                $this->logs()->create([
-                    'description' => sprintf(
-                        "Membership Renewal Failed with error: %s",
-                        $exception->payment->status
-                    )
-                ]);
-            }
-
-            $this->save();
-            return $this;
-        } catch ( Exception $e ) {
-            $this->logs()->create([
-                'description' => sprintf("Renewal Error: %s", $e->getMessage())
-            ]);
-
-            return $e->getMessage();
-        }
+        \App\Jobs\Memberships\RenewMembershipJob::dispatch($this->id, $force);
     }
 
     /**

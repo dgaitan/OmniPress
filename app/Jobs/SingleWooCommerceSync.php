@@ -25,7 +25,7 @@ class SingleWooCommerceSync implements ShouldQueue
     public function __construct(int $element_id, string $resource)
     {
         $this->id = $element_id;
-        $this->content_type = $resource;
+        $this->resource = $resource;
     }
 
     /**

@@ -236,6 +236,45 @@ class MembershipController extends Controller
     }
 
     /**
+     * Set the new Gift
+     *
+     * @param Request $request
+     * @return array
+     */
+    public function pickGift(Request $request) {
+        // Validate the params
+        $validator = Validator::make($request->all(), [
+            'membership_id' => 'required|integer',
+            'gift_product_id' => 'required|integer',
+        ]);
+
+        // If validation fails, return error listed with 400 http code
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors()
+            ], 400);
+        }
+
+        $membership = Membership::find($request->membership_id);
+
+        if (is_null($membership)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Membership Not Found'
+            ]);
+        }
+
+        $membership->status = Membership::ACTIVE_STATUS;
+        $membership->gift_product_id = $request->gift_product_id;
+        $membership->save();
+
+        return response()->json([
+            'status' => 'success',
+            'membership' => $membership->toArray(true)
+        ]);
+    }
+
+    /**
      * [addCash description]
      *
      * @param Request $request [description]
@@ -266,6 +305,13 @@ class MembershipController extends Controller
         return response()->json($membership->kindCash->toArray(), 200);
     }
 
+    /**
+     * Redeem cash
+     *
+     * @param Request $request
+     * @param [type] $id
+     * @return void
+     */
     public function redeemCash(Request $request, $id) {
         $membership = Membership::find($id);
 

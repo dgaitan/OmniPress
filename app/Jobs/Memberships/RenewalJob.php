@@ -82,11 +82,11 @@ class RenewalJob implements ShouldQueue
                         $membership->expire("Membership expired because was impossible find a payment method in 30 days.");
                     }
 
-                    // if ($membership->isAwaitingPickGift()) {
-                    //     if (in_array($membership->daysAfterRenewal(), [1, 2, 5, 20, 30])) {
-                    //         $membership->sendMembershipRenewedEmail();
-                    //     }
-                    // }
+                    if ($membership->isAwaitingPickGift()) {
+                        if (in_array($membership->daysAfterRenewal(), [1, 2, 5, 20, 30])) {
+                            $membership->sendMembershipRenewedMail();
+                        }
+                    }
                 }
 
                 // Increment the page
