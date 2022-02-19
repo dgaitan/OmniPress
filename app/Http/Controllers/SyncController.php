@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Sync;
-use App\Jobs\WooCommerceSyncServiceJob;
 use App\Http\Resources\SyncResource;
 use App\Rules\SyncContentType;
 
@@ -31,13 +30,11 @@ class SyncController extends Controller
             'description' => ['max:500']
         ]);
 
-        $sync = Sync::initialize(
+        Sync::initialize(
             $request->content_type,
             $request->user(),
             $request->description
         );
-
-        WooCommerceSyncServiceJob::dispatch(strtolower($sync->content_type));
 
         return redirect(route('kinja.sync.index'))
             ->with('message', 'Sync Initialized!');

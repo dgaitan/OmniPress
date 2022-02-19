@@ -133,8 +133,7 @@ class Membership extends Model
      * @return Collection
      */
     public function orders(): Collection {
-        return \App\Models\WooCommerce\Order::where('membership_id', $this->id)
-            ->get();
+        return \App\Models\WooCommerce\Order::where('membership_id', $this->id);
     }
 
     /**

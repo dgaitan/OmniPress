@@ -28,16 +28,16 @@
                             <div class="col-span-6 sm:col-span-4">
                                 <label class="block text-sm font-medium mb-2" for="content_type">Sync Type</label>
                                 <div class="relative">
-                                    <select 
-                                        v-model="syncForm.content_type" 
-                                        class="appearance-none block w-full px-4 py-3 mb-2 border-gray-300 focus:border-cyan-600 focus:ring focus:ring-cyan-400 focus:ring-opacity-50 rounded-md shadow-sm" 
+                                    <select
+                                        v-model="syncForm.content_type"
+                                        class="appearance-none block w-full px-4 py-3 mb-2 border-gray-300 focus:border-cyan-600 focus:ring focus:ring-cyan-400 focus:ring-opacity-50 rounded-md shadow-sm"
                                         name="content_type"
                                         id="content_type">
                                       <option value="">Select sync content type</option>
                                       <option value="customers">Customers</option>
-                                      <option value="coupons">Coupons</option>
                                       <option value="products">Products</option>
                                       <option value="orders">Orders</option>
+                                      <option value="memberships">Memberships</option>
                                     </select>
                                 </div>
                                 <jet-input-error :message="syncForm.errors.content_type" class="mt-2" />
@@ -116,10 +116,10 @@
                                             <span :class="`status ${sync.status}`">{{ sync.status }}</span>
                                         </td>
                                         <td>
-                                            <Button 
+                                            <Button
                                                 v-if="sync.status === 'pending' || sync.status === 'failed'"
-                                                type="button" 
-                                                color="secondary" 
+                                                type="button"
+                                                color="secondary"
                                                 size="sm"
                                                 @click="tryAgain(sync.id, $event)">
                                                 Try Again

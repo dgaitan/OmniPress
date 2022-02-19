@@ -26,7 +26,7 @@ class SyncContentType implements Rule
      */
     public function passes($attribute, $value)
     {
-        return in_array($value, (new WooCommerceTask)->getAvailableTasks());
+        return in_array($value, ['customers', 'orders', 'products', 'memberships']);
     }
 
     /**

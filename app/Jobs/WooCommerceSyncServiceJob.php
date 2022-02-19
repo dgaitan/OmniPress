@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\Sync;
 use App\Services\WooCommerce\WooCommerceService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
@@ -15,38 +16,20 @@ class WooCommerceSyncServiceJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     /**
-     * Per Page
+     * Sync Id
      *
      * @var integer
      */
-    protected int $perPage = 100;
-
-    /**
-     * Current page
-     *
-     * @var integer
-     */
-    protected int $page = 1;
-
-    /**
-     * Resource
-     *
-     * @var string
-     */
-    protected string $resource = '';
+    protected int $sync_id;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(string $resource, int|null $perPage = null, int $page = 1)
+    public function __construct(int $sync_id)
     {
-        if (! $perPage) $perPage = env('KINDHUMANS_SYNC_PER_PAGE', 100);
-
-        $this->resource = $resource;
-        $this->perPage = $perPage;
-        $this->page = $page;
+        $this->sync_id = $sync_id;
     }
 
     /**
@@ -56,7 +39,8 @@ class WooCommerceSyncServiceJob implements ShouldQueue
      */
     public function handle()
     {
+        $sync = Sync::find($this->sync_id);
         $woocommerce = WooCommerceService::make();
-        $woocommerce->{$this->resource}()->syncAll($this->perPage, $this->page);
+        $woocommerce->{$sync->content_type}()->syncAll($sync->per_page, $sync->current_page, $sync->id);
     }
 }

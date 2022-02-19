@@ -59,7 +59,7 @@ class Sync extends Model
 
     protected $fillable = [
         'name', 'description',
-        'user_id', 'status',
+        'user_id', 'status', 'per_page',
         'content_type', 'intents', 'current_page'
     ];
 
@@ -127,7 +127,7 @@ class Sync extends Model
         $sync = self::create([
             'name' => sprintf('%s sync', ucwords($content_type)),
             'status' => self::PENDING,
-            'content_type' => $content_type,
+            'content_type' => strtolower($content_type),
             'user_id' => $user->id,
             'description' => $description,
             'intents' => 1,
@@ -141,6 +141,8 @@ class Sync extends Model
         ));
 
         $sync->save();
+
+        \App\Jobs\WooCommerceSyncServiceJob::dispatch($sync->id);
 
         return $sync;
     }

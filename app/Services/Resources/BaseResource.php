@@ -2,6 +2,7 @@
 
 namespace App\Services\Resources;
 
+use Exception;
 use App\Services\Contracts\DataObjectContract;
 use App\Services\Contracts\ServiceContract;
 use App\Services\Contracts\FactoryContract;
@@ -9,6 +10,16 @@ use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 abstract class BaseResource {
+    /**
+     * Sometimes the endpoint is different that the
+     * Resource name.
+     *
+     * So, let's add a slug to prevent it
+     *
+     * @var string|null
+     */
+    public string|null $slug = null;
+
     /**
      * Resource Endpoint
      *
@@ -85,25 +96,29 @@ abstract class BaseResource {
      * @param integer $per_page
      * @return void
      */
-    public function syncAll(int|null $perPage, int $page = 1): void {
+    public function syncAll(int|null $perPage, int $page = 1, int $sync_id = 0): void {
         if (! $perPage) {
             $perPage = env('KINDHUMANS_SYNC_PER_PAGE', 100);
         }
 
+        $sync = \App\Models\Sync::find($sync_id);
         $params = array_merge(['per_page' => $perPage, 'page' => $page], $this->requestParams());
-        $response = $this->all($params);
 
-        if ($response) {
-            $response->map(fn($item) => $item->sync());
-            $page++;
-            \App\Jobs\WooCommerceSyncServiceJob::dispatch($this->endpoint, $perPage, $page);
-        } else {
-            $sync = \App\Models\Sync::where('status', 'pending')
-                ->where('content_type', $this->endpoint)
-                ->first();
+        try {
+            $response = $this->all($params);
 
-            if (! is_null($sync)) $sync->complete();
+            if ($response) {
+                $response->map(fn($item) => $item->sync());
+                $sync->current_page = $page + 1;
+                $sync->save();
+                \App\Jobs\WooCommerceSyncServiceJob::dispatch($sync->id);
+            } else {
+                $sync->complete();
+            }
+        } catch (Exception $e) {
+            $sync->add_log(sprintf('Error: %s', $e->getMessage()));
         }
+
     }
 
     /**
