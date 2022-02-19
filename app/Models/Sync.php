@@ -121,21 +121,18 @@ class Sync extends Model
      */
     public static function initialize(
         string $content_type,
-        User|null $user,
+        User $user,
         ?string $description = ''
     ) {
         $sync = self::create([
             'name' => sprintf('%s sync', ucwords($content_type)),
             'status' => self::PENDING,
             'content_type' => $content_type,
+            'user_id' => $user->id,
             'description' => $description,
             'intents' => 1,
             'current_page' => 1
         ]);
-
-        if ($user) {
-            $sync->user_id = $user->id;
-        }
 
         $sync->add_log(sprintf(
             'Sync started by %s at %s',

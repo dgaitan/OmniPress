@@ -39,9 +39,17 @@ class Customer extends BaseObject implements DataObjectContract
         $data = $this->toArray('customer_id');
 
         if ($data['meta_data']) {
-            $data['meta_data'] = collect($data['meta_data'])->map(function($meta) {
-                return (array) $meta;
-            });
+            $meta_data = [];
+            foreach ($data['meta_data'] as $meta) {
+                $meta = (array) $meta;
+
+                if (! isset($meta['key'])) continue;
+                if ($meta['key'] === '_stripe_customer') continue;
+
+                $meta_data[] = $meta;
+            }
+
+            $data['meta_data'] = $meta_data;
         }
 
         $customer->fill($data);

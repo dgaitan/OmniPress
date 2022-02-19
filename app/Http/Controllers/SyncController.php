@@ -37,7 +37,7 @@ class SyncController extends Controller
             $request->description
         );
 
-        WooCommerceSyncServiceJob::dispatch($sync->content_type);
+        WooCommerceSyncServiceJob::dispatch(strtolower($sync->content_type));
 
         return redirect(route('kinja.sync.index'))
             ->with('message', 'Sync Initialized!');

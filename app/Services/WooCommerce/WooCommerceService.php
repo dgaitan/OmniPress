@@ -62,7 +62,7 @@ class WooCommerceService implements ServiceContract
      *
      * @return CustomerResource
      */
-    public function customer(): CustomerResource
+    public function customers(): CustomerResource
     {
         return new CustomerResource(service: $this);
     }

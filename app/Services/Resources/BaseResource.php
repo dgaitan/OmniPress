@@ -90,14 +90,29 @@ abstract class BaseResource {
             $perPage = env('KINDHUMANS_SYNC_PER_PAGE', 100);
         }
 
-        $params = ['per_page' => $perPage, 'page' => $page];
+        $params = array_merge(['per_page' => $perPage, 'page' => $page], $this->requestParams());
         $response = $this->all($params);
 
         if ($response) {
             $response->map(fn($item) => $item->sync());
             $page++;
             \App\Jobs\WooCommerceSyncServiceJob::dispatch($this->endpoint, $perPage, $page);
+        } else {
+            $sync = \App\Models\Sync::where('status', 'pending')
+                ->where('content_type', $this->endpoint)
+                ->first();
+
+            if (! is_null($sync)) $sync->complete();
         }
+    }
+
+    /**
+     * Used to send custom params
+     *
+     * @return array
+     */
+    protected function requestParams(): array {
+        return [];
     }
 
     /**
