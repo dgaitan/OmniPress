@@ -155,7 +155,7 @@ class MembershipController extends Controller
         ]);
 
         // Is user picked gift product, attach it to membership as well
-        if (!is_null($request->gift_product_id)) {
+        if (! is_null($request->gift_product_id)) {
             $giftProduct = Product::firstOrCreate(['product_id' => $request->gift_product_id]);
             $membership->giftProducts()->attach($giftProduct);
             $membership->save();

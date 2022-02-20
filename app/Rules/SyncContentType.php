@@ -3,7 +3,6 @@
 namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
-use App\Tasks\WooCommerceTask;
 
 class SyncContentType implements Rule
 {

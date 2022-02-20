@@ -146,4 +146,17 @@ class Sync extends Model
 
         return $sync;
     }
+
+    /**
+     * Find a Sync and resume it
+     *
+     * @param integer $sync_id
+     * @return void
+     */
+    public static function resume(int $sync_id): void {
+        $sync = self::find($sync_id);
+        $api = \App\Services\WooCommerce\WooCommerceService::make();
+        $api->{$sync->content_type}()
+            ->syncAll($sync->per_page, $sync->current_page, $sync->id);
+    }
 }

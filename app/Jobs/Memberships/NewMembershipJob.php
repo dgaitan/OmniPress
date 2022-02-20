@@ -28,12 +28,12 @@ class NewMembershipJob implements ShouldQueue
      * @return void
      */
     public function __construct(
-        string $customerEmail, 
-        int $customerId, 
-        int $orderId, 
+        string $customerEmail,
+        int $customerId,
+        int $orderId,
         int|null $giftProductId = null,
         int|null $membershipProductId = null
-    ) {   
+    ) {
         $this->customerEmail = $customerEmail;
         $this->customerId = $customerId;
         $this->orderId = $orderId;
@@ -50,13 +50,13 @@ class NewMembershipJob implements ShouldQueue
     {
         Mail::to($this->customerEmail)->send(new WelcomeMail);
 
-        if (!is_null($this->giftProductId)) {
+        if (! is_null($this->giftProductId)) {
             SingleWooCommerceSync::dispatch($this->giftProductId, 'products');
         }
 
-        if (!is_null($this->membershipProductId)) {
+        if (! is_null($this->membershipProductId)) {
             SingleWooCommerceSync::dispatch(
-                $this->membershipProductId, 
+                $this->membershipProductId,
                 'products'
             );
         }

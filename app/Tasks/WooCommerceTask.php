@@ -5,7 +5,6 @@ namespace App\Tasks;
 use App\Models\Sync;
 use App\Http\Clients\Client;
 use App\Http\Clients\WooCommerce\WooCommerceClient;
-use App\Jobs\SyncKindhumansData;
 use App\Tasks\WooCommerce\CustomerTask;
 use App\Tasks\WooCommerce\CouponTask;
 use App\Tasks\WooCommerce\OrderTask;
@@ -22,7 +21,7 @@ class WooCommerceTask {
 
     /**
      * WooCommerce CLient Instance
-     * 
+     *
      * @var WooCommerceClient
      */
     protected WooCommerceClient $client;
@@ -33,7 +32,7 @@ class WooCommerceTask {
 
     /**
      * Tasks registered to this task manager
-     * 
+     *
      * @var array
      */
     protected array $tasks = [
@@ -46,10 +45,10 @@ class WooCommerceTask {
 
     /**
      * Task Constructor
-     * 
+     *
      * Is necessary a service to can run tasks because we to attach the data
      * retrieved from sync to a service.
-     * 
+     *
      * @param Sync
      */
     public function __construct(Sync|null $sync = null) {
@@ -57,13 +56,13 @@ class WooCommerceTask {
         $this->client = new WooCommerceClient(
             new Client
         );
-        
+
         $this->loadTasks();
     }
 
     /**
      * Return the available tasks
-     * 
+     *
      * @return array
      */
     public function getAvailableTasks(): array {
@@ -72,7 +71,7 @@ class WooCommerceTask {
 
     /**
      * Set if a request is single
-     * 
+     *
      * @param  bool    $isSingle [description]
      * @return boolean           [description]
      */
@@ -82,7 +81,7 @@ class WooCommerceTask {
 
     /**
      * Load the tasks registered
-     * 
+     *
      * @return void
      */
     protected function loadTasks() : void {
@@ -99,7 +98,7 @@ class WooCommerceTask {
 
     /**
      * Syncronize Customers
-     * 
+     *
      * @param  array
      * @return void
      */
@@ -154,7 +153,7 @@ class WooCommerceTask {
      */
     protected function sync(string $task, array $syncArgs = []): void {
         $task = $this->tasks[$task];
-        
+
         if ($this->isTesting) {
             $task->setTestingMode($this->isTesting)
             ->setTestingCollectionData($this->testingCollectionData)
@@ -163,7 +162,7 @@ class WooCommerceTask {
 
         $task->setId($this->id);
         $task->sync($syncArgs, $this->sync);
-        
+
         // if (!$this->sync) return;
 
         // $endpoint = $this->client->getEndpoint($task);
@@ -175,15 +174,15 @@ class WooCommerceTask {
         //     $endpoint->setTestingData($this->testingCollectionData[$task]);
         //     $endpoint->retrieveDataFromAPI($this->retrieveFromAPI);
         // }
-        
+
         // if ($results) {
         //     if ($this->isTesting) {
         //     } else {
-                
-                
+
+
         //         // Iterate the page result
         //         foreach ($results as $page => $results) {
-        
+
         //             // Iterate the results in a page
         //             foreach ($results as $result) {
         //                 (new $this->tasks[$task])->handle($result);

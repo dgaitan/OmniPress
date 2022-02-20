@@ -3,7 +3,6 @@
 namespace App\Jobs;
 
 use App\Models\Sync;
-use App\Services\WooCommerce\WooCommerceService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -39,8 +38,6 @@ class WooCommerceSyncServiceJob implements ShouldQueue
      */
     public function handle()
     {
-        $sync = Sync::find($this->sync_id);
-        $woocommerce = WooCommerceService::make();
-        $woocommerce->{$sync->content_type}()->syncAll($sync->per_page, $sync->current_page, $sync->id);
+        Sync::resume($this->sync_id);
     }
 }

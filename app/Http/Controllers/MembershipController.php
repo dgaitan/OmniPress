@@ -66,7 +66,7 @@ class MembershipController extends Controller
                 $memberships->orderBy($request->input('orderBy'), $ordering);
             }
         } else {
-            $memberships = $memberships->orderBy('start_at', 'desc');
+            $memberships = $memberships->orderBy('id', 'desc');
         }
 
         $memberships = $memberships->paginate($perPage);
