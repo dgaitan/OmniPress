@@ -131,9 +131,9 @@ abstract class BaseObject {
 
             // First Sync the collection.
             foreach ($this->attributes[$key] as $item) {
-                $object = (new $dataObject((array) $item))->sync();
-                $object->fill([$fieldName => $parent->id]);
-                $object->save();
+                $item = (array) $item;
+                $item[$fieldName] = $parent->id;
+                $object = (new $dataObject($item))->sync();
 
                 $toAttach[] = $object->id;
             }
