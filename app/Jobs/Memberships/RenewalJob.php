@@ -87,6 +87,10 @@ class RenewalJob implements ShouldQueue
                         if (in_array($membership->daysAfterRenewal(), [1, 2, 5, 20, 30])) {
                             $membership->sendMembershipRenewedMail();
                         }
+
+                        if ($membership->daysAfterRenewal() > 30) {
+                            \App\Jobs\Memberships\SetDefaultGiftProductJob::dispatch($membership->id);
+                        }
                     }
                 }
 

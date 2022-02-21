@@ -9,6 +9,7 @@ use App\Services\WooCommerce\DataObjects\ProductTag;
 use App\Services\WooCommerce\DataObjects\ProductImage;
 use App\Services\WooCommerce\DataObjects\ProductAttribute;
 use App\Services\WooCommerce\DataObjects\ProductSetting;
+use App\Services\WooCommerce\DataObjects\ProductVariation;
 use App\Models\WooCommerce\Product as WooProduct;
 
 class Product extends BaseObject implements DataObjectContract
@@ -57,6 +58,7 @@ class Product extends BaseObject implements DataObjectContract
         $this->array('attributes');
         $this->array('meta_data');
         $this->array('settings');
+        $this->array('product_variations');
     }
 
     /**
@@ -71,6 +73,7 @@ class Product extends BaseObject implements DataObjectContract
         unset($data['tags']);
         unset($data['images']);
         unset($data['attributes']);
+        unset($data['product_variations']);
 
         $data['meta_data'] = $this->getMetaData();
 
@@ -81,6 +84,13 @@ class Product extends BaseObject implements DataObjectContract
         $this->syncCollection('tags', 'product_id', ProductTag::class, $product);
         $this->syncCollection('images', 'product_id', ProductImage::class, $product);
         $this->syncCollection('attributes', 'product_id', ProductAttribute::class, $product);
+
+        if ($product->type === 'variable' && $this->product_variations) {
+            foreach ($this->product_variations as $variation) {
+                $variation->parent_id = $product->id;
+                (new ProductVariation((array) $variation))->sync();
+            }
+        }
 
         $product->save();
 

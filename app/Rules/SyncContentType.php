@@ -25,7 +25,7 @@ class SyncContentType implements Rule
      */
     public function passes($attribute, $value)
     {
-        return in_array($value, ['customers', 'orders', 'products', 'memberships']);
+        return in_array($value, \App\Models\Sync::RESOURCES_TYPES);
     }
 
     /**

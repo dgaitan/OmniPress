@@ -127,6 +127,7 @@
 
         <!-- Membership Detail Modal -->
         <jet-modal :show="showDetailModal" @close="showDetailModal = false" maxWidth="7xl">
+            <MembershipDetail :membership="membership" />
             <div class="p-4">
                 <jet-button @click="showSyncConfirmation = false">
                     Close
@@ -138,6 +139,7 @@
 
 <script>
     import { defineComponent } from 'vue'
+    import axios from 'axios'
     import Layout from '@/Layouts/Layout.vue'
     import JetInput from '@/Jetstream/Input.vue'
     import JetButton from '@/Jetstream/Button.vue'
@@ -146,6 +148,7 @@
     import ListFilter from '@/Components/List/ListFilter.vue'
     import ListTable from '@/Components/List/ListTable.vue'
     import ListPagination from '@/Components/List/ListPagination'
+    import MembershipDetail from './Detail.vue'
 
     export default defineComponent({
         props: [
@@ -166,7 +169,7 @@
             ListFilter,
             ListTable,
             ListPagination,
-
+            MembershipDetail
         },
 
         data() {
@@ -184,7 +187,8 @@
                 },
                 action: '',
                 ids: [],
-                showDetailModal: false
+                showDetailModal: false,
+                membership: {}
             }
         },
 
@@ -260,8 +264,13 @@
                 }, { replace: true })
             },
 
-            showDetail(id) {
-                this.showDetailModal = true
+            async showDetail(id) {
+                const request = await axios.get(route('kinja.memberships.show', id));
+
+                if (request.data.membership) {
+                    this.membership = request.data.membership
+                    this.showDetailModal = true
+                }
             },
 
             /**
@@ -295,7 +304,7 @@
                         this.action = ''
                     }
                 });
-            }
+            },
         }
     })
 </script>

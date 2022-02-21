@@ -86,6 +86,28 @@ class MembershipController extends Controller
     }
 
     /**
+     * Undocumented function
+     *
+     * @param Request $request
+     * @param int $id
+     * @return array
+     */
+    public function show(Request $request, $id) {
+        $membership = Membership::find($id);
+
+        if (is_null($membership)) {
+            return response()->json([
+                'membership' => [],
+                'message' => 'Membership Not Found'
+            ], 404);
+        }
+
+        return response()->json([
+            'membership' => $membership->toArray(true)
+        ], 200);
+    }
+
+    /**
      * Membership Actions
      *
      * @param Request $request

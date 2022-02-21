@@ -124,7 +124,11 @@ class Product extends Model
     /**
      * Child Products
      */
-    public function children() {
+    public function variations() {
+        return $this->hasMany(self::class, 'parent_id');
+    }
+
+    public function parent() {
         return $this->belongsTo(self::class, 'parent_id');
     }
 

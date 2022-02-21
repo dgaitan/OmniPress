@@ -16,7 +16,7 @@ class ProductResource extends BaseResource implements ResourceContract
     public string $endpoint = 'products';
 
     /**
-     * Order Factory
+     * Product Factory
      *
      * @var string
      */

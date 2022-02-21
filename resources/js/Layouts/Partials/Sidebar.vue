@@ -15,7 +15,7 @@
 	            			Dashboard
 	            		</SidebarNavLink>
 	            	</SidebarNav>
-	              	
+
 	              	<!-- Store -->
 	              	<SidebarNav>
 	              		<template #title>Store</template>
@@ -65,9 +65,13 @@
 	              			<template #icon><unicon name="sync"></unicon></template>
 	              			Sync
 	              		</SidebarNavLink>
-	              		<SidebarNavLink 
-	              			:href="route('api-tokens.index')" 
-	              			:active="route().current('api-tokens.index')" 
+                          <SidebarNavLink :href="route('kinja.queues.index')" :active="route().current('kinja.queues.index')">
+	              			<template #icon><unicon name="sync"></unicon></template>
+	              			Queues
+	              		</SidebarNavLink>
+	              		<SidebarNavLink
+	              			:href="route('api-tokens.index')"
+	              			:active="route().current('api-tokens.index')"
 	              			v-if="userCan('manage_api_tokens')">
 	              			<template #icon><unicon name="key-skeleton"></unicon></template>
 	              			Api Tokens
@@ -81,7 +85,7 @@
 	              			<template #icon><unicon name="user-circle"></unicon></template>
 	              			Profile
 	              		</SidebarNavLink>
-	              		
+
 	              		<!-- Authentication -->
 	              		<li>
                             <form @submit.prevent="logout">

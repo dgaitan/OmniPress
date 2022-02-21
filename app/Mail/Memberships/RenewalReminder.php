@@ -15,13 +15,6 @@ class RenewalReminder extends Mailable
     protected $membership;
 
     /**
-     * The number of times the job may be attempted.
-     *
-     * @var int
-     */
-    public $tries = 3;
-
-    /**
      * Create a new message instance.
      *
      * @return void
@@ -48,15 +41,5 @@ class RenewalReminder extends Mailable
                 'kindCash' => $this->membership->kindCash->cashForHuman(),
                 'accountUrl' => sprintf('%s/my-account/account-settings/', env('CLIENT_DOMAIN', 'https://kindhumans.com')),
             ]);
-    }
-
-    /**
-     * Determine the time at which the job should timeout.
-     *
-     * @return \DateTime
-     */
-    public function retryUntil()
-    {
-        return now()->addMinutes(5);
     }
 }

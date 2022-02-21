@@ -35,13 +35,20 @@ abstract class BaseResource {
     public string $factory;
 
     /**
+     * Service
+     *
+     * @var ServiceContract
+     */
+    private ServiceContract $service;
+
+    /**
      * A Resource should receive a Service
      *
      * @param ServiceContract $service
      */
-    public function __construct(
-        private ServiceContract $service,
-    ) {}
+    public function __construct(ServiceContract $service) {
+        $this->service = $service;
+    }
 
     /**
      * Retrieve Service
@@ -116,6 +123,8 @@ abstract class BaseResource {
                 $sync->complete();
             }
         } catch (Exception $e) {
+            $sync->status = \App\Models\Sync::FAILED;
+            $sync->save();
             $sync->add_log(sprintf('Error: %s', $e->getMessage()));
         }
 

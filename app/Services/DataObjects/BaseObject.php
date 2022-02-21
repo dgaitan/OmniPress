@@ -108,7 +108,7 @@ abstract class BaseObject {
             });
         }
 
-        return $meta_data->toArray();
+        return $meta_data ? $meta_data->toArray() : [];
     }
 
     /**

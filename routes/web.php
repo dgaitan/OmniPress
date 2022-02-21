@@ -10,6 +10,7 @@ use App\Http\Controllers\CouponController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\MembershipController;
+use App\Http\Controllers\QueuesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,6 +54,10 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('/dashboard')->group(fun
             Route::get('/logs/{id}', 'logs')->name('logs');
             Route::get('/check', 'check')->name('check');
         });
+
+        Route::controller(QueuesController::class)->name('kinja.queues.')->prefix('/queues')->group(function () {
+            Route::get('/', 'index')->name('index');
+        });
     });
 
     // Store Views
@@ -86,6 +91,7 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('/dashboard')->group(fun
         Route::controller(MembershipController::class)->prefix('/memberships')->name('memberships.')->group(function () {
             Route::get('/', 'index')->name('index');
             Route::post('/actions', 'actions')->name('actions');
+            Route::get('/{id}', 'show')->name('show');
         });
     });
 

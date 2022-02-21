@@ -53,6 +53,14 @@ class Sync extends Model
 
     const FAILED = 'failed';
 
+    const RESOURCES_TYPES = [
+        'memberships',
+        'customers',
+        'products',
+        'productVariations',
+        'orders'
+    ];
+
     protected $casts = [
         'created_at' => 'datetime',
     ];

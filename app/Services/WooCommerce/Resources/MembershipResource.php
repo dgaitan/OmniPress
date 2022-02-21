@@ -31,4 +31,18 @@ class MembershipResource extends BaseResource implements ResourceContract
      * @var string
      */
     public string $factory = MembershipFactory::class;
+
+    /**
+     * Run Add Gift PRoduct To ORder
+     *
+     * @param integer $order_id
+     * @return object|null|false
+     */
+    public function addGiftProduct(int $order_id) {
+        $request = $this->service()->makeRequest();
+        return $request->put(
+            sprintf('%s/%s/set-gift', $this->endpoint, $order_id),
+            []
+        );
+    }
 }
