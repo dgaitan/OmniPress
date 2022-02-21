@@ -20,6 +20,7 @@ class ProductImage extends BaseObject implements DataObjectContract
         $this->string('src');
         $this->string('name');
         $this->string('alt');
+        $this->integer('product_id');
     }
 
     /**

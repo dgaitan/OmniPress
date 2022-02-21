@@ -28,6 +28,7 @@ class OrderLine extends BaseObject implements DataObjectContract
         $this->array('meta_data');
         $this->string('sku');
         $this->money('price');
+        $this->integer('order_id');
     }
 
     /**
@@ -37,7 +38,7 @@ class OrderLine extends BaseObject implements DataObjectContract
      */
     public function sync(): WooOrderLine {
         $orderLine = WooOrderLine::firstOrNew(['order_line_id' => $this->id]);
-        $orderLine->fill($this->toArray());
+        $orderLine->fill($this->toArray('order_line_id'));
         $product = Product::whereProductId($this->product_id)->first();
 
         if ($product) {

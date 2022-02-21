@@ -20,6 +20,7 @@ class ProductAttribute extends BaseObject implements DataObjectContract
         $this->boolean('visible');
         $this->boolean('variation');
         $this->array('options');
+        $this->integer('product_id');
     }
 
     /**

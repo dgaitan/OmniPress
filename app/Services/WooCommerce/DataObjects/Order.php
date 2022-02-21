@@ -75,13 +75,7 @@ class Order extends BaseObject implements DataObjectContract
         $order->save();
 
         // Sync Order Lines
-        if ($this->line_items) {
-            foreach ($this->line_items as $item) {
-                $orderLine = (new OrderLine((array) $item))->sync();
-                $orderLine->order_id = $order->id;
-                $orderLine->save();
-            }
-        }
+        $this->syncCollection('line_items', 'order_id', OrderLine::class, $order);
 
         return $order;
     }
