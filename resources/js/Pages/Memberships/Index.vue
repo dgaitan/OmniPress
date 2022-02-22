@@ -26,7 +26,7 @@
                     </select>
 
                     <!-- Actions -->
-                    <select v-model="action" @change="bulkActions()" class="border-gray-300 focus:border-cyan-600 focus:ring focus:ring-cyan-400 focus:ring-opacity-50 rounded-md shadow-sm ml-2" style="width:200px">
+                    <select v-model="action" @change="confirmAction()" class="border-gray-300 focus:border-cyan-600 focus:ring focus:ring-cyan-400 focus:ring-opacity-50 rounded-md shadow-sm ml-2" style="width:200px">
                         <option value="">Actions</option>
                         <optgroup label="Shipping Statuses">
                             <option value="shipping_status_to_cancelled">Change Shipping Status to Cancelled</option>
@@ -37,7 +37,6 @@
                             <option value="status_to_active">Change Status to Active</option>
                             <option value="status_to_awaiting_pick_gift">Change Status to Awaiting Pick Gift</option>
                             <option value="status_to_cancelled">Change Status to Cancelled</option>
-                            <option value="status_to_expired">Change Status to Expired</option>
                         </optgroup>
                         <optgroup label="Actions">
                             <option value="expire">Cancell Membership</option>
@@ -125,6 +124,29 @@
 
         </div>
 
+        <!-- Sync Confirmation Modal -->
+        <jet-confirmation-modal :show="showActionConfirmation" @close="showActionConfirmation = false">
+            <template #title>
+                Are you sure?
+            </template>
+
+            <template #content>
+                {{ confirmationMessage }}
+            </template>
+
+            <template #footer>
+                <jet-secondary-button @click="showActionConfirmation = false" class="">
+                    <span v-if="ids.length > 0">Cancel</span>
+                    <span v-else>Close</span>
+                </jet-secondary-button>
+
+                <jet-button v-if="ids.length > 0" class="ml-3" @click="bulkActions" :class="{ 'opacity-25': runningBulk }" :disabled="runningBulk">
+                    <span v-if="!runningBulk">Confirm</span>
+                    <Sppiner v-else />
+                </jet-button>
+            </template>
+        </jet-confirmation-modal>
+
         <!-- Membership Detail Modal -->
         <jet-modal :show="showDetailModal" @close="showDetailModal = false" maxWidth="7xl">
             <MembershipDetail :membership="membership" />
@@ -143,12 +165,15 @@
     import Layout from '@/Layouts/Layout.vue'
     import JetInput from '@/Jetstream/Input.vue'
     import JetButton from '@/Jetstream/Button.vue'
+    import JetSecondaryButton from '@/Jetstream/SecondaryButton.vue'
     import JetModal from '@/Jetstream/Modal.vue'
+    import JetConfirmationModal from '@/Jetstream/ConfirmationModal.vue'
     import ListWrapper from '@/Components/List/ListWrapper.vue'
     import ListFilter from '@/Components/List/ListFilter.vue'
     import ListTable from '@/Components/List/ListTable.vue'
     import ListPagination from '@/Components/List/ListPagination'
     import MembershipDetail from './Detail.vue'
+    import Sppiner from '@/Components/Sppiner.vue'
 
     export default defineComponent({
         props: [
@@ -165,12 +190,15 @@
             Layout,
             JetInput,
             JetButton,
+            JetSecondaryButton,
             JetModal,
+            JetConfirmationModal,
             ListWrapper,
             ListFilter,
             ListTable,
             ListPagination,
-            MembershipDetail
+            MembershipDetail,
+            Sppiner
         },
 
         data() {
@@ -189,7 +217,21 @@
                 action: '',
                 ids: [],
                 showDetailModal: false,
-                membership: {}
+                membership: {},
+                confirmationMessages: {
+                    shipping_status_to_cancelled: 'Please confirm if you want to cancell shipment of these memberships.',
+                    shipping_status_to_shipped: 'Please confirm if you want to mark these memberships as shipped.',
+                    shipping_status_to_no_ship: 'Please confirm if you want to make as no ship these memberships.',
+                    status_to_active: 'Please confirm if you want to active these memberships',
+                    status_to_awaiting_pick_gift: 'Please confirm if you want to change these memberships to Awaiting Pick Gift Product.',
+                    status_to_cancelled: 'Please confirm if you want to cancell these memberships.',
+                    expire: 'Please confirm if you want to expire these memberships.',
+                    renew: 'Please confirm if you want to renew these memberships manually.',
+                    run_cron: 'Please confirm if you want to run the membership cron manully.'
+                },
+                confirmationMessage: '',
+                showActionConfirmation: false,
+                runningBulk: false
             }
         },
 
@@ -291,8 +333,19 @@
                 checked ? this.memberships.map(m => this.ids.push(m.id)) : this.ids = [];
             },
 
+            confirmAction() {
+                if (this.ids.length === 0) {
+                    this.confirmationMessage = 'Please select at least one membership to execute this action.'
+                } else {
+                    this.confirmationMessage = this.confirmationMessages[this.action]
+                }
+
+                this.showActionConfirmation = true
+            },
+
             bulkActions() {
                 if (!this.action) return false;
+                this.runningBulk = true;
 
                 this.$inertia.post(route('kinja.memberships.actions'), {
                     ids: this.ids,
@@ -303,6 +356,9 @@
                     onSuccess: () => {
                         this.ids = []
                         this.action = ''
+                        this.runningBulk = false
+                        this.confirmationMessage = ''
+                        this.showActionConfirmation = false
                     }
                 });
             },
