@@ -15,33 +15,56 @@ class ProductController extends Controller
      * @return array
      */
     public function index(Request $request) {
-        $perPage = 50;
+        $statuses = [
+            ['slug' => 'publish', 'label' => 'Publish'],
+            ['slug' => 'draft', 'label' => 'Draft'],
+        ];
+        $status = '';
+        $products = Product::with('categories', 'tags', 'images');
 
-        if ($request->input('perPage')) {
-            $perPage = $request->input('perPage');
-        }
+        // Ordering
+        $availableOrders = ['product_id', 'price', 'date_created'];
+        if ($request->input('orderBy') && in_array($request->input('orderBy'), $availableOrders)) {
+            $ordering = in_array($request->input('order'), ['desc', 'asc'])
+                ? $request->input('order')
+                : 'desc';
 
-        if ($request->input('s') && !empty($request->input('s'))) {
-            $products = Product::searchByKey($request->input('s'));
+            $products->orderBy($request->input('orderBy'), $ordering);
         } else {
-            $products = Product::with(['categories', 'tags', 'images'])->orderBy('date_created', 'desc');
-            $products = $products->where('status', 'publish');
+            $products->orderBy('date_created', 'desc');
         }
 
-        $products = $products->where('type', '!=', 'variation')->paginate($perPage);
-        
-        
+        // Search
+        $search = $this->analyzeSearchQuery($request, ['product_id', 'status', 'type']);
+        if ($search->isValid) {
+            // If the search query isn't specific
+            if (! $search->specific) {
+                $s = $search->s;
+                $products->search();
+            } else {
+                $products->where($search->key, 'ilike', "$search->s%");
+            }
+        }
+
+        // Filter By Status
+        if ($request->input('status') && 'all' !== $request->input('status')) {
+            $status = $request->input('status');
+            $products->where('status', $status);
+        }
+
+        $products = $products->where('type', '!=', 'variation');
+        $products = $this->paginate($request, $products);
+        $data = $this->getPaginationResponse($products);
+
         return Inertia::render('Products/Index', [
             'products' => collect($products->items())->map(function ($product) {
                 return $product->toArray(['withImages' => true]);
             }),
-            'total' => $products->total(),
-            'nextUrl' => $products->nextPageUrl(),
-            'prevUrl' => $products->previousPageUrl(),
-            'perPage' => $products->perPage(),
-            'currentPage' => $products->currentPage(),
-            's' => $request->input('s') ?? '',
-            'filterByStatus' => $request->input('filterByStatus') ?? ''
+            '_s' => $request->input('s') ?? '',
+            '_status' => $status,
+            'statuses' => $statuses,
+            '_order' => $request->input('order') ?? 'desc',
+            '_orderBy' => $request->input('orderBy') ?? ''
         ]);
     }
 }

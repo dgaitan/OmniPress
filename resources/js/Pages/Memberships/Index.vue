@@ -152,13 +152,14 @@
 
     export default defineComponent({
         props: [
-          'sessions', 'memberships',
-          // Pagination Props
-          'total', 'nextUrl', 'prevUrl', '_perPage', '_currentPage',
-          // Ordering Props
-          '_order', '_orderBy',
-          // Custom Props
-          '_status', 'statuses', '_s', '_shippingStatus', 'shippingStatuses'],
+            'sessions', 'memberships',
+            // Pagination Props
+            'total', 'nextUrl', 'prevUrl', '_perPage', '_currentPage',
+            // Ordering Props
+            '_order', '_orderBy',
+            // Custom Props
+            '_status', 'statuses', '_s', '_shippingStatus', 'shippingStatuses'
+        ],
 
         components: {
             Layout,
