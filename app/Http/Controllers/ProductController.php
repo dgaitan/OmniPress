@@ -40,7 +40,9 @@ class ProductController extends Controller
             // If the search query isn't specific
             if (! $search->specific) {
                 $s = $search->s;
-                $products->search();
+                $products->orWhere('name', 'ilike', "%$s%");
+                $products->orWhere('price', 'ilike', "%$s%");
+                $products->orWhere('sku', 'ilike', "%$s%");
             } else {
                 $products->where($search->key, 'ilike', "$search->s%");
             }
@@ -55,8 +57,7 @@ class ProductController extends Controller
         $products = $products->where('type', '!=', 'variation');
         $products = $this->paginate($request, $products);
         $data = $this->getPaginationResponse($products);
-
-        return Inertia::render('Products/Index', [
+        $data = array_merge($data, [
             'products' => collect($products->items())->map(function ($product) {
                 return $product->toArray(['withImages' => true]);
             }),
@@ -66,5 +67,7 @@ class ProductController extends Controller
             '_order' => $request->input('order') ?? 'desc',
             '_orderBy' => $request->input('orderBy') ?? ''
         ]);
+
+        return Inertia::render('Products/Index', $data);
     }
 }

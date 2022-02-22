@@ -139,7 +139,6 @@
             filters: {
                 status: this._status ? this._status : 'all',
                 s: this._s,
-                shippingStatus: this._shippingStatus,
                 // Pagination Data
                 page: this._currentPage,
                 perPage: this._perPage,
@@ -233,12 +232,6 @@
                         this.action = ''
                     }
                 });
-            },
-
-            search() {
-              this.$inertia.get(route('kinja.products.index'), {
-                s: this.q
-              }, { replace: true })
             },
         }
     })
