@@ -30,6 +30,14 @@ Route::middleware('auth:sanctum')->name('kinja.api.v1.')->group(function () {
         ], 200);
     });
 
+    Route::post('/check-post', function () {
+        return response()->json([
+            'domain' => env('APP_URL'),
+            'app_name' => env('APP_NAME'),
+            'status' => 'ok'
+        ], 200);
+    });
+
 	Route::controller(MembershipController::class)->name('memberships.')->prefix('/memberships')->group(function () {
 		Route::get('/', 'index')->name('index');
 		Route::get('/{id}', 'show')->name('show');

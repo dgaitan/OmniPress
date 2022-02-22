@@ -72,6 +72,11 @@ class PaymentController extends Controller
                 'card' => $defaultCard ? $defaultCard['card'] : []
             ], 200);
 
+        } catch (IncompletePayment $exception) {
+            return response()->json([
+                'status' => $exception->payment->status,
+                'error' => serialize( $exception )
+            ], 200);
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'failed',
