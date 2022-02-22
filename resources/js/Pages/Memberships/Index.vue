@@ -39,7 +39,7 @@
                             <option value="status_to_cancelled">Change Status to Cancelled</option>
                         </optgroup>
                         <optgroup label="Actions">
-                            <option value="expire">Cancell Membership</option>
+                            <option value="expire">Expire Membership</option>
                             <option value="renew">Renew Memberships</option>
                             <option value="run_cron">Run Renewal Cron</option>
                         </optgroup>

@@ -59,14 +59,18 @@
 	              	</SidebarNav>
 
 	              	<!-- Admin -->
-	              	<SidebarNav v-if="userCan(['run_sync'])">
+	              	<SidebarNav v-if="userCan(['run_sync', 'add_user', 'admin_queues'])">
 	              		<template #title>Admin</template>
-	              		<SidebarNavLink :href="route('kinja.sync.index')" :active="route().current('kinja.sync.index')">
+                        <SidebarNavLink  v-if="userCan(['assign_roles'])" :href="route('kinja.users.index')" :active="route().current('kinja.users.index')">
+	              			<template #icon><unicon name="user-square"></unicon></template>
+	              			Users
+	              		</SidebarNavLink>
+	              		<SidebarNavLink  v-if="userCan(['run_sync'])" :href="route('kinja.sync.index')" :active="route().current('kinja.sync.index')">
 	              			<template #icon><unicon name="sync"></unicon></template>
 	              			Sync
 	              		</SidebarNavLink>
-                          <SidebarNavLink :href="route('kinja.queues.index')" :active="route().current('kinja.queues.index')">
-	              			<template #icon><unicon name="sync"></unicon></template>
+                        <SidebarNavLink  v-if="userCan(['admin_queues'])" :href="route('kinja.queues.index')" :active="route().current('kinja.queues.index')">
+	              			<template #icon><unicon name="clock"></unicon></template>
 	              			Queues
 	              		</SidebarNavLink>
 	              		<SidebarNavLink

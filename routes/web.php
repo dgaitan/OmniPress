@@ -11,6 +11,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\MembershipController;
 use App\Http\Controllers\QueuesController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -53,14 +54,22 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('/dashboard')->group(fun
         ->middleware(['role:super_admin|admin'])
         ->group(function () {
         // Sync Routes
-        Route::controller(SyncController::class)->name('kinja.sync.')->prefix('/sync')->group(function () {
+        Route::controller(SyncController::class)
+            ->middleware(['can:run_sync'])->name('kinja.sync.')->prefix('/sync')->group(function () {
             Route::get('/', 'index')->name('index');
             Route::post('/execute', 'execute')->name('execute');
             Route::get('/logs/{id}', 'logs')->name('logs');
             Route::get('/check', 'check')->name('check');
         });
 
-        Route::controller(QueuesController::class)->name('kinja.queues.')->prefix('/queues')->group(function () {
+        // Queues
+        Route::controller(QueuesController::class)
+            ->middleware(['can:admin_queues'])->name('kinja.queues.')->prefix('/queues')->group(function () {
+            Route::get('/', 'index')->name('index');
+        });
+
+        Route::controller(UserController::class)
+            ->middleware('can:assign_roles')->name('kinja.users.')->prefix('/users')->group(function () {
             Route::get('/', 'index')->name('index');
         });
     });
