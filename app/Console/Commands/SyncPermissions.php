@@ -63,7 +63,7 @@ class SyncPermissions extends Command
         // Super Admin Abilities
         $superAdminPerms = [
             'maintenance', 'add_roles', 'add_super_admin',
-            'edit_roles', 'admin_queues',...$adminPerms
+            'edit_roles', 'admin_queues', ...$adminPerms
         ];
 
         $permissionsByRole = [
