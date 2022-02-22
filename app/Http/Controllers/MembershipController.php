@@ -119,6 +119,8 @@ class MembershipController extends Controller
      */
     public function actions(Request $request)
     {
+        $message = "";
+
         if (! $request->user()->hasPermissionTo('edit_memberships') ) {
             abort(403);
         }
@@ -137,6 +139,16 @@ class MembershipController extends Controller
             if ($memberships->exists()) {
                 $memberships->get()->map(fn($m) => $m->update([$action[0] => $action[1]]));
             }
+
+            $status = explode("_", $action[0]);
+            $status = implode(" ", $status);
+            $_to    = explode('_', $action[1]);
+            $_to    = implode(" ", $_to);
+            $message = sprintf(
+                "Memberships updated %s to %s",
+                $status,
+                $_to
+            );
         }
 
         // Expering Memberships
@@ -155,6 +167,8 @@ class MembershipController extends Controller
                         'description' => sprintf("Membership Expired by %s", $request->user()->email)
                     ]);
                 });
+
+                $message = "Membership expired successfully!";
             }
 
             if ($action === 'renew' && $memberships->exists()) {
@@ -167,9 +181,19 @@ class MembershipController extends Controller
                         ]);
                     }
                 });
+
+                $message = "Membership manual renew has been started in the background successfully!";
+            }
+
+            if ($action === 'run_cron') {
+                \Illuminate\Support\Facades\Artisan::call('kinja:renew-membership-task');
+                $message = "Membership renewal cron has started running in the background!";
             }
         }
 
-        return to_route('kinja.memberships.index', $request->input('filters', []));
+        session()->flash('flash.banner', $message);
+        session()->flash('flash.bannerStyle', 'success');
+
+        return to_route('kinja.memberships.index', $request->input('filters', []))->banner($message);
     }
 }

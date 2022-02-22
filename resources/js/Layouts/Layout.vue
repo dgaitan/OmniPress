@@ -2,20 +2,26 @@
 	<div>
 		<Head :title="title" />
 
-		<jet-banner />
-
-		<div class="min-h-screen bg-gray-100">
+        <div class="min-h-screen bg-gray-100">
 			<Header />
 			<Sidebar />
-	        <div class="mx-auto lg:ml-80 content-wrapper">
-	        	<slot></slot>
+	        <div class="mx-auto lg:ml-80 content">
+                <jet-banner />
+                <div class="content-wrapper">
+	        	    <slot></slot>
+                </div>
 	        </div>
 		</div>
+
 	</div>
 </template>
 
 <style type="text/css">
-	.content-wrapper {
+    .content {
+        padding-top: 65px;
+    }
+
+    .content-wrapper {
 		padding-top: 6rem;
 		padding-bottom: 6rem;
 	}

@@ -12,6 +12,13 @@ class RenewalReminder extends Mailable
 {
     use Queueable, SerializesModels;
 
+    /**
+     * The number of times the job may be attempted.
+     *
+     * @var int
+     */
+    public $tries = 3;
+
     protected $membership;
 
     /**
@@ -31,6 +38,7 @@ class RenewalReminder extends Mailable
      */
     public function build()
     {
+
         return $this->subject(sprintf("Your membership will renew in %s days", $this->membership->daysUntilRenewal()))
             ->view('emails.memberships.renewal-reminder')
             ->with([

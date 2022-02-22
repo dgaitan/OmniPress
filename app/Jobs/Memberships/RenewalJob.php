@@ -50,6 +50,7 @@ class RenewalJob implements ShouldQueue
         if ($memberships->exists()) {
             $query = $memberships->paginate(50);
             $items = $query->items();
+            $mailQueue = 0;
 
             // While the query has more page, keep running it
             while ($hasMorePages) {
@@ -60,11 +61,11 @@ class RenewalJob implements ShouldQueue
                     if ($membership->isActive()) {
 
                         if (in_array($membership->daysUntilRenewal(), [15, 5, 3])) {
-                            $membership->sendRenewalReminder($key++);
+                            $membership->sendRenewalReminder($mailQueue++);
                         }
 
                         if ($membership->daysUntilRenewal() === 0) {
-                            $membership->maybeRenew();
+                            $membership->maybeRenew(force: false, index: $mailQueue++);
                         }
                     }
 
@@ -72,7 +73,7 @@ class RenewalJob implements ShouldQueue
                     // So we're going to make another intent.
                     if ($membership->isInRenewal()) {
                         if (in_array($membership->daysExpired(), [15, 5, 3, 0])) {
-                            $membership->maybeRenew($this->everything);
+                            $membership->maybeRenew(force: $this->everything, index: $mailQueue++);
                         }
                     }
 
@@ -85,7 +86,7 @@ class RenewalJob implements ShouldQueue
                         $membership->save();
 
                         if (in_array($membership->daysAfterRenewal(), [1, 2, 5, 20, 30])) {
-                            $membership->sendMembershipRenewedMail();
+                            $membership->sendMembershipRenewedMail(force: false, index: $mailQueue++);
                         }
 
                         if ($membership->daysAfterRenewal() > 30) {

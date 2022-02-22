@@ -15,6 +15,13 @@ class PaymentNotFound extends Mailable
     protected Membership $membership;
 
     /**
+     * The number of times the job may be attempted.
+     *
+     * @var int
+     */
+    public $tries = 3;
+
+    /**
      * Create a new message instance.
      *
      * @return void

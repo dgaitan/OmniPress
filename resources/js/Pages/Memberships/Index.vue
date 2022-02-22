@@ -136,11 +136,11 @@
 
             <template #footer>
                 <jet-secondary-button @click="showActionConfirmation = false" class="">
-                    <span v-if="ids.length > 0">Cancel</span>
+                    <span v-if="ids.length > 0 || action === 'run_cron'">Cancel</span>
                     <span v-else>Close</span>
                 </jet-secondary-button>
 
-                <jet-button v-if="ids.length > 0" class="ml-3" @click="bulkActions" :class="{ 'opacity-25': runningBulk }" :disabled="runningBulk">
+                <jet-button v-if="ids.length > 0 || action === 'run_cron'" class="ml-3" @click="bulkActions" :class="{ 'opacity-25': runningBulk }" :disabled="runningBulk">
                     <span v-if="!runningBulk">Confirm</span>
                     <Sppiner v-else />
                 </jet-button>
@@ -227,7 +227,7 @@
                     status_to_cancelled: 'Please confirm if you want to cancell these memberships.',
                     expire: 'Please confirm if you want to expire these memberships.',
                     renew: 'Please confirm if you want to renew these memberships manually.',
-                    run_cron: 'Please confirm if you want to run the membership cron manully.'
+                    run_cron: 'Please confirm if you want to run the membership cron manually.'
                 },
                 confirmationMessage: '',
                 showActionConfirmation: false,
@@ -334,7 +334,7 @@
             },
 
             confirmAction() {
-                if (this.ids.length === 0) {
+                if (this.ids.length === 0 && this.action !== 'run_cron') {
                     this.confirmationMessage = 'Please select at least one membership to execute this action.'
                 } else {
                     this.confirmationMessage = this.confirmationMessages[this.action]

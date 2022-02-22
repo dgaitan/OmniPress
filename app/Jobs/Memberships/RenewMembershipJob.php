@@ -18,16 +18,18 @@ class RenewMembershipJob implements ShouldQueue
 
     protected int $membership_id = 0;
     protected bool $force = false;
+    protected int $index = 1;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(int $membership_id, bool $force = false)
+    public function __construct(int $membership_id, bool $force = false, int $index = 1)
     {
         $this->membership_id = $membership_id;
         $this->force = $force;
+        $this->index = $index;
     }
 
     /**
@@ -59,7 +61,7 @@ class RenewMembershipJob implements ShouldQueue
                 if ($membership->daysExpired() > 30) {
                     $membership->expire("Membership expired because was impossible find a payment method in 30 days.");
                 } else {
-                    $membership->sendPaymentNotFoundNotification();
+                    $membership->sendPaymentNotFoundNotification($this->index);
                     $membership->status = Membership::IN_RENEWAL_STATUS;
                     $membership->logs()->create([
                         'description' => "Mebership renewal failed because we wasn't able to find a payment method for the customer."
@@ -156,7 +158,7 @@ class RenewMembershipJob implements ShouldQueue
                     $membership->save();
                 }
 
-                $membership->sendMembershipRenewedMail();
+                $membership->sendMembershipRenewedMail($this->index);
 
             } catch (\Laravel\Cashier\Exceptions\IncompletePayment $exception) {
                 $membership->last_payment_intent = \Carbon\Carbon::now();

@@ -300,8 +300,8 @@ class Membership extends Model
      * @throws if customer doesn't have a payment method.
      * @return Membership
      */
-    public function maybeRenew($force = false) {
-        \App\Jobs\Memberships\RenewMembershipJob::dispatch($this->id, $force);
+    public function maybeRenew($force = false, int $index = 1) {
+        \App\Jobs\Memberships\RenewMembershipJob::dispatch($this->id, $force, $index);
     }
 
     /**
