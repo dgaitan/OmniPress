@@ -128,7 +128,8 @@ class MembershipController extends Controller
             'pending_order_id' => 0,
             'user_picked_gift' => !is_null($request->gift_product_id),
             'gift_product_id' => $request->gift_product_id,
-            'product_id' => $request->product_id
+            'product_id' => $request->product_id,
+            'last_payment_intent' => Carbon::now()
         ]);
 
         // Initialize the params to add a log to membership.
@@ -223,6 +224,7 @@ class MembershipController extends Controller
         $membership->status = Membership::ACTIVE_STATUS;
         $membership->shipping_status = Membership::SHIPPING_PENDING_STATUS;
         $membership->pending_order_id = $request->order_id;
+        $membership->last_payment_intent = Carbon::now();
         $membership->gift_product_id = $request->gift_product_id;
         $membership->end_at = $membership->end_at->addYear();
         $membership->payment_intents = 0;

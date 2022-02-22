@@ -102,8 +102,12 @@ class MembershipController extends Controller
             ], 404);
         }
 
+        $orders = $membership->orders()->get();
+        $data = $membership->toArray(true);
+        $data['orders'] = $orders;
+
         return response()->json([
-            'membership' => $membership->toArray(true)
+            'membership' => $data
         ], 200);
     }
 
