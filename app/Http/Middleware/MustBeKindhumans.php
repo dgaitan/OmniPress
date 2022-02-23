@@ -20,10 +20,22 @@ class MustBeKindhumans
     public function handle(Request $request, Closure $next)
     {
         $user = Socialite::driver('google')->user();
+        $validEmails = [
+            'dgaitan@kindhumans.com',
+            'fdiaz@kindhumans.com',
+            'martijn@kindhumans.com',
+            'dgordon@kindhumasn.com'
+        ];
 
         if (!Str::endsWith($user->getEmail(), 'kindhumans.com')) {
             return redirect()->route('register')->withErrors(
                 'Invalid email domain. Please be sure you are using a kindhumans.com email'
+            );
+        }
+
+        if (! in_array($user->getEmail(), $validEmails)) {
+            return redirect()->route('register')->withErrors(
+                'Invalid email. Please be sure of using a valid kindhumans.com email'
             );
         }
         return $next($request);
