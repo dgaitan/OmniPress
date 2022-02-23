@@ -109,7 +109,7 @@
                                 <div class="p-5 border-b border-gray-200">
                                     <h3 class="mr-2 text-xl font-bold">KindCash</h3>
                                 </div>
-                                <div class="mb-6 p-5">
+                                <div class="mb-6 p-5 overflow-y-auto" style="max-height: 450px">
                                     <div class="flex flex-wrap mb-5">
                                         <div class="w-1/2">
                                             <p class="text-md font-medium text-gray-500 mb-1">Available KindCash</p>
@@ -131,7 +131,15 @@
                                                 class="flex items-center mb-8">
                                                 <span class="inline-block w-2 h-2 ml-px mr-4 rounded-full bg-green-500"></span>
                                                 <div>
-                                                    <a class="mb-1 text-sm font-medium" href="#">{{ log.description }}</a>
+                                                    <span v-if="log.event !== 'initialized'" class="mb-1 text-sm font-medium">{{ log.description }}</span>
+                                                    <span v-else class="mb-1 text-sm font-medium">KindCash Initialized</span>
+                                                    <div class="flex items-center text-xs text-gray-500 mb-1 mt-1">
+                                                        <span v-if="log.event === 'redeem'">-</span>
+                                                        <span v-else>+</span>
+                                                        <p>
+                                                            $ {{ moneyFormat(log.points) }}
+                                                        </p>
+                                                    </div>
                                                     <div class="flex items-center text-xs text-gray-500">
                                                         <span class="mr-1">
                                                             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
