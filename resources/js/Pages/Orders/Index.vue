@@ -36,14 +36,13 @@
                             <span>#{{ order.order_id }}</span>
                         </td>
 
-                      <!-- Customer -->
-                      <td class="font-medium">
-                        <div v-if="order.customer">
-                          <p class="font-medium">{{ order.customer.name }}</p>
-                          <p class="text-gray-500">{{ order.customer.email }}</p>
-                        </div>
-                        <div v-else>-</div>
-                      </td>
+                        <!-- Customer -->
+                        <td class="font-medium">
+                            <div>
+                                <p class="font-medium">{{ order.billing.first_name }} {{ order.billing.last_name }}</p>
+                                <p class="text-gray-500">{{ order.billing.email }}</p>
+                            </div>
+                        </td>
 
                       <!-- Status -->
                       <td class="font-medium">

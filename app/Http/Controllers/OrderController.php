@@ -81,6 +81,7 @@ class OrderController extends Controller
                     'order_id' => $order->order_id,
                     'status' => $order->status,
                     'total' => $order->total,
+                    'billing' => $order->billing,
                     'shipping' => $order->ShippingAddress(),
                     'date' => $order->getDateCompleted(),
                     'customer' => $customer
