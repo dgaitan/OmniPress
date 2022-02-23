@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Membership;
+use App\Models\WooCommerce\Product;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -92,23 +93,22 @@ class MembershipController extends Controller
      * @param int $id
      * @return array
      */
-    public function show(Request $request, $id) {
-        $membership = Membership::find($id);
+    public function show(Request $request, $id)
+    {
+        $membership = Membership::with(['customer', 'kindCash'])->find($id);
 
         if (is_null($membership)) {
-            return response()->json([
-                'membership' => [],
-                'message' => 'Membership Not Found'
-            ], 404);
+            abort(404);
         }
 
         $orders = $membership->orders()->get();
         $data = $membership->toArray(true);
         $data['orders'] = $orders;
+        $data['giftProduct'] = Product::with(['images', 'categories'])->whereProductId($membership->gift_product_id)->first();
 
-        return response()->json([
+        return Inertia::render('Memberships/Detail', [
             'membership' => $data
-        ], 200);
+        ]);
     }
 
     /**

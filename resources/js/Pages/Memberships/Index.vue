@@ -108,10 +108,10 @@
                         {{ displayMoment(membership.end_at, 'LL') }}
                       </td>
 
-                      <!-- Actions -->
-                      <td class="font-medium">
-                          <a href="javascript:void(0)" @click="showDetail(membership.id)" class="text-cyan-500 font-bold">Show</a>
-                      </td>
+                        <!-- Actions -->
+                        <td class="font-medium">
+                            <Link :href="route('kinja.memberships.show', membership.id)" class="text-cyan-500 font-bold">Show</Link>
+                        </td>
                     </tr>
                   </template>
                 </ListTable>
@@ -146,33 +146,21 @@
                 </jet-button>
             </template>
         </jet-confirmation-modal>
-
-        <!-- Membership Detail Modal -->
-        <jet-modal :show="showDetailModal" @close="showDetailModal = false" maxWidth="7xl">
-            <MembershipDetail :membership="membership" />
-            <div class="p-4">
-                <jet-button @click="showSyncConfirmation = false">
-                    Close
-                </jet-button>
-            </div>
-        </jet-modal>
     </layout>
 </template>
 
 <script>
     import { defineComponent } from 'vue'
-    import axios from 'axios'
+    import { Link } from '@inertiajs/inertia-vue3'
     import Layout from '@/Layouts/Layout.vue'
     import JetInput from '@/Jetstream/Input.vue'
     import JetButton from '@/Jetstream/Button.vue'
     import JetSecondaryButton from '@/Jetstream/SecondaryButton.vue'
-    import JetModal from '@/Jetstream/Modal.vue'
     import JetConfirmationModal from '@/Jetstream/ConfirmationModal.vue'
     import ListWrapper from '@/Components/List/ListWrapper.vue'
     import ListFilter from '@/Components/List/ListFilter.vue'
     import ListTable from '@/Components/List/ListTable.vue'
     import ListPagination from '@/Components/List/ListPagination'
-    import MembershipDetail from './Detail.vue'
     import Sppiner from '@/Components/Sppiner.vue'
 
     export default defineComponent({
@@ -188,16 +176,15 @@
 
         components: {
             Layout,
+            Link,
             JetInput,
             JetButton,
             JetSecondaryButton,
-            JetModal,
             JetConfirmationModal,
             ListWrapper,
             ListFilter,
             ListTable,
             ListPagination,
-            MembershipDetail,
             Sppiner
         },
 
@@ -305,15 +292,6 @@
                 this.$inertia.get(route('kinja.memberships.index'), {
                     s: this.filters.s
                 }, { replace: true })
-            },
-
-            async showDetail(id) {
-                const request = await axios.get(route('kinja.memberships.show', id));
-
-                if (request.data.membership) {
-                    this.membership = request.data.membership
-                    this.showDetailModal = true
-                }
             },
 
             /**

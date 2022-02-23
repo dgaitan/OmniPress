@@ -54,7 +54,7 @@ class KindCash extends Model
      * @return [type] [description]
      */
     public function logs() {
-        return $this->hasMany(KindCashLog::class, 'kind_cash_id');
+        return $this->hasMany(KindCashLog::class, 'kind_cash_id')->orderBy('id', 'desc');
     }
 
     /**
