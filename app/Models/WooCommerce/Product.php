@@ -129,7 +129,7 @@ class Product extends Model
     }
 
     public function parent() {
-        return $this->belongsTo(self::class, 'parent_id');
+        return $this->belongsTo(self::class, 'parent_id')->with('images');
     }
 
     public function images() {

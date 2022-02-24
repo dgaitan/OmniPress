@@ -68,8 +68,14 @@ class Order extends BaseObject implements DataObjectContract
         $order->fill($data);
 
         // Maybe get the customer
-        if ($customer = Customer::whereCustomerId($this->customer_id)->first()) {
-            $order->customer_id = $customer->id;
+        if ($this->customer_id) {
+            $customer = Customer::whereCustomerId($this->customer_id)->first();
+
+            if (! is_null($customer)) {
+                $order->customer_id = $customer->id;
+            } else {
+                $order->customer_id = null;
+            }
         }
 
         $order->save();

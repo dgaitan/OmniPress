@@ -1,6 +1,9 @@
-@import 'tailwindcss/base';
+/* @import 'tailwindcss/base';
 @import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
+@import 'tailwindcss/utilities'; */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 .status {
 	background: #cbd5e1;
@@ -11,6 +14,10 @@
 	text-transform: capitalize;
 	font-weight: 600;
 	font-size:  12px;
+}
+
+.status.status-bordered {
+    border-width: 1px;
 }
 
 .status.processing,
@@ -26,6 +33,10 @@
 .status.kh_affiliate {
 	color: #0c4a6e;
 	background-color: #e0f2fe;
+}
+
+.status-bordered.completed {
+    border-color: lighten(#0c4a6e, 5%);
 }
 
 .status.pending,

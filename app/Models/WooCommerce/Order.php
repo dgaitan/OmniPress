@@ -203,6 +203,29 @@ class Order extends Model
     }
 
     /**
+     * Return the billing address formatted
+     *
+     * @return string
+     */
+    public function billingAddress():string {
+        $billing = '';
+
+        if ($this->billing) {
+            $billing = sprintf(
+                '<p>%s %s<br>%s<br>%s %s %s</p>',
+                $this->billing->first_name,
+                $this->billing->last_name,
+                $this->billing->address_1,
+                $this->billing->city,
+                $this->billing->state,
+                $this->billing->postcode,
+            );
+        }
+
+        return $billing;
+    }
+
+    /**
      * Get ORder Date Completed
      *
      * @return string
@@ -213,6 +236,36 @@ class Order extends Model
         }
 
         return $this->date_created->diffForHumans();
+    }
+
+    /**
+     * GEt Subtotal
+     *
+     * @return integer
+     */
+    public function getSubtotal(): int {
+        return $this->total - ((int) $this->total_tax + (int) $this->shipping_total) + $this->discount_total;
+    }
+
+    /**
+     * Convert Order to Array
+     *
+     * @param boolean $isSingle
+     * @return array
+     */
+    public function toArray(bool $isSingle = false): array {
+        $data = parent::toArray();
+        $data['date'] = $this->getDateCompleted();
+        $data['sub_total'] = $this->getSubtotal();
+
+        if ($isSingle) {
+            $data['customer'] = $this->customer;
+            $data['items'] = $this->items()->with('product')->get();
+            $data['shipping_address'] = $this->shippingAddress();
+            $data['billing_address'] = $this->billingAddress();
+        }
+
+        return $data;
     }
 
     /**

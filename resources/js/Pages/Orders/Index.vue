@@ -65,6 +65,10 @@
                       <td class="font-medium">
                         $ {{ moneyFormat(order.total) }}
                       </td>
+
+                        <td class="font-medium">
+                            <Link :href="route('kinja.orders.show', order.order_id)" class="text-cyan-500 font-bold">Show</Link>
+                        </td>
                     </tr>
                   </template>
                 </ListTable>
@@ -80,6 +84,7 @@
 
 <script>
     import { defineComponent } from 'vue'
+    import { Link } from '@inertiajs/inertia-vue3'
     import Layout from '@/Layouts/Layout.vue'
     import JetInput from '@/Jetstream/Input.vue'
     import ListWrapper from '@/Components/List/ListWrapper.vue'
@@ -99,6 +104,7 @@
 
         components: {
             Layout,
+            Link,
             JetInput,
             ListWrapper,
             ListFilter,
@@ -154,6 +160,11 @@
                 name: 'Total',
                 sortable: true,
                 key: 'total'
+              },
+              {
+                  name: '',
+                  sortable: false,
+                  key: ''
               }
             ]
           }

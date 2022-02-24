@@ -163,8 +163,18 @@ class Sync extends Model
      */
     public static function resume(int $sync_id): void {
         $sync = self::find($sync_id);
-        $api = \App\Services\WooCommerce\WooCommerceService::make();
+        $api = self::makeWooCommerceService();
         $api->{$sync->content_type}()
             ->syncAll($sync->per_page, $sync->current_page, $sync->id);
+    }
+
+    /**
+     * Get WooCommerce APi
+     *
+     * @return \App\Services\WooCommerce\WooCommerceService
+     */
+    public static function makeWooCommerceService(): \App\Services\WooCommerce\WooCommerceService
+    {
+        return \App\Services\WooCommerce\WooCommerceService::make();
     }
 }

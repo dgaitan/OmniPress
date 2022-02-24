@@ -96,4 +96,26 @@ class OrderController extends Controller
 
         return Inertia::render('Orders/Index', $data);
     }
+
+    /**
+     * Show Order Detail
+     *
+     * @param Request $request
+     * @param int $id
+     * @return void
+     */
+    public function show(Request $request, $id)
+    {
+        $order = Order::with('items', 'customer')
+            ->whereOrderId($id)
+            ->first();
+
+        if (is_null($order)) {
+            abort(404);
+        }
+
+        return Inertia::render('Orders/Detail', [
+            'order' => $order->toArray(true)
+        ]);
+    }
 }

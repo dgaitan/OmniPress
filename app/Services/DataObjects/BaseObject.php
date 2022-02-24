@@ -126,7 +126,7 @@ abstract class BaseObject {
         string $dataObject,
         Model $parent
     ): void {
-        if (in_array($key, $this->attributes) && $this->attributes[$key]) {
+        if (array_key_exists($key, $this->attributes) && $this->attributes[$key]) {
             $toAttach = [];
 
             // First Sync the collection.
@@ -138,7 +138,7 @@ abstract class BaseObject {
                 $toAttach[] = $object->id;
             }
 
-            if (method_exists($parent->{$key}(), 'sync')) {
+            if (method_exists($parent, $key) && method_exists($parent->{$key}(), 'sync')) {
                 $parent->{$key}()->sync($toAttach);
             }
         }
