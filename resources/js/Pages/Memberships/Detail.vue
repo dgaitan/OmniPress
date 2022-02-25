@@ -42,7 +42,7 @@
                                     </div>
                                     <div class="w-full mt-3">
                                         <p class="text-md font-medium text-gray-500 mb-2">Last Gift Product Selected</p>
-                                        <div class="flex" style="width:300px;">
+                                        <div class="flex" style="width:300px;" v-if="membership.giftProduct">
                                             <img
                                                 v-if="membership.giftProduct.images.length === 0"
                                                 class="w-20 h-20 mr-4 object-cover rounded-md"
@@ -56,6 +56,7 @@
                                                 <p class="text-xs text-gray-500">SKU: {{ membership.giftProduct.sku }}</p>
                                             </div>
                                         </div>
+                                        <div v-else>Not defined yet</div>
                                     </div>
                                 </div>
                             </div>

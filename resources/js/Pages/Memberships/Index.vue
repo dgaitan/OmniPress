@@ -12,7 +12,7 @@
                     <select
                         v-model="filters.shippingStatus"
                         @change="changeShippingStatus()"
-                        class="border-gray-300 focus:border-cyan-600 focus:ring focus:ring-cyan-400 focus:ring-opacity-50 rounded-md shadow-sm ml-2"
+                        class="border-gray-300 focus:border-cyan-600 focus:ring focus:ring-cyan-400 focus:ring-opacity-50 rounded-md shadow-sm ml-2 py-2 pl-2 pr-10"
                         name="content_type"
                         id="content_type">
                         <option value="" :selected="filters.shippingStatus === ''">Filter By Shipping Status</option>
@@ -26,7 +26,7 @@
                     </select>
 
                     <!-- Actions -->
-                    <select v-model="action" @change="confirmAction()" class="border-gray-300 focus:border-cyan-600 focus:ring focus:ring-cyan-400 focus:ring-opacity-50 rounded-md shadow-sm ml-2" style="width:200px">
+                    <select v-model="action" @change="confirmAction()" class="border-gray-300 focus:border-cyan-600 focus:ring focus:ring-cyan-400 focus:ring-opacity-50 rounded-md shadow-sm ml-2 py-2 pl-2 pr-10" style="width:200px">
                         <option value="">Actions</option>
                         <optgroup label="Shipping Statuses">
                             <option value="shipping_status_to_cancelled">Change Shipping Status to Cancelled</option>
