@@ -26,11 +26,12 @@
                 <ListTable :columns="columns" :stateData="this.filters" :selectIds="selectAllIds">
                   <template #body>
                     <tr
-                      class="text-xs"
-                      v-for="(order, i) in orders"
-                      v-bind:class="[isOdd(i) ? '' : 'bg-gray-50']"
-                      :key="order.id">
-                      <!-- Order ID -->
+                        class="text-xs"
+                        v-for="(order, i) in orders"
+                        v-bind:class="[isOdd(i) ? '' : 'bg-gray-50']"
+                        :key="order.id">
+
+                        <!-- Order ID -->
                         <td class="flex items-center py-5 px-6 font-medium">
                             <input class="mr-3" type="checkbox" @change="setIds($event)" :checked="ids.includes(order.id)" :value="order.id">
                             <span>#{{ order.order_id }}</span>
@@ -44,27 +45,27 @@
                             </div>
                         </td>
 
-                      <!-- Status -->
-                      <td class="font-medium">
-                        <span :class="`status ${order.status}`">
-                          {{ parseRole(order.status) }}
-                        </span>
-                      </td>
+                        <!-- Status -->
+                        <td class="font-medium">
+                            <span :class="`status ${order.status}`">
+                            {{ parseRole(order.status) }}
+                            </span>
+                        </td>
 
-                      <!-- Shipping Status -->
-                      <td class="font-medium">
-                        <div class="text-gray-500 py-2" v-html="order.shipping"></div>
-                      </td>
+                        <!-- Shipping Status -->
+                        <td class="font-medium">
+                            <div class="text-gray-500 py-2" v-html="order.shipping"></div>
+                        </td>
 
-                      <!-- Date -->
-                      <td class="font-medium">
-                        {{ order.date }}
-                      </td>
+                        <!-- Date -->
+                        <td class="font-medium">
+                            {{ order.date }}
+                        </td>
 
-                      <!-- Total -->
-                      <td class="font-medium">
-                        $ {{ moneyFormat(order.total) }}
-                      </td>
+                        <!-- Total -->
+                        <td class="font-medium">
+                            $ {{ moneyFormat(order.total) }}
+                        </td>
 
                         <td class="font-medium">
                             <Link :href="route('kinja.orders.show', order.order_id)" class="text-cyan-500 font-bold">Show</Link>

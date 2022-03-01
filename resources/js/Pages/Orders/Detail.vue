@@ -128,7 +128,6 @@ import { defineComponent } from 'vue'
 import Layout from '@/Layouts/Layout.vue'
 import Status from '@/Components/Status.vue'
 
-
 export default defineComponent({
     props: [
         'order', 'session'

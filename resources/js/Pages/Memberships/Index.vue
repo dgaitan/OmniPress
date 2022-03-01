@@ -35,6 +35,7 @@
                         </optgroup>
                         <optgroup label="Membership Statuses">
                             <option value="status_to_active">Change Status to Active</option>
+                            <option value="status_to_in_renewal">Change Status to In Renewal</option>
                             <option value="status_to_awaiting_pick_gift">Change Status to Awaiting Pick Gift</option>
                             <option value="status_to_cancelled">Change Status to Cancelled</option>
                         </optgroup>
@@ -62,90 +63,76 @@
 
               <template #table>
                 <ListTable :columns="columns" :stateData="this.filters" :selectIds="selectAllIds">
-                  <template #body>
-                    <tr class="text-xs"
-                      v-for="(membership, i) in memberships"
-                      :key="membership.id"
-                      v-bind:class="[isOdd(i) ? '' : 'bg-gray-50']">
-                      <!-- MEmbership ID -->
-                      <td class="flex items-center py-5 px-6 font-medium">
-                        <input class="mr-3" type="checkbox" @change="setIds($event)" :checked="ids.includes(membership.id)" :value="membership.id">
-                          <span>#{{ membership.id }}</span>
-                      </td>
-                      <!-- Customer -->
-                      <td class="font-medium">
-                        <div v-if="membership.customer">
-                          <p class="font-medium">{{ membership.customer.username }}</p>
-                          <p class="text-gray-500">{{ membership.customer.email }}</p>
-                        </div>
-                      </td>
-                      <!-- Status -->
-                      <td class="font-medium">
-                        <span :class="`status ${membership.status}`">
-                          {{ parseRole(membership.status) }}
-                        </span>
-                      </td>
+                    <template #body>
+                        <tr class="text-xs"
+                            v-for="(membership, i) in memberships"
+                            :key="membership.id"
+                            v-bind:class="[isOdd(i) ? '' : 'bg-gray-50']">
 
-                      <!-- Shipping Status -->
-                      <td class="font-medium">
-                        <span :class="`status ${membership.shipping_status}`">
-                          {{ parseRole(membership.shipping_status) }}
-                        </span>
-                      </td>
+                            <!-- MEmbership ID -->
+                            <td class="flex items-center py-5 px-6 font-medium">
+                                <input class="mr-3" type="checkbox" @change="setIds($event)" :checked="ids.includes(membership.id)" :value="membership.id">
+                                <span>#{{ membership.id }}</span>
+                            </td>
 
-                      <!-- Kind Cash -->
-                      <td class="font-medium">
-                        $ {{ moneyFormat(membership.cash.points) }}
-                      </td>
+                            <!-- Customer -->
+                            <td class="font-medium">
+                                <div v-if="membership.customer">
+                                    <p class="font-medium">{{ membership.customer.username }}</p>
+                                    <p class="text-gray-500">{{ membership.customer.email }}</p>
+                                </div>
+                            </td>
 
-                      <!-- Start At -->
-                      <td class="font-medium">
-                        {{ displayMoment(membership.start_at, 'LL') }}
-                      </td>
+                            <!-- Status -->
+                            <td class="font-medium">
+                                <Status :status="membership.status" />
+                            </td>
 
-                      <!-- End At -->
-                      <td class="font-medium">
-                        {{ displayMoment(membership.end_at, 'LL') }}
-                      </td>
+                            <!-- Shipping Status -->
+                            <td class="font-medium">
+                                <Status :status="membership.shipping_status" />
+                            </td>
 
-                        <!-- Actions -->
-                        <td class="font-medium">
-                            <Link :href="route('kinja.memberships.show', membership.id)" class="text-cyan-500 font-bold">Show</Link>
-                        </td>
-                    </tr>
-                  </template>
+                            <!-- Kind Cash -->
+                            <td class="font-medium">
+                                $ {{ moneyFormat(membership.cash.points) }}
+                            </td>
+
+                            <!-- Start At -->
+                            <td class="font-medium">
+                                {{ displayMoment(membership.start_at, 'LL') }}
+                            </td>
+
+                            <!-- End At -->
+                            <td class="font-medium">
+                                {{ displayMoment(membership.end_at, 'LL') }}
+                            </td>
+
+                            <!-- Actions -->
+                            <td class="font-medium">
+                                <Link :href="route('kinja.memberships.show', membership.id)" class="text-cyan-500 font-bold">Show</Link>
+                            </td>
+                        </tr>
+                    </template>
                 </ListTable>
-              </template>
+            </template>
 
-              <template #pagination>
+            <template #pagination>
                 <ListPagination :url="route('kinja.memberships.index')" :params="this.$props" :stateData="this.filters" />
-              </template>
+            </template>
             </ListWrapper>
 
         </div>
 
         <!-- Sync Confirmation Modal -->
-        <jet-confirmation-modal :show="showActionConfirmation" @close="showActionConfirmation = false">
-            <template #title>
-                Are you sure?
-            </template>
-
-            <template #content>
-                {{ confirmationMessage }}
-            </template>
-
-            <template #footer>
-                <jet-secondary-button @click="showActionConfirmation = false" class="">
-                    <span v-if="ids.length > 0 || action === 'run_cron'">Cancel</span>
-                    <span v-else>Close</span>
-                </jet-secondary-button>
-
-                <jet-button v-if="ids.length > 0 || action === 'run_cron'" class="ml-3" @click="bulkActions" :class="{ 'opacity-25': runningBulk }" :disabled="runningBulk">
-                    <span v-if="!runningBulk">Confirm</span>
-                    <Sppiner v-else />
-                </jet-button>
-            </template>
-        </jet-confirmation-modal>
+        <Confirm
+            title="Are you sure?"
+            :message="confirmationMessage"
+            :show="showActionConfirmation"
+            :canConfirm="ids.length > 0 || action === 'run_cron'"
+            :processing="runningBulk"
+            @close="showActionConfirmation = false"
+            @confirm="bulkActions" />
     </layout>
 </template>
 
@@ -154,14 +141,12 @@
     import { Link } from '@inertiajs/inertia-vue3'
     import Layout from '@/Layouts/Layout.vue'
     import JetInput from '@/Jetstream/Input.vue'
-    import JetButton from '@/Jetstream/Button.vue'
-    import JetSecondaryButton from '@/Jetstream/SecondaryButton.vue'
-    import JetConfirmationModal from '@/Jetstream/ConfirmationModal.vue'
     import ListWrapper from '@/Components/List/ListWrapper.vue'
     import ListFilter from '@/Components/List/ListFilter.vue'
     import ListTable from '@/Components/List/ListTable.vue'
     import ListPagination from '@/Components/List/ListPagination'
-    import Sppiner from '@/Components/Sppiner.vue'
+    import Status from '@/Components/Status.vue'
+    import Confirm from '@/Components/Confirm.vue'
 
     export default defineComponent({
         props: [
@@ -178,14 +163,12 @@
             Layout,
             Link,
             JetInput,
-            JetButton,
-            JetSecondaryButton,
-            JetConfirmationModal,
             ListWrapper,
             ListFilter,
             ListTable,
             ListPagination,
-            Sppiner
+            Status,
+            Confirm
         },
 
         data() {
@@ -209,6 +192,7 @@
                     shipping_status_to_cancelled: 'Please confirm if you want to cancell shipment of these memberships.',
                     shipping_status_to_shipped: 'Please confirm if you want to mark these memberships as shipped.',
                     shipping_status_to_no_ship: 'Please confirm if you want to make as no ship these memberships.',
+                    status_to_in_renewal: 'Please confirm if you want to change these memberships to In Renewal.',
                     status_to_active: 'Please confirm if you want to active these memberships',
                     status_to_awaiting_pick_gift: 'Please confirm if you want to change these memberships to Awaiting Pick Gift Product.',
                     status_to_cancelled: 'Please confirm if you want to cancell these memberships.',
