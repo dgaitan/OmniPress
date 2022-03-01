@@ -2,12 +2,7 @@
 
 namespace App\Imports;
 
-use App\Models\WooCommerce\Order;
-use App\Models\WooCommerce\Product;
-use App\Models\WooCommerce\OrderLine;
-use App\Models\WooCommerce\Customer;
-use App\Data\Http\OrderData;
-use App\Data\Shared\AddressData;
+use App\Services\WooCommerce\Factories\OrderFactory;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\WithProgressBar;
@@ -34,32 +29,9 @@ class OrderImport implements ToModel, WithProgressBar, WithHeadingRow
         $row['billing'] = json_decode($row['billing'], true);
         $row['shipping'] = json_decode($row['shipping'], true);
 
-        $data = OrderData::_fromCSV($row);
-        $order = Order::firstOrNew(['order_id' => $row['id']]);
-        $order->fill($data->toStoreData());
+        $order = OrderFactory::make($row);
+        $order = $order->sync();
 
-        // Maybe get the customer
-        if ($customer = Customer::where('customer_id', $data->customer_id)->first()) {
-            $order->customer_id = $customer->id;
-        }
-
-        $order->save();
-
-        // Sync Order Lines
-        if ($data->line_items) {
-            
-            foreach ($data->line_items as $item) {
-                $orderLine = OrderLine::firstOrNew(['order_line_id' => $item->line_item_id]);
-                $orderLine->fill($item->toStoreData());
-                $product = Product::whereProductId($item->product_id)->first();
-
-                if ($product) {
-                    $orderLine->product_id = $product->id;
-                }
-
-                $orderLine->order_id = $order->id;
-                $orderLine->save();
-            }
-        }
+        return $order;
     }
 }
