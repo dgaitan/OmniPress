@@ -27,7 +27,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('sync', function (Blueprint $table) {
+        Schema::table('syncs', function (Blueprint $table) {
             $table->dropColumn('per_page');
         });
     }
