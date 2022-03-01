@@ -2,9 +2,7 @@
 
 namespace App\Imports;
 
-use App\Models\WooCommerce\Customer;
-use App\Data\Shared\AddressData;
-use App\Data\Shared\MetaData;
+use App\Services\WooCommerce\Factories\CustomerFactory;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\WithProgressBar;
@@ -40,34 +38,14 @@ class CustomerImport implements ToModel, WithProgressBar, WithHeadingRow
     {
         if (empty($row['email'])) return null;
 
-        $customer = Customer::firstOrNew([
-            'customer_id' => $row['id'],
-            'email' => $row['email']
-        ]);
+        // prepare format data
+        $row['billing'] = json_decode($row['billing'], true);
+        $row['shipping'] = json_decode($row['shipping'], true);
+        $row['meta_data'] = json_decode($row['meta_data'], true);
+        $row['is_paying_customer'] = '1' === $row['is_paying_customer'];
 
-        $data = [];
-        foreach ( $this->fields as $field ) {
-            $data[$field] = $row[$field];
-        }
-        
-        $data['customer_id'] = $row['id'];
-
-        if (!empty($row['billing'])) {
-            $data['billing'] = AddressData::from(json_decode($row['billing'], true));
-        }
-
-        if (!empty($row['shipping'])) {
-            $data['shipping'] = AddressData::from(json_decode($row['shipping'], true));
-        }
-        
-        if (!empty($row['meta_data'])) {
-            $data['meta_data'] = MetaData::collection(json_decode($row['meta_data'], true));
-        }
-        
-        $data['is_paying_customer'] = '1' === $data['is_paying_customer'];
-
-        $customer->fill($data);
-        $customer->save();
+        $customer = CustomerFactory::make($row);
+        $customer = $customer->sync();
 
         return $customer;
     }
