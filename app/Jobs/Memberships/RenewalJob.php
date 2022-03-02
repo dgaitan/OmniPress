@@ -62,6 +62,12 @@ class RenewalJob implements ShouldQueue
 
                         if (in_array($membership->daysUntilRenewal(), [15, 5, 3])) {
                             $membership->sendRenewalReminder($mailQueue++);
+                            $membership->logs()->create([
+                                'description' => sprintf(
+                                    "%s days email reminder was sent to customer.",
+                                    $membership->daysUntilRenewal()
+                                )
+                            ]);
                         }
 
                         if ($membership->daysUntilRenewal() === 0) {
@@ -87,6 +93,12 @@ class RenewalJob implements ShouldQueue
 
                         if (in_array($membership->daysAfterRenewal(), [1, 2, 5, 20, 30])) {
                             $membership->sendMembershipRenewedMail(force: false, index: $mailQueue++);
+                            $membership->logs()->create([
+                                'description' => sprintf(
+                                    "An email to reminder customer to pick the gift product includes on membership was sent.",
+                                    $membership->daysAfterRenewal()
+                                )
+                            ]);
                         }
 
                         if ($membership->daysAfterRenewal() > 30) {
