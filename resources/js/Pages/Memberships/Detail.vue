@@ -11,8 +11,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0">
-
+                <div class="w-full md:w-1/3 px-4 mb-4 md:mb-0 text-right">
+                    <jet-button @click="showEditForm = true">Edit</jet-button>
                 </div>
             </div>
             <div class="py-5">
@@ -160,32 +160,49 @@
                 </div>
             </div>
         </div>
+
+        <Edit
+            :membership="membership"
+            :statuses="statuses"
+            :shippingStatuses="shippingStatuses"
+            :show="showEditForm"
+            @close="showEditForm = false" />
     </layout>
 
 </template>
 <script>
-import { defineComponent } from 'vue'
-import Layout from '@/Layouts/Layout.vue'
+    import { defineComponent } from 'vue'
+    import Layout from '@/Layouts/Layout.vue'
+    import JetButton from '@/Jetstream/Button.vue'
+    import Edit from './Edit.vue'
 
-export default defineComponent({
-    props: [
-        'membership', 'session'
-    ],
+    export default defineComponent({
+        props: [
+            'membership', 'session', 'statuses', 'shippingStatuses'
+        ],
 
-    components: {
-        Layout
-    },
-
-    computed: {
-        pageTitle() {
-            return `Membership #${this.membership.id}`
-        }
-    },
-
-    methods: {
-        parseRole(role) {
-            return role ? role.split('_').join(' ') : ''
+        data() {
+            return {
+                showEditForm: false
+            }
         },
-    }
-})
+
+        components: {
+            Layout,
+            JetButton,
+            Edit
+        },
+
+        computed: {
+            pageTitle() {
+                return `Membership #${this.membership.id}`
+            }
+        },
+
+        methods: {
+            parseRole(role) {
+                return role ? role.split('_').join(' ') : ''
+            },
+        }
+    })
 </script>

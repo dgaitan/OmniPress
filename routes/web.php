@@ -106,6 +106,7 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('/dashboard')->group(fun
             Route::get('/', 'index')->name('index');
             Route::post('/actions', 'actions')->name('actions');
             Route::get('/{id}', 'show')->name('show');
+            Route::put('/{id}/update', 'update')->name('update');
         });
     });
 

@@ -12,7 +12,7 @@
             type: {
                 type: String,
                 default: 'submit',
-            },
+            }
         }
     })
 </script>

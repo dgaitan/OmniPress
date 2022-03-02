@@ -22,7 +22,7 @@
     }
 
     .content-wrapper {
-		padding-top: 6rem;
+		padding-top: 2rem;
 		padding-bottom: 6rem;
 	}
 </style>

@@ -29,7 +29,7 @@
     import Sppiner from '@/Components/Sppiner.vue'
 
     export default defineComponent({
-        // emits: ['confirm', '],
+        emits: ['confirm', 'close'],
         props: {
             title: {
                 type: String,

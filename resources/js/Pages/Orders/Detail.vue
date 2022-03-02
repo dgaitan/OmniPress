@@ -121,7 +121,6 @@
             </div>
         </div>
     </layout>
-
 </template>
 <script>
 import { defineComponent } from 'vue'

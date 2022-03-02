@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Membership;
 use App\Models\WooCommerce\Product;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 
 class MembershipController extends Controller
@@ -107,8 +109,40 @@ class MembershipController extends Controller
         $data['giftProduct'] = Product::with(['images', 'categories'])->whereProductId($membership->gift_product_id)->first();
 
         return Inertia::render('Memberships/Detail', [
-            'membership' => $data
+            'membership' => $data,
+            'statuses' => Membership::getStatuses(),
+            'shippingStatuses' => Membership::getShippingStatuses(),
         ]);
+    }
+
+    /**
+     * Update Membership
+     *
+     * @param Request $request
+     * @param int $id
+     * @return void
+     */
+    public function update(Request $request, $id)
+    {
+        Validator::make($request->all(), [
+            'status' => ['required', 'string'],
+            'shipping_status' => ['required', 'string'],
+            'end_at' => ['required', 'date']
+        ])->validateWithBag('updateMembership');
+
+        $membership = Membership::find($id);
+
+        if (is_null($membership)) {
+            abort(404);
+        }
+
+        $membership->update([
+            'status' => $request->input('status'),
+            'shipping_status' => $request->input('shipping_status'),
+            'end_at' => (new Carbon(strtotime($request->input('end_at'))))->toDateTimeString()
+        ]);
+
+        return back();
     }
 
     /**
