@@ -3,13 +3,10 @@
         <Container>
             <Row>
                 <Column :mdSize="8">
-                    <div class="flex items-center">
-                        <img :src="membership.customer.avatar_url" width="60" height="60" class="rounded-full" />
-                        <div class="pl-5">
-                            <h4 class="text-xl font-bold">{{ membership.customer.first_name }} {{ membership.customer.last_name }}</h4>
-                            <p class="text-sm text-gray-600">{{ membership.customer.email }}</p>
-                        </div>
-                    </div>
+                    <CustomerMedia
+                        :avatar="membership.customer.avatar_url"
+                        :headline="`${membership.customer.first_name} ${membership.customer.last_name}`"
+                        :legend="membership.customer.email" />
                 </Column>
                 <Column :mdSize="4" class="text-right">
                     <jet-button @click="showEditForm = true">Edit</jet-button>
@@ -17,90 +14,8 @@
             </Row>
             <Row class="mt-10">
                 <Column :mdSize="8">
-                    <div class="bg-white rounded mb-10">
-                        <div class="p-5 border-b border-gray-200">
-                            <h3 class="mr-2 text-xl font-bold">Membership #{{ membership.id }}</h3>
-                        </div>
-                        <div class="p-5 flex flex-wrap">
-                            <div class="w-1/2 mb-5">
-                                <p class="text-md font-medium text-gray-500 mb-2">Status</p>
-                                <span :class="`status ${membership.status}`">{{ parseRole(membership.status) }}</span>
-                            </div>
-                            <div class="w-1/2 mb-3">
-                                <p class="text-md font-medium text-gray-500 mb-2">Shipping Status</p>
-                                <span :class="`status ${membership.shipping_status}`">{{ parseRole(membership.shipping_status) }}</span>
-                            </div>
-                            <div class="w-1/2 mb-3">
-                                <p class="text-md font-medium text-gray-500 mb-1">Start At</p>
-                                <span class="text-sm text-gray-600">{{ displayMoment(membership.start_at, 'LL') }}</span>
-                            </div>
-                            <div class="w-1/2 mb-3">
-                                <p class="text-md font-medium text-gray-500 mb-1">End At</p>
-                                <span class="text-sm text-gray-600">{{ displayMoment(membership.end_at, 'LL') }}</span>
-                            </div>
-                            <div class="w-full mt-3">
-                                <p class="text-md font-medium text-gray-500 mb-2">Last Gift Product Selected</p>
-                                <div class="flex" style="width:300px;" v-if="membership.giftProduct">
-                                    <img
-                                        v-if="membership.giftProduct.images.length === 0"
-                                        class="w-20 h-20 mr-4 object-cover rounded-md"
-                                        src="https://images.unsplash.com/photo-1559893088-c0787ebfc084?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;ixlib=rb-1.2.1&amp;auto=format&amp;fit=crop&amp;w=1050&amp;q=80" alt="">
-                                    <img v-else :src="membership.giftProduct.images[0].src" class="w-20 h-20 mr-4 object-cover rounded-md" >
-                                    <div>
-                                        <p class="text-sm font-medium mb-1">
-                                            <strong class="text-gray-400">ID {{ membership.giftProduct.product_id }}</strong>
-                                        </p>
-                                        <p class="text-sm font-medium mb-2">{{ membership.giftProduct.name }}</p>
-                                        <p class="text-xs text-gray-500">SKU: {{ membership.giftProduct.sku }}</p>
-                                    </div>
-                                </div>
-                                <div v-else>Not defined yet</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Orders -->
-                    <div class="bg-white rounded">
-                        <div class="p-5 border-b border-gray-200">
-                            <h3 class="mr-2 text-xl font-bold">Orders</h3>
-                        </div>
-                        <div class="p-5 overflow-x-auto">
-                            <table class="table-auto w-full">
-                                <thead>
-                                    <tr class="text-xs text-gray-500 text-left">
-                                        <td class="pb-3 font-medium">
-                                            Order ID
-                                        </td>
-                                        <td class="pb-3 font-medium">
-                                            Date
-                                        </td>
-                                        <td class="pb-3 font-medium">
-                                            Status
-                                        </td>
-                                        <td class="pb-3 font-medium">
-                                            Total
-                                        </td>
-                                        <td></td>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr
-                                        v-for="order in membership.orders"
-                                        :key="order.order_id"
-                                        class="text-xs bg-gray-50">
-                                        <td class="py-5 px-6 font-medium">#{{ order.order_id }}</td>
-                                        <td class="font-medium">{{ displayMoment(order.date_created, 'LL') }}</td>
-                                        <td class="font-medium">
-                                            <span :class="`status ${order.status}`">{{ parseRole(order.status) }}</span>
-                                        </td>
-                                        <td class="font-medium">
-                                            $ {{ moneyFormat(order.total) }}
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                    <MembershipSummary :membership="membership" />
+                    <MembershipOrders :membership="membership" />
                 </Column>
                 <Column :mdSize="4">
                     <div class="relative bg-white rounded">
@@ -173,6 +88,9 @@
     import Container from '@/Components/Layouts/Container.vue'
     import Row from '@/Components/Layouts/Row.vue'
     import Column from '@/Components/Layouts/Column.vue'
+    import CustomerMedia from '@/Components/Media/CustomerMedia.vue'
+    import MembershipSummary from './Partials/MembershipSummary.vue'
+    import MembershipOrders from './Partials/MembershipOrders.vue'
 
     export default defineComponent({
         props: [
@@ -191,6 +109,9 @@
             Row,
             Column,
             JetButton,
+            CustomerMedia,
+            MembershipSummary,
+            MembershipOrders,
             Edit
         },
 

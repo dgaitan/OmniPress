@@ -1,6 +1,6 @@
 <template>
     <span :class="classes">
-        <span :class="pointClasses"></span>
+        <span class="status-dot"></span>
         {{ label }}
     </span>
 </template>
@@ -22,16 +22,10 @@ export default defineComponent({
             return this.status ? this.status.split('_').join(' ') : ''
         },
 
-        pointClasses() {
-            let base = 'relative inline-flex w-2.5 h-2.5 rounded-full mr-2';
-
-            return `${base} bg-${this.getStatusColor()}-600`;
-        },
-
         classes() {
-            let base = 'inline-flex items-center pl-3 pr-4 py-1 text-sm font-semibold capitalize rounded-full bg-opacity-10';
+            let base = 'status';
             const color = this.getStatusColor();
-            base = `${base} bg-${color}-600 text-${color}-600`;
+            base = `${base} ${color}`;
             if (this.bordered) base = `${base} border border-${color}-600`;
 
             return base;

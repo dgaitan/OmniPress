@@ -1,61 +1,72 @@
-/* @import 'tailwindcss/base';
+@import 'tailwindcss/base';
 @import 'tailwindcss/components';
-@import 'tailwindcss/utilities'; */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss/utilities';
+
+.bg-sky-600 {
+    background-color: theme('colors.sky.600');
+}
 
 .status {
-	background: #cbd5e1;
-	color: #1e293b;
-	padding: 5px 10px;
-	border-radius: 50px;
-	display: inline-block;
-	text-transform: capitalize;
-	font-weight: 600;
-	font-size:  12px;
+    @apply inline-flex;
+    @apply items-center;
+    @apply px-3;
+    @apply py-1;
+    @apply text-sm;
+    @apply font-medium;
+    @apply capitalize;
+    @apply rounded-full;
+    @apply bg-gray-600;
+    @apply text-gray-600;
+    @apply bg-opacity-10;
 }
 
-.status.status-bordered {
-    border-width: 1px;
+.status .status-dot {
+    @apply relative;
+    @apply inline-flex;
+    @apply w-2.5;
+    @apply h-2.5;
+    @apply rounded-full;
+    @apply mr-2;
+    @apply bg-gray-600;
 }
 
-.status.processing,
-.status.active,
-.status.subscriber,
-.status.publish {
-	color: #064e3b;
-	background-color: #d1fae5;
+.status.green {
+    @apply bg-green-600;
+    @apply text-green-600;
+    @apply bg-opacity-10;
 }
 
-.status.completed,
-.status.shipped,
-.status.kh_affiliate {
-	color: #0c4a6e;
-	background-color: #e0f2fe;
+.status.green .status-dot {
+    @apply bg-green-600;
 }
 
-.status-bordered.completed {
-    border-color: lighten(#0c4a6e, 5%);
+.status.sky {
+    @apply bg-sky-100;
+    @apply text-sky-600;
 }
 
-.status.pending,
-.status.in_renewal,
-.status.adminstrator {
-	color: #164e63;
-	background-color: #cffafe;
+.status.sky .status-dot {
+    @apply bg-sky-600;
 }
 
-.status.cancelled,
-.status.error,
-.status.failed {
-	color: #881337;
-	background-color: #fda4af;
+.status.cyan {
+    @apply bg-cyan-100;
+    @apply text-cyan-600;
+    @apply bg-opacity-10;
 }
 
-.status.expired {
-    color: rgb(136 19 55);
-    background-color: rgb(253 164 175);
+.status.cyan .status-dot {
+    @apply bg-cyan-600;
+}
+
+.status.red {
+    @apply bg-red-100;
+    @apply text-red-600;
+    @apply bg-opacity-10;
+}
+
+.status.red .status-dot {
+    @apply bg-red-600;
 }
 
 
