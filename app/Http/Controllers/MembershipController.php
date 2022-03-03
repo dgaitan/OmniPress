@@ -7,6 +7,7 @@ use App\Models\WooCommerce\Product;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 
 class MembershipController extends Controller
@@ -18,19 +19,26 @@ class MembershipController extends Controller
      */
     public function index(Request $request)
     {
+        $cacheKey = "membeships_index_";
         $perPage = 50;
         $status = '';
         $memberships = Membership::with(['customer', 'kindCash']);
 
+        if ($request->input('page')) {
+            $cacheKey = $cacheKey . $request->input('page') . "_";
+        }
+
         // Set Per Page
         if ($request->input('perPage')) {
             $perPage = $request->input('perPage');
+            $cacheKey = $cacheKey . $perPage . "_";
         }
 
         // Filter By Status
         if ($request->input('status') && 'all' !== $request->input('status')) {
             $status = $request->input('status');
             $memberships->where('status', $status);
+            $cacheKey = $cacheKey . $status . "_";
         }
 
         // Filter By Shipping status
@@ -40,6 +48,7 @@ class MembershipController extends Controller
             && Membership::isValidShippingStatus($request->input('shippingStatus'))
         ) {
             $memberships->where('shipping_status', $request->input('shippingStatus'));
+            $cacheKey = $cacheKey . $request->input('shippingStatus') . "_";
         }
 
         // Search
@@ -52,6 +61,7 @@ class MembershipController extends Controller
             });
 
             $memberships->orWhere('customer_email', 'ilike', "%$s%");
+            $cacheKey = $cacheKey . $s . "_";
         }
 
         // Ordering
@@ -68,14 +78,42 @@ class MembershipController extends Controller
             } else {
                 $memberships->orderBy($request->input('orderBy'), $ordering);
             }
+
+            $cacheKey = $cacheKey . $ordering . "_";
         } else {
             $memberships = $memberships->orderBy('id', 'desc');
+            $cacheKey = $cacheKey . "desc_";
         }
 
-        $memberships = $memberships->paginate($perPage);
+        if (Cache::has($cacheKey)) {
+            $memberships = Cache::get($cacheKey, []);
+        } else {
+            $memberships = Cache::remember($cacheKey, 3600, function () use ($memberships, $perPage) {
+                return $memberships->paginate($perPage);
+            });
+        }
         $data = $this->getPaginationResponse($memberships);
         $data = array_merge($data, [
-            'memberships' => collect($memberships->items())->map(fn($m) => $m->toArray(false)),
+            'memberships' => collect($memberships->items())->map(function($m) {
+                $customer = $m->customer;
+                $cash = $m->kindCash;
+
+                return [
+                    'id' => $m->id,
+                    'status' => $m->status,
+                    'shipping_status' => $m->shipping_status,
+                    'start_at' => $m->start_at,
+                    'end_at' => $m->end_at,
+                    'cash' => [
+                        'points' => $cash->points,
+                    ],
+                    'customer' => [
+                        'username' => $customer->username,
+                        'email' => $customer->email
+                    ],
+
+                ];
+            }),
             'statuses' => Membership::getStatuses(),
             'shippingStatuses' => Membership::getShippingStatuses(),
             '_s' => $request->input('s') ?? '',

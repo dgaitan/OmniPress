@@ -2,9 +2,10 @@
 
 namespace App\Http\Middleware;
 
-use Illuminate\Http\Request;
-use Inertia\Middleware;
 use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -36,7 +37,7 @@ class HandleInertiaRequests extends Middleware
      * @return array
      */
     public function share(Request $request): array
-    {   
+    {
         return array_merge(parent::share($request), [
             'perms' => $this->getUserPermissions($request->user()),
             'message' => $request->session()->get('message')
@@ -47,11 +48,21 @@ class HandleInertiaRequests extends Middleware
         $perms = [];
 
         if (!is_null($user)) {
-            foreach ($user->getPermissionsViaRoles()->toArray() as $perm) {
-                $perms[] = $perm['name'];
+            $cacheKey = "user_perms_for_" . $user->id;
+
+            if (Cache::has($cacheKey)) {
+                $perms = Cache::get($cacheKey, []);
+            } else {
+                $perms = Cache::remember(
+                    $cacheKey,
+                    now()->addDays(7),
+                    function() use ($user) {
+                        return collect($user->getPermissionsViaRoles())->map(function($p) {
+                            return $p->toArray()['name'];
+                        })->toArray();
+                });
             }
         }
-
 
         return $perms;
     }
