@@ -3,8 +3,9 @@
 namespace App\Console\Commands;
 
 use Exception;
-use Illuminate\Console\Command;
 use App\Models\User;
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Cache;
 
 class AssignRole extends Command
 {
@@ -13,7 +14,7 @@ class AssignRole extends Command
      *
      * @var string
      */
-    protected $signature = 'kinja:become-super-admin 
+    protected $signature = 'kinja:become-super-admin
                             {user_email : The user email to assign role}';
 
     /**
@@ -43,6 +44,8 @@ class AssignRole extends Command
         try {
             $user = User::whereEmail($this->argument('user_email'))->firstOrFail();
             $user->assignRole('super_admin');
+            Cache::flush();
+
             $this->info(sprintf('%s now is a super admin', $user->email));
         } catch(Exception $e) {
             $this->error($e->getMessage());
