@@ -47,9 +47,7 @@
 
                         <!-- Status -->
                         <td class="font-medium">
-                            <span :class="`status ${order.status}`">
-                            {{ parseRole(order.status) }}
-                            </span>
+                            <Status :status="order.status" />
                         </td>
 
                         <!-- Shipping Status -->
@@ -92,6 +90,7 @@
     import ListFilter from '@/Components/List/ListFilter.vue'
     import ListTable from '@/Components/List/ListTable.vue'
     import ListPagination from '@/Components/List/ListPagination'
+    import Status from '@/Components/Status.vue'
 
     export default defineComponent({
         props: [
@@ -110,7 +109,8 @@
             ListWrapper,
             ListFilter,
             ListTable,
-            ListPagination
+            ListPagination,
+            Status,
         },
 
         data() {

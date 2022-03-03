@@ -11,7 +11,7 @@
     @apply items-center;
     @apply px-3;
     @apply py-1;
-    @apply text-sm;
+    @apply text-xs;
     @apply font-medium;
     @apply capitalize;
     @apply rounded-full;
@@ -52,7 +52,6 @@
 .status.cyan {
     @apply bg-cyan-100;
     @apply text-cyan-600;
-    @apply bg-opacity-10;
 }
 
 .status.cyan .status-dot {
@@ -62,7 +61,6 @@
 .status.red {
     @apply bg-red-100;
     @apply text-red-600;
-    @apply bg-opacity-10;
 }
 
 .status.red .status-dot {

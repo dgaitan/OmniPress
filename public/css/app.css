@@ -1718,8 +1718,8 @@ select {
   padding-right: 0.75rem;
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
-  font-size: 0.875rem;
-  line-height: 1.25rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
   font-weight: 500;
   text-transform: capitalize;
   border-radius: 9999px;
@@ -1760,20 +1760,20 @@ select {
     background-color: #0284c7;
 }
 .status.cyan {
+  --tw-bg-opacity: 1;
   background-color: rgb(207 250 254 / var(--tw-bg-opacity));
   --tw-text-opacity: 1;
   color: rgb(8 145 178 / var(--tw-text-opacity));
-  --tw-bg-opacity: 0.1;
 }
 .status.cyan .status-dot {
   --tw-bg-opacity: 1;
   background-color: rgb(8 145 178 / var(--tw-bg-opacity));
 }
 .status.red {
+  --tw-bg-opacity: 1;
   background-color: rgb(254 226 226 / var(--tw-bg-opacity));
   --tw-text-opacity: 1;
   color: rgb(220 38 38 / var(--tw-text-opacity));
-  --tw-bg-opacity: 0.1;
 }
 .status.red .status-dot {
   --tw-bg-opacity: 1;

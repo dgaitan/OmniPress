@@ -103,7 +103,7 @@ class MembershipController extends Controller
             abort(404);
         }
 
-        $orders = $membership->orders()->get();
+        $orders = $membership->orders()->orderBy('id', 'desc')->get();
         $data = $membership->toArray(true);
         $data['orders'] = $orders;
         $data['giftProduct'] = Product::with(['images', 'categories'])->whereProductId($membership->gift_product_id)->first();
