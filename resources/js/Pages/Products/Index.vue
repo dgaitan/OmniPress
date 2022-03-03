@@ -38,7 +38,7 @@
                                         <img
                                             v-if="product.images.length === 0"
                                             class="w-20 h-20 mr-4 object-cover rounded-md"
-                                            src="https://images.unsplash.com/photo-1559893088-c0787ebfc084?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;ixlib=rb-1.2.1&amp;auto=format&amp;fit=crop&amp;w=1050&amp;q=80" alt="">
+                                            src="https://picsum.photos/id/160/80/80" alt="">
                                         <img v-else :src="product.images[0].src" class="w-20 h-20 mr-4 object-cover rounded-md" >
                                         <div>
                                             <p class="text-sm font-medium mb-1">
