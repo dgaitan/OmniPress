@@ -209,7 +209,9 @@ class Membership extends Model
     }
 
     /**
-     * [daysUntilRenewal description]
+     * Days until renewal
+     *
+     * @todo Better find a strategy to compare by hours.
      * @return [type] [description]
      */
     public function daysUntilRenewal(): int {
