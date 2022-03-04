@@ -50,10 +50,10 @@ class HandleInertiaRequests extends Middleware
         if (!is_null($user)) {
             $cacheKey = "user_perms_for_" . $user->id;
 
-            if (Cache::has($cacheKey)) {
-                $perms = Cache::get($cacheKey, []);
+            if (Cache::tags('account')->has($cacheKey)) {
+                $perms = Cache::tags('account')->get($cacheKey, []);
             } else {
-                $perms = Cache::remember(
+                $perms = Cache::tags('account')->remember(
                     $cacheKey,
                     now()->addDays(7),
                     function() use ($user) {

@@ -233,3 +233,11 @@ $ sail artisan kinja:import orders csv/Orders_Kindhumans.csv
 ```bash
 $ sail artisan kinja:import memberships csv/Memberships_Kindhumans.csv
 ```
+
+## Tasks after finished.
+
+Link storage
+
+```bash
+$ sail artisan storage:link
+```

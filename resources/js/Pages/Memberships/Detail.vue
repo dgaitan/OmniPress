@@ -94,7 +94,7 @@
 
     export default defineComponent({
         props: [
-            'membership', 'session', 'statuses', 'shippingStatuses'
+            'data', 'session', 'statuses', 'shippingStatuses'
         ],
 
         data() {
@@ -118,6 +118,10 @@
         computed: {
             pageTitle() {
                 return `Membership #${this.membership.id}`
+            },
+
+            membership() {
+                return this.data.data
             }
         },
 

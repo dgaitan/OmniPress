@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Membership;
 use App\Models\WooCommerce\Product;
+use App\Http\Resources\MembershipResource;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -13,7 +14,8 @@ use Inertia\Inertia;
 class MembershipController extends Controller
 {
     /**
-     * [index description]
+     * Membership Index View
+     *
      * @param  Request $request [description]
      * @return [type]           [description]
      */
@@ -66,7 +68,10 @@ class MembershipController extends Controller
 
         // Ordering
         $availableOrders = ['id', 'kind_cash', 'start_at', 'end_at'];
-        if ($request->input('orderBy') && in_array($request->input('orderBy'), $availableOrders)) {
+        if (
+            $request->input('orderBy')
+            && in_array($request->input('orderBy'), $availableOrders)
+        ) {
             $ordering = in_array($request->input('order'), ['desc', 'asc'])
                 ? $request->input('order')
                 : 'desc';
@@ -85,10 +90,11 @@ class MembershipController extends Controller
             $cacheKey = $cacheKey . "desc_";
         }
 
-        if (Cache::has($cacheKey)) {
-            $memberships = Cache::get($cacheKey, []);
+        if (Cache::tags('memberships')->has($cacheKey)) {
+            $memberships = Cache::tags('memberships')->get($cacheKey, []);
         } else {
-            $memberships = Cache::remember($cacheKey, 3600, function () use ($memberships, $perPage) {
+            $memberships = Cache::tags('memberships')
+                ->remember($cacheKey, 3600, function () use ($memberships, $perPage) {
                 return $memberships->paginate($perPage);
             });
         }
@@ -135,19 +141,26 @@ class MembershipController extends Controller
      */
     public function show(Request $request, $id)
     {
-        $membership = Membership::with(['customer', 'kindCash'])->find($id);
+        // Cache::tags('membership')->flush();
+        $cacheKey = "membership_" . $id;
+        $membership = null;
+
+        if (Cache::tags('memberships')->has($cacheKey)) {
+            $membership = Cache::tags('memberships')->get($cacheKey);
+        } else {
+            $membership = Cache::tags('memberships')
+                ->remember($cacheKey, now()->addDay(), function() use ($id) {
+                    $m = Membership::with(['customer', 'kindCash'])->find($id);
+                    return new MembershipResource($m);
+                });
+        }
 
         if (is_null($membership)) {
             abort(404);
         }
 
-        $orders = $membership->orders()->orderBy('id', 'desc')->get();
-        $data = $membership->toArray(true);
-        $data['orders'] = $orders;
-        $data['giftProduct'] = Product::with(['images', 'categories'])->whereProductId($membership->gift_product_id)->first();
-
         return Inertia::render('Memberships/Detail', [
-            'membership' => $data,
+            'data' => $membership,
             'statuses' => Membership::getStatuses(),
             'shippingStatuses' => Membership::getShippingStatuses(),
         ]);
@@ -179,6 +192,8 @@ class MembershipController extends Controller
             'shipping_status' => $request->input('shipping_status'),
             'end_at' => (new Carbon(strtotime($request->input('end_at'))))->toDateTimeString()
         ]);
+
+        Cache::tags('memberships')->flush();
 
         return back();
     }
@@ -265,6 +280,8 @@ class MembershipController extends Controller
 
         session()->flash('flash.banner', $message);
         session()->flash('flash.bannerStyle', 'success');
+
+        Cache::tags('memberships')->flush();
 
         return to_route('kinja.memberships.index', $request->input('filters', []))->banner($message);
     }

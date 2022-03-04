@@ -3,17 +3,17 @@
 namespace App\Models;
 
 use App\Mail\Memberships\MembershipRenewed;
-use Exception;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Mail;
 use App\Mail\Memberships\RenewalReminder;
 use App\Mail\Memberships\PaymentNotFound;
 use App\Models\WooCommerce\Customer;
 use App\Models\WooCommerce\Product;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Cache;
 
 /**
  * App\Models\Membership
@@ -388,5 +388,19 @@ class Membership extends Model
         ];
 
         return array_key_exists($code, $messages) ? $messages[$code] : '';
+    }
+
+    /**
+     * Handle Some actions on model boot
+     *
+     * @return void
+     */
+    protected static function boot() {
+        parent::boot();
+
+        // Forget Membership Cache
+        static::saving(function() {
+            Cache::tags('memberships')->flush();
+        });
     }
 }

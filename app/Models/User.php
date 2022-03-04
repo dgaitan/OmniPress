@@ -5,13 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use JoelButcher\Socialstream\HasConnectedAccounts;
-use JoelButcher\Socialstream\SetsProfilePhotoFromUrl;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Support\Facades\Cache;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Spatie\Permission\Traits\HasRoles;
+use JoelButcher\Socialstream\HasConnectedAccounts;
+use JoelButcher\Socialstream\SetsProfilePhotoFromUrl;
 
 /**
  * App\Models\User
@@ -132,5 +133,19 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function syncs() {
         return $this->hasMany(Sync::class);
+    }
+
+    /**
+     * Handle Some actions on model boot
+     *
+     * @return void
+     */
+    protected static function boot() {
+        parent::boot();
+
+        // Forget Membership Cache
+        static::saving(function() {
+            Cache::tags('account')->flush();
+        });
     }
 }
