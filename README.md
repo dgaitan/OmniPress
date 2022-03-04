@@ -195,3 +195,41 @@ $ sail artisan kinja:become-super-admin youremail@kindhumans.com
 
 Of course, replace `youremail@kindhumans.com` with the email you used to login in the admin.
 
+## Adding Kindhumans Data
+
+Of course we need data in our admin to keep it synced with our kindhumans store. So, let's go to our admin with super admin perms and click on `Api Tokens` and let's create a new one
+with all the perms. Then copy the API key generated and let's go to the kindhuman store wp dashboard and click on `Tools > Kinja` and set the url of our admin and the api key just 
+generated.
+
+To import all the data from out store locally we have two options. Do it via API and via imports. Both works, the difference is in speed. We recommend import the data importing it via csv. So, to do it we should go to the project root of our kindhumans store and run the next wp cli command:
+
+```bash
+$ wp kinja export_customers
+$ wp kinja export_products
+$ wp kinja export_orders
+$ wp kinja export_memberships
+```
+
+The we should copy those csv files and save it on a `csv/` folder in the root of this project. Then we should import the customers first. 
+
+**Note:** The order of this imports is importante to avoid errors of dependency data.
+
+1. First import customers:
+```bash
+$ sail artisan kinja:import customers csv/Customers_Kindhumans.csv
+```
+
+2. Import Products
+```bash
+$ sail artisan kinja:import products csv/Products_Kindhumans.csv
+```
+
+3. Import Orders
+```bash
+$ sail artisan kinja:import orders csv/Orders_Kindhumans.csv
+```
+
+4. Finally import memberships
+```bash
+$ sail artisan kinja:import memberships csv/Memberships_Kindhumans.csv
+```

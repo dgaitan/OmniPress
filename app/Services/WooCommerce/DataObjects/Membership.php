@@ -42,7 +42,15 @@ class Membership extends BaseObject implements DataObjectContract
     public function sync(): KinjaMembership {
         $customer = Customer::whereCustomerId($this->customer_id)->first();
 
-        if (! $customer->username) {
+        if (is_null($customer)) {
+            $customer = Customer::create([
+                'customer_id' => $this->customer_id,
+                'email' => $this->customer_email,
+                'username' => $this->customer_email
+            ]);
+        }
+
+        if (! is_null($customer) && ! $customer->username) {
             $customer->username = $this->customer_email;
         }
 
