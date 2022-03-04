@@ -9,6 +9,7 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Laravel\Scout\Builder as ScoutBuilder;
 
 class Controller extends BaseController
 {
@@ -21,7 +22,10 @@ class Controller extends BaseController
      * @param [type] $query
      * @return void
      */
-    protected function paginate(Request $request, Builder $query): LengthAwarePaginator {
+    protected function paginate(
+        Request $request,
+        Builder|ScoutBuilder $query
+    ): LengthAwarePaginator {
         $perPage = 50;
 
         if ($request->input('perPage')) {

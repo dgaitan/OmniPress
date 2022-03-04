@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Laravel\Scout\Searchable;
 
 /**
  * App\Models\WooCommerce\Order
@@ -98,7 +99,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class Order extends Model
 {
-    use HasFactory;
+    use HasFactory, Searchable;
 
     /**
      * Order Casting
@@ -311,6 +312,6 @@ class Order extends Model
      */
     protected function makeAllSearchableUsing($query)
     {
-        return $query->with('customer');
+        return $query->with(['customer', 'items']);
     }
 }

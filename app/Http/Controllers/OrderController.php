@@ -26,7 +26,11 @@ class OrderController extends Controller
 
         // Ordering
         $availableOrders = ['order_id', 'date_completed', 'total'];
-        if ($request->input('orderBy') && in_array($request->input('orderBy'), $availableOrders)) {
+
+        if (
+            $request->input('orderBy')
+            && in_array($request->input('orderBy'), $availableOrders)
+        ) {
             $ordering = in_array($request->input('order'), ['desc', 'asc'])
                 ? $request->input('order')
                 : 'desc';
@@ -42,15 +46,16 @@ class OrderController extends Controller
             // If the search query isn't specific
             if (!$search->specific) {
                 $s = $search->s;
-                $orders->orWhereHas('customer', function ($query) use ($s) {
-                    $query->where('first_name', 'ilike', "%$s%")
-                        ->orWhere('last_name', 'ilike', "%$s%")
-                        ->orWhere('email', 'ilike', "%$s%")
-                        ->orWhere('username', 'ilike', "%$s%");
-                });
+                $orders = Order::search($s);
+                // $orders->orWhereHas('customer', function ($query) use ($s) {
+                //     $query->where('first_name', 'ilike', "%$s%")
+                //         ->orWhere('last_name', 'ilike', "%$s%")
+                //         ->orWhere('email', 'ilike', "%$s%")
+                //         ->orWhere('username', 'ilike', "%$s%");
+                // });
 
-                $orders->orWhere('order_id', 'ilike', "%$s%");
-                $orders->orWhere('total', 'ilike', "%$s%");
+                // $orders->orWhere('order_id', 'ilike', "%$s%");
+                // $orders->orWhere('total', 'ilike', "%$s%");
             } else {
                 $orders->where($search->key, 'ilike', "$search->s%");
             }
