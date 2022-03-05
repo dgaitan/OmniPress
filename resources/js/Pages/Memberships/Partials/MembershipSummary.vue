@@ -16,7 +16,7 @@
             <p class="text-md font-medium text-gray-500 mb-1">End At</p>
             <span class="text-sm text-gray-600">{{ displayMoment(membership.end_at, 'LL') }}</span>
         </Column>
-        <Column>
+        <Column :mdSize="6" class="mb-5">
             <p class="text-md font-medium text-gray-500 mb-2">Last Gift Product Selected</p>
             <div class="flex" style="width:300px;" v-if="membership.giftProduct">
                 <img
@@ -33,6 +33,10 @@
                 </div>
             </div>
             <div v-else>Not defined yet</div>
+        </Column>
+        <Column :mdSize="6" class="mb-5">
+            <p class="text-md font-medium text-gray-500 mb-2">Last Payment Date</p>
+            <span class="text-sm text-gray-600">{{ displayMoment(membership.last_payment_intent, 'LL') }}</span>
         </Column>
     </Box>
 </template>

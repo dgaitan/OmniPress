@@ -60,17 +60,9 @@ class RenewalJob implements ShouldQueue
                     // or maybe renew it.
                     if ($membership->isActive()) {
 
-                        if (in_array($membership->daysUntilRenewal(), [15, 5, 3])) {
-                            $membership->sendRenewalReminder($mailQueue++);
-                            $membership->logs()->create([
-                                'description' => sprintf(
-                                    "%s days email reminder was sent to customer.",
-                                    $membership->daysUntilRenewal()
-                                )
-                            ]);
-                        }
+                        $membership->maybeSendRenewalReminder($mailQueue++);
 
-                        if ($membership->daysUntilRenewal() === 0) {
+                        if ($membership->expireToday()) {
                             $membership->maybeRenew(force: false, index: $mailQueue++);
                         }
                     }
@@ -78,9 +70,7 @@ class RenewalJob implements ShouldQueue
                     // If is in renewal, it means that the first renewal failed
                     // So we're going to make another intent.
                     if ($membership->isInRenewal()) {
-                        if (in_array($membership->daysExpired(), [15, 5, 3, 0])) {
-                            $membership->maybeRenew(force: $this->everything, index: $mailQueue++);
-                        }
+                        $membership->maybeRenewIfExpired($this->everything, $mailQueue++);
                     }
 
                     if (($membership->isInRenewal() || $membership->isCancelled()) && $membership->daysExpired() > 30) {
@@ -91,16 +81,8 @@ class RenewalJob implements ShouldQueue
                         $membership->shipping_status = 'N/A';
                         $membership->save();
 
-                        if (in_array($membership->daysAfterRenewal(), [1, 2, 5, 20, 30])) {
-                            $membership->sendMembershipRenewedMail(force: false, index: $mailQueue++);
-                            $membership->logs()->create([
-                                'description' => sprintf(
-                                    "An email to reminder customer to pick the gift product includes on membership was sent.",
-                                    $membership->daysAfterRenewal()
-                                )
-                            ]);
-                        }
-
+                        $membership->maybeRememberThatMembershipHasRenewed();
+                        
                         if ($membership->daysAfterRenewal() > 30) {
                             \App\Jobs\Memberships\SetDefaultGiftProductJob::dispatch($membership->id);
                         }

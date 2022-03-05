@@ -19,16 +19,29 @@ class RenewalReminder extends Mailable
      */
     public $tries = 3;
 
+    /**
+     * Membership
+     *
+     * @var Membership
+     */
     protected $membership;
+
+    /**
+     * Days until renewal
+     *
+     * @var integer
+     */
+    protected $days = 0;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(Membership $membership)
+    public function __construct(Membership $membership, int $days)
     {
         $this->membership = $membership;
+        $this->days = $days;
     }
 
     /**
@@ -39,11 +52,11 @@ class RenewalReminder extends Mailable
     public function build()
     {
 
-        return $this->subject(sprintf("Your membership will renew in %s days", $this->membership->daysUntilRenewal()))
+        return $this->subject(sprintf("Your membership will renew in %s days", $this->days))
             ->view('emails.memberships.renewal-reminder')
             ->with([
                 'customerName' => $this->membership->customer->getFullName(),
-                'days' => $this->membership->daysUntilRenewal(),
+                'days' => $this->days,
                 'memberSince' => $this->membership->start_at->format('F j, Y'),
                 'memberEnd' => $this->membership->end_at->format('F j, Y'),
                 'kindCash' => $this->membership->kindCash->cashForHuman(),

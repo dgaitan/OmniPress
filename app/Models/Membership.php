@@ -14,6 +14,7 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Cache;
+use PhpParser\Node\Stmt\Switch_;
 
 /**
  * App\Models\Membership
@@ -209,6 +210,123 @@ class Membership extends Model
     }
 
     /**
+     * Check if the membership expires in 3, 5, or 15 days.
+     * 
+     * First compare the days to know if we're on the range.
+     * Then Send renewal reminder if we're on the range.
+     *
+     * @param integer $time
+     * @return boolean
+     */
+    public function maybeSendRenewalReminder(int $time = 1): bool {
+        if (! $this->isActive()) return false;
+        $days = 0;
+        $possibleDays = [3, 5, 15];
+
+        foreach ($possibleDays as $day) {
+            if ($this->end_at->day === \Carbon\Carbon::now()->addDays($day)->day) {
+                $days = $day;
+                break;
+            }
+        }
+
+        if ($days !== 0) {
+            $this->sendRenewalReminder($time, $days);
+            $this->logs()->create([
+                'description' => sprintf(
+                    "%s days email reminder was sent to customer.",
+                    $days
+                )
+            ]);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Maybe Renew membership if it is expired
+     *
+     * @param boolean $force
+     * @param integer $time
+     * @return void
+     */
+    public function maybeRenewIfExpired(
+        bool $force = false, 
+        int $time = 0
+    ): bool {
+        if (! $this->isInRenewal()) return false;
+        
+        $days = 0;
+        $possibleDays = [15, 5, 3];
+
+        foreach ($possibleDays as $day) {
+            if ($this->end_at->day === \Carbon\Carbon::now()->subDays($day)->day) {
+                $days = $day;
+                break;
+            }
+        }
+
+        if ($days !== 0) {
+            $this->maybeRenew(force: $force, index: $time);
+            return true;
+        }
+        
+        return false;
+    }
+
+    /**
+     * Send notification to customer that membership
+     * has been renewed but the customer still not
+     * choose a gift product
+     *
+     * @param integer $time
+     * @return boolean
+     */
+    public function maybeRememberThatMembershipHasRenewed(
+        int $time = 0
+    ): bool {
+        if (! $this->isAwaitingPickGift()) return false;
+
+        $days = 0;
+        $possibleDays = [1, 2, 5, 20, 30];
+        
+        foreach ($possibleDays as $day) {
+            if ($this->last_payment_intent->day === \Carbon\Carbon::now()->subDays($day)->day) {
+                $days = $day;
+                break;
+            }
+        }
+
+        if ($days !== 0) {
+            $this->sendMembershipRenewedMail($time);
+            $this->logs()->create([
+                'description' => sprintf(
+                    "An email to reminder customer to pick the gift product includes on membership was sent.",
+                    $days
+                )
+            ]);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Is this membership expiring today?
+     *
+     * @return boolean
+     */
+    public function expireToday(): bool {
+        return (
+            $this->end_at->day === \Carbon\Carbon::now()->day ||
+            \Carbon\Carbon::now()->gt($this->end_at)
+        );
+    }
+
+    /**
      * Days until renewal
      *
      * @todo Better find a strategy to compare by hours.
@@ -257,9 +375,12 @@ class Membership extends Model
      *
      * @return void
      */
-    public function sendRenewalReminder(int $time = 1): void {
+    public function sendRenewalReminder(int $time = 1, int $days = 0): void {
         Mail::to($this->customer->email)
-            ->later(now()->addMinutes($time), new RenewalReminder($this));
+            ->later(
+                now()->addSeconds($time), 
+                new RenewalReminder($this, $days)
+            );
     }
 
     /**
@@ -268,7 +389,7 @@ class Membership extends Model
      */
     public function sendPaymentNotFoundNotification(int $time = 1): void {
         Mail::to($this->customer->email)
-            ->later(now()->addMinutes($time), new PaymentNotFound($this));
+            ->later(now()->addSeconds($time), new PaymentNotFound($this));
     }
 
     /**
@@ -278,7 +399,7 @@ class Membership extends Model
      */
     public function sendMembershipRenewedMail(int $time = 1): void {
         Mail::to($this->customer->email)
-            ->later(now()->addMinutes($time), new MembershipRenewed($this));
+            ->later(now()->addSeconds($time), new MembershipRenewed($this));
     }
 
     /**
