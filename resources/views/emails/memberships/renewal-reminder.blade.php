@@ -225,7 +225,7 @@ a:hover {
                   <td align="center" style="padding-bottom:20px;"><h2>Hi {{ $customerName }},</h2></td>
                 </tr>
                 <tr>
-                  <td align="center"><span style="font-size:16px;display:block;">This is a friendly reminder that your Kindhumans Membership will auto-renewal in <strong>{{ $days }} days</strong></span></td>
+                  <td align="center"><span style="font-size:16px;display:block;">This is a friendly reminder that your Kindhumans Membership will auto-renew in <strong>{{ $days }} days.</strong></span></td>
                 </tr>
               </table>
             </td>
@@ -259,7 +259,7 @@ a:hover {
               <table width="450" align="center" border="0" cellpadding="0" cellspacing="0">
                 <tr>
                   <td align="center">
-                    <p style="font-family:'BentonSans-Medium', sans-serif !important;">To update or cancel your membership, you can visit your <a href="{{ $accountUrl }}" target="_blank" style="text-decoration:underline;color:#172936;">Account Settings</a> page.. If you have any questions along the way, please <a href="https://kindhumans.com/contact-us/" target="_blank" style="text-decoration:underline;color:#172936;">Contact Us</a>, and we'll be happy to help.<span style="display:block;margin-top:20px;">Thank you,<br/> Kindhumans</span></p>
+                    <p style="font-family:'BentonSans-Medium', sans-serif !important;">To update or cancel your membership, you can visit your <a href="{{ $accountUrl }}" target="_blank" style="text-decoration:underline;color:#172936;">Account Settings</a> page. If you have any questions along the way, please <a href="https://kindhumans.com/contact-us/" target="_blank" style="text-decoration:underline;color:#172936;">Contact Us</a>, and we'll be happy to help.<span style="display:block;margin-top:20px;">Thank you,<br/> Kindhumans</span></p>
                   </td>
                 </tr>
               </table>
