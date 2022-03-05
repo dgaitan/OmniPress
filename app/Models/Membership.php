@@ -14,7 +14,6 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Cache;
-use PhpParser\Node\Stmt\Switch_;
 
 /**
  * App\Models\Membership
@@ -220,22 +219,14 @@ class Membership extends Model
      */
     public function maybeSendRenewalReminder(int $time = 1): bool {
         if (! $this->isActive()) return false;
-        $days = 0;
         $possibleDays = [3, 5, 15];
 
-        foreach ($possibleDays as $day) {
-            if ($this->end_at->day === \Carbon\Carbon::now()->addDays($day)->day) {
-                $days = $day;
-                break;
-            }
-        }
-
-        if ($days !== 0) {
-            $this->sendRenewalReminder($time, $days);
+        if (in_array($this->daysUntilRenewal(), $possibleDays)) {
+            $this->sendRenewalReminder($time, $this->daysUntilRenewal());
             $this->logs()->create([
                 'description' => sprintf(
                     "%s days email reminder was sent to customer.",
-                    $days
+                    $this->daysUntilRenewal()
                 )
             ]);
 
@@ -258,17 +249,9 @@ class Membership extends Model
     ): bool {
         if (! $this->isInRenewal()) return false;
         
-        $days = 0;
         $possibleDays = [15, 5, 3];
 
-        foreach ($possibleDays as $day) {
-            if ($this->end_at->day === \Carbon\Carbon::now()->subDays($day)->day) {
-                $days = $day;
-                break;
-            }
-        }
-
-        if ($days !== 0) {
+        if (in_array($this->daysExpired(), $possibleDays)) {
             $this->maybeRenew(force: $force, index: $time);
             return true;
         }
@@ -288,24 +271,12 @@ class Membership extends Model
         int $time = 0
     ): bool {
         if (! $this->isAwaitingPickGift()) return false;
-
-        $days = 0;
         $possibleDays = [1, 2, 5, 20, 30];
-        
-        foreach ($possibleDays as $day) {
-            if ($this->last_payment_intent->day === \Carbon\Carbon::now()->subDays($day)->day) {
-                $days = $day;
-                break;
-            }
-        }
 
-        if ($days !== 0) {
+        if (in_array($this->daysAfterRenewal(), $possibleDays)) {
             $this->sendMembershipRenewedMail($time);
             $this->logs()->create([
-                'description' => sprintf(
-                    "An email to reminder customer to pick the gift product includes on membership was sent.",
-                    $days
-                )
+                'description' => 'An email to reminder customer to pick the gift product includes on membership was sent.'
             ]);
 
             return true;
@@ -320,9 +291,17 @@ class Membership extends Model
      * @return boolean
      */
     public function expireToday(): bool {
-        return (
-            $this->end_at->day === \Carbon\Carbon::now()->day ||
-            \Carbon\Carbon::now()->gt($this->end_at)
+        return $this->daysUntilRenewal() === 0;
+    }
+
+    /**
+     * Parse the today date to match without time, only date
+     *
+     * @return \Carbon\Carbon
+     */
+    protected function today(): \Carbon\Carbon {
+        return \Carbon\Carbon::parse(
+            \Carbon\Carbon::now()->toDateString()
         );
     }
 
@@ -333,7 +312,7 @@ class Membership extends Model
      * @return [type] [description]
      */
     public function daysUntilRenewal(): int {
-        return max(\Carbon\Carbon::now()->diffInDays($this->end_at, false), 0);
+        return max($this->today()->diffInDays($this->end_at, false), 0);
     }
 
     /**
@@ -341,7 +320,7 @@ class Membership extends Model
      * @return [type] [description]
      */
     public function daysExpired(): int {
-        return max($this->end_at->diffInDays(\Carbon\Carbon::now(), false), 0);
+        return max($this->end_at->diffInDays($this->today(), false), 0);
     }
 
     /**
@@ -349,7 +328,7 @@ class Membership extends Model
      * @return [type] [description]
      */
     public function daysAfterRenewal(): int {
-        return max($this->last_payment_intent->diffInDays(\Carbon\Carbon::now(), false), 0);
+        return max($this->last_payment_intent->diffInDays($this->today(), false), 0);
     }
 
     /**
