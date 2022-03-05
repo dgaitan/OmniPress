@@ -98,6 +98,11 @@
             :processing="runningBulk"
             @close="showActionConfirmation = false"
             @confirm="bulkActions" />
+
+        <!-- <UpdateKindCash 
+            :membership="membership"
+            :show="showUpdateKindCash"
+            @close="showUpdateKindCash = false"/> -->
     </layout>
 </template>
 
@@ -113,6 +118,7 @@
     import Status from '@/Components/Status.vue'
     import Confirm from '@/Components/Confirm.vue'
     import Actions from './Partials/MembershipListActions.vue'
+    import UpdateKindCash from './Partials/UpdateKindCash.vue'
 
     export default defineComponent({
         props: [
@@ -135,7 +141,8 @@
             ListPagination,
             Status,
             Confirm,
-            Actions
+            Actions,
+            UpdateKindCash
         },
 
         data() {
@@ -169,7 +176,7 @@
                 },
                 confirmationMessage: '',
                 showActionConfirmation: false,
-                runningBulk: false
+                runningBulk: false,
             }
         },
 
@@ -240,6 +247,11 @@
                 } else {
                     this.ids.splice(this.ids.indexOf(ID), 1);
                 }
+            },
+
+            updateKindCash(membership) {
+                this.membership = membership
+                this.showUpdateKindCash = true
             },
 
             selectAllIds(checked) {
