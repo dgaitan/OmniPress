@@ -5,46 +5,11 @@
             <ListWrapper title="Memberships">
                 <!-- Actions -->
                 <template #actions>
-                    <!-- SearchBox -->
-                    <jet-input v-model="filters.s" type="search" v-on:keyup.enter="search" placeholder="Search..." style="width:350px" />
-
-                    <!-- Shipping Status Filter -->
-                    <select
-                        v-model="filters.shippingStatus"
-                        @change="changeShippingStatus()"
-                        class="border-gray-300 focus:border-cyan-600 focus:ring focus:ring-cyan-400 focus:ring-opacity-50 rounded-md shadow-sm ml-2 py-2 pl-2 pr-10"
-                        name="content_type"
-                        id="content_type">
-                        <option value="" :selected="filters.shippingStatus === ''">Filter By Shipping Status</option>
-                        <option
-                            v-for="s in shippingStatuses"
-                            :key="s.slug"
-                            :value="s.slug"
-                            :selected="filters.shippingStatus === s.slug">
-                            {{ s.label }}
-                        </option>
-                    </select>
-
-                    <!-- Actions -->
-                    <select v-model="action" @change="confirmAction()" class="border-gray-300 focus:border-cyan-600 focus:ring focus:ring-cyan-400 focus:ring-opacity-50 rounded-md shadow-sm ml-2 py-2 pl-2 pr-10" style="width:200px">
-                        <option value="">Actions</option>
-                        <optgroup label="Shipping Statuses">
-                            <option value="shipping_status_to_cancelled">Change Shipping Status to Cancelled</option>
-                            <option value="shipping_status_to_shipped">Change Shipping Status to Shipped</option>
-                            <option value="shipping_status_to_no_ship">Change Shipping Status to No Ship</option>
-                        </optgroup>
-                        <optgroup label="Membership Statuses">
-                            <option value="status_to_active">Change Status to Active</option>
-                            <option value="status_to_in_renewal">Change Status to In Renewal</option>
-                            <option value="status_to_awaiting_pick_gift">Change Status to Awaiting Pick Gift</option>
-                            <option value="status_to_cancelled">Change Status to Cancelled</option>
-                        </optgroup>
-                        <optgroup label="Actions">
-                            <option value="expire">Expire Membership</option>
-                            <option value="renew">Renew Memberships</option>
-                            <option value="run_cron">Run Renewal Cron</option>
-                        </optgroup>
-                    </select>
+                    <Actions 
+                        :filters="filters"
+                        :shippingStatuses="shippingStatuses"
+                        :action="action"
+                        @bulkAction="confirmAction"/>
               </template>
 
               <!-- FIlters -->
@@ -147,6 +112,7 @@
     import ListPagination from '@/Components/List/ListPagination'
     import Status from '@/Components/Status.vue'
     import Confirm from '@/Components/Confirm.vue'
+    import Actions from './Partials/MembershipListActions.vue'
 
     export default defineComponent({
         props: [
@@ -168,7 +134,8 @@
             ListTable,
             ListPagination,
             Status,
-            Confirm
+            Confirm,
+            Actions
         },
 
         data() {
@@ -255,27 +222,11 @@
 
         methods: {
 
-            parseRole(role) {
-                return role ? role.split('_').join(' ') : ''
-            },
-
-            changeShippingStatus() {
-                this.$inertia.get(route('kinja.memberships.index'), {
-                    ...this.filters
-                }, { replace: true })
-            },
-
             filterStatus(status) {
                 this.filters.status = status
                 this.$inertia.get(route('kinja.memberships.index'), {
                     ...this.filters
                 }, { replace: true });
-            },
-
-            search() {
-                this.$inertia.get(route('kinja.memberships.index'), {
-                    s: this.filters.s
-                }, { replace: true })
             },
 
             /**
@@ -295,7 +246,8 @@
                 checked ? this.memberships.map(m => this.ids.push(m.id)) : this.ids = [];
             },
 
-            confirmAction() {
+            confirmAction(action = '') {
+                this.action = action
                 if (this.ids.length === 0 && this.action !== 'run_cron') {
                     this.confirmationMessage = 'Please select at least one membership to execute this action.'
                 } else {
