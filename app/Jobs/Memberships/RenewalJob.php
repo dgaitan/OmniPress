@@ -2,6 +2,7 @@
 
 namespace App\Jobs\Memberships;
 
+use App\Models\Membership;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -9,8 +10,8 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Cache;
 use Carbon\Carbon;
-use App\Models\Membership;
 
 class RenewalJob implements ShouldQueue
 {
@@ -36,6 +37,7 @@ class RenewalJob implements ShouldQueue
     public function handle()
     {
         // Retrieve the memberships in a range of 2 month in the pase and future from today.
+        Cache::tags('memberships')->flush();
         $currentPage = 1;
         $hasMorePages = true;
         $items = [];
@@ -44,7 +46,7 @@ class RenewalJob implements ShouldQueue
         if (! $this->everything) {
             $aMonthAgo = Carbon::now()->subMonth();
             $oneMonth = Carbon::now()->addMonth();
-            $memberships = $memberships->whereBetween('end_at', [$aMonthAgo, $oneMonth]);
+            $memberships = $memberships->whereBetween('end_at', [$aMonthAgo, $oneMonth]);            
         }
 
         if ($memberships->exists()) {
@@ -97,7 +99,7 @@ class RenewalJob implements ShouldQueue
 
                 // Initialize a new instance.
                 $query = $memberships->paginate(50);
-                $hasMorePages = $query->hasMorePages();
+                $hasMorePages = $query->count() > 0;
                 $items = $query->items();
             }
 

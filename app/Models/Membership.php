@@ -220,7 +220,7 @@ class Membership extends Model
     public function maybeSendRenewalReminder(int $time = 1): bool {
         if (! $this->isActive()) return false;
         $possibleDays = [3, 5, 15];
-
+        
         if (in_array($this->daysUntilRenewal(), $possibleDays)) {
             $this->sendRenewalReminder($time, $this->daysUntilRenewal());
             $this->logs()->create([
