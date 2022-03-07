@@ -238,21 +238,17 @@ class MembershipController extends Controller
             );
         }
 
-        // Expering Memberships
+        // Custom Actions Memberships
         if (count($action) === 1) {
             $action = end($action);
             $memberships = Membership::whereIn('id', $request->input('ids'));
 
+            // Expiring
             if ($action === 'expire' && $memberships->exists()) {
                 $memberships->get()->map(function($m) use ($request) {
-                    $m->update([
-                        'shipping_status' => Membership::SHIPPING_CANCELLED_STATUS,
-                        'status' => Membership::EXPIRED_STATUS
-                    ]);
-
-                    $m->logs()->create([
-                        'description' => sprintf("Membership Expired by %s", $request->user()->email)
-                    ]);
+                    $m->expire(sprintf(
+                        "Membership Expired by: %s", $request->user()->email
+                    ));
                 });
 
                 $message = "Membership expired successfully!";
