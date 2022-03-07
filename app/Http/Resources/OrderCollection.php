@@ -22,6 +22,8 @@ class OrderCollection extends ResourceCollection
                 'total' => $order->total,
                 'shipping' => $order->shipping,
                 'date' => $order->getDateCompleted(),
+                'permalink' => $order->getPermalink(),
+                'storePermalink' => $order->getPermalinkOnStore()
             ];
 
             if ($order->customer) {

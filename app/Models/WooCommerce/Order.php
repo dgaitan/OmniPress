@@ -249,6 +249,28 @@ class Order extends Model
     }
 
     /**
+     * Get Permalink on this app
+     *
+     * @return string
+     */
+    public function getPermalink(): string {
+        return route('kinja.orders.show', [$this->order_id]);
+    }
+
+    /**
+     * Get Permalink on client store
+     *
+     * @return string
+     */
+    public function getPermalinkOnStore(): string {
+        return sprintf(
+            '%s/wp-admin/post.php?post=%s&action=edit',
+            env('CLIENT_DOMAIN', 'https://kindhumans.com'),
+            $this->order_id
+        );
+    }
+
+    /**
      * Convert Order to Array
      *
      * @param boolean $isSingle

@@ -19,6 +19,7 @@ class OrderResource extends JsonResource
             'name' => $this->customer->getFullName(),
             'email' => $this->customer->email
         ] : null;
+
         return [
             'id' => $this->id,
             'order_id' => $this->order_id,
