@@ -41,7 +41,6 @@
                                 </template>
                                 <template #content>
                                     <div class="">
-                                        <!-- Team Settings -->
 	                                    <jet-dropdown-link :href="order.permalink">
 	                                        Show
 	                                    </jet-dropdown-link>

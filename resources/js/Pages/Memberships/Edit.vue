@@ -16,6 +16,13 @@
                         </FormGroup>
 
                         <FormGroup
+                            id="kind_cash"
+                            label="Kind Cash"
+                            :message="form.errors.points">
+                            <JetInput type="number" v-model="form.points" id="kind_cash" class="w-full" />
+                        </FormGroup>
+
+                        <FormGroup
                             id="status"
                             label="Status"
                             :message="form.status.end_at">
@@ -91,7 +98,8 @@
                     _method: 'PUT',
                     end_at: new Date(this.membership.end_at),
                     status: this.membership.status,
-                    shipping_status: this.membership.shipping_status
+                    shipping_status: this.membership.shipping_status,
+                    points: parseFloat(this.membership.cash.points / 100)
                 }),
             }
         },

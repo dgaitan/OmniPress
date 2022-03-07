@@ -11,8 +11,8 @@
                         <FormGroup
                             id="kind_cash"
                             label="Kind Cash"
-                            :message="form.points.end_at">
-                            <JetInput id="kind_cash" type="text" v-model="form.points" class="w-full" />
+                            :message="form.errors.points">
+                            <JetInput id="kind_cash" type="number" v-model="form.points" class="w-full" />
                         </FormGroup>
                     </div>
                 </div>
@@ -23,7 +23,7 @@
                 Saved.
             </jet-action-message>
             <JetSecondaryButton @click="$emit('close')">Close</JetSecondaryButton>
-            <JetButton @click="updateMembership" class="ml-3" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+            <JetButton @click="update" class="ml-3" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                 <span v-if="!form.processing" class="text-xs uppercase">Update</span>
                 <Sppiner v-else />
             </JetButton>
@@ -39,6 +39,7 @@
     import JetActionMessage from '@/Jetstream/ActionMessage.vue'
     import FormGroup from '@/Components/Forms/FormGroup.vue'
     import Sppiner from '@/Components/Sppiner.vue'
+    import numeral from 'numeral'
 
     export default defineComponent({
         emits: ['close'],
@@ -47,13 +48,17 @@
             membership: {
                 type: Object,
                 deafult: {}
+            },
+            show: {
+                type: Boolean,
+                deafult: false
             }
         },
 
         data() {
             let form = {}
 
-            if (this.$props.membership) {
+            if (this.$props.membership.cash) {
                 form = this.$inertia.form({
                     points: this.membership.cash.points
                 })
@@ -63,7 +68,7 @@
                 form: form
             }
         },
-        
+
         components: {
             Modal,
             JetInput,
@@ -76,16 +81,24 @@
 
         methods: {
             update() {
-                this.form.post(
-                    route('kinja.memberships.updateKindCash', membership.id),
+                this.form.put(
+                    route('kinja.memberships.updateKindCash', this.membership.id),
                     {
-                        errorBag: 'updateMembershipKindCash',
+                        errorBag: 'updateKindCash',
                         preserveScroll: true,
                         onSuccess: () => {
                             this.$props.membership.cash.points = this.form.points
                         }
                     }
                 )
+            }
+        },
+
+        watch: {
+            membership: function (membership) {
+                this.form = this.$inertia.form({
+                    points: numeral(membership.cash.points / 100).format('0.00')
+                })
             }
         }
     })
