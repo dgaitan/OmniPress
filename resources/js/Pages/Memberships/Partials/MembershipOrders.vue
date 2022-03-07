@@ -25,7 +25,7 @@
                         :key="order.order_id"
                         class="text-xs bg-gray-50">
                         <td class="py-5 px-6 font-medium">#{{ order.order_id }}</td>
-                        <td class="font-medium">{{ displayMoment(order.date_completed, 'LL') }}</td>
+                        <td class="font-medium">{{ order.date }}</td>
                         <td class="font-medium">
                             <Status :status="order.status" />
                         </td>
