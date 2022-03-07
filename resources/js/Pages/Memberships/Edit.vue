@@ -66,6 +66,7 @@
     import Select from '@/Components/Select.vue'
     import FormGroup from '@/Components/Forms/FormGroup.vue'
     import Sppiner from '@/Components/Sppiner.vue'
+    import numeral from 'numeral'
 
     export default defineComponent({
         emits: ['close'],
@@ -99,7 +100,7 @@
                     end_at: new Date(this.membership.end_at),
                     status: this.membership.status,
                     shipping_status: this.membership.shipping_status,
-                    points: parseFloat(this.membership.cash.points / 100)
+                    points: numeral(this.membership.cash.points / 100).format('0.00')
                 }),
             }
         },

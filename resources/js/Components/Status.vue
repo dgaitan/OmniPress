@@ -19,6 +19,10 @@ export default defineComponent({
 
     computed: {
         label() {
+            if (this.status == 'kh-awm') {
+                return 'Awaiting Membership'
+            }
+
             return this.status ? this.status.split('_').join(' ') : ''
         },
 
