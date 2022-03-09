@@ -3,6 +3,21 @@
 use App\Providers\RouteServiceProvider;
 use Laravel\Fortify\Features;
 
+$features = [
+    // Features::registration(),
+    Features::resetPasswords(),
+    Features::emailVerification(),
+    Features::updateProfileInformation(),
+    Features::updatePasswords(),
+    Features::twoFactorAuthentication([
+        'confirmPassword' => true,
+    ]),
+];
+
+if (env('ACTIVATE_TRADITIONAL_REGISTRATION', false)) {
+    $features[] = Features::registration();
+}
+
 return [
 
     /*
@@ -131,15 +146,6 @@ return [
     |
     */
 
-    'features' => [
-        // Features::registration(),
-        Features::resetPasswords(),
-        Features::emailVerification(),
-        Features::updateProfileInformation(),
-        Features::updatePasswords(),
-        Features::twoFactorAuthentication([
-            'confirmPassword' => true,
-        ]),
-    ],
+    'features' => $features,
 
 ];

@@ -15,15 +15,16 @@ Web Application to manage Kindhumans store features like:
 - Composer
 - Laravel 9
 - Redis
+- Mailhog
+- Meilisearch
 - Supervisor
 - PostgresSQL
 
 ## How to install?
 
-We have two choices to install this project. One is install the requirements/dependences mentioned above in your local machine and run it. Or install it using `Laravel Sail`.
-We're going to explain both ways to install it.
+We have two choices to install this project. One is install the requirements/dependences mentioned above in your local machine and run it. Or install it using `Laravel Sail`. We recommend to use this last option. It will to avoid issues related to dependecies or requirements of the project.
 
-But first, is necessary to have composer installed in your local machine. Please follow the documentation of composer to get it installed in your local machine in case you
+First, is necessary to have composer installed in your local machine. Please follow the documentation of composer to get it installed in your local machine in case you
 don't have it installed yet. https://getcomposer.org/doc/00-intro.md#installation-linux-unix-macos
 
 Once you have ready composer, please go to the project root and run `composer install`. It will install the project dependences.
@@ -40,10 +41,10 @@ This app is a client of a kindhumans store which is necessary define some env co
 to define some values. Look:
 
 ```
-APP_URL=http://localhost:3030
-FRONTEND_URL=http://localhost:3030
+APP_URL=http://localhost:8000
+FRONTEND_URL=http://localhost:8000
 ASSET_DOMAIN=https://kindhumans.com # Should no change, but if you want to redirect the asset urls base domain to another domain, change it.
-CLIENT_DOMAIN=https://kind.humans # Replace with the local store domain.
+CLIENT_DOMAIN=https://your-local-host-here # Replace with the local store domain.
 ```
 
 The `ASSET_DOMAIN` var will be used as the base url for images. We don't store images on this app, normally we have a link of each images to the store connected. By default we
@@ -52,27 +53,25 @@ can use kindhumans.com, but if you want to load the images of your local kindhum
 The `CLIENT_DOMAIN` is the url of your store in your local machine. 
 
 ### Database.
-We are using PostgresSQL as our database engine, it means that we need to define this env vars in our .env file.
+We are using PostgresSQL as our database engine, it means that we need to define this env vars in our .env file. If you're using `Laravel Sail`, you should these vars with the default values, otherwise, you should set the right values to connect to postgres in your local machine.
 
 ```
 DB_CONNECTION=pgsql
-DB_HOST=localhost
+DB_HOST=pgsql
 DB_PORT=5432
 DB_DATABASE=omnipress
 DB_USERNAME=postgres
 DB_PASSWORD=postgres
 ```
 
-If you're using Laravel Sail, change the value of `DB_HOST` to `pgsql`.
-
 ### Mailer
 
-Is your choice which mailer tool use to see emails but we recommed to use a tool like Mailtrap to see the emails. You will see a env vars already defined like this:
+By default the project has mailhog installed as the email client. If you use `Laravel Sail` leave these env vars as it comes in the default .env.example. Otherwise, you should change those var values to the right values of your email client.
 
 ```
 MAIL_MAILER=smtp
-MAIL_HOST=smtp.mailtrap.io
-MAIL_PORT=2525
+MAIL_HOST=mailhog
+MAIL_PORT=1025
 MAIL_USERNAME=null
 MAIL_PASSWORD=null
 MAIL_FROM_ADDRESS=noreply@kindhumans.com
@@ -80,24 +79,40 @@ MAIL_FROM_NAME="${APP_NAME}"
 MAIL_ENCRYPTION=null
 ```
 
-You should only replace the `MAIL_USERNAME` and `MAIL_PASSWORD` vars with the right values defined by mailtrap.
-
 ### WooCommerce API Keys.
-We need to define the WooCommerce API Keys to sync the data in our app. So, is necessary you go to your store wp dash and generate a new woo api keys.
-To do this, please go to the WP Dash, then WooCommerce > Settings > Advanced > Rest API and then create a new API Keys. **Note:** Please be sure of create the api key with read/write permissions.
+To connect with WooCommerce we only need to be sure of the port we're using on our local machine. If you're using localwp to run your WordPress in your laptop, probably the port will be 10003 or 10009. To be sure of this, please run in your terminal:
 
-Once you created your api keys, you'll see the following vars in your .env file:
-
-```
-WOO_CUSTOMER_KEY=add_your_customer_key_here
-WOO_CUSTOMER_SECRET=add_yur_customer_secret_here
-WOO_CUSTOMER_DOMAIN=http://example.com
+```bash
+$ sudo lsof -i -n -P | grep TCP
 ```
 
-Replace the values with the right ones.
+It will show you the port used. So, look for the ports used by `nginx`. Probably you will see something like:
+
+```bash
+nginx       787        dgaitan    7u  IPv4 0x8be2049a08e8bf2b      0t0    TCP *:10003 (LISTEN)
+nginx       788        dgaitan    7u  IPv4 0x8be2049a08e87f2b      0t0    TCP *:80 (LISTEN)
+nginx       788        dgaitan    8u  IPv6 0x8be20495371cbb83      0t0    TCP *:80 (LISTEN)
+nginx       788        dgaitan    9u  IPv4 0x8be2049a08e8944b      0t0    TCP *:443 (LISTEN)
+nginx       789        dgaitan    7u  IPv4 0x8be2049a08e87f2b      0t0    TCP *:80 (LISTEN)
+nginx       789        dgaitan    8u  IPv6 0x8be20495371cbb83      0t0    TCP *:80 (LISTEN)
+nginx       789        dgaitan    9u  IPv4 0x8be2049a08e8944b      0t0    TCP *:443 (LISTEN)
+```
+
+So, the localwp normally use a port greater than 10000, so if you see a port between 10000 or 100010, probably will be that.
+
+Once you have the port of your localwp, you can set the value in your `.env` to connecto to your store.
+
+```
+WOO_CUSTOMER_KEY=ck_5f944eb60ada2cfb7ffafb923603f28b99f2dd80
+WOO_CUSTOMER_SECRET=cs_c20d091b9a06ed2e0e4530f3e1d0fd5ef97ea049
+WOO_CUSTOMER_DOMAIN=http://host.docker.internal:10003 # replace the port with the port in your local.
+WOO_TIMEOUT=50
+```
 
 ### Google Auth Login
-To login into the app, is necessary generates a google auth key. To do this, please go to the Google Developer Console (https://console.cloud.google.com/apis/dashboard) and create a new api keys.
+To login into the app we have to choices: login using google oauth, or just activate the register.
+
+To login into the app using google oauth is necessary generates a google auth key. To do this, please go to the Google Developer Console (https://console.cloud.google.com/apis/dashboard) and create a new api keys.
 
 Steps to create a google api key:
 
@@ -106,20 +121,30 @@ Steps to create a google api key:
 3. Click on **Create Credentials** then click on **OAuth Client ID**
 4. On Application type select **Web Application**
 5. Set the App Name
-6. Add a new Authorized Javascript origins. Add http://localhost:3030 and http://127.0.0.1:3030
-7. Add Authorized redirect URIs and define the next url: `http://localhost:3030/oauth/google/callback`
+6. Add a new Authorized Javascript origins. Add http://localhost:8000 and http://127.0.0.1:8000
+7. Add Authorized redirect URIs and define the next url: `http://localhost:8000/oauth/google/callback`
 8. Save it and it will take a few minutes to make effects.
 
 So far, you can add the API Keys generated by Google in the top right inside the form where we defined the step above. Copy the keys and add it to the .env file.
 You'll see the variables like this:
 
 ```
-GOOGLE_CLIENT_ID=578350767445-bblhgo7rfa9cjale719gsb184d8t6j3j.apps.googleusercontent.com
-GOOGLE_CLIENT_SECRET=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
+ACTIVATE_TRADITIONAL_REGISTRATION=false
+GOOGLE_CLIENT_ID=578350767445-pbhibf17vh47j2oa7cslcmpl8abfsbmm.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=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
 GOOGLE_REDIRECT=http://localhost:8000/oauth/google/callback
 ```
 
 You can try using the current api keys or set the new one.
+
+If you want to register without google, you'll to set the env var `ACTIVATE_TRADITIONAL_REGISTRATION` to `true`. It will activate a new route to register into the app.
+
+1. Go to `http://localhost:8000/register`
+2. Fill the form using an email ending with @kindhumans.com
+3. You'll need to confirm your email.
+4. Go to `http://localhost:8025` and see the new email confirmation.
+5. Click on the confirmation link.
+6. That's all.
 
 ### Stripe
 We use stripe to process payments. So, let's define the api keys:
@@ -131,9 +156,6 @@ CASHIER_CURRENCY=usd
 ```
 
 Please contact to one of the kindhumans dev team member to get the stripe keys.
-
-### Algolia
-We use algolia to index some content and search it easily. Please contact to one of the kindhumans dev team member to get the algolia keys.
 
 ## Install with Laravel Sail (Docker).
 
@@ -170,7 +192,7 @@ The last command will be run only by the first time. Once the contianer has been
 $ sail up
 ```
 
-It will run the docker image and we should be able to see the site running on http://localhost:3030 with an error. Of course we need to migrate our database.
+It will run the docker image and we should be able to see the site running on http://localhost:8000 with an error. Of course we need to migrate our database.
 
 ### Running database migrations:
 
@@ -186,7 +208,7 @@ Then run:
 $ sail artisan kinja:sync-permissions
 ```
 
-And then goes to the browser to http://locaslhost:3030 and login with your @kindhumans.com email. You should be able to login to the admin and then you'll need to give super admin permissions
+And then goes to the browser to http://locaslhost:8000 and login with your @kindhumans.com email or register into the app going to `http://localhost:8000/regiser` (be sure of have `ACTIVATE_TRADITIONAL_REGISTRATION` en var to `true`). You should be able to login to the admin and then you'll need to give super admin permissions
 to yourself. So, to do this please go back to  your terminal and run:
 
 ```bash
@@ -197,8 +219,7 @@ Of course, replace `youremail@kindhumans.com` with the email you used to login i
 
 ## Adding Kindhumans Data
 
-Of course we need data in our admin to keep it synced with our kindhumans store. So, let's go to our admin with super admin perms and click on `Api Tokens` and let's create a new one
-with all the perms. Then copy the API key generated and let's go to the kindhuman store wp dashboard and click on `Tools > Kinja` and set the url of our admin and the api key just 
+Of course we need data in our admin to keep it synced with our kindhumans store. So, let's go to our admin with super admin perms and click on `Api Tokens` (http://localhost:8000/user/api-tokens) and let's create a new one with all the perms. Then copy the API key generated and let's go to the kindhuman store wp dashboard and click on `Tools > Kinja` and set the url of our admin and the api key just 
 generated.
 
 To import all the data from out store locally we have two options. Do it via API and via imports. Both works, the difference is in speed. We recommend import the data importing it via csv. So, to do it we should go to the project root of our kindhumans store and run the next wp cli command:
@@ -212,7 +233,7 @@ $ wp kinja export_memberships
 
 The we should copy those csv files and save it on a `csv/` folder in the root of this project. Then we should import the customers first. 
 
-**Note:** The order of this imports is importante to avoid errors of dependency data.
+**Note:** The order of these imports are important to avoid errors of dependency data.
 
 1. First import customers:
 ```bash
@@ -236,8 +257,16 @@ $ sail artisan kinja:import memberships csv/Memberships_Kindhumans.csv
 
 ## Tasks after finished.
 
-Link storage
+Link storage.
 
 ```bash
 $ sail artisan storage:link
 ```
+
+If you want to run queue jobs, run:
+
+```bash
+$ sail artisan queue:work
+```
+
+**Note** Be sure of have running up `sail up` always, otherwise these commands will not work.
