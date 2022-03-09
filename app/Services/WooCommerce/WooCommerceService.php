@@ -35,6 +35,7 @@ class WooCommerceService implements ServiceContract
      */
     public function makeRequest(): WooCommerce
     {
+
         $request = new WooCommerce(
             $this->domain,
             $this->key,
