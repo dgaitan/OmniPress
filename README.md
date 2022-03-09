@@ -22,7 +22,7 @@ Web Application to manage Kindhumans store features like:
 
 ## How to install?
 
-We have two choices to install this project. One is install the requirements/dependences mentioned above in your local machine and run it. Or install it using `Laravel Sail`. We recommend to use this last option. It will to avoid issues related to dependecies or requirements of the project.
+We have two choices to install this project. One is install the requirements/dependences mentioned above in your local machine and run it. Or installing it using `Laravel Sail`. We recommend to use this last option. It will avoid issues related to dependecies or requirements of the project.
 
 First, is necessary to have composer installed in your local machine. Please follow the documentation of composer to get it installed in your local machine in case you
 don't have it installed yet. https://getcomposer.org/doc/00-intro.md#installation-linux-unix-macos
