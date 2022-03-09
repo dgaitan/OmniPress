@@ -5,6 +5,8 @@ namespace App\Models;
 use App\Mail\Memberships\MembershipRenewed;
 use App\Mail\Memberships\RenewalReminder;
 use App\Mail\Memberships\PaymentNotFound;
+use App\Mail\Memberships\MembershipExpired;
+use App\Mail\Memberships\RenewError;
 use App\Models\WooCommerce\Customer;
 use App\Models\WooCommerce\Product;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -210,7 +212,7 @@ class Membership extends Model
 
     /**
      * Check if the membership expires in 3, 5, or 15 days.
-     * 
+     *
      * First compare the days to know if we're on the range.
      * Then Send renewal reminder if we're on the range.
      *
@@ -220,7 +222,7 @@ class Membership extends Model
     public function maybeSendRenewalReminder(int $time = 1): bool {
         if (! $this->isActive()) return false;
         $possibleDays = [3, 5, 15];
-        
+
         if (in_array($this->daysUntilRenewal(), $possibleDays)) {
             $this->sendRenewalReminder($time, $this->daysUntilRenewal());
             $this->logs()->create([
@@ -244,18 +246,18 @@ class Membership extends Model
      * @return void
      */
     public function maybeRenewIfExpired(
-        bool $force = false, 
+        bool $force = false,
         int $time = 0
     ): bool {
         if (! $this->isInRenewal()) return false;
-        
+
         $possibleDays = [15, 5, 3];
 
         if (in_array($this->daysExpired(), $possibleDays)) {
             $this->maybeRenew(force: $force, index: $time);
             return true;
         }
-        
+
         return false;
     }
 
@@ -346,6 +348,8 @@ class Membership extends Model
             $this->logs()->create(['description' => $reason]);
         }
 
+        $this->sendMembershipExpiredMail();
+
         return $this;
     }
 
@@ -357,7 +361,7 @@ class Membership extends Model
     public function sendRenewalReminder(int $time = 1, int $days = 0): void {
         Mail::to($this->customer->email)
             ->later(
-                now()->addSeconds($time), 
+                now()->addSeconds($time),
                 new RenewalReminder($this, $days)
             );
     }
@@ -379,6 +383,31 @@ class Membership extends Model
     public function sendMembershipRenewedMail(int $time = 1): void {
         Mail::to($this->customer->email)
             ->later(now()->addSeconds($time), new MembershipRenewed($this));
+    }
+
+    /**
+     * Send Membership Expired Mail
+     *
+     * @param integer $time
+     * @return void
+     */
+    public function sendMembershipExpiredMail(int $time = 1): void {
+        Mail::to($this->customer->email)
+            ->later(now()->addSeconds($time), new MembershipExpired($this));
+    }
+
+    /**
+     * Send Renewal Error Mail
+     *
+     * @param integer $time
+     * @return void
+     */
+    public function sendRenewalErrorMail(
+        int $time = 1,
+        string $message = ''
+    ): void {
+        Mail::to($this->customer->email)
+            ->later(now()->addSeconds($time), new RenewError($this, $message));
     }
 
     /**
@@ -404,6 +433,36 @@ class Membership extends Model
      */
     public function maybeRenew($force = false, int $index = 1) {
         \App\Jobs\Memberships\RenewMembershipJob::dispatch($this->id, $force, $index);
+    }
+
+    /**
+     * catch error code when something fails
+     * if we try to renew it
+     *
+     * @param string $message
+     * @return Membership
+     */
+    public function catchRenewalError(string $message = ''): Membership {
+        $this->last_payment_intent = \Carbon\Carbon::now();
+        $this->payment_intents = $this->payment_intents + 1;
+
+        if ($this->daysExpired() > 30) {
+            $this->status = Membership::EXPIRED_STATUS;
+            $this->expire('Membership expired because was impossible find a payment method in 30 days');
+        } else {
+            $this->sendRenewalErrorMail(1, $message);
+        }
+
+        $this->logs()->create([
+            'description' => sprintf(
+                "Membership Renewal Failed with error: %s",
+                $message
+            )
+        ]);
+
+        $this->save();
+
+        return $this;
     }
 
     /**

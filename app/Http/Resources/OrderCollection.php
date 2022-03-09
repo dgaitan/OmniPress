@@ -21,7 +21,9 @@ class OrderCollection extends ResourceCollection
                 'status' => $order->status,
                 'total' => $order->total,
                 'shipping' => $order->shipping,
-                'date_completed' => $order->date_completed ? $order->date_completed->toDateString() : null,
+                'date' => $order->getDateCompleted(),
+                'permalink' => $order->getPermalink(),
+                'storePermalink' => $order->getPermalinkOnStore()
             ];
 
             if ($order->customer) {

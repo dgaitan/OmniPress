@@ -158,23 +158,12 @@ class RenewMembershipJob implements ShouldQueue
                     $membership->save();
                 }
 
-                $membership->sendMembershipRenewedMail($this->index);
+                $membership->sendMembershipRenewedMail();
 
             } catch (\Laravel\Cashier\Exceptions\IncompletePayment $exception) {
-                $membership->last_payment_intent = \Carbon\Carbon::now();
-                $membership->payment_intents = $membership->payment_intents + 1;
-
-                if ($membership->daysExpired() > 30) {
-                    $membership->status = Membership::EXPIRED_STATUS;
-                }
-
-                $membership->save();
-                $membership->logs()->create([
-                    'description' => sprintf(
-                        "Membership Renewal Failed with error: %s",
-                        $exception->payment->status
-                    )
-                ]);
+                $membership->catchRenewalError($exception->payment->status);
+            } catch (Exception $e) {
+                $membership->catchRenewalError($e->getMessage());
             }
 
             $membership->save();

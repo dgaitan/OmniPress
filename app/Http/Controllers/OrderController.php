@@ -89,6 +89,8 @@ class OrderController extends Controller
                     'billing' => $order->billing,
                     'shipping' => $order->ShippingAddress(),
                     'date' => $order->getDateCompleted(),
+                    'permalink' => $order->getPermalink(),
+                    'storePermalink' => $order->getPermalinkOnStore(),
                     'customer' => $customer
                 ];
             }),

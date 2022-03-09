@@ -107,6 +107,7 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('/dashboard')->group(fun
             Route::post('/actions', 'actions')->name('actions');
             Route::get('/{id}', 'show')->name('show');
             Route::put('/{id}/update', 'update')->name('update');
+            Route::put('/{id}/update-kind-cash', 'updateKindCash')->name('updateKindCash');
         });
     });
 

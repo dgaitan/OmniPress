@@ -66,7 +66,21 @@
                         </td>
 
                         <td class="font-medium">
-                            <Link :href="route('kinja.orders.show', order.order_id)" class="text-cyan-500 font-bold">Show</Link>
+                            <jet-dropdown align="right" width="48">
+                                <template #trigger>
+                                    <button type="button" class="inline-flex items-center px-3 py-2 border border-gray-200 text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:bg-gray-50 hover:text-gray-700 focus:outline-none focus:bg-gray-50 active:bg-gray-50 transition">
+	                                    Actions
+	                                </button>
+                                </template>
+                                <template #content>
+                                    <div class="">
+	                                    <jet-dropdown-link :href="order.permalink">
+	                                        Show
+	                                    </jet-dropdown-link>
+                                        <jet-dropdown-link :href="order.storePermalink" as="a" target="_blank">Show on kindhumans</jet-dropdown-link>
+                                    </div>
+                                </template>
+                            </jet-dropdown>
                         </td>
                     </tr>
                   </template>
@@ -86,6 +100,8 @@
     import { Link } from '@inertiajs/inertia-vue3'
     import Layout from '@/Layouts/Layout.vue'
     import JetInput from '@/Jetstream/Input.vue'
+    import JetDropdown from '@/Jetstream/Dropdown.vue'
+    import JetDropdownLink from '@/Jetstream/DropdownLink.vue'
     import ListWrapper from '@/Components/List/ListWrapper.vue'
     import ListFilter from '@/Components/List/ListFilter.vue'
     import ListTable from '@/Components/List/ListTable.vue'
@@ -106,6 +122,8 @@
             Layout,
             Link,
             JetInput,
+            JetDropdown,
+            JetDropdownLink,
             ListWrapper,
             ListFilter,
             ListTable,

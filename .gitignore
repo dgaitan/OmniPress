@@ -15,3 +15,4 @@ yarn-error.log
 /.vscode
 /csv
 dump.rdb
+data.ms

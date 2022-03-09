@@ -178,7 +178,8 @@ class MembershipController extends Controller
         Validator::make($request->all(), [
             'status' => ['required', 'string'],
             'shipping_status' => ['required', 'string'],
-            'end_at' => ['required', 'date']
+            'end_at' => ['required', 'date'],
+            'points' => ['required', 'numeric']
         ])->validateWithBag('updateMembership');
 
         $membership = Membership::find($id);
@@ -192,6 +193,47 @@ class MembershipController extends Controller
             'shipping_status' => $request->input('shipping_status'),
             'end_at' => (new Carbon(strtotime($request->input('end_at'))))->toDateTimeString()
         ]);
+
+        $points = (int) ((float) $request->input('points') * 100);
+        $membership->kindCash->update([
+            'points' => $points
+        ]);
+        $membership->kindCash->addLog('earned', $points, sprintf(
+            'Kind Cash added by %s',
+            $request->user()->email
+        ));
+
+        Cache::tags('memberships')->flush();
+
+        return back();
+    }
+
+    /**
+     * Update Membership Kind Cash
+     *
+     * @param Request $request
+     * @param int $id
+     * @return void
+     */
+    public function updateKindCash(Request $request, $id) {
+        Validator::make($request->all(), [
+            'points' => ['required', 'numeric']
+        ])->validateWithBag('updateKindCash');
+
+        $membership = Membership::find($id);
+
+        if (is_null($membership)) {
+            abort(404);
+        }
+
+        $points = (int) ((float) $request->input('points') * 100);
+        $membership->kindCash->update([
+            'points' => $points
+        ]);
+        $membership->kindCash->addLog('earned', $points, sprintf(
+            'Kind Cash added by %s',
+            $request->user()->email
+        ));
 
         Cache::tags('memberships')->flush();
 
@@ -238,21 +280,17 @@ class MembershipController extends Controller
             );
         }
 
-        // Expering Memberships
+        // Custom Actions Memberships
         if (count($action) === 1) {
             $action = end($action);
             $memberships = Membership::whereIn('id', $request->input('ids'));
 
+            // Expiring
             if ($action === 'expire' && $memberships->exists()) {
                 $memberships->get()->map(function($m) use ($request) {
-                    $m->update([
-                        'shipping_status' => Membership::SHIPPING_CANCELLED_STATUS,
-                        'status' => Membership::EXPIRED_STATUS
-                    ]);
-
-                    $m->logs()->create([
-                        'description' => sprintf("Membership Expired by %s", $request->user()->email)
-                    ]);
+                    $m->expire(sprintf(
+                        "Membership Expired by: %s", $request->user()->email
+                    ));
                 });
 
                 $message = "Membership expired successfully!";
