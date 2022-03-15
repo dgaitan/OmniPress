@@ -139,7 +139,8 @@ class Sync extends Model
             'user_id' => $user->id,
             'description' => $description,
             'intents' => 1,
-            'current_page' => 1
+            'current_page' => 1,
+            'per_page' => env('KINDHUMANS_SYNC_PER_PAGE', 50)
         ]);
 
         $sync->add_log(sprintf(
