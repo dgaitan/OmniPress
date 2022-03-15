@@ -298,7 +298,7 @@ class Order extends Model
      */
     public function searchableAs()
     {
-        return 'woocommerce_orders_index';
+        return sprintf('%s_woocommerce_orders_index', env('MEILISEARCH_PREFIX', 'dev'));
     }
 
     /**

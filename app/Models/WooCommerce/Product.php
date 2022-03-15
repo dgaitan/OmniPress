@@ -186,7 +186,7 @@ class Product extends Model
      */
     public function searchableAs()
     {
-        return 'woocommerce_products_index';
+        return sprintf('%s_woocommerce_products_index', env('MEILISEARCH_PREFIX', 'dev'));
     }
 
     /**
