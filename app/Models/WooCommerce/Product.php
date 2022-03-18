@@ -84,7 +84,7 @@ use Laravel\Scout\Searchable;
 class Product extends Model
 {
     use HasFactory;
-    use Searchable;
+    // use Searchable;
 
     protected $casts = [
         'price' => 'decimal:2',
