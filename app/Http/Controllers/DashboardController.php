@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\WooCommerce\Order;
 use App\Models\WooCommerce\Customer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Carbon\Carbon;
 
@@ -32,33 +33,40 @@ class DashboardController extends Controller
      */
     protected function getOrderStats(): array {
         $stats = [];
+
+        // Current Orders
         $ordersQuery = Order::whereBetween(
             'date_created',
             [(new Carbon)->startOfMonth(), Carbon::now()]
-        );
+        )->whereIn('status', ['processing', 'completed']);
+
+        $stats['total_orders'] = $ordersQuery->count();
+        $stats['total_sold'] = $ordersQuery->sum('total');
+        $stats['total_fees'] = $ordersQuery->sum(DB::raw('total_tax + shipping_tax + shipping_total'));
+        $stats['net_sales'] = $stats['total_sold'] - $stats['total_fees'];
+
         $lastMonth = Order::whereBetween(
             'date_created',
             [
                 (new Carbon)->subMonth(1)->startOfMonth(),
                 (new Carbon)->subMonth(1)->endOfMonth()
             ]
-        );
+        )->whereIn('status', ['processing', 'completed']);
 
-        $stats['total_orders'] = $ordersQuery->count();
-        $stats['total_sold'] = $ordersQuery->sum('total');
+
 
         // Compare total sold with last month.
         $lastMonthSold = $lastMonth->sum('total');
 
         if ($lastMonthSold > 0) {
-            $comparission = ($stats['total_sold'] / $lastMonthSold) * 100;
+            $comparission = ($stats['net_sales'] / $lastMonthSold) * 100;
             $comparission = $comparission > 100 ? $comparission - 100 : $comparission;
             $stats['percentage'] = $comparission;
         } else {
             $stats['percentage'] = 0;
         }
 
-        $stats['total_sold'] = sprintf('$ %s', $stats['total_sold'] / 100);
+        // $stats['net_sales'] = sprintf( '$ %s', (float) ($stats['net_sales'] / 100) );
 
         // Compare orders created with last month
         $comparissionCount = ( $stats['total_orders'] / $lastMonth->count() ) * 100;
