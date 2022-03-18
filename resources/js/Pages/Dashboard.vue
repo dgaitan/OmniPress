@@ -6,9 +6,44 @@
             </h2>
         </template>
 
-        <div class="pb-12">
-            <Stats />
-        </div>
+        <Container>
+            <Row>
+                <Column :mdSize="6">
+                    <div class=" rounded mb-5 ">
+                        <h3 class="mr-2 text-xl font-medium">
+                            Welcome, {{ user.name }}
+                        </h3>
+                        <form @submit.prevent="logout">
+                            <span class="block mt-2 text-sm leading-5 text-gray-700 cursor-pointer">
+                                Log Out
+                            </span>
+                        </form>
+                    </div>
+                </Column>
+                <Column :mdSize="6">
+                </Column>
+            </Row>
+            <Row>
+                <Column :mdSize="4">
+                    <Stat
+                        title="Incomes"
+                        :value="orders.total_sold"
+                        :percentage="orders.percentage" />
+                </Column>
+                <Column :mdSize="4">
+                    <Stat
+                        title="Orders"
+                        :value="orders.total_orders"
+                        :percentage="orders.percentage_count" />
+                </Column>
+                <Column :mdSize="4">
+                    <Stat
+                        title="New Customers"
+                        :value="customers.total_customers"
+                        percentage="0" />
+                </Column>
+            </Row>
+        </Container>
     </layout>
 </template>
 
@@ -17,12 +52,26 @@
     import Layout from '@/Layouts/Layout.vue'
     import Welcome from '@/Jetstream/Welcome.vue'
     import Stats from '@/Components/Stats.vue'
+    import Container from '@/Components/Layouts/Container.vue'
+    import Row from '@/Components/Layouts/Row.vue'
+    import Column from '@/Components/Layouts/Column.vue'
+    import Stat from '@/Components/Widgets/Stat.vue'
 
     export default defineComponent({
+        props: ['user', 'orders', 'customers'],
         components: {
             Layout,
             Welcome,
-            Stats
+            Stats,
+            Stat,
+            Container,
+            Row,
+            Column
         },
+        methods: {
+            logout() {
+                this.$inertia.post(route('logout'));
+            },
+        }
     })
 </script>

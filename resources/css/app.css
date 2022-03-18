@@ -110,3 +110,55 @@
       transform: rotate(360deg);
     }
 }
+
+/**
+* COlumns
+*/
+.col-1 { @apply w-1/6; }
+.col-2 { @apply w-1/5; }
+.col-3 { @apply w-1/4; }
+.col-4 { @apply w-1/3; }
+.col-5 { @apply w-2/5; }
+.col-6 { @apply w-1/2; }
+.col-7 { @apply w-3/5; }
+.col-8 { @apply w-2/3; }
+.col-9 { @apply w-3/4; }
+.col-10 { @apply w-4/5; }
+.col-11 { @apply w-5/6; }
+.col-12 { @apply w-full; }
+.md\:col-1 { @apply md:w-1/6; }
+.md\:col-2 { @apply md:w-1/5; }
+.md\:col-3 { @apply md:w-1/4; }
+.md\:col-4 { @apply md:w-1/3; }
+.md\:col-5 { @apply md:w-2/5; }
+.md\:col-6 { @apply md:w-1/2; }
+.md\:col-7 { @apply md:w-3/5; }
+.md\:col-8 { @apply md:w-2/3; }
+.md\:col-9 { @apply md:w-3/4; }
+.md\:col-10 { @apply md:w-4/5; }
+.md\:col-11 { @apply md:w-5/6; }
+.md\:col-12 { @apply md:w-full; }
+.sm\:col-1 { @apply sm:w-1/6; }
+.sm\:col-2 { @apply sm:w-1/5; }
+.sm\:col-3 { @apply sm:w-1/4; }
+.sm\:col-4 { @apply sm:w-1/3; }
+.sm\:col-5 { @apply sm:w-2/5; }
+.sm\:col-6 { @apply sm:w-1/2; }
+.sm\:col-7 { @apply sm:w-3/5; }
+.sm\:col-8 { @apply sm:w-2/3; }
+.sm\:col-9 { @apply sm:w-3/4; }
+.sm\:col-10 { @apply sm:w-4/5; }
+.sm\:col-11 { @apply sm:w-5/6; }
+.sm\:col-12 { @apply sm:w-full; }
+.lg\:col-1 { @apply lg:w-1/6; }
+.lg\:col-2 { @apply lg:w-1/5; }
+.lg\:col-3 { @apply lg:w-1/4; }
+.lg\:col-4 { @apply lg:w-1/3; }
+.lg\:col-5 { @apply lg:w-2/5; }
+.lg\:col-6 { @apply lg:w-1/2; }
+.lg\:col-7 { @apply lg:w-3/5; }
+.lg\:col-8 { @apply lg:w-2/3; }
+.lg\:col-9 { @apply lg:w-3/4; }
+.lg\:col-10 { @apply lg:w-4/5; }
+.lg\:col-11 { @apply lg:w-5/6; }
+.lg\:col-12 { @apply lg:w-full; }
