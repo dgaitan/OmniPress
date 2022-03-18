@@ -50,9 +50,14 @@ class DashboardController extends Controller
         // Compare total sold with last month.
         $lastMonthSold = $lastMonth->sum('total');
 
-        $comparission = ($stats['total_sold'] / $lastMonthSold) * 100;
-        $comparission = $comparission > 100 ? $comparission - 100 : $comparission;
-        $stats['percentage'] = $comparission;
+        if ($lastMonthSold > 0) {
+            $comparission = ($stats['total_sold'] / $lastMonthSold) * 100;
+            $comparission = $comparission > 100 ? $comparission - 100 : $comparission;
+            $stats['percentage'] = $comparission;
+        } else {
+            $stats['percentage'] = 0;
+        }
+
         $stats['total_sold'] = sprintf('$ %s', $stats['total_sold'] / 100);
 
         // Compare orders created with last month

@@ -24,6 +24,7 @@ class ProductController extends Controller
 
         // Ordering
         $availableOrders = ['product_id', 'price', 'date_created'];
+
         if ($request->input('orderBy') && in_array($request->input('orderBy'), $availableOrders)) {
             $ordering = in_array($request->input('order'), ['desc', 'asc'])
                 ? $request->input('order')
@@ -43,6 +44,7 @@ class ProductController extends Controller
                 $products->orWhere('name', 'ilike', "%$s%");
                 $products->orWhere('price', 'ilike', "%$s%");
                 $products->orWhere('sku', 'ilike', "%$s%");
+                // $products = Product::search($s);
             } else {
                 $products->where($search->key, 'ilike', "$search->s%");
             }

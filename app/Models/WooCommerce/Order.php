@@ -99,7 +99,7 @@ use Laravel\Scout\Searchable;
  */
 class Order extends Model
 {
-    use HasFactory, Searchable;
+    use HasFactory;
 
     /**
      * Order Casting

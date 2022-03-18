@@ -84,7 +84,7 @@ use Laravel\Scout\Searchable;
 class Product extends Model
 {
     use HasFactory;
-    use Searchable;
+    // use Searchable;
 
     protected $casts = [
         'price' => 'decimal:2',
@@ -180,6 +180,15 @@ class Product extends Model
     }
 
     /**
+     * IS the current producdt a variation?
+     *
+     * @return boolean
+     */
+    public function isVariation() {
+        return $this->type === 'variation';
+    }
+
+    /**
      * Get the name of the index associated with the model.
      *
      * @return string
@@ -196,9 +205,33 @@ class Product extends Model
      */
     public function toSearchableArray()
     {
-        $array = $this->toArray();
+        $data = [
+            'id' => $this->id,
+            'product_id' => $this->product_id,
+            'slug' => $this->slug,
+            'name' => $this->name,
+            'permalink' => $this->permalink,
+            'price' => $this->price,
+            'date_created' => $this->date_created,
+            'type' => $this->type,
+            'status' => $this->status,
+            'regular_price' => $this->regular_price,
+            'sku' => $this->sku,
+            'categories' => $this->categories()->pluck('name')->toArray(),
+            'tags' => $this->tags()->pluck('name')->toArray()
+        ];
 
-        return $array;
+        return $data;
+    }
+
+    /**
+     * Determine if the model should be searchable.
+     *
+     * @return bool
+     */
+    public function shouldBeSearchable()
+    {
+        return ! $this->isVariation();
     }
 
     /**
