@@ -156,6 +156,36 @@ class Customer extends Model
     }
 
     /**
+     * Get Date Created
+     *
+     * @return string
+     */
+    public function getDateCreated(): string {
+        if (! $this->date_created) {
+            return '';
+        }
+
+        if ($this->date_created->diffInDays(\Carbon\Carbon::now()) > 1) {
+            return $this->date_created->format('F j, Y');
+        }
+
+        return $this->date_created->diffForHumans();
+    }
+
+    /**
+     * Get Permalink on client store
+     *
+     * @return string
+     */
+    public function getPermalinkOnStore(): string {
+        return sprintf(
+            '%s/wp-admin/user-edit.php?user_id=%s',
+            env('CLIENT_DOMAIN', 'https://kindhumans.com'),
+            $this->customer_id
+        );
+    }
+
+    /**
      * Convert Model To Array
      *
      * @param boolean $isSingle
@@ -230,5 +260,29 @@ class Customer extends Model
             'exp_year' => $paymentMethod->card->exp_year,
             'last4' => $paymentMethod->card->last4
         ];
+    }
+
+    /**
+     * Get WP Roles
+     *
+     * @return array
+     */
+    public static function getRoles(): array {
+        $roles = [];
+        $_roles = [
+            'administrator' => 'Administrator',
+            'editor' => 'Editor',
+            'subscriber' => 'Subscriber',
+            'customer' => 'Customer',
+            'shop_manager' => 'Shop Manager',
+            'affiliate' => 'Affiliate',
+            'kindhumans_dropship_supplier' => 'Dropship Supplier'
+        ];
+
+        foreach ( $_roles as $key => $value ) {
+            $roles[] = ['slug' => $key, 'label' => $value];
+        }
+
+        return $roles;
     }
 }

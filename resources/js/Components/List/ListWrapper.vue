@@ -21,7 +21,7 @@
 						<slot name="filters"></slot>
 					</div>
 				</div>
-				<div class="overflow-x-auto">
+				<div class="">
 					<slot name="table"></slot>
 				</div>
 
