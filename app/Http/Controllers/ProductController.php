@@ -20,11 +20,11 @@ class ProductController extends Controller
             ['slug' => 'draft', 'label' => 'Draft'],
         ];
         $status = '';
-        $products = Product::with('categories', 'tags', 'images')
-            ->where('type', '!=', 'variation');
+        $products = Product::with('categories', 'tags', 'images');
 
         // Ordering
         $availableOrders = ['product_id', 'price', 'date_created'];
+
         if ($request->input('orderBy') && in_array($request->input('orderBy'), $availableOrders)) {
             $ordering = in_array($request->input('order'), ['desc', 'asc'])
                 ? $request->input('order')
@@ -41,10 +41,10 @@ class ProductController extends Controller
             // If the search query isn't specific
             if (! $search->specific) {
                 $s = $search->s;
-                // $products->orWhere('name', 'ilike', "%$s%");
-                // $products->orWhere('price', 'ilike', "%$s%");
-                // $products->orWhere('sku', 'ilike', "%$s%");
-                $products = Product::search($s);
+                $products->orWhere('name', 'ilike', "%$s%");
+                $products->orWhere('price', 'ilike', "%$s%");
+                $products->orWhere('sku', 'ilike', "%$s%");
+                // $products = Product::search($s);
             } else {
                 $products->where($search->key, 'ilike', "$search->s%");
             }
@@ -56,6 +56,7 @@ class ProductController extends Controller
             $products->where('status', $status);
         }
 
+        $products = $products->where('type', '!=', 'variation');
         $products = $this->paginate($request, $products);
         $data = $this->getPaginationResponse($products);
         $data = array_merge($data, [
