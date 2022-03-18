@@ -40,6 +40,7 @@ class Customer extends BaseObject implements DataObjectContract
 
         if ($data['meta_data']) {
             $meta_data = [];
+
             foreach ($data['meta_data'] as $meta) {
                 $meta = (array) $meta;
 

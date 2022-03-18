@@ -110,7 +110,7 @@ class PaymentController extends Controller
                 $request->customer_id
             )->first();
 
-            if (!$customer->hasDefaultPaymentMethod()) {
+            if (! $customer->hasDefaultPaymentMethod()) {
                 return response()->json([
                     'status' => 'failed',
                     'error' => 'Customer has not default payment method'
