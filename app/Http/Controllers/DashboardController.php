@@ -3,11 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\WooCommerce\Order;
-use App\Models\WooCommerce\Customer;
 use App\Analytics\OrderAnalytics;
+use App\Analytics\CustomerAnalytics;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
@@ -63,12 +62,13 @@ class DashboardController extends Controller
     protected function getCustomerStats(): array {
         $stats = [];
 
-        $customerQuery = Customer::whereBetween(
-            'date_created',
-            [(new Carbon)->startOfMonth(), Carbon::now()]
+        $customerAnalytics = new CustomerAnalytics(
+            CustomerAnalytics::CURRENT_MONTH_RANGE,
+            CustomerAnalytics::PREVIOUS_PERIOD
         );
 
-        $stats['total_customers'] = $customerQuery->count();
+        $stats['total_customers'] = $customerAnalytics->getTotalCustomers();
+        $stats['percentage'] = $customerAnalytics->getTotalPercentageDifference();
 
         return $stats;
     }

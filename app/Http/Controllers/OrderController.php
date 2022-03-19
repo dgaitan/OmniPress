@@ -122,7 +122,7 @@ class OrderController extends Controller
         }
 
         return Inertia::render('Orders/Detail', [
-            'order' => $order->toArray(true)
+            'order' => new OrderResource($order)
         ]);
     }
 }
