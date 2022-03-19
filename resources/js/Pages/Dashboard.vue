@@ -27,7 +27,7 @@
                 <Column :mdSize="4">
                     <Stat
                         title="Incomes"
-                        :value="orders.total_sold"
+                        :value="`$ ${moneyFormat(orders.net_sales)}`"
                         :percentage="orders.percentage" />
                 </Column>
                 <Column :mdSize="4">
@@ -68,6 +68,7 @@
             Row,
             Column
         },
+
         methods: {
             logout() {
                 this.$inertia.post(route('logout'));

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\WooCommerce\Order;
 use App\Models\WooCommerce\Customer;
+use App\Analytics\OrderAnalytics;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Carbon\Carbon;
@@ -32,40 +33,18 @@ class DashboardController extends Controller
      */
     protected function getOrderStats(): array {
         $stats = [];
-        $ordersQuery = Order::whereBetween(
-            'date_created',
-            [(new Carbon)->startOfMonth(), Carbon::now()]
-        );
-        $lastMonth = Order::whereBetween(
-            'date_created',
-            [
-                (new Carbon)->subMonth(1)->startOfMonth(),
-                (new Carbon)->subMonth(1)->endOfMonth()
-            ]
+
+        $orderAnalytics = new OrderAnalytics(
+            OrderAnalytics::CURRENT_MONTH_RANGE,
+            OrderAnalytics::PREVIOUS_PERIOD
         );
 
-        $stats['total_orders'] = $ordersQuery->count();
-        $stats['total_sold'] = $ordersQuery->sum('total');
-
-        // Compare total sold with last month.
-        $lastMonthSold = $lastMonth->sum('total');
-
-        if ($lastMonthSold > 0) {
-            $comparission = ($stats['total_sold'] / $lastMonthSold) * 100;
-            $comparission = $comparission > 100 ? $comparission - 100 : $comparission;
-            $stats['percentage'] = $comparission;
-        } else {
-            $stats['percentage'] = 0;
-        }
-
-        $stats['total_sold'] = sprintf('$ %s', $stats['total_sold'] / 100);
-
-        // Compare orders created with last month
-        $comparissionCount = ( $stats['total_orders'] / $lastMonth->count() ) * 100;
-        $comparissionCount = $comparissionCount > 100
-            ? $comparissionCount - 100
-            : $comparissionCount;
-        $stats['percentage_count'] = $comparissionCount;
+        $stats = [
+            'net_sales' => $orderAnalytics->getNetSales(),
+            'total_orders' => $orderAnalytics->getTotalOrders(),
+            'percentage' => $orderAnalytics->getSalesPercentageDifference(),
+            'percentage_count' => $orderAnalytics->getTotalOrdersPercentageDifference()
+        ];
 
         // Total orders to fulfill
         $ordersToFulfill = Order::orderBy('date_created', 'desc')
