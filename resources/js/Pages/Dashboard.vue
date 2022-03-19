@@ -40,7 +40,7 @@
                     <Stat
                         title="New Customers"
                         :value="customers.total_customers"
-                        percentage="0" />
+                        :percentage="customers.percentage" />
                 </Column>
             </Row>
         </Container>

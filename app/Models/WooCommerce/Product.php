@@ -179,6 +179,10 @@ class Product extends Model
         return $this->hasMany(ProductAttribute::class, 'product_id');
     }
 
+    public function productAttributes() {
+        return $this->hasMany(ProductAttribute::class, 'product_id');
+    }
+
     /**
      * IS the current producdt a variation?
      *
