@@ -40,4 +40,21 @@ use Illuminate\Database\Eloquent\Model;
 class PaymentMethod extends Model
 {
     use HasFactory;
+
+    protected $casts = [
+        'method_supports' => 'array',
+        'settings' => 'array'
+    ];
+
+    protected $fillable = [
+        'payment_method_id',
+        'title',
+        'description',
+        'order',
+        'enabled',
+        'method_title',
+        'method_description',
+        'method_supports',
+        'settings'
+    ];
 }

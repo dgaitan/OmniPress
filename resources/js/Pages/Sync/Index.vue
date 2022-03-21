@@ -38,6 +38,7 @@
                                       <option value="products">Products</option>
                                       <option value="orders">Orders</option>
                                       <option value="memberships">Memberships</option>
+                                      <option value="paymentMethods">Payment Methods</option>
                                     </select>
                                 </div>
                                 <jet-input-error :message="syncForm.errors.content_type" class="mt-2" />
