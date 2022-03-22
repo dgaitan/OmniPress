@@ -20,7 +20,7 @@
                 </Column>
             </Row>
         </Container>
-        
+
     </layout>
 </template>
 <script>
@@ -54,7 +54,7 @@ export default defineComponent({
 
     computed: {
         pageTitle() {
-            return `Order #${this.order.order_id}`
+            return `Order #${this.order.data.order_id}`
         }
     },
 
