@@ -9,6 +9,7 @@ use App\Services\WooCommerce\Resources\OrderResource;
 use App\Services\WooCommerce\Resources\CustomerResource;
 use App\Services\WooCommerce\Resources\ProductResource;
 use App\Services\WooCommerce\Resources\MembershipResource;
+use App\Services\WooCommerce\Resources\PaymentMethodResource;
 use Automattic\WooCommerce\Client as WooCommerce;
 
 class WooCommerceService implements ServiceContract
@@ -87,6 +88,16 @@ class WooCommerceService implements ServiceContract
     public function memberships(): MembershipResource
     {
         return new MembershipResource(service: $this);
+    }
+
+    /**
+     * Payment Methods
+     *
+     * @return PaymentMethodResource
+     */
+    public function paymentMethods(): PaymentMethodResource
+    {
+        return new PaymentMethodResource(service: $this);
     }
 
     /**

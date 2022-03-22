@@ -58,7 +58,8 @@ class Sync extends Model
         'customers',
         'products',
         'productVariations',
-        'orders'
+        'orders',
+        'paymentMethods'
     ];
 
     protected $casts = [
@@ -135,7 +136,7 @@ class Sync extends Model
         $sync = self::create([
             'name' => sprintf('%s sync', ucwords($content_type)),
             'status' => self::PENDING,
-            'content_type' => strtolower($content_type),
+            'content_type' => $content_type,
             'user_id' => $user->id,
             'description' => $description,
             'intents' => 1,

@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Inertia\Inertia;
 use App\Models\WooCommerce\Order;
 use App\Http\Resources\OrderResource;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Inertia\Inertia;
 
 class OrderController extends Controller
 {
@@ -113,16 +114,26 @@ class OrderController extends Controller
      */
     public function show(Request $request, $id)
     {
-        $order = Order::with('items', 'customer')
-            ->whereOrderId($id)
-            ->first();
+        $cacheKey = sprintf("woocommerce_order_%s", $id);
+        $order = Cache::tags('orders')->get($cacheKey, null);
 
         if (is_null($order)) {
-            abort(404);
+            $order = Cache::tags('orders')->remember($cacheKey, 86430, function() use ($id) {
+                $order = Order::with('items', 'customer', 'paymentMethod')
+                    ->whereOrderId($id)
+                    ->first();
+
+                if (is_null($order)) {
+                    abort(404);
+                }
+
+                return new OrderResource($order);
+            });
         }
 
+
         return Inertia::render('Orders/Detail', [
-            'order' => new OrderResource($order)
+            'order' => $order
         ]);
     }
 }

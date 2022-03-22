@@ -4,6 +4,7 @@ namespace App\Models\WooCommerce;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * App\Models\WooCommerce\PaymentMethod
@@ -40,4 +41,30 @@ use Illuminate\Database\Eloquent\Model;
 class PaymentMethod extends Model
 {
     use HasFactory;
+
+    protected $casts = [
+        'method_supports' => 'array',
+        'settings' => 'array'
+    ];
+
+    protected $fillable = [
+        'payment_method_id',
+        'title',
+        'description',
+        'order',
+        'enabled',
+        'method_title',
+        'method_description',
+        'method_supports',
+        'settings'
+    ];
+
+    /**
+     * Orders
+     *
+     * @return HasMany
+     */
+    public function orders(): HasMany {
+        return $this->hasMany(Order::class, 'payment_id');
+    }
 }

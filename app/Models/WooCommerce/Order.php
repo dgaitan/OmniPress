@@ -172,6 +172,15 @@ class Order extends Model
     }
 
     /**
+     * An order should belongs to a payment method.
+     *
+     * @return BelongsTo
+     */
+    public function paymentMethod(): BelongsTo {
+        return $this->belongsTo(PaymentMethod::class, 'payment_id');
+    }
+
+    /**
      * Order Items
      *
      * @return HasMany
