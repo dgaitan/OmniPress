@@ -4,6 +4,7 @@ namespace App\Models\WooCommerce;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * App\Models\WooCommerce\PaymentMethod
@@ -57,4 +58,13 @@ class PaymentMethod extends Model
         'method_supports',
         'settings'
     ];
+
+    /**
+     * Orders
+     *
+     * @return HasMany
+     */
+    public function orders(): HasMany {
+        return $this->hasMany(Order::class, 'payment_id');
+    }
 }

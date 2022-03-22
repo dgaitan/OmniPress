@@ -7,6 +7,7 @@ use App\Services\DataObjects\BaseObject;
 use App\Services\WooCommerce\DataObjects\OrderLine;
 use App\Models\WooCommerce\Order as WooOrder;
 use App\Models\WooCommerce\Customer;
+use App\Models\WooCommerce\PaymentMethod;
 
 class Order extends BaseObject implements DataObjectContract
 {
@@ -75,6 +76,17 @@ class Order extends BaseObject implements DataObjectContract
                 $order->customer_id = $customer->id;
             } else {
                 $order->customer_id = null;
+            }
+        }
+
+        // Check if there's a payment method
+        if ($this->payment_method) {
+            $paymentMethod = PaymentMethod::wherePaymentMethodId(
+                $this->payment_method
+            )->first();
+
+            if ($paymentMethod) {
+                $order->payment_id = $paymentMethod->id;
             }
         }
 
