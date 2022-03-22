@@ -1,7 +1,7 @@
 <template>
     <Box headline="Information">
         <Column class="mb-5">
-            <p class="text-md font-medium text-gray-800 mb-2">Customer</p>
+            <Label>Customer</Label>
             <div v-if="order.customer" class="text-sm text-gray-600 flex items-center">
                 <img v-if="order.customer.avatar_url" :src="order.customer.avatar_url" class="h-10 w-10 mr-4 object-cover rounded-full" />
                 <img
@@ -17,16 +17,25 @@
             <div v-else class="text-sm text-gray-600">Guest</div>
         </Column>
         <Column :mdSize="12" class="mb-5">
-            <p class="text-md font-medium text-gray-800 mb-2">Email</p>
+            <Label>Email</Label>
             <a :href="order.billing.email" class="text-sm text-cyan-500">{{ order.billing.email }}</a>
         </Column>
         <Column :mdSize="6" class="mb-5">
-            <p class="text-md font-medium text-gray-800 mb-2">Billing</p>
+            <Label>Billing</Label>
             <div class="text-sm text-gray-600" v-html="order.billing_address"></div>
         </Column>
         <Column :mdSize="6" class="mb-3">
-            <p class="text-md font-medium text-gray-800 mb-2">Shipping</p>
+            <Label>Shipping</Label>
             <div class="text-sm text-gray-600" v-html="order.shipping_address"></div>
+        </Column>
+        <Column>
+            <Label>Payment Method</Label>
+            <div v-if="order.payment_method" class="text-sm text-gray-600">
+                {{ order.payment_method.title }}
+            </div>
+            <div v-else class="text-sm text-gray-600">
+                Free
+            </div>
         </Column>
     </Box>
 </template>
@@ -34,6 +43,7 @@
 import { defineComponent } from 'vue'
 import Box from '@/Components/Content/Box.vue'
 import Column from '@/Components/Layouts/Column.vue'
+import Label from '@/Components/Content/Label.vue'
 
 export default defineComponent({
     props: {
@@ -42,7 +52,8 @@ export default defineComponent({
 
     components: {
         Box,
-        Column
+        Column,
+        Label
     }
 })
 </script>

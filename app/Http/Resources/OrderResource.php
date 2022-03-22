@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Http\Resources\OrderItemCollection;
+use App\Http\Resources\PaymentMethodResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class OrderResource extends JsonResource
@@ -15,12 +16,6 @@ class OrderResource extends JsonResource
      */
     public function toArray($request)
     {
-        // $customer = $this->customer ? [
-        //     'customer_id' => $this->customer->id,
-        //     'name' => $this->customer->getFullName(),
-        //     'email' => $this->customer->email
-        // ] : null;
-
         $order = [
             'id' => $this->id,
             'order_id' => $this->order_id,
@@ -49,7 +44,8 @@ class OrderResource extends JsonResource
             // Default Values for relationships
             'customer' => null,
             'items' => array(),
-            'membership' => null
+            'membership' => null,
+            'payment_method' => null
         ];
 
         if (! is_null($this->customer)) {
@@ -66,16 +62,12 @@ class OrderResource extends JsonResource
             $order['items'] = new OrderItemCollection($this->items);
         }
 
-        return $order;
+        if ($this->payment_id) {
+            $order['payment_method'] = new PaymentMethodResource(
+                $this->paymentMethod
+            );
+        }
 
-        // return [
-        //     'id' => $this->id,
-        //     'order_id' => $this->order_id,
-        //     'status' => $this->status,
-        //     'total' => $this->total,
-        //     'shipping' => $this->shipping,
-        //     'date_completed' => $this->date_completed ? $this->date_completed->format('F j, Y at H:i:s') : null,
-        //     'customer' => $customer
-        // ];
+        return $order;
     }
 }
