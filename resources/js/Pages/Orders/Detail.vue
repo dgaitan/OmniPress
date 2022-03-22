@@ -17,6 +17,9 @@
                 </Column>
                 <Column :mdSize="4">
                     <OrderInfo :order="order.data" />
+                    <OrderShipping
+                        v-if="order.data.shipping_lines.length > 0"
+                        :order="order.data" />
                 </Column>
             </Row>
         </Container>
@@ -33,6 +36,7 @@ import OrderIntro from './Partials/OrderIntro.vue'
 import OrderLines from './Partials/OrderLines.vue'
 import OrderTotals from './Partials/OrderTotals.vue'
 import OrderInfo from './Partials/OrderInfo.vue'
+import OrderShipping from './Partials/OrderShipping.vue'
 import Button from '@/Components/Button.vue'
 
 export default defineComponent({
@@ -49,6 +53,7 @@ export default defineComponent({
         OrderLines,
         OrderTotals,
         OrderInfo,
+        OrderShipping,
         Button
     },
 
