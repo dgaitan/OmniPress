@@ -45,7 +45,7 @@ class MembershipResource extends JsonResource
             $giftProduct = Product::with('images')
                 ->whereProductId($this->gift_product_id)->first();
 
-            if (! is_null($this->gift_product_id)) {
+            if (! is_null($giftProduct)) {
                 $data['giftProduct'] = [
                     'id' => $giftProduct->id,
                     'product_id' => $giftProduct->product_id,
