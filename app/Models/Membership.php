@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Mail\Memberships\MembershipCancelled;
 use App\Mail\Memberships\MembershipRenewed;
 use App\Mail\Memberships\RenewalReminder;
 use App\Mail\Memberships\PaymentNotFound;
@@ -351,6 +352,31 @@ class Membership extends Model
         $this->sendMembershipExpiredMail();
 
         return $this;
+    }
+
+    public function cancell(string $reason = '') {
+        $this->status = self::CANCELLED_STATUS;
+        $this->save();
+
+        if ($reason) {
+            $this->logs()->create(['description' => $reason]);
+        }
+
+        $this->sendCancelledEmail();
+    }
+
+    /**
+     * Send Membership Cancelled Email
+     *
+     * @param integer $time
+     * @return voiud
+     */
+    public function sendCancelledEmail(int $time = 1): void {
+        Mail::to($this->customer->email)
+            ->later(
+                now()->addSeconds($time),
+                new MembershipCancelled($this)
+            );
     }
 
     /**
