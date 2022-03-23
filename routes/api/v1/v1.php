@@ -44,6 +44,7 @@ Route::middleware('auth:sanctum')->name('kinja.api.v1.')->group(function () {
 		Route::post('/new', 'new')->name('create');
         Route::post('/renew', 'renew')->name('renew');
         Route::post('/pick-gift', 'pickGift')->name('pickGift');
+        Route::post('/cancell/{id}', 'cancell')->name('cancell');
 		Route::post('/{id}/cash/add', 'addCash')->name('add_cash');
 		Route::post('/{id}/cash/redeem', 'redeemCash')->name('redeem_cash');
 		Route::get('/{email}/check', 'checkMembershipEmail')->name('check_email');
