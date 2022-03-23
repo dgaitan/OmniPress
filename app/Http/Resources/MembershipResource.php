@@ -25,7 +25,8 @@ class MembershipResource extends JsonResource
             'price' => $this->price,
             'shipping_status' => $this->shipping_status,
             'status' => $this->status,
-            'last_payment_intent' => $this->last_payment_intent
+            'last_payment_intent' => $this->last_payment_intent,
+            'giftProduct' => null
         ];
 
         if ($this->customer) {
@@ -43,13 +44,16 @@ class MembershipResource extends JsonResource
         if ($this->gift_product_id) {
             $giftProduct = Product::with('images')
                 ->whereProductId($this->gift_product_id)->first();
-            $data['giftProduct'] = [
-                'id' => $giftProduct->id,
-                'product_id' => $giftProduct->product_id,
-                'name' => $giftProduct->name,
-                'sku' => $giftProduct->sku,
-                'images' => $giftProduct->images
-            ];
+
+            if (! is_null($this->gift_product_id)) {
+                $data['giftProduct'] = [
+                    'id' => $giftProduct->id,
+                    'product_id' => $giftProduct->product_id,
+                    'name' => $giftProduct->name,
+                    'sku' => $giftProduct->sku,
+                    'images' => $giftProduct->images
+                ];
+            }
         }
 
         return $data;

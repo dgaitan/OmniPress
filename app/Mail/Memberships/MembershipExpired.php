@@ -54,8 +54,7 @@ class MembershipExpired extends Mailable
                 'loginPage' => sprintf(
                     '%s/login',
                     env('CLIENT_DOMAIN', 'https://kindhumans.com')
-                ),
-                'erroMessage' => $this->message
+                )
             ]);
     }
 }
