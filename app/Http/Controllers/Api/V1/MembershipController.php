@@ -393,7 +393,7 @@ class MembershipController extends Controller
 
         return response()->json([
             'success' => true,
-            'membersihp' => $membership->toArray()
+            'membership' => $membership->toArray()
         ]);
     }
 }
