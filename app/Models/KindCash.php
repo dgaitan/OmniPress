@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 
 /**
  * App\Models\KindCash
@@ -156,5 +157,19 @@ class KindCash extends Model
         unset($cash['membership_id']);
 
         return $cash;
+    }
+
+    /**
+     * Handle Some actions on model boot
+     *
+     * @return void
+     */
+    protected static function boot() {
+        parent::boot();
+
+        // Forget Membership Cache
+        static::saving(function() {
+            Cache::tags('memberships')->flush();
+        });
     }
 }
