@@ -361,4 +361,39 @@ class MembershipController extends Controller
 
         return response()->json(['exists' => $memberships->exists()], 200);
     }
+
+    /**
+     * Cancell a membership
+     *
+     * @param Request $request
+     * @param integer $id
+     * @return void
+     */
+    public function cancell(Request $request, $id) {
+        $membership = Membership::find($id);
+
+        if (is_null($membership)) {
+            return response()->json(['error' => 'Membership not found'], 404);
+        }
+
+        // Validate the params
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email:rfc,dns',
+            'membership_id' => 'required|integer'
+        ]);
+
+        // If validation fails, return error listed with 400 http code
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors()
+            ], 400);
+        }
+
+        $membership->cancell('Membership cancelled by customer');
+
+        return response()->json([
+            'success' => true,
+            'membersihp' => $membership->toArray()
+        ]);
+    }
 }
