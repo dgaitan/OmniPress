@@ -113,6 +113,20 @@ class Sync extends Model
         return ($this->current_page + env('KINDHUMANS_SYNC_PAGINATE', 10)) === $page;
     }
 
+    /**
+     * Is this sync completed?
+     *
+     * @return boolean
+     */
+    public function isCompleted(): bool {
+        return $this->status === self::COMPLETED;
+    }
+
+    /**
+     * Complete a sync
+     *
+     * @return void
+     */
     public function complete() {
         $this->update(['status' => self::COMPLETED]);
         $this->add_log(sprintf(

@@ -111,7 +111,7 @@ abstract class BaseResource {
         $sync = \App\Models\Sync::find($sync_id);
         $params = array_merge(['per_page' => $perPage, 'page' => $page], $this->requestParams());
 
-        if ($sync->status === \App\Models\Sync::COMPLETED) return;
+        if ($sync->isCompleted()) return;
 
         try {
             $response = $this->all($params);

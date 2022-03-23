@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\WooCommerce\Order;
 use App\Analytics\OrderAnalytics;
 use App\Analytics\CustomerAnalytics;
+use App\Http\Resources\OrderCollection;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -49,7 +50,7 @@ class DashboardController extends Controller
         $ordersToFulfill = Order::orderBy('date_created', 'desc')
             ->where('status', 'processing');
         $stats['total_orders_to_fulfill'] = $ordersToFulfill->count();
-        $stats['latest_orders'] = $ordersToFulfill->take(5);
+        $stats['latest_orders'] = new OrderCollection($ordersToFulfill->take(5)->get());
 
         return $stats;
     }
