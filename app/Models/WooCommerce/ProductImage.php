@@ -57,11 +57,31 @@ class ProductImage extends Model
         return $this->belongsTo(Product::class, 'product_id');
     }
 
+    /**
+     * Get Image Url
+     *
+     * @return string
+     */
+    public function getImageUrl(): string {
+        $imageUrl = '';
+
+        if ($this->src) {
+            $imageUrl = explode('wp-content/', $this->src);
+            $imageUrl = sprintf(
+                '%s/wp-content/%s',
+                env('ASSET_DOMAIN', 'https://kindhumans.com'),
+                end($imageUrl)
+            );
+        }
+
+        return $imageUrl;
+    }
+
     public function toArray() {
         $data = parent::toArray();
 
         if ($data['src']) {
-            $src = explode('wp-content/', $data['src']);            
+            $src = explode('wp-content/', $data['src']);
             $data['src'] = sprintf(
                 '%s/wp-content/%s',
                 env('ASSET_DOMAIN', 'https://kindhumans.com'),

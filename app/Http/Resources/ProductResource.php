@@ -58,7 +58,7 @@ class ProductResource extends JsonResource
         if ($this->images()->exists()) {
             $product['images'] = collect($this->images)->map(function($image){
                 return [
-                    'src' => $image->src,
+                    'src' => $image->getImageUrl(),
                     'name' => $image->name,
                     'alt' => $image->alt
                 ];
