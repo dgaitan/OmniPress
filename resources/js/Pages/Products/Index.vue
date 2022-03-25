@@ -27,7 +27,7 @@
                     <ListTable :columns="columns" :stateData="this.filters" :selectIds="selectAllIds">
                         <template #body>
                             <tr class="text-xs"
-                                v-for="(product, i) in products"
+                                v-for="(product, i) in products.data"
                                 :key="product.id"
                                 v-bind:class="[isOdd(i) ? '' : 'bg-gray-50']">
 
@@ -36,10 +36,10 @@
                                     <input class="mr-3" type="checkbox" @change="setIds($event)" :checked="ids.includes(product.id)" :value="product.id">
                                     <div class="flex" style="width:300px;">
                                         <img
-                                            v-if="product.images.length === 0"
+                                            v-if="!product.image"
                                             class="w-20 h-20 mr-4 object-cover rounded-md"
                                             src="https://picsum.photos/id/160/80/80" alt="">
-                                        <img v-else :src="product.images[0].src" class="w-20 h-20 mr-4 object-cover rounded-md" >
+                                        <img v-else :src="product.image" class="w-20 h-20 mr-4 object-cover rounded-md" >
                                         <div>
                                             <p class="text-sm font-medium mb-1">
                                                 <strong class="text-gray-400">ID {{ product.product_id }}</strong>
@@ -52,21 +52,12 @@
 
                                 <!-- Status -->
                                 <td class="font-medium">
-                                    <span :class="`status ${product.status}`">
-                                        {{ parseRole(product.status) }}
-                                    </span>
+                                    <Status :status="product.status" />
                                 </td>
 
                                 <!-- Price -->
                                 <td class="font-medium">
-                                    <span class="text-xs" v-html="product.settings.price_html"></span>
-                                </td>
-
-                                <!-- Date Created -->
-                                <td class="font-medium">
-                                    <span class="inline-block py-1 px-2 text-sm text-purple-500 bg-purple-50 rounded-full">
-                                        {{ product.date_created ? displayMoment(product.date_created, 'LL') : displayMoment(product.date_modified, 'LL') }}
-                                    </span>
+                                    <span class="text-xs" v-html="product.price_html"></span>
                                 </td>
 
                                 <td class="font-medium" width="250px">
@@ -82,9 +73,22 @@
                                     </div>
                                 </td>
 
+                                <td class="font-medium" width="250px">
+                                    <div class="py-4 flex flex-wrap items-center" style="max-width: 200px" v-if="product.brands.length > 0">
+                                        <a
+                                        v-for="brand in product.brands"
+                                        :data-product-id="brand.id"
+                                        :key="brand.id"
+                                        class="py-1 px-2 text-xs text-sky-500 bg-sky-100 mr-2 mb-2 rounded-full"
+                                        href="#">
+                                        {{ brand.name }}
+                                        </a>
+                                    </div>
+                                </td>
+
                                 <!-- Actions -->
                                 <td class="font-medium">
-                                    <a href="javascript:void(0)" @click="showDetail(membership.id)" class="text-cyan-500 font-bold">Show</a>
+                                    <a href="javascript:void(0)" class="text-cyan-500 font-bold">Show</a>
                                 </td>
                              </tr>
                         </template>
@@ -110,6 +114,7 @@
     import ListTable from '@/Components/List/ListTable.vue'
     import ListPagination from '@/Components/List/ListPagination'
     import { Link } from '@inertiajs/inertia-vue3'
+    import Status from '@/Components/Status.vue'
 
     export default defineComponent({
         props: [
@@ -131,7 +136,8 @@
             ListWrapper,
             ListFilter,
             ListTable,
-            ListPagination
+            ListPagination,
+            Status
         },
 
         data() {
@@ -170,12 +176,12 @@
                     key: 'price'
                 },
                 {
-                    name: 'Date Created',
-                    sortable: true,
+                    name: 'Categories',
+                    sortable: false,
                     key: 'date_created'
                 },
                 {
-                    name: 'Categories',
+                    name: 'Brands',
                     sortable: false,
                     key: ''
                 }
@@ -215,7 +221,7 @@
             },
 
             selectAllIds(checked) {
-                checked ? this.products.map(m => this.ids.push(m.id)) : this.ids = [];
+                checked ? this.products.data.map(m => this.ids.push(m.id)) : this.ids = [];
             },
 
             bulkActions() {

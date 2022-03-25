@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\WooCommerce\Product;
+use App\Http\Resources\ProductCollection;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use App\Models\WooCommerce\Product;
 
 class ProductController extends Controller
 {
@@ -20,7 +21,8 @@ class ProductController extends Controller
             ['slug' => 'draft', 'label' => 'Draft'],
         ];
         $status = '';
-        $products = Product::with('categories', 'tags', 'images');
+        $products = Product::with('categories', 'tags', 'images', 'brands')
+            ->where('type', '!=', 'variation');
 
         // Ordering
         $availableOrders = ['product_id', 'price', 'date_created'];
@@ -44,6 +46,7 @@ class ProductController extends Controller
                 $products->orWhere('name', 'ilike', "%$s%");
                 $products->orWhere('price', 'ilike', "%$s%");
                 $products->orWhere('sku', 'ilike', "%$s%");
+                $products->orWhere('product_id', 'ilike', "%$s%");
                 // $products = Product::search($s);
             } else {
                 $products->where($search->key, 'ilike', "$search->s%");
@@ -56,13 +59,11 @@ class ProductController extends Controller
             $products->where('status', $status);
         }
 
-        $products = $products->where('type', '!=', 'variation');
+        // $products = $products->where('type', '!=', 'variation');
         $products = $this->paginate($request, $products);
         $data = $this->getPaginationResponse($products);
         $data = array_merge($data, [
-            'products' => collect($products->items())->map(function ($product) {
-                return $product->toArray(['withImages' => true]);
-            }),
+            'products' => new ProductCollection($products->items()),
             '_s' => $request->input('s') ?? '',
             '_status' => $status,
             'statuses' => $statuses,

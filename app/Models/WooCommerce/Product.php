@@ -257,8 +257,10 @@ class Product extends Model
             'status' => $this->status,
             'regular_price' => $this->regular_price,
             'sku' => $this->sku,
+            'stock_status' => $this->stock_status,
             'categories' => $this->categories()->pluck('name')->toArray(),
-            'tags' => $this->tags()->pluck('name')->toArray()
+            'tags' => $this->tags()->pluck('name')->toArray(),
+            'brands' => $this->tags()->pluck('name')->toArray()
         ];
 
         return $data;
@@ -281,7 +283,7 @@ class Product extends Model
      * @return \Illuminate\Database\Eloquent\Builder
      */
     protected function makeAllSearchableUsing($query) {
-        return $query->with(['categories', 'tags', 'images']);
+        return $query->with(['categories', 'tags', 'brands']);
     }
 
     public function toArray(array $args = []) {
