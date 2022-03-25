@@ -83,7 +83,13 @@ class Product extends BaseObject implements DataObjectContract
         $this->syncCollection('categories', 'product_id', ProductCategory::class, $product);
         $this->syncCollection('tags', 'product_id', ProductTag::class, $product);
         $this->syncCollection('images', 'product_id', ProductImage::class, $product);
-        $this->syncCollection('attributes', 'product_id', ProductAttribute::class, $product);
+        $this->syncCollection(
+            'attributes',
+            'product_id',
+            ProductAttribute::class,
+            $product,
+            'productAttributes'
+        );
 
         if ($product->type === 'variable' && $this->product_variations) {
             foreach ($this->product_variations as $variation) {

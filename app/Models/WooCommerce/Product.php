@@ -176,11 +176,21 @@ class Product extends Model
     }
 
     public function attributes() {
-        return $this->hasMany(ProductAttribute::class, 'product_id');
+        return $this->belongsToMany(
+            ProductAttribute::class,
+            'product_attribute',
+            'product_id',
+            'product_attribute_id'
+        )->as('product_attributes')->withTimestamps();
     }
 
     public function productAttributes() {
-        return $this->hasMany(ProductAttribute::class, 'product_id');
+        return $this->belongsToMany(
+            ProductAttribute::class,
+            'product_attribute',
+            'product_id',
+            'product_attribute_id'
+        )->as('product_attributes')->withTimestamps();
     }
 
     /**

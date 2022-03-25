@@ -124,7 +124,8 @@ abstract class BaseObject {
         string $key,
         string $fieldName,
         string $dataObject,
-        Model $parent
+        Model $parent,
+        string|null $accessName = null
     ): void {
         if (array_key_exists($key, $this->attributes) && $this->attributes[$key]) {
             $toAttach = [];
@@ -134,11 +135,17 @@ abstract class BaseObject {
                 $item = (array) $item;
                 $item[$fieldName] = $parent->id;
                 $object = (new $dataObject($item))->sync();
-
                 $toAttach[] = $object->id;
             }
 
-            if (method_exists($parent, $key) && method_exists($parent->{$key}(), 'sync')) {
+            if (! is_null($accessName)) {
+                $key = $accessName;
+            }
+
+            if (
+                method_exists($parent, $key)
+                && method_exists($parent->{$key}(), 'sync')
+            ) {
                 $parent->{$key}()->sync($toAttach);
             }
         }

@@ -80,10 +80,15 @@
         "optimize-autoloader": true,
         "preferred-install": "dist",
         "sort-packages": true,
+        "platform-check": false,
         "platform": {
             "php": "8.1.0"
         }
     },
+    "platform": {
+        "php": "8.1"
+    },
+    "platform-check": false,
     "minimum-stability": "dev",
     "prefer-stable": true
 }
