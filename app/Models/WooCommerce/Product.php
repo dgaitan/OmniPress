@@ -80,6 +80,13 @@ use Laravel\Scout\Searchable;
  * @property-read Service|null $service
  * @property-read \Illuminate\Database\Eloquent\Collection|Membership[] $memberships
  * @property-read int|null $memberships_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\WooCommerce\Brand[] $brands
+ * @property-read int|null $brands_count
+ * @property-read Product|null $parent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\WooCommerce\ProductAttribute[] $productAttributes
+ * @property-read int|null $product_attributes_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|Product[] $variations
+ * @property-read int|null $variations_count
  */
 class Product extends Model
 {
@@ -184,6 +191,11 @@ class Product extends Model
         )->as('product_attributes')->withTimestamps();
     }
 
+    /**
+     * Product Attributes
+     *
+     * @return
+     */
     public function productAttributes() {
         return $this->belongsToMany(
             ProductAttribute::class,
@@ -191,6 +203,20 @@ class Product extends Model
             'product_id',
             'product_attribute_id'
         )->as('product_attributes')->withTimestamps();
+    }
+
+    /**
+     * Product Brands
+     *
+     * @return
+     */
+    public function brands() {
+        return $this->belongsToMany(
+            Brand::class,
+            'product_brand',
+            'product_id',
+            'product_brand_id'
+        )->as('product_brands')->withTimestamps();
     }
 
     /**

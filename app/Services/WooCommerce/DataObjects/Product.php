@@ -10,6 +10,7 @@ use App\Services\WooCommerce\DataObjects\ProductImage;
 use App\Services\WooCommerce\DataObjects\ProductAttribute;
 use App\Services\WooCommerce\DataObjects\ProductSetting;
 use App\Services\WooCommerce\DataObjects\ProductVariation;
+use App\Services\WooCommerce\DataObjects\ProductBrand;
 use App\Models\WooCommerce\Product as WooProduct;
 
 class Product extends BaseObject implements DataObjectContract
@@ -57,6 +58,7 @@ class Product extends BaseObject implements DataObjectContract
         $this->array('images');
         $this->array('attributes');
         $this->array('meta_data');
+        $this->array('brands');
         $this->array('settings');
         $this->array('product_variations');
     }
@@ -83,6 +85,7 @@ class Product extends BaseObject implements DataObjectContract
         $this->syncCollection('categories', 'product_id', ProductCategory::class, $product);
         $this->syncCollection('tags', 'product_id', ProductTag::class, $product);
         $this->syncCollection('images', 'product_id', ProductImage::class, $product);
+        $this->syncCollection('brands', 'product_id', ProductBrand::class, $product);
         $this->syncCollection(
             'attributes',
             'product_id',
