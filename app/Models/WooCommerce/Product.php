@@ -229,6 +229,28 @@ class Product extends Model
     }
 
     /**
+     * Get Permalink on this app
+     *
+     * @return string
+     */
+    public function getKinjaPermalink(): string {
+        return route('kinja.products.show', [$this->product_id]);
+    }
+
+    /**
+     * Get Permalink on client store
+     *
+     * @return string
+     */
+    public function getStorePermalink(): string {
+        return sprintf(
+            '%s/wp-admin/post.php?post=%s&action=edit',
+            env('CLIENT_DOMAIN', 'https://kindhumans.com'),
+            $this->product_id
+        );
+    }
+
+    /**
      * Get the name of the index associated with the model.
      *
      * @return string

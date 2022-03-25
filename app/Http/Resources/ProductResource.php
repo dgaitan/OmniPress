@@ -22,6 +22,8 @@ class ProductResource extends JsonResource
             'name' => $this->name,
             'slug' => $this->slug,
             'permalink' => $this->permalink,
+            'store_permalink' => $this->getStorePermalink(),
+            'kinja_permalink' => $this->getKinjaPermalink(),
             'sku' => $this->sku,
             'date_created' => $this->date_created ? $this->date_created->format('F j, Y') : '',
             'date_modified' => $this->date_created ? $this->date_created->format('F j, Y') : '',

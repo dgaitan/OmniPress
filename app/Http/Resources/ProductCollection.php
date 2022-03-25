@@ -21,6 +21,8 @@ class ProductCollection extends ResourceCollection
                 'name' => $product->name,
                 'slug' => $product->slug,
                 'permalink' => $product->permalink,
+                'storePermalink' => $product->getStorePermalink(),
+                'kinja_permalink' => $product->getKinjaPermalink(),
                 'product_id' => $product->product_id,
                 'stock_status' => $product->stock_status,
                 'price' => $product->price,

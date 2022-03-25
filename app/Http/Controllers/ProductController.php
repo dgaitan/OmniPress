@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\WooCommerce\Product;
 use App\Http\Resources\ProductCollection;
+use App\Http\Resources\ProductResource;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -72,5 +73,26 @@ class ProductController extends Controller
         ]);
 
         return Inertia::render('Products/Index', $data);
+    }
+
+    /**
+     * Product Detail
+     *
+     * @param Request $request
+     * @param int $id
+     * @return void
+     */
+    public function show(Request $request, $id) {
+        $product = Product::with('tags', 'categories', 'brands', 'images')
+            ->whereProductId($id)
+            ->first();
+
+        if (is_null($product)) {
+            abort(404);
+        }
+
+        return Inertia::render('Products/Detail', [
+            'product' => new ProductResource($product)
+        ]);
     }
 }

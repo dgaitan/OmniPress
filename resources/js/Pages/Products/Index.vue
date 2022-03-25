@@ -34,7 +34,7 @@
                                 <!-- Product Info -->
                                 <td class="flex items-start py-5 px-6 font-medium">
                                     <input class="mr-3" type="checkbox" @change="setIds($event)" :checked="ids.includes(product.id)" :value="product.id">
-                                    <div class="flex" style="width:300px;">
+                                    <div class="flex" style="width:250px;">
                                         <img
                                             v-if="!product.image"
                                             class="w-20 h-20 mr-4 object-cover rounded-md"
@@ -51,12 +51,12 @@
                                 </td>
 
                                 <!-- Status -->
-                                <td class="font-medium">
+                                <td class="font-medium px-2">
                                     <Status :status="product.status" />
                                 </td>
 
                                 <!-- Price -->
-                                <td class="font-medium">
+                                <td class="font-medium px-2">
                                     <span class="text-xs" v-html="product.price_html"></span>
                                 </td>
 
@@ -73,7 +73,7 @@
                                     </div>
                                 </td>
 
-                                <td class="font-medium" width="250px">
+                                <td class="font-medium" width="180px">
                                     <div class="py-4 flex flex-wrap items-center" style="max-width: 200px" v-if="product.brands.length > 0">
                                         <a
                                         v-for="brand in product.brands"
@@ -88,7 +88,21 @@
 
                                 <!-- Actions -->
                                 <td class="font-medium">
-                                    <a href="javascript:void(0)" class="text-cyan-500 font-bold">Show</a>
+                                    <jet-dropdown align="right" width="48">
+                                        <template #trigger>
+                                            <button type="button" class="inline-flex items-center px-3 py-2 border border-gray-200 text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:bg-gray-50 hover:text-gray-700 focus:outline-none focus:bg-gray-50 active:bg-gray-50 transition">
+                                                Actions
+                                            </button>
+                                        </template>
+                                        <template #content>
+                                            <div class="">
+                                                <jet-dropdown-link :href="product.kinja_permalink">
+                                                    Show
+                                                </jet-dropdown-link>
+                                                <jet-dropdown-link :href="product.store_permalink" as="a" target="_blank">Show on kindhumans</jet-dropdown-link>
+                                            </div>
+                                        </template>
+                                    </jet-dropdown>
                                 </td>
                              </tr>
                         </template>
@@ -113,6 +127,8 @@
     import ListFilter from '@/Components/List/ListFilter.vue'
     import ListTable from '@/Components/List/ListTable.vue'
     import ListPagination from '@/Components/List/ListPagination'
+    import JetDropdown from '@/Jetstream/Dropdown.vue'
+    import JetDropdownLink from '@/Jetstream/DropdownLink.vue'
     import { Link } from '@inertiajs/inertia-vue3'
     import Status from '@/Components/Status.vue'
 
@@ -133,6 +149,8 @@
             JetConfirmationModal,
             Link,
             JetInput,
+            JetDropdown,
+            JetDropdownLink,
             ListWrapper,
             ListFilter,
             ListTable,
