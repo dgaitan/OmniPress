@@ -24,7 +24,12 @@ class MustBeKindhumans
             'dgaitan@kindhumans.com',
             'fdiaz@kindhumans.com',
             'martijn@kindhumans.com',
-            'dgordon@kindhumans.com'
+            'dgordon@kindhumans.com',
+            'jen@kindhumans.com',
+            'dan@kindhumans.com',
+            'sam@kindhumans.com',
+            'ora@kindhumans.com',
+            'tconnoly@kindhumans.com'
         ];
 
         if (!Str::endsWith($user->getEmail(), 'kindhumans.com')) {

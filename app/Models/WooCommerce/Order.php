@@ -96,6 +96,9 @@ use Laravel\Scout\Searchable;
  * @property bool $has_membership
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereHasMembership($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereMembershipId($value)
+ * @property int|null $payment_id
+ * @property-read \App\Models\WooCommerce\PaymentMethod|null $paymentMethod
+ * @method static \Illuminate\Database\Eloquent\Builder|Order wherePaymentId($value)
  */
 class Order extends Model
 {

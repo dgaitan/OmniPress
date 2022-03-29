@@ -42,6 +42,8 @@ use Carbon\Carbon;
  * @property int|null $current_page
  * @method static \Illuminate\Database\Eloquent\Builder|Sync whereBatchId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Sync whereCurrentPage($value)
+ * @property int|null $per_page
+ * @method static \Illuminate\Database\Eloquent\Builder|Sync wherePerPage($value)
  */
 class Sync extends Model
 {

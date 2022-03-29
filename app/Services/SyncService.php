@@ -53,9 +53,9 @@ class SyncService {
 
     }
 
-    protected function initializeSync(string $resource) {
-        return Sync::initialize($resource, )
-    }
+    // protected function initializeSync(string $resource) {
+    //     return Sync::initialize($resource, )
+    // }
 
     /**
      * Build a new service

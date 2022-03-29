@@ -80,6 +80,13 @@ use Laravel\Scout\Searchable;
  * @property-read Service|null $service
  * @property-read \Illuminate\Database\Eloquent\Collection|Membership[] $memberships
  * @property-read int|null $memberships_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\WooCommerce\Brand[] $brands
+ * @property-read int|null $brands_count
+ * @property-read Product|null $parent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\WooCommerce\ProductAttribute[] $productAttributes
+ * @property-read int|null $product_attributes_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|Product[] $variations
+ * @property-read int|null $variations_count
  */
 class Product extends Model
 {
@@ -176,11 +183,40 @@ class Product extends Model
     }
 
     public function attributes() {
-        return $this->hasMany(ProductAttribute::class, 'product_id');
+        return $this->belongsToMany(
+            ProductAttribute::class,
+            'product_attribute',
+            'product_id',
+            'product_attribute_id'
+        )->as('product_attributes')->withTimestamps();
     }
 
+    /**
+     * Product Attributes
+     *
+     * @return
+     */
     public function productAttributes() {
-        return $this->hasMany(ProductAttribute::class, 'product_id');
+        return $this->belongsToMany(
+            ProductAttribute::class,
+            'product_attribute',
+            'product_id',
+            'product_attribute_id'
+        )->as('product_attributes')->withTimestamps();
+    }
+
+    /**
+     * Product Brands
+     *
+     * @return
+     */
+    public function brands() {
+        return $this->belongsToMany(
+            Brand::class,
+            'product_brand',
+            'product_id',
+            'product_brand_id'
+        )->as('product_brands')->withTimestamps();
     }
 
     /**
@@ -190,6 +226,28 @@ class Product extends Model
      */
     public function isVariation() {
         return $this->type === 'variation';
+    }
+
+    /**
+     * Get Permalink on this app
+     *
+     * @return string
+     */
+    public function getKinjaPermalink(): string {
+        return route('kinja.products.show', [$this->product_id]);
+    }
+
+    /**
+     * Get Permalink on client store
+     *
+     * @return string
+     */
+    public function getStorePermalink(): string {
+        return sprintf(
+            '%s/wp-admin/post.php?post=%s&action=edit',
+            env('CLIENT_DOMAIN', 'https://kindhumans.com'),
+            $this->product_id
+        );
     }
 
     /**
@@ -221,8 +279,10 @@ class Product extends Model
             'status' => $this->status,
             'regular_price' => $this->regular_price,
             'sku' => $this->sku,
+            'stock_status' => $this->stock_status,
             'categories' => $this->categories()->pluck('name')->toArray(),
-            'tags' => $this->tags()->pluck('name')->toArray()
+            'tags' => $this->tags()->pluck('name')->toArray(),
+            'brands' => $this->tags()->pluck('name')->toArray()
         ];
 
         return $data;
@@ -245,7 +305,7 @@ class Product extends Model
      * @return \Illuminate\Database\Eloquent\Builder
      */
     protected function makeAllSearchableUsing($query) {
-        return $query->with(['categories', 'tags', 'images']);
+        return $query->with(['categories', 'tags', 'brands']);
     }
 
     public function toArray(array $args = []) {

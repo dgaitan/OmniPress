@@ -11,7 +11,7 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 class ProductImport implements ToModel, WithProgressBar, WithHeadingRow
 {
     use Importable;
-    
+
     /**
     * @param array $row
     *
@@ -23,6 +23,7 @@ class ProductImport implements ToModel, WithProgressBar, WithHeadingRow
         $row['tags'] = unserialize($row['tags']);
         $row['images'] = unserialize($row['images']);
         $row['attributes'] = unserialize($row['attributes']);
+        $row['brands'] = unserialize($row['brands']);
         if (isset($row['meta_data'])) $row['meta_data'] = unserialize($row['meta_data']);
 
         $product = ProductFactory::make($row);
