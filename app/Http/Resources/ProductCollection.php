@@ -33,6 +33,7 @@ class ProductCollection extends ResourceCollection
                 'categories' => $this->getCollectionMapped($product->categories),
                 'sku' => $product->sku,
                 'status' => $product->status,
+                'stock_quantity' => $product->stock_quantity,
                 'type' => $product->type,
                 'image' => null
             ];

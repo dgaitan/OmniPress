@@ -35,7 +35,7 @@ class ProductController extends Controller
 
             $products->orderBy($request->input('orderBy'), $ordering);
         } else {
-            $products->orderBy('date_created', 'desc');
+            $products->orderBy('product_id', 'desc');
         }
 
         // Search

@@ -45,7 +45,8 @@
                                                 <strong class="text-gray-400">ID {{ product.product_id }}</strong>
                                             </p>
                                             <p class="text-sm font-medium mb-2">{{ product.name }}</p>
-                                            <p class="text-xs text-gray-500">SKU: {{ product.sku }}</p>
+                                            <p class="text-xs text-gray-500"><strong>Sku:</strong> {{ product.sku }}</p>
+                                            <p class="text-xs text-gray-500"><strong>Stock:</strong> {{ product.stock_quantity }}</p>
                                         </div>
                                     </div>
                                 </td>
