@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ProductResource extends JsonResource
@@ -21,6 +22,8 @@ class ProductResource extends JsonResource
             'name' => $this->name,
             'slug' => $this->slug,
             'permalink' => $this->permalink,
+            'store_permalink' => $this->getStorePermalink(),
+            'kinja_permalink' => $this->getKinjaPermalink(),
             'sku' => $this->sku,
             'date_created' => $this->date_created ? $this->date_created->format('F j, Y') : '',
             'date_modified' => $this->date_created ? $this->date_created->format('F j, Y') : '',
@@ -39,11 +42,12 @@ class ProductResource extends JsonResource
             'sale_price' => $this->sale_price,
             'settings' => $this->settings,
             'meta_data' => $this->meta_data,
-            'images' => null,
-            'categories' => null,
-            'tags' => null,
-            'attributes' => null,
-            'variations' => null,
+            'images' => [],
+            'categories' => $this->getCollectionMapped($this->categories),
+            'tags' => $this->getCollectionMapped($this->tags),
+            'attributes' => [],
+            'variations' => [],
+            'brands' => $this->getCollectionMapped($this->brands),
             'parent' => null
         ];
 
@@ -55,8 +59,8 @@ class ProductResource extends JsonResource
             $product['parent'] = new self($this->parent);
         }
 
-        if ($this->images()->exists()) {
-            $product['images'] = collect($this->images)->map(function($image){
+        if ($this->images->isNotEmpty()) {
+            $product['images'] = $this->images->map(function($image){
                 return [
                     'src' => $image->getImageUrl(),
                     'name' => $image->name,
@@ -65,18 +69,30 @@ class ProductResource extends JsonResource
             });
         }
 
-        if ($this->categories()->exists()) {
-            $product['categories'] = $this->categories()->get();
-        }
-
-        if ($this->tags()->exists()) {
-            $product['tags'] = $this->tags()->get();
-        }
-
-        if ($this->productAttributes()->exists()) {
+        if ($this->productAttributes->isNotEmpty()) {
             $product['attributes'] = $this->attributes;
         }
 
         return $product;
+    }
+
+    /**
+     * Get collection like brands, tags or categories.
+     *
+     * @param Collection $collection
+     * @return array
+     */
+    protected function getCollectionMapped(Collection $collection): array {
+        if ($collection->isEmpty()) {
+            return [];
+        }
+
+        return $collection->map(function($item) {
+            return [
+                'id' => $item->id,
+                'name' => $item->name,
+                'slug' => $item->slug
+            ];
+        })->toArray();
     }
 }

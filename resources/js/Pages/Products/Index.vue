@@ -27,46 +27,38 @@
                     <ListTable :columns="columns" :stateData="this.filters" :selectIds="selectAllIds">
                         <template #body>
                             <tr class="text-xs"
-                                v-for="(product, i) in products"
+                                v-for="(product, i) in products.data"
                                 :key="product.id"
                                 v-bind:class="[isOdd(i) ? '' : 'bg-gray-50']">
 
                                 <!-- Product Info -->
                                 <td class="flex items-start py-5 px-6 font-medium">
                                     <input class="mr-3" type="checkbox" @change="setIds($event)" :checked="ids.includes(product.id)" :value="product.id">
-                                    <div class="flex" style="width:300px;">
+                                    <div class="flex" style="width:250px;">
                                         <img
-                                            v-if="product.images.length === 0"
+                                            v-if="!product.image"
                                             class="w-20 h-20 mr-4 object-cover rounded-md"
                                             src="https://picsum.photos/id/160/80/80" alt="">
-                                        <img v-else :src="product.images[0].src" class="w-20 h-20 mr-4 object-cover rounded-md" >
+                                        <img v-else :src="product.image" class="w-20 h-20 mr-4 object-cover rounded-md" >
                                         <div>
                                             <p class="text-sm font-medium mb-1">
                                                 <strong class="text-gray-400">ID {{ product.product_id }}</strong>
                                             </p>
                                             <p class="text-sm font-medium mb-2">{{ product.name }}</p>
-                                            <p class="text-xs text-gray-500">SKU: {{ product.sku }}</p>
+                                            <p class="text-xs text-gray-500"><strong>Sku:</strong> {{ product.sku }}</p>
+                                            <p class="text-xs text-gray-500"><strong>Stock:</strong> {{ product.stock_quantity }}</p>
                                         </div>
                                     </div>
                                 </td>
 
                                 <!-- Status -->
-                                <td class="font-medium">
-                                    <span :class="`status ${product.status}`">
-                                        {{ parseRole(product.status) }}
-                                    </span>
+                                <td class="font-medium px-2">
+                                    <Status :status="product.status" />
                                 </td>
 
                                 <!-- Price -->
-                                <td class="font-medium">
-                                    <span class="text-xs" v-html="product.settings.price_html"></span>
-                                </td>
-
-                                <!-- Date Created -->
-                                <td class="font-medium">
-                                    <span class="inline-block py-1 px-2 text-sm text-purple-500 bg-purple-50 rounded-full">
-                                        {{ product.date_created ? displayMoment(product.date_created, 'LL') : displayMoment(product.date_modified, 'LL') }}
-                                    </span>
+                                <td class="font-medium px-2">
+                                    <span class="text-xs" v-html="product.price_html"></span>
                                 </td>
 
                                 <td class="font-medium" width="250px">
@@ -82,9 +74,36 @@
                                     </div>
                                 </td>
 
+                                <td class="font-medium" width="180px">
+                                    <div class="py-4 flex flex-wrap items-center" style="max-width: 200px" v-if="product.brands.length > 0">
+                                        <a
+                                        v-for="brand in product.brands"
+                                        :data-product-id="brand.id"
+                                        :key="brand.id"
+                                        class="py-1 px-2 text-xs text-sky-500 bg-sky-100 mr-2 mb-2 rounded-full"
+                                        href="#">
+                                        {{ brand.name }}
+                                        </a>
+                                    </div>
+                                </td>
+
                                 <!-- Actions -->
-                                <td class="font-medium">
-                                    <a href="javascript:void(0)" @click="showDetail(membership.id)" class="text-cyan-500 font-bold">Show</a>
+                                <td class="font-medium px-2">
+                                    <jet-dropdown align="right" width="48">
+                                        <template #trigger>
+                                            <button type="button" class="inline-flex items-center px-3 py-2 border border-gray-200 text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:bg-gray-50 hover:text-gray-700 focus:outline-none focus:bg-gray-50 active:bg-gray-50 transition">
+                                                Actions
+                                            </button>
+                                        </template>
+                                        <template #content>
+                                            <div class="">
+                                                <jet-dropdown-link :href="product.kinja_permalink">
+                                                    Show
+                                                </jet-dropdown-link>
+                                                <jet-dropdown-link :href="product.store_permalink" as="a" target="_blank">Show on kindhumans</jet-dropdown-link>
+                                            </div>
+                                        </template>
+                                    </jet-dropdown>
                                 </td>
                              </tr>
                         </template>
@@ -109,7 +128,10 @@
     import ListFilter from '@/Components/List/ListFilter.vue'
     import ListTable from '@/Components/List/ListTable.vue'
     import ListPagination from '@/Components/List/ListPagination'
+    import JetDropdown from '@/Jetstream/Dropdown.vue'
+    import JetDropdownLink from '@/Jetstream/DropdownLink.vue'
     import { Link } from '@inertiajs/inertia-vue3'
+    import Status from '@/Components/Status.vue'
 
     export default defineComponent({
         props: [
@@ -128,10 +150,13 @@
             JetConfirmationModal,
             Link,
             JetInput,
+            JetDropdown,
+            JetDropdownLink,
             ListWrapper,
             ListFilter,
             ListTable,
-            ListPagination
+            ListPagination,
+            Status
         },
 
         data() {
@@ -170,12 +195,12 @@
                     key: 'price'
                 },
                 {
-                    name: 'Date Created',
-                    sortable: true,
+                    name: 'Categories',
+                    sortable: false,
                     key: 'date_created'
                 },
                 {
-                    name: 'Categories',
+                    name: 'Brands',
                     sortable: false,
                     key: ''
                 }
@@ -215,7 +240,7 @@
             },
 
             selectAllIds(checked) {
-                checked ? this.products.map(m => this.ids.push(m.id)) : this.ids = [];
+                checked ? this.products.data.map(m => this.ids.push(m.id)) : this.ids = [];
             },
 
             bulkActions() {

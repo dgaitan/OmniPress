@@ -5,7 +5,7 @@
               	<th
               		v-for="(column, index) in columns"
 					:key="index"
-					class="py-4 font-medium" v-bind:class="[index === 0 ? 'flex items-center pl-6' : '']">
+					class="py-4 px-2 font-medium" v-bind:class="[index === 0 ? 'flex items-center pl-6' : '']">
 
                 	<input v-if="index === 0" class="mr-3" type="checkbox" @click="(e) => selectIds(e.target.checked)">
                 	<a
