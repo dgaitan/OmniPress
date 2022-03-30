@@ -283,6 +283,39 @@ class Order extends Model
     }
 
     /**
+     * Get a meta value
+     *
+     * @param string $key
+     * @return void
+     */
+    public function getMetaValue(string $key) {
+        $metaData = collect($this->meta_data)->where('key', $key);
+
+        if ($metaData->count() > 0) {
+            return $metaData->pluck('value')[0];
+        }
+
+        return null;
+    }
+
+    /**
+     * Get Coupon codes
+     *
+     * @return void
+     */
+    public function getCouponCodes() {
+        $coupons = collect($this->coupon_lines);
+
+        if ($coupons->count() === 0) {
+            return '';
+        }
+
+        $coupons = $coupons->pluck('code')->toArray();
+
+        return implode(', ', $coupons);
+    }
+
+    /**
      * Convert Order to Array
      *
      * @param boolean $isSingle

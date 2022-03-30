@@ -7,6 +7,8 @@ use App\Http\Resources\OrderResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 
 class OrderController extends Controller
 {
@@ -23,51 +25,7 @@ class OrderController extends Controller
             ['slug' => 'failed', 'label' => 'Failed']
         ];
         $status = '';
-        $orders = Order::with('customer');
-
-        // Ordering
-        $availableOrders = ['order_id', 'date_completed', 'total'];
-
-        if (
-            $request->input('orderBy')
-            && in_array($request->input('orderBy'), $availableOrders)
-        ) {
-            $ordering = in_array($request->input('order'), ['desc', 'asc'])
-                ? $request->input('order')
-                : 'desc';
-
-            $orders->orderBy($request->input('orderBy'), $ordering);
-        } else {
-            $orders->orderBy('date_created', 'desc');
-        }
-
-        // Search
-        $search = $this->analyzeSearchQuery($request, ['order_id', 'total']);
-        if ($search->isValid) {
-            // If the search query isn't specific
-            if (!$search->specific) {
-                $s = $search->s;
-                // $orders = Order::search($s);
-                $orders->orWhereHas('customer', function ($query) use ($s) {
-                    $query->where('first_name', 'ilike', "%$s%")
-                        ->orWhere('last_name', 'ilike', "%$s%")
-                        ->orWhere('email', 'ilike', "%$s%")
-                        ->orWhere('username', 'ilike', "%$s%");
-                });
-
-                $orders->orWhere('order_id', 'ilike', "%$s%");
-                $orders->orWhere('total', 'ilike', "%$s%");
-            } else {
-                $orders->where($search->key, 'ilike', "$search->s%");
-            }
-        }
-
-        // Filter By Status
-        if ($request->input('status') && 'all' !== $request->input('status')) {
-            $status = $request->input('status');
-            $orders->where('status', $status);
-        }
-
+        $orders = $this->queryset($request);
         $orders = $this->paginate($request, $orders);
         $data = $this->getPaginationResponse($orders);
         $data = array_merge($data, [
@@ -99,7 +57,9 @@ class OrderController extends Controller
             '_status' => $status,
             'statuses' => $statuses,
             '_order' => $request->input('order') ?? 'desc',
-            '_orderBy' => $request->input('orderBy') ?? ''
+            '_orderBy' => $request->input('orderBy') ?? '',
+            '_fromDate' => $request->input('fromDate') ?? '',
+            '_toDate' => $request->input('toDate') ?? '',
         ]);
 
         return Inertia::render('Orders/Index', $data);
@@ -131,9 +91,134 @@ class OrderController extends Controller
             });
         }
 
-
         return Inertia::render('Orders/Detail', [
             'order' => $order
         ]);
+    }
+
+    /**
+     * It needs to be completed
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function export(Request $request) {
+        $orders = $this->queryset($request, Order::with('customer', 'items'));
+        $orders = $orders->get();
+        $orders = $orders->map(function ($order) {
+            return $order->items->map(function($item) use ($order) {
+                return [
+                    'id' => $order->order_id,
+                    'date' => $order->date_created
+                        ? $order->date_created->format('F j, Y H:i:s')
+                        : '-',
+                    'status' => $order->status,
+                    'last_name' => $order->billing->last_name,
+                    'first_name' => $order->billing->first_name,
+                    'email' => $order->billing->email,
+                    'active_membership' => $order->customer_id
+                        ? ( $order->customer->hasMemberships() ? 'Yes' : 'No' )
+                        : 'No',
+                    'address' => sprintf(
+                        '%s %s',
+                        $order->billing->address_1,
+                        $order->billing->address_2
+                    ),
+                    'zip' => $order->billing->postcode,
+                    'state' => $order->billing->state,
+                    'city' => $order->billing->city,
+                    'country' => $order->billing->country,
+                    'subtotal' => $order->getSubtotal(),
+                    'coupon' => $order->getCouponCodes(),
+                    'total_discount' => $order->discount_total / 100,
+                    'total_tax' => $order->total_tax / 100,
+                    'total_shipping' => $order->shipping_total / 100,
+                    'order_amount' => $order->total / 100,
+                    'total_donated' => $order->getMetaValue('total_donated_amount'),
+                    'sku' => $item->sku,
+                    'name' => $item->name,
+                    'price' => $item->product->price / 100,
+                    'qty' => $item->quantity,
+                    'total_tax' => $item->subtotal_tax,
+                    'subtotal' => $item->subtotal
+                ];
+            });
+        });
+    }
+
+    /**
+     * Process Orders Queryset
+     *
+     * @param Request $request
+     * @return Builder
+     */
+    protected function queryset(Request $request, $baseQuery = null): Builder {
+        $orders = $baseQuery ?? Order::with('customer');
+
+        // Ordering
+        $availableOrders = ['order_id', 'date_completed', 'total'];
+
+        if (
+            $request->input('orderBy')
+            && in_array($request->input('orderBy'), $availableOrders)
+        ) {
+            $ordering = in_array($request->input('order'), ['desc', 'asc'])
+                ? $request->input('order')
+                : 'desc';
+
+            $orders->orderBy($request->input('orderBy'), $ordering);
+        } else {
+            $orders->orderBy('date_created', 'desc');
+        }
+
+        // Filter By Date.
+        if (
+            $request->input('fromDate') || $request->input('toDate')
+        ) {
+            $fromDate = ! empty($request->input('fromDate'))
+                ? Carbon::parse($request->input('fromDate'))
+                : null;
+
+            $toDate = ! empty($request->input('toDate'))
+                ? Carbon::parse($request->input('toDate'))
+                : Carbon::now();
+
+            if ($fromDate && $toDate) {
+                $orders->whereBetween('date_created', [$fromDate, $toDate]);
+
+            } else if (is_null($fromDate)) {
+                $orders->where('date_created', '<=', $toDate);
+            }
+
+        }
+
+        // Search
+        $search = $this->analyzeSearchQuery($request, ['order_id', 'total']);
+        if ($search->isValid) {
+            // If the search query isn't specific
+            if (!$search->specific) {
+                $s = $search->s;
+                // $orders = Order::search($s);
+                $orders->orWhereHas('customer', function ($query) use ($s) {
+                    $query->where('first_name', 'ilike', "%$s%")
+                        ->orWhere('last_name', 'ilike', "%$s%")
+                        ->orWhere('email', 'ilike', "%$s%")
+                        ->orWhere('username', 'ilike', "%$s%");
+                });
+
+                $orders->orWhere('order_id', 'ilike', "%$s%");
+                $orders->orWhere('total', 'ilike', "%$s%");
+            } else {
+                $orders->where($search->key, 'ilike', "$search->s%");
+            }
+        }
+
+        // Filter By Status
+        if ($request->input('status') && 'all' !== $request->input('status')) {
+            $status = $request->input('status');
+            $orders->where('status', $status);
+        }
+
+        return $orders;
     }
 }
