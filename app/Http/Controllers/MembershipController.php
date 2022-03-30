@@ -5,10 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Membership;
 use App\Models\WooCommerce\Product;
 use App\Http\Resources\MembershipResource;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Cache;
+use Carbon\Carbon;
 use Inertia\Inertia;
 
 class MembershipController extends Controller
@@ -51,6 +51,42 @@ class MembershipController extends Controller
         ) {
             $memberships->where('shipping_status', $request->input('shippingStatus'));
             $cacheKey = $cacheKey . $request->input('shippingStatus') . "_";
+        }
+
+        // Filter By Date.
+        if (
+            $request->input('fromDate') || $request->input('toDate')
+        ) {
+            $dateFieldToFilter = in_array($request->input('dateFiledToFilter'), ['start_at', 'end_at'])
+                ? $request->input('dateFieldToFilter')
+                : 'end_at';
+
+            $fromDate = ! empty($request->input('fromDate'))
+                ? Carbon::parse($request->input('fromDate'))
+                : null;
+
+            $toDate = ! empty($request->input('toDate'))
+                ? Carbon::parse($request->input('toDate'))
+                : Carbon::now();
+
+            if ($fromDate && $toDate) {
+                $memberships->whereBetween($dateFieldToFilter, [$fromDate, $toDate]);
+                $cacheKey = sprintf(
+                    '%s_date_from_%s_to_%s',
+                    $cacheKey,
+                    $fromDate->format('Y-m-d'),
+                    $toDate->format('Y-m-d')
+                );
+
+            } else if (is_null($fromDate)) {
+                $memberships->where($dateFieldToFilter, '<=', $toDate);
+                $cacheKey = sprintf(
+                    '%s_date_until_%s',
+                    $cacheKey,
+                    $toDate->format('Y-m-d')
+                );
+            }
+
         }
 
         // Search
@@ -126,7 +162,10 @@ class MembershipController extends Controller
             '_status' => $status,
             '_shippingStatus' => $request->input('shippingStatus') ?? '',
             '_order' => $request->input('order') ?? 'desc',
-            '_orderBy' => $request->input('orderBy') ?? ''
+            '_orderBy' => $request->input('orderBy') ?? '',
+            '_fromDate' => $request->input('fromDate') ?? '',
+            '_toDate' => $request->input('toDate') ?? '',
+            '_dateFieldToFilter' => $request->input('dateFieldToFilter') ?? 'end_at'
         ]);
 
         return Inertia::render('Memberships/Index', $data);

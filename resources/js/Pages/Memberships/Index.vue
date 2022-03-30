@@ -9,7 +9,8 @@
                         :filters="filters"
                         :shippingStatuses="shippingStatuses"
                         :action="action"
-                        @bulkAction="confirmAction"/>
+                        @bulkAction="confirmAction"
+                        @showFilters="showFilters = $event"/>
               </template>
 
               <!-- FIlters -->
@@ -124,6 +125,12 @@
             :membership="membership"
             :show="showUpdateKindCash"
             @close="showUpdateKindCash = false"/>
+
+        <Filters
+            :filters="filters"
+            :shippingStatuses="shippingStatuses"
+            :show="showFilters"
+            @close="showFilters = false"/>
     </layout>
 </template>
 
@@ -142,6 +149,7 @@
     import Confirm from '@/Components/Confirm.vue'
     import Actions from './Partials/MembershipListActions.vue'
     import UpdateKindCash from './Partials/UpdateKindCash.vue'
+    import Filters from './Partials/Filters.vue'
 
     export default defineComponent({
         props: [
@@ -151,7 +159,8 @@
             // Ordering Props
             '_order', '_orderBy',
             // Custom Props
-            '_status', 'statuses', '_s', '_shippingStatus', 'shippingStatuses'
+            '_status', 'statuses', '_s', '_shippingStatus', 'shippingStatuses',
+            '_fromDate', '_toDate', '_dateFieldToFilter'
         ],
 
         components: {
@@ -167,7 +176,8 @@
             Status,
             Confirm,
             Actions,
-            UpdateKindCash
+            UpdateKindCash,
+            Filters
         },
 
         data() {
@@ -181,7 +191,11 @@
                     perPage: this._perPage,
                     // Ordering Data
                     order: this._order,
-                    orderBy: this._orderBy
+                    orderBy: this._orderBy,
+                    // Dates
+                    fromDate: this._fromDate,
+                    toDate: this._toDate,
+                    dateFieldToFilter: this._dateFieldToFilter
                 },
                 action: '',
                 ids: [],
@@ -202,7 +216,8 @@
                 confirmationMessage: '',
                 showActionConfirmation: false,
                 runningBulk: false,
-                showUpdateKindCash: false
+                showUpdateKindCash: false,
+                showFilters: false
             }
         },
 

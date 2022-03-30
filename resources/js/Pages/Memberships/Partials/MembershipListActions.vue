@@ -5,23 +5,7 @@
 
         <!-- Actions -->
         <div>
-            <!-- Shipping Status Filter -->
-            <select
-                :value="filters.shippingStatus"
-                @change="changeShippingStatus($event)"
-                class="border-gray-300 focus:border-cyan-600 focus:ring focus:ring-cyan-400 focus:ring-opacity-50 rounded-md shadow-sm ml-2 py-2 pl-2 pr-10"
-                name="content_type"
-                id="content_type">
-                <option value="" :selected="filters.shippingStatus === ''">Filter By Shipping Status</option>
-                <option
-                    v-for="s in shippingStatuses"
-                    :key="s.slug"
-                    :value="s.slug"
-                    :selected="filters.shippingStatus === s.slug">
-                    {{ s.label }}
-                </option>
-            </select>
-            
+
             <select :value="action" @change="bulkActions($event)" class="border-gray-300 focus:border-cyan-600 focus:ring focus:ring-cyan-400 focus:ring-opacity-50 rounded-md shadow-sm ml-2 py-2 pl-2 pr-10" style="width:200px">
                 <option value="">Actions</option>
                 <optgroup label="Shipping Statuses">
@@ -41,6 +25,8 @@
                     <option value="run_cron">Run Renewal Cron</option>
                 </optgroup>
             </select>
+
+            <JetSecondaryButton @click="$emit('showFilters', true)" class="px-5 py-3 ml-2">Filters</JetSecondaryButton>
         </div>
     </div>
 </template>
@@ -48,6 +34,7 @@
     import { defineComponent } from 'vue'
     import JetInput from '@/Jetstream/Input.vue'
     import JetDropdown from '@/Jetstream/Dropdown.vue'
+    import JetSecondaryButton from '@/Jetstream/SecondaryButton.vue'
 
     export default defineComponent({
         props: {
@@ -56,11 +43,12 @@
             action: String
         },
 
-        emits: ['bulkAction'],
-        
+        emits: ['bulkAction', 'showFilters'],
+
         components: {
             JetInput,
-            JetDropdown
+            JetDropdown,
+            JetSecondaryButton
         },
 
         methods: {
@@ -69,7 +57,7 @@
                     s: e.target.value
                 }, { replace: true })
             },
-            
+
             changeShippingStatus(e) {
                 this.$props.filters.shippingStatus = e.target.value
                 this.$inertia.get(route('kinja.memberships.index'), {
