@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\MembershipExport;
 use App\Models\Membership;
 use App\Models\WooCommerce\Product;
 use App\Http\Resources\MembershipResource;
@@ -10,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Cache;
 use Carbon\Carbon;
 use Inertia\Inertia;
+use Maatwebsite\Excel\Facades\Excel;
 
 class MembershipController extends Controller
 {
@@ -24,107 +26,12 @@ class MembershipController extends Controller
         $cacheKey = "membeships_index_";
         $perPage = 50;
         $status = '';
-        $memberships = Membership::with(['customer', 'kindCash']);
 
         if ($request->input('page')) {
             $cacheKey = $cacheKey . $request->input('page') . "_";
         }
 
-        // Set Per Page
-        if ($request->input('perPage')) {
-            $perPage = $request->input('perPage');
-            $cacheKey = $cacheKey . $perPage . "_";
-        }
-
-        // Filter By Status
-        if ($request->input('status') && 'all' !== $request->input('status')) {
-            $status = $request->input('status');
-            $memberships->where('status', $status);
-            $cacheKey = $cacheKey . $status . "_";
-        }
-
-        // Filter By Shipping status
-        if (
-            $request->input('shippingStatus')
-            && ! empty($request->input('shippingStatus'))
-            && Membership::isValidShippingStatus($request->input('shippingStatus'))
-        ) {
-            $memberships->where('shipping_status', $request->input('shippingStatus'));
-            $cacheKey = $cacheKey . $request->input('shippingStatus') . "_";
-        }
-
-        // Filter By Date.
-        if (
-            $request->input('fromDate') || $request->input('toDate')
-        ) {
-            $dateFieldToFilter = in_array($request->input('dateFiledToFilter'), ['start_at', 'end_at'])
-                ? $request->input('dateFieldToFilter')
-                : 'end_at';
-
-            $fromDate = ! empty($request->input('fromDate'))
-                ? Carbon::parse($request->input('fromDate'))
-                : null;
-
-            $toDate = ! empty($request->input('toDate'))
-                ? Carbon::parse($request->input('toDate'))
-                : Carbon::now();
-
-            if ($fromDate && $toDate) {
-                $memberships->whereBetween($dateFieldToFilter, [$fromDate, $toDate]);
-                $cacheKey = sprintf(
-                    '%s_date_from_%s_to_%s',
-                    $cacheKey,
-                    $fromDate->format('Y-m-d'),
-                    $toDate->format('Y-m-d')
-                );
-
-            } else if (is_null($fromDate)) {
-                $memberships->where($dateFieldToFilter, '<=', $toDate);
-                $cacheKey = sprintf(
-                    '%s_date_until_%s',
-                    $cacheKey,
-                    $toDate->format('Y-m-d')
-                );
-            }
-
-        }
-
-        // Search
-        if ($request->input('s') && ! empty($request->input('s'))) {
-            $s = $request->input('s');
-            $memberships->orWhereHas('customer', function ($query) use ($s) {
-                $query->where('first_name', 'ilike', "%$s%")
-                    ->orWhere('last_name', 'ilike', "%$s%")
-                    ->orWhere('username', 'ilike', "%$s%");
-            });
-
-            $memberships->orWhere('customer_email', 'ilike', "%$s%");
-            $cacheKey = $cacheKey . $s . "_";
-        }
-
-        // Ordering
-        $availableOrders = ['id', 'kind_cash', 'start_at', 'end_at'];
-        if (
-            $request->input('orderBy')
-            && in_array($request->input('orderBy'), $availableOrders)
-        ) {
-            $ordering = in_array($request->input('order'), ['desc', 'asc'])
-                ? $request->input('order')
-                : 'desc';
-
-            // If the ordering is by kind cash, let's deal with it
-            if ($request->input('orderBy') === 'kind_cash') {
-                $memberships->join('kind_cashes', 'kind_cashes.membership_id', '=', 'memberships.id');
-                $memberships->orderBy('kind_cashes.points', $ordering);
-            } else {
-                $memberships->orderBy($request->input('orderBy'), $ordering);
-            }
-
-            $cacheKey = $cacheKey . $ordering . "_";
-        } else {
-            $memberships = $memberships->orderBy('id', 'desc');
-            $cacheKey = $cacheKey . "desc_";
-        }
+        [$cacheKey, $memberships] = $this->queryset($request, $cacheKey);
 
         if (Cache::tags('memberships')->has($cacheKey)) {
             $memberships = Cache::tags('memberships')->get($cacheKey, []);
@@ -165,7 +72,7 @@ class MembershipController extends Controller
             '_orderBy' => $request->input('orderBy') ?? '',
             '_fromDate' => $request->input('fromDate') ?? '',
             '_toDate' => $request->input('toDate') ?? '',
-            '_dateFieldToFilter' => $request->input('dateFieldToFilter') ?? 'end_at'
+            '_dateFieldToFilter' => $request->input('dateFieldToFilter') ?? 'start_at'
         ]);
 
         return Inertia::render('Memberships/Index', $data);
@@ -280,6 +187,52 @@ class MembershipController extends Controller
     }
 
     /**
+     * Export Memberships View
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function export(Request $request)
+    {
+        $cacheKey = "memberships_csv_";
+        [$cacheKey, $memberships] = $this->queryset($request, $cacheKey);
+        $memberships = $memberships->get();
+        $filename = sprintf(
+            "kindhumans_memberships_%s_%s.csv",
+            $memberships->count(),
+            Carbon::now()->format('Y-m-d-His')
+        );
+
+        $memberships = $memberships->map(function ($m) {
+            return [
+                'id' => $m->id,
+                'customer' => sprintf(
+                    '%s - %s',
+                    $m->customer->username,
+                    $m->customer->email
+                ),
+                'status' => $m->status,
+                'shipping_status' => $m->shipping_status,
+                'giftProduct' => $m->gift_product_id
+                    ? Product::whereProductId($m->gift_product_id)->pluck('name')[0]
+                    : '-',
+                'start_at' => $m->start_at->format('F j, Y'),
+                'end_at' => $m->end_at->format('F j, Y'),
+                'kindCash' => $m->kindCash->cashForHuman(),
+            ];
+        })->toArray();
+
+        return Excel::download(
+            new MembershipExport($memberships),
+            $filename,
+            \Maatwebsite\Excel\Excel::CSV,
+            [
+                'Content-Type' => 'text/csv',
+            ]
+        );
+    }
+
+    /**
      * Membership Actions
      *
      * @param Request $request
@@ -361,5 +314,119 @@ class MembershipController extends Controller
         Cache::tags('memberships')->flush();
 
         return to_route('kinja.memberships.index', $request->input('filters', []))->banner($message);
+    }
+
+    /**
+     * Prepare Membership Queryset with filters.
+     *
+     * @param Request $request
+     * @param string $cacheKey
+     * @return array
+     */
+    protected function queryset(Request $request, string $cacheKey): array {
+        $memberships = Membership::with(['customer', 'kindCash']);
+
+        // Set Per Page
+        if ($request->input('perPage')) {
+            $perPage = $request->input('perPage');
+            $cacheKey = $cacheKey . $perPage . "_";
+        }
+
+        // Filter By Status
+        if ($request->input('status') && 'all' !== $request->input('status')) {
+            $status = $request->input('status');
+            $memberships->where('status', $status);
+            $cacheKey = $cacheKey . $status . "_";
+        }
+
+        // Filter By Shipping status
+        if (
+            $request->input('shippingStatus')
+            && ! empty($request->input('shippingStatus'))
+            && Membership::isValidShippingStatus($request->input('shippingStatus'))
+        ) {
+            $memberships->where('shipping_status', $request->input('shippingStatus'));
+            $cacheKey = $cacheKey . $request->input('shippingStatus') . "_";
+        }
+
+        // Filter By Date.
+        if (
+            $request->input('fromDate') || $request->input('toDate')
+        ) {
+            $dateFieldToFilter = in_array($request->input('dateFieldToFilter'), ['start_at', 'end_at'])
+                ? $request->input('dateFieldToFilter')
+                : 'start_at';
+
+            $fromDate = ! empty($request->input('fromDate'))
+                ? Carbon::parse($request->input('fromDate'))
+                : null;
+
+            $toDate = ! empty($request->input('toDate'))
+                ? Carbon::parse($request->input('toDate'))
+                : Carbon::now();
+
+            if ($fromDate && $toDate) {
+                $memberships->whereBetween($dateFieldToFilter, [$fromDate, $toDate]);
+                $cacheKey = sprintf(
+                    '%s_date_%s_from_%s_to_%s',
+                    $cacheKey,
+                    $dateFieldToFilter,
+                    $fromDate->format('Y-m-d'),
+                    $toDate->format('Y-m-d')
+                );
+
+            } else if (is_null($fromDate)) {
+                $memberships->where($dateFieldToFilter, '<=', $toDate);
+                $cacheKey = sprintf(
+                    '%s_date_%s_until_%s',
+                    $cacheKey,
+                    $dateFieldToFilter,
+                    $toDate->format('Y-m-d')
+                );
+            }
+
+        }
+
+        // Search
+        if ($request->input('s') && ! empty($request->input('s'))) {
+            $s = $request->input('s');
+            $memberships->orWhereHas('customer', function ($query) use ($s) {
+                $query->where('first_name', 'ilike', "%$s%")
+                    ->orWhere('last_name', 'ilike', "%$s%")
+                    ->orWhere('username', 'ilike', "%$s%");
+            });
+
+            $memberships->orWhere('customer_email', 'ilike', "%$s%");
+            $cacheKey = $cacheKey . $s . "_";
+        }
+
+        // Ordering
+        $availableOrders = ['id', 'kind_cash', 'start_at', 'end_at'];
+        if (
+            $request->input('orderBy')
+            && in_array($request->input('orderBy'), $availableOrders)
+        ) {
+            $ordering = in_array($request->input('order'), ['desc', 'asc'])
+                ? $request->input('order')
+                : 'desc';
+
+            // If the ordering is by kind cash, let's deal with it
+            if ($request->input('orderBy') === 'kind_cash') {
+                $memberships->join('kind_cashes', 'kind_cashes.membership_id', '=', 'memberships.id');
+                $memberships->orderBy('kind_cashes.points', $ordering);
+            } else {
+                $memberships->orderBy($request->input('orderBy'), $ordering);
+            }
+
+            $cacheKey = $cacheKey . $ordering . "_";
+        } else {
+            $memberships = $memberships->orderBy('id', 'desc');
+            $cacheKey = $cacheKey . "desc_";
+        }
+
+        return [
+            $cacheKey,
+            $memberships
+        ];
     }
 }

@@ -2,7 +2,7 @@
     <layout title="Memberships">
 
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <ListWrapper title="Memberships">
+            <ListWrapper title="Memberships" @export="exportCsv">
                 <!-- Actions -->
                 <template #actions>
                     <Actions
@@ -329,6 +329,15 @@
                     }
                 });
             },
+
+            exportCsv() {
+                let params = Object.keys(this.filters).map(filter => {
+                    return `${filter}=${this.filters[filter]}`
+                }).join('&');
+                const url = `${route('kinja.memberships.export')}?${params}`;
+
+                window.open(url, '_blank')
+            }
         }
     })
 </script>
