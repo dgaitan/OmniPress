@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\WooCommerce\Order;
 use App\Analytics\OrderAnalytics;
 use App\Analytics\CustomerAnalytics;
+use App\Analytics\MembershipAnalytics;
 use App\Http\Resources\OrderCollection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 
 class DashboardController extends Controller
@@ -18,10 +20,21 @@ class DashboardController extends Controller
      * @return void
      */
     public function dashboard(Request $request) {
-        $stats = [
-            'orders' => $this->getOrderStats(),
-            'customers' => $this->getCustomerStats()
-        ];
+        $cacheKey = 'dashboard_stats';
+        $stats = Cache::get($cacheKey, []);
+
+        if (! $stats) {
+            $stats = [
+                'orders' => $this->getOrderStats(),
+                'customers' => $this->getCustomerStats(),
+                'memberships' => $this->getMembershipStats()
+            ];
+
+            Cache::remember(
+                $cacheKey, strtotime('1 day 30 second', 0), function() use ($stats) {
+                return $stats;
+            });
+        }
 
         return Inertia::render('Dashboard', $stats);
     }
@@ -70,6 +83,25 @@ class DashboardController extends Controller
 
         $stats['total_customers'] = $customerAnalytics->getTotalCustomers();
         $stats['percentage'] = $customerAnalytics->getTotalPercentageDifference();
+
+        return $stats;
+    }
+
+    /**
+     * Get Membership Stats
+     *
+     * @return array
+     */
+    protected function getMembershipStats(): array {
+        $stats = [];
+
+        $membershipAnalytics = new MembershipAnalytics(
+            MembershipAnalytics::CURRENT_MONTH_RANGE,
+            MembershipAnalytics::PREVIOUS_PERIOD
+        );
+
+        $stats['total_memberships'] = $membershipAnalytics->getTotalMemberships();
+        $stats['percentage'] = $membershipAnalytics->getTotalPercentageDifference();
 
         return $stats;
     }
