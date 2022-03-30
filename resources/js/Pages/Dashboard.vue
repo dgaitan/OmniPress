@@ -104,6 +104,10 @@
                     </Box>
                 </Column>
                 <Column :mdSize="4">
+                    <Stat
+                        title="New Memberships"
+                        :value="memberships.total_memberships"
+                        :percentage="memberships.percentage" />
                 </Column>
             </Row>
         </Container>
@@ -125,7 +129,7 @@
     import JetDropdownLink from '@/Jetstream/DropdownLink.vue'
 
     export default defineComponent({
-        props: ['user', 'orders', 'customers'],
+        props: ['user', 'orders', 'customers', 'memberships'],
         components: {
             Layout,
             Welcome,
