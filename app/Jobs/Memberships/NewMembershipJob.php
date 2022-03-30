@@ -11,6 +11,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
 use App\Jobs\SingleWooCommerceSync;
 use App\Mail\Memberships\WelcomeMail;
+use Illuminate\Support\Facades\Cache;
 
 class NewMembershipJob implements ShouldQueue
 {
@@ -63,5 +64,6 @@ class NewMembershipJob implements ShouldQueue
 
         SingleWooCommerceSync::dispatch($this->customerId, 'customers');
         SingleWooCommerceSync::dispatch($this->orderId, 'orders');
+        Cache::forget('dashboard_stats');
     }
 }

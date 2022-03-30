@@ -3,9 +3,24 @@
 
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <ListWrapper title="Orders">
-              <!-- Actions -->
-              <template #actions>
-                <jet-input v-model="filters.s" type="search" v-on:keyup.enter="search" placeholder="Search..." />
+                <!-- Actions -->
+                <template #actions>
+                    <div class="flex">
+                        <jet-input v-model="filters.s" type="search" v-on:keyup.enter="search" placeholder="Search..." class="mr-2" style="width:320px;" />
+                        <Datepicker
+                            v-model="filters.fromDate"
+                            id="fromDate"
+                            placeholder="From Date"
+                            class="border-gray-300 focus:border-cyan-600 focus:ring focus:ring-cyan-400 focus:ring-opacity-50 rounded-md shadow-sm py-2 pl-2 pr-10 mr-2 w-60"  />
+                        <Datepicker
+                            v-model="filters.toDate"
+                            id="toDate"
+                            placeholder="To Date"
+                            class="border-gray-300 focus:border-cyan-600 focus:ring focus:ring-cyan-400 focus:ring-opacity-50 rounded-md shadow-sm py-2 pl-2 pr-10 w-60" />
+                        <JetSecondaryButton @click="filter" class="px-5 py-3 ml-2">
+                            Filter
+                        </JetSecondaryButton>
+                    </div>
               </template>
 
               <!-- FIlters -->
@@ -102,11 +117,13 @@
     import JetInput from '@/Jetstream/Input.vue'
     import JetDropdown from '@/Jetstream/Dropdown.vue'
     import JetDropdownLink from '@/Jetstream/DropdownLink.vue'
+    import JetSecondaryButton from '@/Jetstream/SecondaryButton.vue'
     import ListWrapper from '@/Components/List/ListWrapper.vue'
     import ListFilter from '@/Components/List/ListFilter.vue'
     import ListTable from '@/Components/List/ListTable.vue'
     import ListPagination from '@/Components/List/ListPagination'
     import Status from '@/Components/Status.vue'
+    import Datepicker from 'vue3-datepicker'
 
     export default defineComponent({
         props: [
@@ -115,6 +132,8 @@
             'total', 'nextUrl', 'prevUrl', '_perPage', '_currentPage',
             // Ordering Props
             '_order', '_orderBy',
+            // Date Filters
+            '_fromDate', '_toDate',
             // Custom Props
             '_status', 'statuses', '_s'],
 
@@ -129,6 +148,8 @@
             ListTable,
             ListPagination,
             Status,
+            Datepicker,
+            JetSecondaryButton
         },
 
         data() {
@@ -141,7 +162,10 @@
                 perPage: this._perPage,
                 // Ordering Data
                 order: this._order,
-                orderBy: this._orderBy
+                orderBy: this._orderBy,
+                // Date Filters
+                fromDate: new Date(this._fromDate),
+                toDate: new Date(this._toDate)
             },
             ids: []
           }
@@ -196,6 +220,19 @@
 
             filterStatus(status) {
                 this.filters.status = status
+                this.$inertia.get(route('kinja.orders.index'), {
+                    ...this.filters
+                }, { replace: true });
+            },
+
+            filter() {
+                this.filters.fromDate = this.filters.fromDate.toString() === 'Invalid Date'
+                    ? new Date()
+                    : this.filters.fromDate;
+                this.filters.toDate = this.filters.toDate.toString() === 'Invalid Date'
+                    ? new Date()
+                    : this.filters.toDate;
+
                 this.$inertia.get(route('kinja.orders.index'), {
                     ...this.filters
                 }, { replace: true });

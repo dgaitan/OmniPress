@@ -8,6 +8,7 @@ use App\Services\Contracts\ServiceContract;
 use App\Services\Contracts\FactoryContract;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 
 abstract class BaseResource {
     /**
@@ -122,6 +123,7 @@ abstract class BaseResource {
                 $sync->save();
                 \App\Jobs\WooCommerceSyncServiceJob::dispatch($sync->id);
             } else {
+                Cache::forget('dashboard_stats');
                 $sync->complete();
             }
         } catch (Exception $e) {
@@ -151,6 +153,7 @@ abstract class BaseResource {
         $element = $this->find($id);
 
         if ($element) {
+            Cache::forget('dashboard_stats');
             return $element->sync();
         }
 

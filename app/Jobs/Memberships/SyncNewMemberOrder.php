@@ -5,11 +5,11 @@ namespace App\Jobs\Memberships;
 use App\Jobs\SingleWooCommerceSync;
 use App\Models\WooCommerce\Order;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Cache;
 
 class SyncNewMemberOrder implements ShouldQueue
 {
@@ -43,5 +43,7 @@ class SyncNewMemberOrder implements ShouldQueue
             'has_membership' => true,
             'membership_id' => $this->membership_id
         ]);
+
+        Cache::forget('dashboard_stats');
     }
 }
