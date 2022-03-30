@@ -5,7 +5,6 @@ namespace App\Jobs\Memberships;
 use App\Jobs\SingleWooCommerceSync;
 use App\Models\WooCommerce\Order;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;

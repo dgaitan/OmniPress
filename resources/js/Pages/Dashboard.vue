@@ -14,9 +14,9 @@
                             Welcome, {{ user.name }}
                         </h3>
                         <form @submit.prevent="logout">
-                            <span class="block mt-2 text-sm leading-5 text-gray-700 cursor-pointer">
+                            <button type="submit" class="block mt-2 text-sm leading-5 text-gray-700 cursor-pointer">
                                 Log Out
-                            </span>
+                            </button>
                         </form>
                     </div>
                 </Column>
