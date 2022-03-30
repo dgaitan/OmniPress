@@ -105,6 +105,7 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('/dashboard')->group(fun
         Route::controller(MembershipController::class)->prefix('/memberships')->name('memberships.')->group(function () {
             Route::get('/', 'index')->name('index');
             Route::post('/actions', 'actions')->name('actions');
+            Route::get('/export', 'export')->name('export');
             Route::get('/{id}', 'show')->name('show');
             Route::put('/{id}/update', 'update')->name('update');
             Route::put('/{id}/update-kind-cash', 'updateKindCash')->name('updateKindCash');
