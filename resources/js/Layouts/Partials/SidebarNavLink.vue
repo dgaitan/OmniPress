@@ -24,8 +24,8 @@
 		computed: {
 			classes() {
 				return this.active
-					? 'flex items-center text-md py-2 px-3 text-cyan-500 bg-gray-400/10 transition-all rounded-r-lg border-l-2 border-cyan-400'
-					: 'flex text-md items-center py-2 px-3 text-gray-600 hover:bg-gray-200 hover:text-gray-800 transition-all rounded'
+					? 'flex items-center text-md py-2 px-7 text-cyan-500 bg-gray-400/10 transition-all rounded-r-lg border-l-4 border-cyan-400'
+					: 'flex text-md items-center py-2 px-7 text-gray-600 hover:bg-gray-200 hover:text-gray-800 transition-all rounded'
 			}
 		}
 	})

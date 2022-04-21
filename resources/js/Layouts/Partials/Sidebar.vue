@@ -8,7 +8,7 @@
 	                	<img class="h-8" src="artemis-assets/logos/artemis-logo-light.svg" alt="" width="auto">
 	              	</a>
 	            </div>
-	            <div class="px-4 pb-6">
+	            <div class="pr-4 pb-6">
 	            	<SidebarNav>
 	            		<SidebarNavLink :href="route('dashboard')" :active="route().current('dashboard')">
 	            			<template #icon><HomeIcon class="w-5 h-5" /></template>
@@ -38,22 +38,22 @@
 	              	<SidebarNav v-if="userCan(['run_sync', 'add_user', 'admin_queues'])">
 	              		<template #title>Admin</template>
                         <SidebarNavLink  v-if="userCan(['assign_roles'])" :href="route('kinja.users.index')" :active="route().current('kinja.users.index')">
-	              			<template #icon><unicon name="user-square"></unicon></template>
+	              			<template #icon><UserGroupIcon class="w-5 h-5" /></template>
 	              			Users
 	              		</SidebarNavLink>
 	              		<SidebarNavLink  v-if="userCan(['run_sync'])" :href="route('kinja.sync.index')" :active="route().current('kinja.sync.index')">
-	              			<template #icon><unicon name="sync"></unicon></template>
+	              			<template #icon><RefreshIcon class="w-5 h-5" /></template>
 	              			Sync
 	              		</SidebarNavLink>
                         <SidebarNavLink  v-if="userCan(['admin_queues'])" :href="route('kinja.queues.index')" :active="route().current('kinja.queues.index')">
-	              			<template #icon><unicon name="clock"></unicon></template>
+	              			<template #icon><ClockIcon class="w-5 h-5" /></template>
 	              			Queues
 	              		</SidebarNavLink>
 	              		<SidebarNavLink
 	              			:href="route('api-tokens.index')"
 	              			:active="route().current('api-tokens.index')"
 	              			v-if="userCan('manage_api_tokens')">
-	              			<template #icon><unicon name="key-skeleton"></unicon></template>
+	              			<template #icon><KeyIcon class="w-5 h-5" /></template>
 	              			Api Tokens
 	              		</SidebarNavLink>
 	              	</SidebarNav>
@@ -62,15 +62,17 @@
 	              	<SidebarNav>
 	              		<template #title>Account</template>
 	              		<SidebarNavLink :href="route('profile.show')" :active="route().current('profile.show')">
-	              			<template #icon><unicon name="user-circle"></unicon></template>
+	              			<template #icon><UserCircleIcon class="w-5 h-5" /></template>
 	              			Profile
 	              		</SidebarNavLink>
 
 	              		<!-- Authentication -->
 	              		<li>
                             <form @submit.prevent="logout">
-                                <button type="button" class="logout flex items-center pl-3 py-3 pr-2 text-gray-500 hover:bg-cyan-400 hover:text-white transition-all rounded w-full">
-                                	<unicon name="signout" class="mr-3"></unicon>
+                                <button type="button" class="flex text-md items-center py-2 px-7 text-gray-600 hover:bg-gray-200 hover:text-gray-800 transition-all rounded w-full font-medium">
+                                    <span class="mr-3">
+                                	    <LogoutIcon class="w-5 h-5" />
+                                    </span>
                                 	Log Out
                                 </button>
                             </form>
@@ -82,15 +84,11 @@
 	</div>
 </template>
 
-<style type="text/css">
-	.logout:hover svg { transition: all .4s; fill: #FFFFFF }
-</style>
-
 <script>
 	import { defineComponent } from 'vue';
 	import SidebarNav from '@/Layouts/Partials/SidebarNav.vue';
 	import SidebarNavLink from '@/Layouts/Partials/SidebarNavLink.vue';
-    import { HomeIcon, InboxInIcon, ArchiveIcon, UsersIcon, UserAddIcon } from '@heroicons/vue/solid'
+    import { HomeIcon, InboxInIcon, ArchiveIcon, UsersIcon, UserAddIcon, UserGroupIcon, RefreshIcon, ClockIcon, KeyIcon, UserCircleIcon, LogoutIcon } from '@heroicons/vue/solid'
 
 	export default defineComponent({
 		components: {
@@ -100,7 +98,13 @@
             InboxInIcon,
             ArchiveIcon,
             UsersIcon,
-            UserAddIcon
+            UserAddIcon,
+            UserGroupIcon,
+            RefreshIcon,
+            ClockIcon,
+            KeyIcon,
+            UserCircleIcon,
+            LogoutIcon
 		},
 
 		methods: {
