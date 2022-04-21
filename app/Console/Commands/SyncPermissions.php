@@ -61,7 +61,7 @@ class SyncPermissions extends Command
         // Admin Perms
         $adminPerms = [
             'add_user', 'assign_roles', 'run_sync', 'manage_api_tokens',
-            'see_roles', 'add_external_user',...$kindhumansTeam
+            'see_roles', 'add_external_user',...$qaPerms
         ];
 
         // Super Admin Abilities
