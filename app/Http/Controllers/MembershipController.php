@@ -25,7 +25,6 @@ class MembershipController extends Controller
     {
         $cacheKey = "membeships_index_";
         $perPage = 50;
-        $status = '';
 
         if ($request->input('page')) {
             $cacheKey = $cacheKey . $request->input('page') . "_";
@@ -66,7 +65,7 @@ class MembershipController extends Controller
             'statuses' => Membership::getStatuses(),
             'shippingStatuses' => Membership::getShippingStatuses(),
             '_s' => $request->input('s') ?? '',
-            '_status' => $status,
+            '_status' => $request->has('status') ? $request->status : '',
             '_shippingStatus' => $request->input('shippingStatus') ?? '',
             '_order' => $request->input('order') ?? 'desc',
             '_orderBy' => $request->input('orderBy') ?? '',
