@@ -54,6 +54,10 @@ class SyncPermissions extends Command
             'see_payment_methods'
         ];
 
+        $qaPerms = [
+            'force_membership_renewals', ...$kindhumansTeam
+        ];
+
         // Admin Perms
         $adminPerms = [
             'add_user', 'assign_roles', 'run_sync', 'manage_api_tokens',
@@ -69,6 +73,7 @@ class SyncPermissions extends Command
         $permissionsByRole = [
             'super_admin' => $superAdminPerms,
             'admin' => $adminPerms,
+            'qa' => $qaPerms,
             'kindhumans_team' => $kindhumansTeam
         ];
 
