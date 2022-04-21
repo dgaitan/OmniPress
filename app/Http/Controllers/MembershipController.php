@@ -41,6 +41,7 @@ class MembershipController extends Controller
                 return $memberships->paginate($perPage);
             });
         }
+
         $data = $this->getPaginationResponse($memberships);
         $data = array_merge($data, [
             'memberships' => collect($memberships->items())->map(function($m) {
@@ -437,6 +438,16 @@ class MembershipController extends Controller
             });
 
             $memberships->orWhere('customer_email', 'ilike', "%$s%");
+
+            if (str_contains($s, 'order:') || str_contains($s, 'orders:')) {
+            }
+            $memberships->orWhereExists(function ($query) use ($s) {
+                $query->select('order_id')
+                    ->from('orders')
+                    ->whereColumn('orders.membership_id', 'memberships.id')
+                    ->where('order_id', 'ilike', "%$s%");
+            });
+
             $cacheKey = $cacheKey . $s . "_";
         }
 
