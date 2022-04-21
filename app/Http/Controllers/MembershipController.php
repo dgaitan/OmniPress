@@ -349,7 +349,7 @@ class MembershipController extends Controller
             ManualRenewMembershipJob::dispatch($membership->id);
         }
 
-        $message = 'Membership manual review has been started in the background.';
+        $message = 'Membership manual review has been started in the background. Please wait a few seconds until the processes has been finished.';
 
         session()->flash('flash.banner', $message);
         session()->flash('flash.bannerStyle', 'success');
