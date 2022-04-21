@@ -5,6 +5,8 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Cashier\Cashier;
 use App\Models\WooCommerce\Customer;
+use App\Models\WooCommerce\Order;
+use App\Observers\OrderObserver;
 use App\Services\WooCommerce\WooCommerceService;
 
 class AppServiceProvider extends ServiceProvider
@@ -38,5 +40,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Cashier::useCustomerModel(Customer::class);
+        Order::observe(OrderObserver::class);
     }
 }
