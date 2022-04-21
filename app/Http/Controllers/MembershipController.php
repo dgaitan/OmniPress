@@ -438,9 +438,6 @@ class MembershipController extends Controller
             });
 
             $memberships->orWhere('customer_email', 'ilike', "%$s%");
-
-            if (str_contains($s, 'order:') || str_contains($s, 'orders:')) {
-            }
             $memberships->orWhereExists(function ($query) use ($s) {
                 $query->select('order_id')
                     ->from('orders')
