@@ -2,6 +2,7 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
+
 .bg-sky-600 {
     background-color: theme('colors.sky.600');
 }

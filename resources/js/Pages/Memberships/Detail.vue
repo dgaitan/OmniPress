@@ -9,7 +9,14 @@
                         :legend="membership.customer.email" />
                 </Column>
                 <Column :mdSize="4" class="text-right">
-                    <jet-button @click="showEditForm = true">Edit</jet-button>
+                    <Button
+                        v-if="userCan('force_membership_renewals')"
+                        color="secondary"
+                        type="button"
+                        class="mr-2"
+                        :disabled="membership.status === 'awaiting_pick_gift'"
+                        @click="showManualRenewConfirmation = true">Manual Renew</Button>
+                    <Button type="button" color="primary" @click="showEditForm = true">Edit</Button>
                 </Column>
             </Row>
             <Row class="mt-10">
@@ -76,7 +83,18 @@
             :statuses="statuses"
             :shippingStatuses="shippingStatuses"
             :show="showEditForm"
-            @close="showEditForm = false" />
+            @close="showEditForm = false"
+            @onUpdateMembership="showEditForm = false" />
+
+        <!-- Sync Confirmation Modal -->
+        <Confirm
+            title="Are you sure?"
+            message="This basically will auto-renew automatically an active membership. It will creates a new order on kindhumans and set membership status to 'Awaiting Pick GiftCard'"
+            :show="showManualRenewConfirmation"
+            :canConfirm="userCan('force_membership_renewals')"
+            :processing="submittingManualRenew"
+            @close="showManualRenewConfirmation = false"
+            @confirm="manualRenewAction" />
     </layout>
 
 </template>
@@ -91,6 +109,8 @@
     import CustomerMedia from '@/Components/Media/CustomerMedia.vue'
     import MembershipSummary from './Partials/MembershipSummary.vue'
     import MembershipOrders from './Partials/MembershipOrders.vue'
+    import Button from '@/Components/Button.vue'
+    import Confirm from '@/Components/Confirm.vue'
 
     export default defineComponent({
         props: [
@@ -99,7 +119,9 @@
 
         data() {
             return {
-                showEditForm: false
+                showEditForm: false,
+                showManualRenewConfirmation: false,
+                submittingManualRenew: false
             }
         },
 
@@ -112,7 +134,9 @@
             CustomerMedia,
             MembershipSummary,
             MembershipOrders,
-            Edit
+            Edit,
+            Button,
+            Confirm
         },
 
         computed: {
@@ -129,6 +153,16 @@
             parseRole(role) {
                 return role ? role.split('_').join(' ') : ''
             },
+
+            manualRenewAction() {
+                this.$inertia.post(route('kinja.memberships.testManuallyRenew', this.membership.id), {}, {
+                    replace: true,
+                    onSuccess: () => {
+                        this.submittingManualRenew = false
+                        this.showManualRenewConfirmation = false
+                    }
+                })
+            }
         }
     })
 </script>

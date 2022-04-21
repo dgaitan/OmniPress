@@ -2,6 +2,7 @@
 
 namespace App\Jobs\Memberships;
 
+use App\Jobs\SingleWooCommerceSync;
 use App\Models\Membership;
 use App\Services\WooCommerce\WooCommerceService;
 use Illuminate\Bus\Queueable;
@@ -10,6 +11,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Cache;
 
 class SetDefaultGiftProductJob implements ShouldQueue
 {
@@ -43,7 +45,18 @@ class SetDefaultGiftProductJob implements ShouldQueue
 
             if ($request) {
                 $membership->status = Membership::ACTIVE_STATUS;
+                $membership->shipping_status = Membership::SHIPPING_PENDING_STATUS;
                 $membership->save();
+
+                $cacheKey = sprintf("woocommerce_order_%s", $order_id);
+                Cache::tags('orders')->forget($cacheKey);
+
+                if ($request->product_id) {
+                    $product = $api->products()->findAndSync($request->product_id);
+                    $membership->giftProducts()->attach($product);
+                    $membership->gift_product_id = $request->product_id;
+                    $membership->save();
+                }
             }
         }
     }
