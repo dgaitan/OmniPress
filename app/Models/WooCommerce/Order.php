@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Scout\Searchable;
+use Illuminate\Notifications\Notifiable;
+use App\Observers\OrderObserver;
 
 /**
  * App\Models\WooCommerce\Order
@@ -103,6 +105,7 @@ use Laravel\Scout\Searchable;
 class Order extends Model
 {
     use HasFactory;
+    use Notifiable;
 
     /**
      * Order Casting
@@ -193,6 +196,28 @@ class Order extends Model
     }
 
     /**
+     * Undocumented function
+     *
+     * @return string
+     */
+    public function getCustomerInfo(): string
+    {
+        return sprintf(
+            '%s %s',
+            $this->billing->first_name,
+            $this->billing->last_name
+        );
+    }
+
+    public function getTotal(): string
+    {
+        return sprintf(
+            '$ %s',
+            number_format((float) $this->total / 100, 2)
+        );
+    }
+
+    /**
      * Return the shipping address formatted
      *
      * @return string
@@ -236,6 +261,14 @@ class Order extends Model
         }
 
         return $billing;
+    }
+
+    public function getPaymentMethodName(): string {
+        if ($this->payment_id) {
+            return $this->paymentMethod->title;
+        }
+
+        return 'Free';
     }
 
     /**
@@ -380,5 +413,10 @@ class Order extends Model
     protected function makeAllSearchableUsing($query)
     {
         return $query->with(['customer', 'items']);
+    }
+
+    public function routeNotificationForSlack($notification)
+    {
+        return env('SLACK_CHANNEL_URL', 'https://hooks.slack.com/services/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');
     }
 }
