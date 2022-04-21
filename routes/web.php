@@ -110,6 +110,7 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('/dashboard')->group(fun
             Route::get('/{id}', 'show')->name('show');
             Route::put('/{id}/update', 'update')->name('update');
             Route::put('/{id}/update-kind-cash', 'updateKindCash')->name('updateKindCash');
+            Route::post('/{id}/test/manually-renew', 'testManuallyRenew')->name('testManuallyRenew');
         });
     });
 

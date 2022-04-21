@@ -10,6 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Cache;
 
 class SetDefaultGiftProductJob implements ShouldQueue
 {
@@ -43,7 +44,11 @@ class SetDefaultGiftProductJob implements ShouldQueue
 
             if ($request) {
                 $membership->status = Membership::ACTIVE_STATUS;
+                $membership->shipping_status = Membership::SHIPPING_PENDING_STATUS;
                 $membership->save();
+
+                $cacheKey = sprintf("woocommerce_order_%s", $order_id);
+                Cache::tags('orders')->forget($cacheKey);
             }
         }
     }

@@ -12,7 +12,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Carbon\Carbon;
 
-class ManualRenewMembership implements ShouldQueue
+class ManualRenewMembershipJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -43,7 +43,7 @@ class ManualRenewMembership implements ShouldQueue
             }
 
             $membership->status = Membership::AWAITING_PICK_GIFT_STATUS;
-            $membership->shipping_status = Membership::SHIPPING_PENDING_STATUS;
+            $membership->shipping_status = 'N/A';
             $membership->last_payment_intent = Carbon::now();
             $membership->end_at = $membership->end_at->addYear();
             $membership->payment_intents = 0;
@@ -94,7 +94,7 @@ class ManualRenewMembership implements ShouldQueue
             if ($order->id) {
                 $order->update([
                     'has_membership' => true,
-                    'membership_id' => $membership->id
+                    'membership_id'  => $membership->id
                 ]);
                 $membership->pending_order_id = $order->order_id;
                 $membership->save();
