@@ -3,8 +3,14 @@
 namespace App\Models\WooCommerce;
 
 use App\Models\Membership;
+use App\Models\Concerns\HasMetaData;
+use App\Models\Subscription\SubscriptionProduct;
+use App\Models\Subscription\Subscriptable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Laravel\Scout\Searchable;
 
 /**
@@ -91,6 +97,8 @@ use Laravel\Scout\Searchable;
 class Product extends Model
 {
     use HasFactory;
+    use HasMetaData;
+    use Subscriptable;
     // use Searchable;
 
     protected $casts = [
@@ -125,21 +133,35 @@ class Product extends Model
         'regular_price',
         'sale_price',
         'settings',
-        'meta_data'
+        'meta_data',
+        'is_subscription'
     ];
 
     /**
      * Child Products
      */
-    public function variations() {
+    public function variations(): HasMany
+    {
         return $this->hasMany(self::class, 'parent_id');
     }
 
-    public function parent() {
+    /**
+     * Parent PRoduct
+     *
+     * @return BelongsTo
+     */
+    public function parent(): BelongsTo
+    {
         return $this->belongsTo(self::class, 'parent_id')->with('images');
     }
 
-    public function images() {
+    /**
+     * Images
+     *
+     * @return HasMany
+     */
+    public function images(): HasMany
+    {
         return $this->hasMany(ProductImage::class, 'product_id');
     }
 
@@ -226,6 +248,16 @@ class Product extends Model
      */
     public function isVariation() {
         return $this->type === 'variation';
+    }
+
+    /**
+     * Subscription Product if it has one
+     *
+     * @return HasOne
+     */
+    public function subscription(): HasOne
+    {
+        return $this->hasOne(SubscriptionProduct::class, 'product_id');
     }
 
     /**
