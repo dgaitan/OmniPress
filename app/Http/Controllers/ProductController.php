@@ -25,7 +25,7 @@ class ProductController extends Controller
         ];
         $status = '';
 
-        if ($request->has('s')) {
+        if ($request->has('s') && ! empty($request->s)) {
             $products = Product::search($request->s);
         } else {
             $products = Product::with('categories', 'tags', 'images', 'brands')
