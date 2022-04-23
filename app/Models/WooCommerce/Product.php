@@ -99,7 +99,7 @@ class Product extends Model
     use HasFactory;
     use HasMetaData;
     use Subscriptable;
-    // use Searchable;
+    use Searchable;
 
     protected $casts = [
         'price' => 'decimal:2',
@@ -297,9 +297,9 @@ class Product extends Model
      *
      * @return array
      */
-    public function toSearchableArray()
+    public function toSearchableArray(): array
     {
-        $data = [
+        return [
             'id' => $this->id,
             'product_id' => $this->product_id,
             'slug' => $this->slug,
@@ -316,8 +316,6 @@ class Product extends Model
             'tags' => $this->tags()->pluck('name')->toArray(),
             'brands' => $this->tags()->pluck('name')->toArray()
         ];
-
-        return $data;
     }
 
     /**

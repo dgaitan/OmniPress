@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\Products\ProductSubscriptionExport;
 use App\Models\WooCommerce\Product;
 use App\Http\Resources\ProductCollection;
 use App\Http\Resources\ProductResource;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ProductController extends Controller
 {
@@ -22,37 +24,21 @@ class ProductController extends Controller
             ['slug' => 'draft', 'label' => 'Draft'],
         ];
         $status = '';
-        $products = Product::with('categories', 'tags', 'images', 'brands')
-            ->where('type', '!=', 'variation');
+
+        if ($request->has('s')) {
+            $products = Product::search($request->s);
+        } else {
+            $products = Product::with('categories', 'tags', 'images', 'brands')
+                ->where('type', '!=', 'variation');
+        }
 
         // Ordering
-        $availableOrders = ['product_id', 'price', 'date_created'];
-
-        if ($request->input('orderBy') && in_array($request->input('orderBy'), $availableOrders)) {
-            $ordering = in_array($request->input('order'), ['desc', 'asc'])
-                ? $request->input('order')
-                : 'desc';
-
-            $products->orderBy($request->input('orderBy'), $ordering);
-        } else {
-            $products->orderBy('product_id', 'desc');
-        }
-
-        // Search
-        $search = $this->analyzeSearchQuery($request, ['product_id', 'status', 'type']);
-        if ($search->isValid) {
-            // If the search query isn't specific
-            if (! $search->specific) {
-                $s = $search->s;
-                $products->orWhere('name', 'ilike', "%$s%");
-                $products->orWhere('price', 'ilike', "%$s%");
-                $products->orWhere('sku', 'ilike', "%$s%");
-                $products->orWhere('product_id', 'ilike', "%$s%");
-                // $products = Product::search($s);
-            } else {
-                $products->where($search->key, 'ilike', "$search->s%");
-            }
-        }
+        $products = $this->getOrderingQuery(
+            request: $request, 
+            query: $products, 
+            availableOrdering: ['product_id', 'price', 'date_created'], 
+            orderBy: 'product_id'
+        );
 
         // Filter By Status
         if ($request->input('status') && 'all' !== $request->input('status')) {
@@ -94,5 +80,37 @@ class ProductController extends Controller
         return Inertia::render('Products/Detail', [
             'product' => new ProductResource($product)
         ]);
+    }
+
+    public function exportSubscriptions(Request $request) {
+        $products = Product::getSubscriptions()->get();
+        $data = [];
+        $filename = sprintf(
+            "kindhumans_product_subscriptions_%s_%s.csv",
+            $products->count(),
+            now()->format('Y-m-d-H:i:s')
+        );
+
+        if ($products->count() > 0) {
+            foreach ($products as $product) {
+                $data[] = Product::prepareToSubscriptionExport($product);
+
+                if ($product->type === 'variable' && $product->variations->isNotEmpty()) {
+                    $data = array_merge(
+                        $data,
+                        $product->variations->map(fn($p) => Product::prepareToSubscriptionExport($p))->toArray()
+                    );
+                }
+            }
+        }
+
+        return Excel::download(
+            new ProductSubscriptionExport($data),
+            $filename,
+            \Maatwebsite\Excel\Excel::CSV,
+            [
+                'Content-Type' => 'text/csv',
+            ]
+        );
     }
 }

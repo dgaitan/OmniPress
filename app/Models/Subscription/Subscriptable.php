@@ -3,6 +3,7 @@
 namespace App\Models\Subscription;
 
 use Carbon\Carbon;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 
 trait Subscriptable {
 
@@ -36,8 +37,8 @@ trait Subscriptable {
             'expiration_date' => $this->getMetaValue('_kh_expiration_date')
                 ? Carbon::parse($this->getMetaValue('_kh_expiration_date'))
                 : null,
-            'price' => (int) $this->getMetaValue('_ks_recurring_price', 0) * 100,
-            'fee' => (int) $this->getMetaValue('_ks_subscription_fee', 0) * 100,
+            'price' => (int) ((float) $this->getMetaValue('_ks_recurring_price', 0) * 100),
+            'fee' => (int) ((float) $this->getMetaValue('_ks_subscription_fee', 0) * 100),
             'intervals' => unserialize($this->getMetaValue('_kh_period_intervals', ''))
         ];
 
@@ -50,9 +51,51 @@ trait Subscriptable {
         if (! $this->subscription) {
             $this->subscription()->create($data);
         } else {
-            $this->subscription()->update($data);
+            $this->subscription->update($data);
         }
 
         $this->save();
+    }
+
+    /**
+     * Get Subscriptions
+     *
+     * @return Builder
+     */
+    public static function getSubscriptions(): Builder
+    {
+        return self::whereHasSubscription(true)
+            ->where('type', '!=', 'variation');
+    }
+
+    public static function prepareToSubscriptionExport($product): array 
+    {
+        $intervals = '';
+        
+        if ($product->subscription->intervals) {
+            $intervals = collect($product->subscription->intervals)->map(function ($i) {
+                return sprintf(
+                    'Interval: %s - Period: %s - Recommended: %s',
+                    $i->interval,
+                    $i->period,
+                    $i->recommended ? 'Yes' : 'No'
+                );
+            })->toArray();
+
+            $intervals = implode(' | ', $intervals);
+        }
+        
+        $data[] = [
+            'id' => $product->id,
+            'parent' => $product->isVariation() ? $product->parent_id : '',
+            'name' => $product->name,
+            'sku' => $product->sku,
+            'type' => $product->type,
+            'price' => $product->subscription->price / 100,
+            'fee' => $product->subscription->fee,
+            'intervarls' => $intervals
+        ];
+
+        return $data;
     }
 }
