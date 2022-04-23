@@ -81,4 +81,39 @@ class Controller extends BaseController
 
         return $data;
     }
+
+    /**
+     * Process Ordering Query
+     *
+     * @param Request $request
+     * @param Builder|ScoutBuilder $query
+     * @param array $availableOrdering
+     * @param string $orderBy
+     * @return Builder|ScoutBuilder
+     */
+    protected function getOrderingQuery(
+        Request $request, 
+        Builder|ScoutBuilder $query,
+        array $availableOrdering,
+        string $orderBy = 'id'
+    ): Builder|ScoutBuilder {
+        $ordering = 'desc';
+        
+        if ($request->input('orderBy') && in_array($request->input('orderBy'), $availableOrdering)) {
+            $ordering = in_array($request->input('order'), ['desc', 'asc'])
+                ? $request->input('order')
+                : 'desc';
+            $orderBy = $request->input('orderBy');
+        }
+        
+        if ($request->has('s') && $query instanceof ScoutBuilder) {
+            $query = $query->query(function($q) use ($ordering, $orderBy) {
+                $q->orderBy($orderBy, $ordering);
+            });
+        } else {
+            $query->orderBy($orderBy, $ordering);
+        }
+
+        return $query;
+    }
 }

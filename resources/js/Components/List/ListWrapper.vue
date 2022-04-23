@@ -4,7 +4,7 @@
 			<div class="pt-6 bg-white shadow rounded">
 				<div class="px-6 border-b">
 					<div class="flex flex-wrap items-center mb-6">
-						<h3 class="text-xl font-bold">{{ title }}</h3>
+						<h3 class="text-xl font-medium">{{ title }}</h3>
                         <JetButton v-if="exportButton" type="button" class="ml-auto flex items-center" @click="$emit('export')">
 				            <span class="mr-1">
 				              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">

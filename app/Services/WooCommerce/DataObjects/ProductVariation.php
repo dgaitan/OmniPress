@@ -42,6 +42,7 @@ class ProductVariation extends Product implements DataObjectContract
         $this->syncCollection('attributes', 'product_id', ProductAttribute::class, $product);
         $this->syncCollection('images', 'product_id', ProductImage::class, $product);
 
+        $product->syncSubscription();
         $product->save();
 
         return $product;

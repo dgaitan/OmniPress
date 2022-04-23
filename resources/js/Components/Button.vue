@@ -51,7 +51,7 @@ export default defineComponent({
         colorClasses() {
             const classes = {
                 'primary': 'text-white border-cyan-400 bg-cyan-400 hover:bg-cyan-500 active:bg-cyan-500 focus:border-cyan-500',
-                'secondary': 'text-gray bg-white border-gray-300 hover:bg-gray-100 active:bg-gray-100 focus:border-gray-100'
+                'secondary': 'text-gray bg-white border-gray-300 hover:bg-gray-300 active:bg-gray-300 focus:border-gray-300'
             }
 
             return classes[this.color]

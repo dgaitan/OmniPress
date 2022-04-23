@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Scout\Searchable;
 use Illuminate\Notifications\Notifiable;
 use App\Observers\OrderObserver;
+use App\Models\Concerns\HasMetaData;
 
 /**
  * App\Models\WooCommerce\Order
@@ -106,6 +107,7 @@ class Order extends Model
 {
     use HasFactory;
     use Notifiable;
+    use HasMetaData;
 
     /**
      * Order Casting
@@ -313,22 +315,6 @@ class Order extends Model
             env('CLIENT_DOMAIN', 'https://kindhumans.com'),
             $this->order_id
         );
-    }
-
-    /**
-     * Get a meta value
-     *
-     * @param string $key
-     * @return void
-     */
-    public function getMetaValue(string $key) {
-        $metaData = collect($this->meta_data)->where('key', $key);
-
-        if ($metaData->count() > 0) {
-            return $metaData->pluck('value')[0];
-        }
-
-        return null;
     }
 
     /**
