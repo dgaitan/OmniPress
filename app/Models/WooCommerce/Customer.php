@@ -2,12 +2,13 @@
 
 namespace App\Models\WooCommerce;
 
+use App\Models\Membership;
+use App\Models\Concerns\HasMetaData;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Cashier\Billable;
-use App\Models\Membership;
 
 /**
  * App\Models\WooCommerce\Customer
@@ -72,6 +73,7 @@ class Customer extends Model
     use HasFactory;
     use Notifiable;
     use Billable;
+    use HasMetaData;
 
     /**
      * Model Casts
@@ -217,6 +219,48 @@ class Customer extends Model
     }
 
     /**
+     * Get payment methods and assign it
+     *
+     * @return void
+     */
+    public function setPaymentMethodsFromCustomerId()
+    {   
+        $stripCustomerId = $this->getMetaValue('_stripe_customer_id', null);
+        
+        if (! is_null($stripCustomerId)) {
+            try {
+                // Try retrieve the customer to avoid 
+                $this->stripe()->customers->retrieve($stripCustomerId, []);
+                $this->stripe_id = $stripCustomerId;
+                $this->save();
+                
+                $paymentMethods = $this->stripe()->customers->allPaymentMethods(
+                    $stripCustomerId,
+                    ['type' => 'card']
+                );
+    
+                if ($paymentMethods) {
+                    foreach ($paymentMethods as $paymentMethod) {
+                        $this->addPaymentMethod($paymentMethod->id);
+                    }
+                }
+            } catch (\Stripe\Exception\InvalidRequestException $e) {
+                $this->stripe_id = null;
+                $this->save();
+                
+                return $e->getMessage();
+            } catch (\Stripe\Exception\InvalidArgumentException $e) {
+                $this->stripe_id = null;
+                $this->save();
+                
+                return $e->getMessage();
+            }
+        }
+
+        return "Yes";
+    }
+
+    /**
      * Route notifications for the mail channel.
      *
      * @param  \Illuminate\Notifications\Notification  $notification
@@ -284,5 +328,10 @@ class Customer extends Model
         }
 
         return $roles;
+    }
+
+    public static function getByEmail(string $email)
+    {
+        return self::whereEmail($email)->first();
     }
 }

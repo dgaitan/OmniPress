@@ -249,10 +249,10 @@ class PaymentController extends Controller
             return response()->json($customer, 404);
         }
 
-        $paymentMethod = $customer->updateDefaultPaymentMethod($request->token);
+        $customer->updateDefaultPaymentMethod($request->token);
 
         return response()->json(
-            $this->prepareResponseData($paymentMethod),
+            $this->prepareResponseData($customer->defaultPaymentMethod()),
             200
         );
     }
