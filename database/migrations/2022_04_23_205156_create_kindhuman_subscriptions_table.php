@@ -34,7 +34,7 @@ return new class extends Migration
             $table->string('shipping_method')->nullable();
             $table->integer('payment_intents')->nullable()->default(0);
             $table->string('payment_interval', 255)->nullable();
-            $table->integer('cause_id')->nullable();
+            $table->text('cause')->nullable();
         });
 
         Schema::table('orders', function (Blueprint $table) {
