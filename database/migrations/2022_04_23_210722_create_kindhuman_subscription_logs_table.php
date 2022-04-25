@@ -17,7 +17,8 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
 
-            $table->foreignId('subscription_id')->onDelete('cascade');
+            $table->foreignId('subscription_id')
+                ->nullable()->onDelete('cascade');
 
             $table->text('by')->nullable();
             $table->text('message');

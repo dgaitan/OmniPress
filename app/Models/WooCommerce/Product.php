@@ -93,6 +93,9 @@ use Laravel\Scout\Searchable;
  * @property-read int|null $product_attributes_count
  * @property-read \Illuminate\Database\Eloquent\Collection|Product[] $variations
  * @property-read int|null $variations_count
+ * @property bool|null $has_subscription
+ * @property-read SubscriptionProduct|null $subscription
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereHasSubscription($value)
  */
 class Product extends Model
 {

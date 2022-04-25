@@ -10,6 +10,7 @@ use Laravel\Scout\Searchable;
 use Illuminate\Notifications\Notifiable;
 use App\Observers\OrderObserver;
 use App\Models\Concerns\HasMetaData;
+use App\Models\Subscription\KindhumanSubscription;
 
 /**
  * App\Models\WooCommerce\Order
@@ -102,6 +103,10 @@ use App\Models\Concerns\HasMetaData;
  * @property int|null $payment_id
  * @property-read \App\Models\WooCommerce\PaymentMethod|null $paymentMethod
  * @method static \Illuminate\Database\Eloquent\Builder|Order wherePaymentId($value)
+ * @property int|null $kindhuman_subscription_id
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
+ * @property-read int|null $notifications_count
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereKindhumanSubscriptionId($value)
  */
 class Order extends Model
 {
@@ -195,6 +200,19 @@ class Order extends Model
      */
     public function items(): HasMany {
         return $this->hasMany(OrderLine::class, 'order_id');
+    }
+
+    /**
+     * Subscription related
+     *
+     * @return BelongsTo
+     */
+    public function subscription(): BelongsTo
+    {
+        return $this->belongsTo(
+            KindhumanSubscription::class,
+            'kindhuman_subscription_id'
+        );
     }
 
     /**

@@ -17,8 +17,10 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
 
-            $table->foreignId('subscription_id')->onDelete('cascade');
-            $table->foreignId('product_id');
+            $table->foreignId('subscription_id')
+                ->nullable()->onDelete('cascade');
+            $table->foreignId('product_id')
+                ->nullable();
             
             $table->integer('regular_price')->nullable()->default(0);
             $table->integer('quantity')->default(1);
