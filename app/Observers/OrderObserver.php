@@ -15,6 +15,6 @@ class OrderObserver
      */
     public function created(Order $order)
     {
-        $order->notify(new NewOrderNotification($order));
+        $order->notify((new NewOrderNotification($order))->delay(now()->addMinute()));
     }
 }
