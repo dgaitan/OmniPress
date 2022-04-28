@@ -58,10 +58,10 @@
             </div>
         </div>
         <div class="flex flex-row justify-end items-center px-6 py-4 bg-gray-100 text-right">
-            <JetSecondaryButton @click="$emit('close')">Close</JetSecondaryButton>
-            <JetButton @click="filter" class="ml-3">
+            <Button color="secondary" @click="$emit('close')">Close</Button>
+            <Button @click="filter" class="ml-3">
                 Filter
-            </JetButton>
+            </Button>
         </div>
     </modal>
 </template>
@@ -70,6 +70,7 @@
     import Modal from '@/Jetstream/Modal.vue'
     import JetInput from '@/Jetstream/Input.vue'
     import JetButton from '@/Jetstream/Button.vue'
+    import Button from '@/Components/Button.vue'
     import JetSecondaryButton from '@/Jetstream/SecondaryButton.vue'
     import JetActionMessage from '@/Jetstream/ActionMessage.vue'
     import FormGroup from '@/Components/Forms/FormGroup.vue'
@@ -117,7 +118,8 @@
             Row,
             Column,
             Select,
-            Datepicker
+            Datepicker,
+            Button
         },
 
         methods: {
