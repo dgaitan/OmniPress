@@ -1,40 +1,88 @@
 <template>
-    <div class="flex content-between">
-        <!-- SearchBox -->
-        <jet-input :value="filters.s" type="search" v-on:keyup.enter="search($event)" placeholder="Search..." style="width:350px" />
+    <div class="flex items-center content-between bg-gray-100 rounded p-2">
+        <div class=" w-1/2">
+            <!-- SearchBox -->
+            <input
+                type="search"
+                :value="filters.s"
+                v-on:keyup.enter="search($event)"
+                placeholder="Search..."
+                class="bg-white border border-gray-300 rounded py-2 px-3 w-full focus:border-gray-400 focus:ring-0 active:border-gray-400" />
+        </div>
 
         <!-- Actions -->
-        <div>
+        <div class="w-1/2 flex content-end justify-end">
 
-            <select :value="action" @change="bulkActions($event)" class="border-gray-300 focus:border-cyan-600 focus:ring focus:ring-cyan-400 focus:ring-opacity-50 rounded-md shadow-sm ml-2 py-2 pl-2 pr-10" style="width:200px">
-                <option value="">Actions</option>
-                <optgroup label="Shipping Statuses">
-                    <option value="shipping_status_to_cancelled">Change Shipping Status to Cancelled</option>
-                    <option value="shipping_status_to_shipped">Change Shipping Status to Shipped</option>
-                    <option value="shipping_status_to_no_ship">Change Shipping Status to No Ship</option>
-                </optgroup>
-                <optgroup label="Membership Statuses">
-                    <option value="status_to_active">Change Status to Active</option>
-                    <option value="status_to_in_renewal">Change Status to In Renewal</option>
-                    <option value="status_to_awaiting_pick_gift">Change Status to Awaiting Pick Gift</option>
-                    <option value="status_to_cancelled">Change Status to Cancelled</option>
-                </optgroup>
-                <optgroup label="Actions">
-                    <option value="expire">Expire Membership</option>
-                    <option value="renew">Renew Memberships</option>
-                    <option value="run_cron">Run Renewal Cron</option>
-                </optgroup>
-            </select>
+            <JetDropdown align="right" width="72">
+                <template #trigger>
+                    <Button size="sm" color="secondary" class="px-3 py-2 leading-7 ml-2 inline-flex">
+                        <LightningBoltIcon class="w-5 h-5 mr-1" />
+                        Actions
+                    </Button>
+                </template>
+                <template #content>
+                    <div class="w-72">
+                        <div class="block px-4 py-2 text-xs text-gray-400">
+                            Shipping Statuses
+                        </div>
+                        <JetDropdownLink as="button" @click="bulkActions('shipping_status_to_cancelled')">
+                            Change Shipping Status to Cancelled
+                        </JetDropdownLink>
+                        <JetDropdownLink as="button" @click="bulkActions('shipping_status_to_shipped')">
+                            Change Shipping Status to Shipped
+                        </JetDropdownLink>
+                        <JetDropdownLink as="button" @click="bulkActions('shipping_status_to_no_ship')">
+                            Change Shipping Status to No Ship
+                        </JetDropdownLink>
 
-            <JetSecondaryButton @click="$emit('showFilters', true)" class="px-5 py-3 ml-2">Filters</JetSecondaryButton>
+                        <div class="block px-4 py-2 text-xs text-gray-400">
+                            Membership Statuses
+                        </div>
+                        <JetDropdownLink as="button" @click="bulkActions('status_to_active')">
+                            Change Status to Active
+                        </JetDropdownLink>
+                        <JetDropdownLink as="button" @click="bulkActions('status_to_in_renewal')">
+                            Change Status to In Renewal
+                        </JetDropdownLink>
+                        <JetDropdownLink as="button" @click="bulkActions('status_to_awaiting_pick_gift')">
+                            Change Status to Awaiting Pick Gift
+                        </JetDropdownLink>
+                        <JetDropdownLink as="button" @click="bulkActions('status_to_cancelled')">
+                            Change Status to Cancelled
+                        </JetDropdownLink>
+
+                        <div class="block px-4 py-2 text-xs text-gray-400">
+                            Actions
+                        </div>
+
+                        <JetDropdownLink as="button" @click="bulkActions('expire')">
+                            Expire Membership
+                        </JetDropdownLink>
+                        <JetDropdownLink as="button" @click="bulkActions('renew')">
+                            Renew Memberships
+                        </JetDropdownLink>
+                        <JetDropdownLink as="button" @click="bulkActions('run_cron')">
+                            Run Renewal Cron
+                        </JetDropdownLink>
+                    </div>
+                </template>
+            </JetDropdown>
+
+            <Button @click="$emit('showFilters', true)" size="sm" color="secondary" class="px-3 py-2 ml-2">
+                <FilterIcon class="w-5 h-5 mr-1" />
+                Filters
+            </Button>
         </div>
     </div>
 </template>
 <script>
     import { defineComponent } from 'vue'
+    import Button from '@/Components/Button.vue'
     import JetInput from '@/Jetstream/Input.vue'
     import JetDropdown from '@/Jetstream/Dropdown.vue'
+    import JetDropdownLink from '@/Jetstream/DropdownLink.vue'
     import JetSecondaryButton from '@/Jetstream/SecondaryButton.vue'
+    import { FilterIcon, LightningBoltIcon } from '@heroicons/vue/outline'
 
     export default defineComponent({
         props: {
@@ -48,7 +96,11 @@
         components: {
             JetInput,
             JetDropdown,
-            JetSecondaryButton
+            JetDropdownLink,
+            JetSecondaryButton,
+            FilterIcon,
+            LightningBoltIcon,
+            Button
         },
 
         methods: {
@@ -65,8 +117,8 @@
                 }, { replace: true })
             },
 
-            bulkActions(e) {
-                this.$emit('bulkAction', e.target.value);
+            bulkActions(action) {
+                this.$emit('bulkAction', action);
             }
         }
     })
