@@ -56,6 +56,8 @@ class SetDefaultGiftProductJob implements ShouldQueue
                     $membership->giftProducts()->attach($product);
                     $membership->gift_product_id = $request->product_id;
                     $membership->save();
+
+                    SingleWooCommerceSync::dispatch('orders', $request->order_id);
                 }
             }
         }

@@ -6,7 +6,9 @@ use Illuminate\Support\ServiceProvider;
 use Laravel\Cashier\Cashier;
 use App\Models\WooCommerce\Customer;
 use App\Models\WooCommerce\Order;
+use App\Models\WooCommerce\Product;
 use App\Observers\OrderObserver;
+use App\Observers\ProductObserver;
 use App\Services\WooCommerce\WooCommerceService;
 
 class AppServiceProvider extends ServiceProvider
@@ -41,5 +43,6 @@ class AppServiceProvider extends ServiceProvider
     {
         Cashier::useCustomerModel(Customer::class);
         Order::observe(OrderObserver::class);
+        Product::observe(ProductObserver::class);
     }
 }
