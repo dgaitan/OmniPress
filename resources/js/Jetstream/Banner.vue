@@ -5,7 +5,7 @@
             <div class=" min-w-min py-2 inline-flex px-6">
                 <div class="flex items-center justify-between flex-wrap w-full">
                     <div class="flex-1 flex items-center min-w-0">
-                        <p class=" font-medium text-sm text-white truncate">
+                        <p class=" font-medium text-sm text-white">
                             {{ message }}
                         </p>
                     </div>

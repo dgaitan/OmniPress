@@ -468,7 +468,7 @@ class MembershipController extends Controller
 
             $cacheKey = $cacheKey . $ordering . "_";
         } else {
-            $memberships = $memberships->orderBy('id', 'desc');
+            $memberships = $memberships->orderBy('last_payment_intent', 'desc');
             $cacheKey = $cacheKey . "desc_";
         }
 
