@@ -90,6 +90,8 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('/dashboard')->group(fun
         // Products
         Route::controller(ProductController::class)->prefix('/products')->group(function () {
             Route::get('/', 'index')->name('kinja.products.index');
+            Route::get('/export-subscriptions', 'exportSubscriptions')
+                ->name('kinja.products.export-subscriptions');
             Route::get('/{id}', 'show')->name('kinja.products.show');
         });
 
@@ -110,6 +112,7 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('/dashboard')->group(fun
             Route::get('/{id}', 'show')->name('show');
             Route::put('/{id}/update', 'update')->name('update');
             Route::put('/{id}/update-kind-cash', 'updateKindCash')->name('updateKindCash');
+            Route::post('/{id}/test/manually-renew', 'testManuallyRenew')->name('testManuallyRenew');
         });
     });
 

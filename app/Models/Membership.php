@@ -544,6 +544,10 @@ class Membership extends Model
             [
                 'slug' => self::SHIPPING_CANCELLED_STATUS,
                 'label' => 'Cancelled'
+            ],
+            [
+                'slug' => 'N/A',
+                'label' => 'N/A'
             ]
         ];
         return $statuses;

@@ -5,8 +5,11 @@
             <ListWrapper title="Products">
                 <!-- Actions -->
                 <template #actions>
-                    <!-- SearchBox -->
-                    <jet-input v-model="filters.s" type="search" v-on:keyup.enter="search" placeholder="Search..." style="width:350px" />
+                    <div class="flex items-center">
+                        <!-- SearchBox -->
+                        <jet-input v-model="filters.s" type="search" v-on:keyup.enter="search" placeholder="Search..." style="width:350px" />
+                        <Exporters class="ml-2" />
+                    </div>
                 </template>
 
                 <!-- FIlters -->
@@ -132,6 +135,7 @@
     import JetDropdownLink from '@/Jetstream/DropdownLink.vue'
     import { Link } from '@inertiajs/inertia-vue3'
     import Status from '@/Components/Status.vue'
+    import Exporters from './Partials/Exporters.vue'
 
     export default defineComponent({
         props: [
@@ -156,7 +160,8 @@
             ListFilter,
             ListTable,
             ListPagination,
-            Status
+            Status,
+            Exporters
         },
 
         data() {

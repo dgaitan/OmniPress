@@ -46,7 +46,11 @@ class PaymentController extends Controller
                     'customer_id' => $request->customer_id,
                     'email'       => $request->customer_email
                 ]);
-                $customer->username = $request->customer_username;
+
+                if (! $customer->username) {
+                    $customer->username = $request->customer_username;
+                }
+
                 $customer->save();
 
                 if ($request->save) {
@@ -249,10 +253,10 @@ class PaymentController extends Controller
             return response()->json($customer, 404);
         }
 
-        $paymentMethod = $customer->updateDefaultPaymentMethod($request->token);
+        $customer->updateDefaultPaymentMethod($request->token);
 
         return response()->json(
-            $this->prepareResponseData($paymentMethod),
+            $this->prepareResponseData($customer->defaultPaymentMethod()),
             200
         );
     }

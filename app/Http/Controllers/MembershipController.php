@@ -6,6 +6,7 @@ use App\Exports\MembershipExport;
 use App\Models\Membership;
 use App\Models\WooCommerce\Product;
 use App\Http\Resources\MembershipResource;
+use App\Jobs\Memberships\ManualRenewMembershipJob;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Cache;
@@ -25,7 +26,6 @@ class MembershipController extends Controller
     {
         $cacheKey = "membeships_index_";
         $perPage = 50;
-        $status = '';
 
         if ($request->input('page')) {
             $cacheKey = $cacheKey . $request->input('page') . "_";
@@ -41,6 +41,7 @@ class MembershipController extends Controller
                 return $memberships->paginate($perPage);
             });
         }
+
         $data = $this->getPaginationResponse($memberships);
         $data = array_merge($data, [
             'memberships' => collect($memberships->items())->map(function($m) {
@@ -66,7 +67,7 @@ class MembershipController extends Controller
             'statuses' => Membership::getStatuses(),
             'shippingStatuses' => Membership::getShippingStatuses(),
             '_s' => $request->input('s') ?? '',
-            '_status' => $status,
+            '_status' => $request->has('status') ? $request->status : '',
             '_shippingStatus' => $request->input('shippingStatus') ?? '',
             '_order' => $request->input('order') ?? 'desc',
             '_orderBy' => $request->input('orderBy') ?? '',
@@ -125,6 +126,7 @@ class MembershipController extends Controller
             'status' => ['required', 'string'],
             'shipping_status' => ['required', 'string'],
             'end_at' => ['required', 'date'],
+            'last_payment_intent' => ['nullable', 'date'],
             'points' => ['required', 'numeric']
         ])->validateWithBag('updateMembership');
 
@@ -134,20 +136,30 @@ class MembershipController extends Controller
             abort(404);
         }
 
-        $membership->update([
+        $data = [
             'status' => $request->input('status'),
             'shipping_status' => $request->input('shipping_status'),
             'end_at' => (new Carbon(strtotime($request->input('end_at'))))->toDateTimeString()
-        ]);
+        ];
+
+        if ($request->user()->can('force_membership_renewals')) {
+            $data['last_payment_intent'] = Carbon::parse($request->last_payment_intent);
+        }
+
+        $membership->update($data);
+
 
         $points = (int) ((float) $request->input('points') * 100);
-        $membership->kindCash->update([
-            'points' => $points
-        ]);
-        $membership->kindCash->addLog('earned', $points, sprintf(
-            'Kind Cash added by %s',
-            $request->user()->email
-        ));
+
+        if ($points !== $membership->kindCash->points) {
+            $membership->kindCash->update([
+                'points' => $points
+            ]);
+            $membership->kindCash->addLog('earned', $points, sprintf(
+                'Kind Cash added by %s',
+                $request->user()->email
+            ));
+        }
 
         Cache::tags('memberships')->flush();
 
@@ -317,6 +329,35 @@ class MembershipController extends Controller
     }
 
     /**
+     * Action that should be handled by QA only.
+     *
+     * @param Request $request
+     * @param int $id
+     * @return void
+     */
+    public function testManuallyRenew(Request $request, $id) {
+        $membership = Membership::find($id);
+
+        if (! $request->user()->can('force_membership_renewals')) {
+            return abort(403);
+        }
+
+        if (is_null($membership)) {
+            return abort(404);
+        }
+
+        if ($membership->isActive()) {
+            ManualRenewMembershipJob::dispatch($membership->id);
+        }
+
+        $message = 'Membership manual review has been started in the background. Please wait a few seconds until the processes has been finished.';
+
+        session()->flash('flash.banner', $message);
+        session()->flash('flash.bannerStyle', 'success');
+        return back()->banner($message);
+    }
+
+    /**
      * Prepare Membership Queryset with filters.
      *
      * @param Request $request
@@ -397,6 +438,13 @@ class MembershipController extends Controller
             });
 
             $memberships->orWhere('customer_email', 'ilike', "%$s%");
+            $memberships->orWhereExists(function ($query) use ($s) {
+                $query->select('order_id')
+                    ->from('orders')
+                    ->whereColumn('orders.membership_id', 'memberships.id')
+                    ->where('order_id', 'ilike', "%$s%");
+            });
+
             $cacheKey = $cacheKey . $s . "_";
         }
 
@@ -420,7 +468,7 @@ class MembershipController extends Controller
 
             $cacheKey = $cacheKey . $ordering . "_";
         } else {
-            $memberships = $memberships->orderBy('id', 'desc');
+            $memberships = $memberships->orderBy('last_payment_intent', 'desc');
             $cacheKey = $cacheKey . "desc_";
         }
 

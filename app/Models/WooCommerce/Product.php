@@ -3,9 +3,16 @@
 namespace App\Models\WooCommerce;
 
 use App\Models\Membership;
+use App\Models\Concerns\HasMetaData;
+use App\Models\Subscription\SubscriptionProduct;
+use App\Models\Subscription\Subscriptable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Laravel\Scout\Searchable;
+use Illuminate\Notifications\Notifiable;
 
 /**
  * App\Models\WooCommerce\Product
@@ -91,7 +98,10 @@ use Laravel\Scout\Searchable;
 class Product extends Model
 {
     use HasFactory;
-    // use Searchable;
+    use HasMetaData;
+    use Subscriptable;
+    use Searchable;
+    use Notifiable;
 
     protected $casts = [
         'price' => 'decimal:2',
@@ -125,21 +135,35 @@ class Product extends Model
         'regular_price',
         'sale_price',
         'settings',
-        'meta_data'
+        'meta_data',
+        'is_subscription'
     ];
 
     /**
      * Child Products
      */
-    public function variations() {
+    public function variations(): HasMany
+    {
         return $this->hasMany(self::class, 'parent_id');
     }
 
-    public function parent() {
+    /**
+     * Parent PRoduct
+     *
+     * @return BelongsTo
+     */
+    public function parent(): BelongsTo
+    {
         return $this->belongsTo(self::class, 'parent_id')->with('images');
     }
 
-    public function images() {
+    /**
+     * Images
+     *
+     * @return HasMany
+     */
+    public function images(): HasMany
+    {
         return $this->hasMany(ProductImage::class, 'product_id');
     }
 
@@ -229,6 +253,16 @@ class Product extends Model
     }
 
     /**
+     * Subscription Product if it has one
+     *
+     * @return HasOne
+     */
+    public function subscription(): HasOne
+    {
+        return $this->hasOne(SubscriptionProduct::class, 'product_id');
+    }
+
+    /**
      * Get Permalink on this app
      *
      * @return string
@@ -265,9 +299,9 @@ class Product extends Model
      *
      * @return array
      */
-    public function toSearchableArray()
+    public function toSearchableArray(): array
     {
-        $data = [
+        return [
             'id' => $this->id,
             'product_id' => $this->product_id,
             'slug' => $this->slug,
@@ -284,8 +318,6 @@ class Product extends Model
             'tags' => $this->tags()->pluck('name')->toArray(),
             'brands' => $this->tags()->pluck('name')->toArray()
         ];
-
-        return $data;
     }
 
     /**
@@ -359,5 +391,25 @@ class Product extends Model
         }
 
         return $products;
+    }
+
+    public function routeNotificationForSlack($notification)
+    {
+        return env('SLACK_CHANNEL_URL', 'https://hooks.slack.com/services/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');
+    }
+
+    /**
+     * Route notifications for the mail channel.
+     *
+     * @param  \Illuminate\Notifications\Notification  $notification
+     * @return array|string
+     */
+    public function routeNotificationForMail($notification)
+    {
+        // Return email address only...
+        return env('NOTIFICATION_EMAILS', 'martijn@kindhumans.com');
+
+        // Return email address and name...
+        // return [$this->email_address => $this->name];
     }
 }

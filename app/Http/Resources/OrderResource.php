@@ -31,6 +31,7 @@ class OrderResource extends JsonResource
             'total_tax' => $this->total_tax,
             'discount_total' => $this->discount_total,
             'discount_tax' => $this->discount_tax,
+            'giftcard_total' => $this->giftcard_total,
             'billing_address' => $this->billingAddress(),
             'billing' => $this->billing,
             'shipping_address' => $this->shippingAddress(),
@@ -40,6 +41,7 @@ class OrderResource extends JsonResource
             'fee_lines' => $this->fee_lines,
             'coupon_lines' => $this->coupon_lines,
             'shipping_lines' => $this->shipping_lines,
+            'giftcards' => $this->giftcards,
             'permalink_on_store' => $this->getPermalinkOnStore(),
             // Default Values for relationships
             'customer' => null,

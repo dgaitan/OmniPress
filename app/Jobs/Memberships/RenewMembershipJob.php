@@ -101,7 +101,7 @@ class RenewMembershipJob implements ShouldQueue
                 );
 
                 $membership->status = Membership::AWAITING_PICK_GIFT_STATUS;
-                $membership->shipping_status = Membership::SHIPPING_PENDING_STATUS;
+                $membership->shipping_status = 'N/A';
                 $membership->last_payment_intent = Carbon::now();
                 $membership->end_at = $membership->end_at->addYear();
                 $membership->payment_intents = 0;

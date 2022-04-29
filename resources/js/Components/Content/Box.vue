@@ -1,7 +1,7 @@
 <template>
-    <div class="bg-white rounded mb-10">
+    <div class="bg-white rounded mb-10 border border-gray-200 shadow-gray-200 shadow-sm">
         <div v-if="headline" class="p-4 border-b border-gray-200 flex justify-between w-full">
-            <h3 class="mr-2 text-xl font-medium">
+            <h3 class="mr-2 text-lg font-medium">
                 {{ headline }}
             </h3>
             <div v-if="button.link">

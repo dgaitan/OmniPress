@@ -16,6 +16,14 @@
                         </FormGroup>
 
                         <FormGroup
+                            v-if="userCan('force_membership_renewals')"
+                            id="last_payment_intent"
+                            label="Last Payment Intent"
+                            :message="form.last_payment_intent.end_at">
+                            <Datepicker v-model="form.last_payment_intent" id="end_at" class="border-gray-300 focus:border-cyan-600 focus:ring focus:ring-cyan-400 focus:ring-opacity-50 rounded-md shadow-sm py-2 pl-2 pr-10 w-full"  />
+                        </FormGroup>
+
+                        <FormGroup
                             id="kind_cash"
                             label="Kind Cash"
                             :message="form.errors.points">
@@ -69,7 +77,7 @@
     import numeral from 'numeral'
 
     export default defineComponent({
-        emits: ['close'],
+        emits: ['close', 'onUpdateMembership'],
 
         components: {
             Modal,
@@ -98,6 +106,9 @@
                 form: this.$inertia.form({
                     _method: 'PUT',
                     end_at: new Date(this.membership.end_at),
+                    last_payment_intent: this.membership.last_payment_intent
+                        ? new Date(this.membership.last_payment_intent)
+                        : new Date(),
                     status: this.membership.status,
                     shipping_status: this.membership.shipping_status,
                     points: numeral(this.membership.cash.points / 100).format('0.00')
@@ -113,6 +124,7 @@
                     onSuccess: () => {
                         this.$props.membership.status = this.form.status,
                         this.$props.membership.shipping_status = this.form.shipping_status
+                        this.$emit('onUpdateMembership');
                     }
                 })
             }

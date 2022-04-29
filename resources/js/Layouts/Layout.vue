@@ -6,13 +6,13 @@
 			<Header />
 			<Sidebar />
 	        <div class="mx-auto lg:ml-80 content">
-                <jet-banner />
                 <div class="content-wrapper">
 	        	    <slot></slot>
                 </div>
 	        </div>
 		</div>
 
+        <jet-banner />
 	</div>
 </template>
 

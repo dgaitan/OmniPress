@@ -1,5 +1,5 @@
 <template>
-    <button :type="type" :class="classes">
+    <button :type="type" :class="classes" :disabled="disabled">
         <slot />
     </button>
 </template>
@@ -20,6 +20,10 @@ export default defineComponent({
         color: {
             type: String,
             default: 'primary'
+        },
+        disabled: {
+            type: Boolean,
+            default: false
         }
     },
 
@@ -31,14 +35,14 @@ export default defineComponent({
 
     methods: {
         baseClasses() {
-            return `inline-flex items-center border border-transparent rounded-md font-semibold focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150`
+            return `inline-flex items-center border drop-shadow-sm rounded-md font-semibold focus:outline-none focus:shadow-outline-gray transition ease-in-out duration-150 disabled:opacity-50 disabled:cursor-not-allowed`
         },
 
         sizeClasses() {
             const classes = {
                 'sm': 'px-2 py-1 text-sm',
-                'md': 'px-4 py-2 text-xs',
-                'lg': 'px-6 py-3 text-lg'
+                'md': 'px-5 py-2 text-sm',
+                'lg': 'px-6 py-3 text-md'
             }
 
             return classes[this.size]
@@ -46,10 +50,10 @@ export default defineComponent({
 
         colorClasses() {
             const classes = {
-                'primary': 'text-white bg-cyan-400 hover:bg-cyan-600 active:bg-cyan-600 foucs:border-cyan-900',
-                'secondary': 'text-white bg-gray-500 hover:bg-gray-600 active:bg-gray-600 foucs:border-gray-900'
-            }            
-            
+                'primary': 'text-white border-cyan-400 bg-cyan-400 hover:bg-cyan-500 active:bg-cyan-500 focus:border-cyan-500',
+                'secondary': 'text-gray bg-white border-gray-300 hover:bg-gray-100 active:bg-gray-300 focus:border-gray-300'
+            }
+
             return classes[this.color]
         }
     }

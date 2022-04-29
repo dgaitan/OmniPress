@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Scout\Searchable;
+use Illuminate\Notifications\Notifiable;
+use App\Observers\OrderObserver;
+use App\Models\Concerns\HasMetaData;
 
 /**
  * App\Models\WooCommerce\Order
@@ -103,6 +106,8 @@ use Laravel\Scout\Searchable;
 class Order extends Model
 {
     use HasFactory;
+    use Notifiable;
+    use HasMetaData;
 
     /**
      * Order Casting
@@ -118,6 +123,7 @@ class Order extends Model
         'discount_total' => 'decimal:0',
         'discount_tax' => 'decimal:0',
         'shipping_tax' => 'decimal:0',
+        'giftcard_total' => 'decimal:0',
         'total_tax' => 'decimal:0',
         'billing' => 'object',
         'shipping' => 'object',
@@ -126,6 +132,7 @@ class Order extends Model
         'shipping_lines' => 'array',
         'fee_lines' => 'array',
         'coupon_lines' => 'array',
+        'giftcards' => 'array'
     ];
 
     protected $fillable = [
@@ -146,6 +153,7 @@ class Order extends Model
         'cart_tax',
         'total',
         'total_tax',
+        'giftcard_total',
         'prices_include_tax',
         'customer_ip_address',
         'customer_user_agent',
@@ -162,7 +170,8 @@ class Order extends Model
         'shipping_lines',
         'fee_lines',
         'coupon_lines',
-        'membership_id'
+        'membership_id',
+        'giftcards'
     ];
 
     /**
@@ -190,6 +199,28 @@ class Order extends Model
      */
     public function items(): HasMany {
         return $this->hasMany(OrderLine::class, 'order_id');
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return string
+     */
+    public function getCustomerInfo(): string
+    {
+        return sprintf(
+            '%s %s',
+            $this->billing->first_name,
+            $this->billing->last_name
+        );
+    }
+
+    public function getTotal(): string
+    {
+        return sprintf(
+            '$ %s',
+            number_format((float) $this->total / 100, 2)
+        );
     }
 
     /**
@@ -238,6 +269,14 @@ class Order extends Model
         return $billing;
     }
 
+    public function getPaymentMethodName(): string {
+        if ($this->payment_id) {
+            return $this->paymentMethod->title;
+        }
+
+        return 'Free';
+    }
+
     /**
      * Get ORder Date Completed
      *
@@ -257,7 +296,7 @@ class Order extends Model
      * @return integer
      */
     public function getSubtotal(): int {
-        return $this->total - ((int) $this->total_tax + (int) $this->shipping_total) + $this->discount_total;
+        return $this->items()->sum('subtotal');
     }
 
     /**
@@ -280,22 +319,6 @@ class Order extends Model
             env('CLIENT_DOMAIN', 'https://kindhumans.com'),
             $this->order_id
         );
-    }
-
-    /**
-     * Get a meta value
-     *
-     * @param string $key
-     * @return void
-     */
-    public function getMetaValue(string $key) {
-        $metaData = collect($this->meta_data)->where('key', $key);
-
-        if ($metaData->count() > 0) {
-            return $metaData->pluck('value')[0];
-        }
-
-        return null;
     }
 
     /**
@@ -380,5 +403,10 @@ class Order extends Model
     protected function makeAllSearchableUsing($query)
     {
         return $query->with(['customer', 'items']);
+    }
+
+    public function routeNotificationForSlack($notification)
+    {
+        return env('SLACK_CHANNEL_URL', 'https://hooks.slack.com/services/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');
     }
 }
