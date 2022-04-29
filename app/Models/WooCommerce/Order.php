@@ -123,6 +123,7 @@ class Order extends Model
         'discount_total' => 'decimal:0',
         'discount_tax' => 'decimal:0',
         'shipping_tax' => 'decimal:0',
+        'giftcard_total' => 'decimal:0',
         'total_tax' => 'decimal:0',
         'billing' => 'object',
         'shipping' => 'object',
@@ -131,6 +132,7 @@ class Order extends Model
         'shipping_lines' => 'array',
         'fee_lines' => 'array',
         'coupon_lines' => 'array',
+        'giftcards' => 'array'
     ];
 
     protected $fillable = [
@@ -151,6 +153,7 @@ class Order extends Model
         'cart_tax',
         'total',
         'total_tax',
+        'giftcard_total',
         'prices_include_tax',
         'customer_ip_address',
         'customer_user_agent',
@@ -167,7 +170,8 @@ class Order extends Model
         'shipping_lines',
         'fee_lines',
         'coupon_lines',
-        'membership_id'
+        'membership_id',
+        'giftcards'
     ];
 
     /**
@@ -292,7 +296,7 @@ class Order extends Model
      * @return integer
      */
     public function getSubtotal(): int {
-        return $this->total - ((int) $this->total_tax + (int) $this->shipping_total) + $this->discount_total;
+        return $this->items()->sum('subtotal');
     }
 
     /**

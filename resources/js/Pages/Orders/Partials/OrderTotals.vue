@@ -25,6 +25,10 @@
             <p class="text-md font-medium text-gray-800">Tax</p>
             <p class="text-md font-medium text-gray-500">$ {{ moneyFormat(order.total_tax) }}</p>
         </div>
+        <div class="w-full flex justify-between pb-2 mb-2" v-if="order.giftcard_total > 0">
+            <p class="text-md font-medium text-gray-800">GiftCard</p>
+            <p class="text-md font-medium text-gray-500">$ -{{ moneyFormat(order.giftcard_total) }}</p>
+        </div>
         <div class="w-full flex justify-between pt-3 mt-3 border-t border-gray-300">
             <p class="text-md font-medium text-gray-800">Total</p>
             <p class="text-md font-medium text-gray-500">$ {{ moneyFormat(order.total) }}</p>
