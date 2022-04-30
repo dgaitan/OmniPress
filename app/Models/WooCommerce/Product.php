@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Laravel\Scout\Searchable;
+use Illuminate\Notifications\Notifiable;
 
 /**
  * App\Models\WooCommerce\Product
@@ -103,6 +104,7 @@ class Product extends Model
     use HasMetaData;
     use Subscriptable;
     use Searchable;
+    use Notifiable;
 
     protected $casts = [
         'price' => 'decimal:2',
@@ -392,5 +394,25 @@ class Product extends Model
         }
 
         return $products;
+    }
+
+    public function routeNotificationForSlack($notification)
+    {
+        return env('SLACK_CHANNEL_URL', 'https://hooks.slack.com/services/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');
+    }
+
+    /**
+     * Route notifications for the mail channel.
+     *
+     * @param  \Illuminate\Notifications\Notification  $notification
+     * @return array|string
+     */
+    public function routeNotificationForMail($notification)
+    {
+        // Return email address only...
+        return env('NOTIFICATION_EMAILS', 'martijn@kindhumans.com');
+
+        // Return email address and name...
+        // return [$this->email_address => $this->name];
     }
 }

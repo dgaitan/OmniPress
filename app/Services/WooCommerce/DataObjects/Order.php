@@ -34,6 +34,7 @@ class Order extends BaseObject implements DataObjectContract
         $this->money('cart_tax');
         $this->money('total');
         $this->money('total_tax');
+        $this->money('giftcard_total');
         $this->boolean('prices_include_tax');
         $this->integer('customer_id');
         $this->string('customer_ip_address');
@@ -54,6 +55,7 @@ class Order extends BaseObject implements DataObjectContract
         $this->array('fee_lines');
         $this->array('coupon_lines');
         $this->array('refunds');
+        $this->array('giftcards');
     }
 
     /**

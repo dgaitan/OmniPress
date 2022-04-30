@@ -11,7 +11,7 @@
                         :action="action"
                         @bulkAction="confirmAction"
                         @showFilters="showFilters = $event"/>
-              </template>
+                </template>
 
               <!-- FIlters -->
               <template #filters>

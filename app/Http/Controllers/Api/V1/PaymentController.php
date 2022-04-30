@@ -46,7 +46,11 @@ class PaymentController extends Controller
                     'customer_id' => $request->customer_id,
                     'email'       => $request->customer_email
                 ]);
-                $customer->username = $request->customer_username;
+
+                if (! $customer->username) {
+                    $customer->username = $request->customer_username;
+                }
+
                 $customer->save();
 
                 if ($request->save) {
