@@ -10,6 +10,7 @@ use App\Services\WooCommerce\Resources\CustomerResource;
 use App\Services\WooCommerce\Resources\ProductResource;
 use App\Services\WooCommerce\Resources\MembershipResource;
 use App\Services\WooCommerce\Resources\PaymentMethodResource;
+use App\Services\WooCommerce\Resources\SubscriptionResource;
 use Automattic\WooCommerce\Client as WooCommerce;
 
 class WooCommerceService implements ServiceContract
@@ -98,6 +99,16 @@ class WooCommerceService implements ServiceContract
     public function paymentMethods(): PaymentMethodResource
     {
         return new PaymentMethodResource(service: $this);
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return SubscriptionResource
+     */
+    public function subscriptions(): SubscriptionResource
+    {
+        return new SubscriptionResource(service: $this);
     }
 
     /**

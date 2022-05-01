@@ -46,6 +46,7 @@ class KindhumanSubscriptionItem extends Model
         'price',
         'fee',
         'total',
+        'quantity'
     ];
 
     public function subscription(): BelongsTo

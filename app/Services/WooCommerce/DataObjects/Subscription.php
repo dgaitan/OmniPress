@@ -5,12 +5,13 @@ namespace App\Services\WooCommerce\DataObjects;
 use App\Services\Contracts\DataObjectContract;
 use App\Services\DataObjects\BaseObject;
 use App\Models\Subscription\KindhumanSubscription;
-use App\Models\KindCash;
+use App\Models\Subscription\KindhumanSubscriptionLog;
 use App\Models\WooCommerce\Customer;
 use App\Models\WooCommerce\Order;
-use App\Models\WooCommerce\Product;
+use App\Services\WooCommerce\DataObjects\SubscriptionItem;
+use Carbon\Carbon;
 
-class Membership extends BaseObject implements DataObjectContract
+class Subscription extends BaseObject implements DataObjectContract
 {
     /**
      * Order Schame
@@ -25,7 +26,7 @@ class Membership extends BaseObject implements DataObjectContract
         $this->string('start_date', null);
         $this->string('end_date', null);
         $this->string('next_payment_date', null);
-        $this->string('last_payment', null);
+        $this->string('last_intent', null);
         $this->money('total', 0);
         $this->string('payment_method', 'stripe');
         $this->array('orders');
@@ -34,7 +35,7 @@ class Membership extends BaseObject implements DataObjectContract
         $this->string('payment_interval');
         $this->array('cause');
         $this->array('logs', []);
-        $this->integer('payment_intents');
+        $this->integer('payment_intents', 0);
         $this->integer('active_order_id', null);
     }
 
@@ -68,6 +69,9 @@ class Membership extends BaseObject implements DataObjectContract
 
         $data['customer_id'] = $customer->id;
         $data['customer_email'] = $customer->email;
+        $data['last_payment'] = $data['last_intent'];
+        unset($data['last_intent']);
+        
         $subscription = KindhumanSubscription::firstOrCreate($data);
         $subscription->save();
 
@@ -76,12 +80,27 @@ class Membership extends BaseObject implements DataObjectContract
                 $order = Order::whereOrderId($order_id)->first();
 
                 if (! is_null($order)) {
-                    $subscription->orders()->attach($order);
+                    $order->update(['kindhuman_subscription_id' => $subscription->id]);
                 }
             });
         }
 
-        // Is user picked gift product, attach it to membership as well
+        if ($this->logs) {
+            $subscription->logs()->delete();
+            
+            collect($this->logs)->map(function($log) use ($subscription) {
+                KindhumanSubscriptionLog::create([
+                    'subscription_id' => $subscription->id,
+                    'by' => $log->by,
+                    'message' => $log->message,
+                    'created_at' => Carbon::parse($log->date)
+                ]);
+            });
+        }
+
+        $this->syncCollection(
+            'items', 'subscription_id', SubscriptionItem::class, $subscription
+        );
 
         return $subscription;
     }

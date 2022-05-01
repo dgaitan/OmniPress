@@ -176,7 +176,8 @@ class Order extends Model
         'fee_lines',
         'coupon_lines',
         'membership_id',
-        'giftcards'
+        'giftcards',
+        'kindhuman_subscription_id'
     ];
 
     /**

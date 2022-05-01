@@ -2,6 +2,7 @@
 
 namespace App\Models\Subscription;
 
+use App\Models\WooCommerce\Order;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -62,7 +63,7 @@ class KindhumanSubscription extends Model
         'start_date' => 'date',
         'end_date' => 'date',
         'next_payment_date' => 'date',
-        'last_intent' => 'date',
+        'last_payment' => 'date',
         'shipping_address' => 'object',
         'billing_address' => 'object',
         'cause' => 'object'
@@ -75,14 +76,15 @@ class KindhumanSubscription extends Model
         'start_date',
         'end_date',
         'next_payment_date',
-        'last_intent',
+        'last_payment',
         'active_order_id',
         'total',
         'billing_address',
         'shipping_address',
         'payment_intents',
         'cause',
-        'payment_method'
+        'payment_method',
+        'payment_interval'
     ];
 
     /**
@@ -93,7 +95,7 @@ class KindhumanSubscription extends Model
     public function orders(): HasMany
     {
         return $this->hasMany(
-            KindhumanSubscription::class, 
+            Order::class, 
             'kindhuman_subscription_id'
         );
     }
