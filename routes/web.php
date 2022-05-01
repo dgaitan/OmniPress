@@ -13,6 +13,7 @@ use App\Http\Controllers\MembershipController;
 use App\Http\Controllers\QueuesController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\SubscriptionController;
 use Illuminate\Support\Facades\Auth;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
@@ -113,6 +114,11 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('/dashboard')->group(fun
             Route::put('/{id}/update', 'update')->name('update');
             Route::put('/{id}/update-kind-cash', 'updateKindCash')->name('updateKindCash');
             Route::post('/{id}/test/manually-renew', 'testManuallyRenew')->name('testManuallyRenew');
+        });
+
+        // Subscriptions
+        Route::controller(SubscriptionController::class)->prefix('/subscriptions')->name('subscriptions.')->group(function () {
+            Route::get('/', 'index')->name('index');
         });
     });
 

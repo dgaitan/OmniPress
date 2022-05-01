@@ -51,7 +51,7 @@ class SyncPermissions extends Command
             'see_coupons', 'analyze_coupons', 'export_coupons',
             'see_orders', 'analyze_orders', 'export_orders',
             'see_products', 'analyze_products', 'export_products',
-            'see_payment_methods'
+            'see_payment_methods', 'see_subscriptions'
         ];
 
         $qaPerms = [

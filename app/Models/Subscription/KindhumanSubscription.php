@@ -2,9 +2,11 @@
 
 namespace App\Models\Subscription;
 
+use App\Models\WooCommerce\Customer;
 use App\Models\WooCommerce\Order;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
@@ -59,6 +61,16 @@ class KindhumanSubscription extends Model
 {
     use HasFactory;
 
+    public const ACTIVE_STATUS = 'active';
+    public const ON_HOLD_STATUS = 'on-hold';
+    public const CANCELLED_STATUS = 'cancelled';
+
+    public const STATUSES = [
+        self::ACTIVE_STATUS => 'Active',
+        self::ON_HOLD_STATUS => 'On Hold',
+        self::CANCELLED_STATUS => 'Cancelled'
+    ];
+
     protected $casts = [
         'start_date' => 'date',
         'end_date' => 'date',
@@ -95,7 +107,7 @@ class KindhumanSubscription extends Model
     public function orders(): HasMany
     {
         return $this->hasMany(
-            Order::class, 
+            Order::class,
             'kindhuman_subscription_id'
         );
     }
@@ -124,5 +136,32 @@ class KindhumanSubscription extends Model
             KindhumanSubscriptionItem::class,
             'subscription_id'
         );
+    }
+
+    /**
+     * Customer
+     *
+     * @return BelongsTo
+     */
+    public function customer(): BelongsTo
+    {
+        return $this->belongsTo(
+            Customer::class,
+            'customer_id'
+        );
+    }
+
+    public static function getStatuses(): array
+    {
+        $statuses = [];
+
+        foreach (self::STATUSES as $key => $value) {
+            $statuses[] = [
+                'slug' => $key,
+                'label' => $value
+            ];
+        }
+
+        return $statuses;
     }
 }

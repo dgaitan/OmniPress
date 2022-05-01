@@ -32,6 +32,12 @@
 	              			<template #icon><UserAddIcon class="w-5 h-5" /></template>
 	              			Memberships
 	              		</SidebarNavLink>
+                        <SidebarNavLink
+                            :href="route('kinja.subscriptions.index')"
+                            :active="route().current('kinja.subscriptions.index')">
+	              			<template #icon><UserAddIcon class="w-5 h-5" /></template>
+	              			Subscriptions
+	              		</SidebarNavLink>
 	            	</SidebarNav>
 
 	              	<!-- Admin -->

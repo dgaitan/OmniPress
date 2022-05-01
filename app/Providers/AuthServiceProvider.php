@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Models\ConnectedAccount;
+use App\Models\Subscription\KindhumanSubscription;
 use App\Policies\ConnectedAccountPolicy;
+use App\Policies\SubscriptionPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -15,6 +17,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         ConnectedAccount::class => ConnectedAccountPolicy::class,
+        KindhumanSubscription::class => SubscriptionPolicy::class
     ];
 
     /**
