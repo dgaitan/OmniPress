@@ -5,9 +5,11 @@ namespace App\Services\WooCommerce\DataObjects;
 use App\Services\Contracts\DataObjectContract;
 use App\Services\DataObjects\BaseObject;
 use App\Models\Subscription\KindhumanSubscription;
+use App\Models\Subscription\KindhumanSubscriptionItem;
 use App\Models\Subscription\KindhumanSubscriptionLog;
 use App\Models\WooCommerce\Customer;
 use App\Models\WooCommerce\Order;
+use App\Models\WooCommerce\Product;
 use App\Services\WooCommerce\DataObjects\SubscriptionItem;
 use Carbon\Carbon;
 
@@ -71,7 +73,7 @@ class Subscription extends BaseObject implements DataObjectContract
         $data['customer_email'] = $customer->email;
         $data['last_payment'] = $data['last_intent'];
         unset($data['last_intent']);
-        
+
         $subscription = KindhumanSubscription::firstOrCreate($data);
         $subscription->save();
 
@@ -87,9 +89,9 @@ class Subscription extends BaseObject implements DataObjectContract
 
         if ($this->logs) {
             $subscription->logs()->delete();
-            
+
             collect($this->logs)->map(function($log) use ($subscription) {
-                KindhumanSubscriptionLog::create([
+                KindhumanSubscriptionLog::firstOrCreate([
                     'subscription_id' => $subscription->id,
                     'by' => $log->by,
                     'message' => $log->message,
@@ -98,9 +100,27 @@ class Subscription extends BaseObject implements DataObjectContract
             });
         }
 
-        $this->syncCollection(
-            'items', 'subscription_id', SubscriptionItem::class, $subscription
-        );
+        if ($this->items) {
+            collect($this->items)->map(function($item) use ($subscription) {
+                $productId = $item->variation_id === 0
+                    ? $item->variation_id
+                    : $item->id;
+
+                $product = Product::findById($productId);
+
+                if (! is_null($product)) {
+                    KindhumanSubscriptionItem::firstOrCreate([
+                        'product_id' => $product->id,
+                        'subscription_id' => $subscription->id,
+                        'regular_price' => $product->price,
+                        'price' => (integer) $item->subscription_price,
+                        'fee' => (integer) $item->fee,
+                        'total' => (integer) $item->total,
+                        'quantity' => (integer) $item->qty
+                    ]);
+                }
+            });
+        }
 
         return $subscription;
     }

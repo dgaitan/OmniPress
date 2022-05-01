@@ -107,9 +107,9 @@ class Product extends Model
     use Notifiable;
 
     protected $casts = [
-        'price' => 'decimal:2',
-        'regular_price' => 'decimal:2',
-        'sale_price' => 'decimal:2',
+        // 'price' => 'decimal:2',
+        // 'regular_price' => 'decimal:2',
+        // 'sale_price' => 'decimal:2',
         'settings' => 'object',
         'meta_data' => 'array',
         'date_created' => 'datetime'
@@ -343,6 +343,12 @@ class Product extends Model
         return $query->with(['categories', 'tags', 'brands']);
     }
 
+    /**
+     * Undocumented function
+     *
+     * @param array $args
+     * @return void
+     */
     public function toArray(array $args = []) {
         $array = parent::toArray();
         $args = array_replace([
@@ -372,6 +378,12 @@ class Product extends Model
         return $array;
     }
 
+    /**
+     * Undocumented function
+     *
+     * @param string $q
+     * @return void
+     */
     public static function searchByKey(string $q) {
         $q = explode(':', $q);
 
@@ -396,7 +408,24 @@ class Product extends Model
         return $products;
     }
 
-    public function routeNotificationForSlack($notification)
+    /**
+     * Get a product by product id
+     *
+     * @param int|string $productId
+     * @return self|null
+     */
+    public static function findById(int|string $productId): self|null
+    {
+        return self::whereProductId($productId)->first();
+    }
+
+    /**
+     * Return Slack Channel Notification
+     *
+     * @param [type] $notification
+     * @return string
+     */
+    public function routeNotificationForSlack($notification): string
     {
         return env('SLACK_CHANNEL_URL', 'https://hooks.slack.com/services/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');
     }
