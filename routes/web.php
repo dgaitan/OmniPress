@@ -119,6 +119,7 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('/dashboard')->group(fun
         // Subscriptions
         Route::controller(SubscriptionController::class)->prefix('/subscriptions')->name('subscriptions.')->group(function () {
             Route::get('/', 'index')->name('index');
+            Route::get('/{id}', 'show')->name('show');
         });
     });
 

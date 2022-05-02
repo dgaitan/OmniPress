@@ -3,6 +3,7 @@
 namespace App\Repositories\Subscriptions;
 
 use App\Http\Resources\Subscription\SubscriptionCollection;
+use App\Http\Resources\Subscription\SubscriptionResource;
 use App\Models\Subscription\KindhumanSubscription as Subscription;
 use App\Repositories\BaseRepository;
 use Illuminate\Database\Eloquent\Builder;
@@ -10,6 +11,13 @@ use Illuminate\Http\Request;
 
 class SubscriptionRepository extends BaseRepository implements SubscriptionRepositoryInterface
 {
+    /**
+     * Resource Class
+     *
+     * @var string
+     */
+    public static string $jsonResourceClass = SubscriptionResource::class;
+
     /**
      * JsonCollectionClass
      *
@@ -38,9 +46,16 @@ class SubscriptionRepository extends BaseRepository implements SubscriptionRepos
         return $subscriptions;
     }
 
+    /**
+     * Show a subscriptions
+     *
+     * @param integer|string $id
+     * @return void
+     */
     public function show(int|string $id)
     {
-
+        return Subscription::with(['items', 'logs', 'customer', 'orders'])
+            ->findOrFail($id);
     }
 
     public function create(array $params)

@@ -5,6 +5,9 @@ namespace App\Repositories;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Laravel\Scout\Builder as ScoutBuilder;
 
@@ -15,7 +18,7 @@ abstract class BaseRepository
      *
      * @var string
      */
-    protected string $jsonResourceClass;
+    public static string $jsonResourceClass;
 
     /**
      * JsonCollectionClass
@@ -28,11 +31,22 @@ abstract class BaseRepository
      * Undocumented function
      *
      * @param Collection|LengthAwarePaginator $data
-     * @return void
+     * @return ResourceCollection
      */
-    public function serializeCollection(Collection|LengthAwarePaginator $data)
+    public function serializeCollection(Collection|LengthAwarePaginator $data): ResourceCollection
     {
         return new static::$jsonCollectionClass($data);
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param Model $object
+     * @return JsonResource
+     */
+    public function serialize(Model $object): JsonResource
+    {
+        return new static::$jsonResourceClass($object);
     }
 
     /**

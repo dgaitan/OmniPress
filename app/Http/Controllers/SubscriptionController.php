@@ -37,4 +37,17 @@ class SubscriptionController extends Controller
 
         return Inertia::render('Subscriptions/Index', $response);
     }
+
+    public function show(Request $request, $id)
+    {
+        $subscription = $this->subscriptionRepository->show(id: $id);
+
+        if (is_null($subscription)) {
+            abort(404);
+        }
+
+        return Inertia::render('Subscriptions/Detail', [
+            'data' => $this->subscriptionRepository->serialize(object: $subscription)
+        ]);
+    }
 }

@@ -35,7 +35,7 @@
                         <SidebarNavLink
                             :href="route('kinja.subscriptions.index')"
                             :active="route().current('kinja.subscriptions.index')">
-	              			<template #icon><UserAddIcon class="w-5 h-5" /></template>
+	              			<template #icon><TicketIcon class="w-5 h-5" /></template>
 	              			Subscriptions
 	              		</SidebarNavLink>
 	            	</SidebarNav>
@@ -94,7 +94,7 @@
 	import { defineComponent } from 'vue';
 	import SidebarNav from '@/Layouts/Partials/SidebarNav.vue';
 	import SidebarNavLink from '@/Layouts/Partials/SidebarNavLink.vue';
-    import { HomeIcon, InboxInIcon, ArchiveIcon, UsersIcon, UserAddIcon, UserGroupIcon, RefreshIcon, ClockIcon, KeyIcon, UserCircleIcon, LogoutIcon } from '@heroicons/vue/solid'
+    import { HomeIcon, InboxInIcon, ArchiveIcon, UsersIcon, UserAddIcon, UserGroupIcon, RefreshIcon, ClockIcon, KeyIcon, UserCircleIcon, LogoutIcon, TicketIcon } from '@heroicons/vue/solid'
 
 	export default defineComponent({
 		components: {
@@ -110,7 +110,8 @@
             ClockIcon,
             KeyIcon,
             UserCircleIcon,
-            LogoutIcon
+            LogoutIcon,
+            TicketIcon
 		},
 
 		methods: {
