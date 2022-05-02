@@ -60,7 +60,7 @@ class SubscriptionRepository extends BaseRepository implements SubscriptionRepos
 
     public function create(array $params)
     {
-
+        $object = Subscription::create($params);
     }
 
     public function update(int|string $id, array $params)
