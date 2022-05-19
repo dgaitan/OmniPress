@@ -92,26 +92,56 @@ class Controller extends BaseController
      * @return Builder|ScoutBuilder
      */
     protected function getOrderingQuery(
-        Request $request, 
+        Request $request,
         Builder|ScoutBuilder $query,
         array $availableOrdering,
         string $orderBy = 'id'
     ): Builder|ScoutBuilder {
         $ordering = 'desc';
-        
-        if ($request->input('orderBy') && in_array($request->input('orderBy'), $availableOrdering)) {
-            $ordering = in_array($request->input('order'), ['desc', 'asc'])
-                ? $request->input('order')
-                : 'desc';
-            $orderBy = $request->input('orderBy');
+
+        if (
+            ! $request->has('orderBy') &&
+            ! in_array($request->input('orderBy'), $availableOrdering)
+        ) {
+            return $query;
         }
-        
-        if ($request->has('s') && $query instanceof ScoutBuilder) {
-            $query = $query->query(function($q) use ($ordering, $orderBy) {
+
+        $ordering = in_array($request->input('order'), ['desc', 'asc'])
+            ? $request->input('order')
+            : 'desc';
+        $orderBy = $request->input('orderBy');
+
+        if ($query instanceof ScoutBuilder) {
+            $query->query(function($q) use ($ordering, $orderBy) {
                 $q->orderBy($orderBy, $ordering);
             });
         } else {
             $query->orderBy($orderBy, $ordering);
+        }
+
+        return $query;
+    }
+
+    protected function addFilterToQuery(
+        Request $request,
+        string $filterKey,
+        Builder|ScoutBuilder $query,
+        array $validFilterKeys = []
+    ): Builder|ScoutBuilder {
+        if (! $request->has($filterKey) && empty($request->input($filterKey))) {
+            return $query;
+        }
+
+        if (! in_array($request->input($filterKey), $validFilterKeys)) {
+            return $query;
+        }
+
+        if ($query instanceof ScoutBuilder) {
+            $query->query(function ($q) use ($filterKey, $request) {
+                $q->where($filterKey, $request->input($filterKey));
+            });
+        } else {
+            $query->where($filterKey, $request->input($filterKey));
         }
 
         return $query;

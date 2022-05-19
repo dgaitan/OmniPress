@@ -23,28 +23,34 @@ class ProductController extends Controller
             ['slug' => 'publish', 'label' => 'Publish'],
             ['slug' => 'draft', 'label' => 'Draft'],
         ];
-        $status = '';
+        $withClauses = ['categories', 'tags', 'images', 'brands'];
 
         if ($request->has('s') && ! empty($request->s)) {
-            $products = Product::search($request->s);
+            $products = Product::search($request->s)
+                ->query(function ($q) use ($withClauses) {
+                    $q->with($withClauses)
+                        ->where('type', '!=', 'variation');
+                });
         } else {
-            $products = Product::with('categories', 'tags', 'images', 'brands')
+            $products = Product::with($withClauses)
                 ->where('type', '!=', 'variation');
         }
 
         // Ordering
         $products = $this->getOrderingQuery(
-            request: $request, 
-            query: $products, 
-            availableOrdering: ['product_id', 'price', 'date_created'], 
+            request: $request,
+            query: $products,
+            availableOrdering: ['product_id', 'price', 'date_created'],
             orderBy: 'product_id'
         );
 
         // Filter By Status
-        if ($request->input('status') && 'all' !== $request->input('status')) {
-            $status = $request->input('status');
-            $products->where('status', $status);
-        }
+        $products = $this->addFilterToQuery(
+            request: $request,
+            filterKey: 'status',
+            query: $products,
+            validFilterKeys: ['publish', 'draft']
+        );
 
         // $products = $products->where('type', '!=', 'variation');
         $products = $this->paginate($request, $products);
@@ -52,7 +58,7 @@ class ProductController extends Controller
         $data = array_merge($data, [
             'products' => new ProductCollection($products->items()),
             '_s' => $request->input('s') ?? '',
-            '_status' => $status,
+            '_status' => $request->input('status'),
             'statuses' => $statuses,
             '_order' => $request->input('order') ?? 'desc',
             '_orderBy' => $request->input('orderBy') ?? ''
