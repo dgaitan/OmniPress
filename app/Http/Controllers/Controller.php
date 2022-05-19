@@ -100,7 +100,7 @@ class Controller extends BaseController
         $ordering = 'desc';
 
         if (
-            ! $request->has('orderBy') &&
+            ! $request->has('orderBy') ||
             ! in_array($request->input('orderBy'), $availableOrdering)
         ) {
             return $query;
