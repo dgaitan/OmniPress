@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Scout\Searchable;
 use Illuminate\Notifications\Notifiable;
-use App\Observers\OrderObserver;
 use App\Models\Concerns\HasMetaData;
 
 /**
