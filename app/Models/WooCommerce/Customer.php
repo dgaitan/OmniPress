@@ -2,6 +2,7 @@
 
 namespace App\Models\WooCommerce;
 
+use App\Models\Causes\UserDonation;
 use App\Models\Membership;
 use App\Models\Concerns\HasMetaData;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -128,6 +129,16 @@ class Customer extends Model
     }
 
     /**
+     * Customer donation
+     *
+     * @return HasMany
+     */
+    public function donations(): HasMany
+    {
+        return $this->hasMany(UserDonation::class, 'customer_id');
+    }
+
+    /**
      * This customer has an active membership?
      *
      * @return boolean
@@ -224,21 +235,21 @@ class Customer extends Model
      * @return void
      */
     public function setPaymentMethodsFromCustomerId()
-    {   
+    {
         $stripCustomerId = $this->getMetaValue('_stripe_customer_id', null);
-        
+
         if (! is_null($stripCustomerId)) {
             try {
-                // Try retrieve the customer to avoid 
+                // Try retrieve the customer to avoid
                 $this->stripe()->customers->retrieve($stripCustomerId, []);
                 $this->stripe_id = $stripCustomerId;
                 $this->save();
-                
+
                 $paymentMethods = $this->stripe()->customers->allPaymentMethods(
                     $stripCustomerId,
                     ['type' => 'card']
                 );
-    
+
                 if ($paymentMethods) {
                     foreach ($paymentMethods as $paymentMethod) {
                         $this->addPaymentMethod($paymentMethod->id);
@@ -247,12 +258,12 @@ class Customer extends Model
             } catch (\Stripe\Exception\InvalidRequestException $e) {
                 $this->stripe_id = null;
                 $this->save();
-                
+
                 return $e->getMessage();
             } catch (\Stripe\Exception\InvalidArgumentException $e) {
                 $this->stripe_id = null;
                 $this->save();
-                
+
                 return $e->getMessage();
             }
         }
