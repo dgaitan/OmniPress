@@ -102,6 +102,14 @@ use App\Models\Concerns\HasMetaData;
  * @property int|null $payment_id
  * @property-read \App\Models\WooCommerce\PaymentMethod|null $paymentMethod
  * @method static \Illuminate\Database\Eloquent\Builder|Order wherePaymentId($value)
+ * @property array|null $giftcards
+ * @property string|null $giftcard_total
+ * @property int|null $kindhuman_subscription_id
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
+ * @property-read int|null $notifications_count
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereGiftcardTotal($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereGiftcards($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereKindhumanSubscriptionId($value)
  */
 class Order extends Model
 {
