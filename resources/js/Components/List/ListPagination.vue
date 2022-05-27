@@ -68,7 +68,9 @@
 
 		methods: {
 			changePerPage() {
-				this.$inertia.get(this.url, {
+                this.loadState()
+
+                this.$inertia.get(this.url, {
 	                ...this.stateData,
 	            }, { replace: true })
 			},
@@ -80,6 +82,8 @@
              * @returns void
              */
 			changePage(direction = null) {
+                this.loadState()
+
                 if (direction) {
                     this.stateData.page = direction === 'next'
                         ? this.stateData.page + 1
@@ -90,6 +94,16 @@
 					...this.stateData
 				}, { replace: true })
 			},
+
+            loadState() {
+                if (this.stateData.fromDate.toString() === "Invalid Date") {
+                    delete this.stateData["fromDate"]
+                }
+
+                if (this.stateData.toDate.toString() === "Invalid Date") {
+                    delete this.stateData["toDate"]
+                }
+            }
 		}
 	})
 </script>
