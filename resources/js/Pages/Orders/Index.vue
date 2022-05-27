@@ -219,6 +219,7 @@
             },
 
             filterStatus(status) {
+                this.loadDateFilters()
                 this.filters.status = status
                 this.$inertia.get(route('kinja.orders.index'), {
                     ...this.filters
@@ -226,16 +227,21 @@
             },
 
             filter() {
-                this.filters.fromDate = this.filters.fromDate.toString() === 'Invalid Date'
-                    ? new Date()
-                    : this.filters.fromDate;
-                this.filters.toDate = this.filters.toDate.toString() === 'Invalid Date'
-                    ? new Date()
-                    : this.filters.toDate;
+                this.loadDateFilters()
 
                 this.$inertia.get(route('kinja.orders.index'), {
                     ...this.filters
                 }, { replace: true });
+            },
+
+            loadDateFilters() {
+                if (this.filters.fromDate.toString() === "Invalid Date") {
+                    delete this.filters["fromDate"]
+                }
+
+                if (this.filters.toDate.toString() === "Invalid Date") {
+                    delete this.filters["toDate"]
+                }
             },
 
             search() {
