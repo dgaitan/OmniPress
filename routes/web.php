@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -93,6 +94,10 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('/dashboard')->group(fun
             Route::get('/export-subscriptions', 'exportSubscriptions')
                 ->name('kinja.products.export-subscriptions');
             Route::get('/{id}', 'show')->name('kinja.products.show');
+        });
+
+        Route::controller(CategoryController::class)->prefix('/products/categories')->group(function () {
+            Route::get('/', 'index')->name('kinja.categories.index');
         });
 
         // Orders
