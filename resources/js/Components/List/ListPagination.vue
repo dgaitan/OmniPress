@@ -96,11 +96,11 @@
 			},
 
             loadState() {
-                if (this.stateData.fromDate.toString() === "Invalid Date") {
+                if (this.stateData.fromDate && this.stateData.fromDate.toString() === "Invalid Date") {
                     delete this.stateData["fromDate"]
                 }
 
-                if (this.stateData.toDate.toString() === "Invalid Date") {
+                if (this.stateData.toDate && this.stateData.toDate.toString() === "Invalid Date") {
                     delete this.stateData["toDate"]
                 }
             }
