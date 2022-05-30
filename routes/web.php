@@ -124,8 +124,8 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('/dashboard')->group(fun
     });
 
     // Analytics View
-    Route::prefix('/analytics')->group(function () {
-
+    Route::prefix('/analytics')->name('kinja.')->group(function () {
+        Route::controller()
     });
 
     // Crm Views

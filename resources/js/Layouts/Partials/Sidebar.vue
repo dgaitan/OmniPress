@@ -38,6 +38,12 @@
 	              			<template #icon><EmojiHappyIcon class="w-5 h-5" /></template>
 	              			Causes
 	              		</SidebarNavLink>
+                        <SidebarNavLink
+                            :href="route('kinja.analytics.index')"
+                            :active="route().current('kinja.causes.index')">
+	              			<template #icon><EmojiHappyIcon class="w-5 h-5" /></template>
+	              			Causes
+	              		</SidebarNavLink>
 	            	</SidebarNav>
 
 	              	<!-- Admin -->
