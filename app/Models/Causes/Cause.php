@@ -33,6 +33,16 @@ class Cause extends Model
 {
     use HasFactory;
 
+    /**
+     * Causes types
+     *
+     * @var array
+     */
+    public static $causeTypes = [
+        'fixed' => 'Collab for Cause',
+        'bucket' => 'Bucket Cause'
+    ];
+
     protected $fillable = [
         'cause_id',
         'name',
@@ -40,4 +50,64 @@ class Cause extends Model
         'image_url',
         'beneficiary'
     ];
+
+    /**
+     * Get the cause type label
+     *
+     * @return string
+     */
+    public function getCauseType(): string
+    {
+        return self::$causeTypes[$this->cause_type];
+    }
+
+    /**
+     * Get Image Url parsed
+     *
+     * @return string
+     */
+    public function getImage(): string
+    {
+        $imageUrl = '';
+
+        if ($this->src) {
+            $imageUrl = explode('wp-content/', $this->image_url);
+            $imageUrl = sprintf(
+                '%s/wp-content/%s',
+                env('ASSET_DOMAIN', 'https://kindhumans.com'),
+                end($imageUrl)
+            );
+        }
+
+        return $imageUrl;
+    }
+
+    /**
+     * Get valid cause types
+     *
+     * @return array
+     */
+    public static function getValidCauseTypes(): array
+    {
+        return array_keys(self::$causeTypes);
+    }
+
+    /**
+     * This is the cause types list
+     *
+     * @return array
+     */
+    public static function getCauseTypes(): array
+    {
+        $types = [];
+
+        foreach (self::$causeTypes as $slug => $label) {
+            $types[] = [
+                'slug' => $slug,
+                'label' => $label
+            ];
+        }
+
+        return $types;
+    }
 }

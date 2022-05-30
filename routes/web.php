@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CauseController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -113,6 +114,12 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('/dashboard')->group(fun
             Route::put('/{id}/update', 'update')->name('update');
             Route::put('/{id}/update-kind-cash', 'updateKindCash')->name('updateKindCash');
             Route::post('/{id}/test/manually-renew', 'testManuallyRenew')->name('testManuallyRenew');
+        });
+
+        // Causes
+        Route::controller(CauseController::class)->prefix('/causes')->name('causes.')->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/{id}', 'show')->name('show');
         });
     });
 

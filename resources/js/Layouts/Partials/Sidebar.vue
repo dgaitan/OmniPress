@@ -32,6 +32,12 @@
 	              			<template #icon><UserAddIcon class="w-5 h-5" /></template>
 	              			Memberships
 	              		</SidebarNavLink>
+                        <SidebarNavLink
+                            :href="route('kinja.causes.index')"
+                            :active="route().current('kinja.causes.index')">
+	              			<template #icon><EmojiHappyIcon class="w-5 h-5" /></template>
+	              			Causes
+	              		</SidebarNavLink>
 	            	</SidebarNav>
 
 	              	<!-- Admin -->
@@ -88,7 +94,7 @@
 	import { defineComponent } from 'vue';
 	import SidebarNav from '@/Layouts/Partials/SidebarNav.vue';
 	import SidebarNavLink from '@/Layouts/Partials/SidebarNavLink.vue';
-    import { HomeIcon, InboxInIcon, ArchiveIcon, UsersIcon, UserAddIcon, UserGroupIcon, RefreshIcon, ClockIcon, KeyIcon, UserCircleIcon, LogoutIcon } from '@heroicons/vue/solid'
+    import { HomeIcon, InboxInIcon, ArchiveIcon, UsersIcon, UserAddIcon, UserGroupIcon, RefreshIcon, ClockIcon, KeyIcon, UserCircleIcon, LogoutIcon, EmojiHappyIcon } from '@heroicons/vue/solid'
 
 	export default defineComponent({
 		components: {
@@ -104,7 +110,8 @@
             ClockIcon,
             KeyIcon,
             UserCircleIcon,
-            LogoutIcon
+            LogoutIcon,
+            EmojiHappyIcon
 		},
 
 		methods: {
