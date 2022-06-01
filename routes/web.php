@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\CauseController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -15,7 +16,6 @@ use App\Http\Controllers\QueuesController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Auth;
-use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 /*
 |--------------------------------------------------------------------------
@@ -102,6 +102,10 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('/dashboard')->group(fun
             Route::get('/export', 'export')->name('kinja.orders.export');
             Route::get('/{id}', 'show')->name('kinja.orders.show');
         });
+
+        Route::controller(AnalyticsController::class)->prefix('/analytics')->group(function () {
+            Route::get('/', 'index')->name('kinja.analytics.index');
+        });
     });
 
     Route::prefix('/kindhumans')->name('kinja.')->group(function () {
@@ -121,11 +125,6 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('/dashboard')->group(fun
             Route::get('/', 'index')->name('index');
             Route::get('/{id}', 'show')->name('show');
         });
-    });
-
-    // Analytics View
-    Route::prefix('/analytics')->name('kinja.')->group(function () {
-        Route::controller()
     });
 
     // Crm Views

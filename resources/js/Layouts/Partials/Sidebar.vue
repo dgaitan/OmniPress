@@ -40,9 +40,13 @@
 	              		</SidebarNavLink>
                         <SidebarNavLink
                             :href="route('kinja.analytics.index')"
-                            :active="route().current('kinja.causes.index')">
-	              			<template #icon><EmojiHappyIcon class="w-5 h-5" /></template>
-	              			Causes
+                            :active="route().current('kinja.analytics.index')">
+	              			<template #icon><ChartBarIcon class="w-5 h-5" /></template>
+	              			Analytics
+
+                            <SidebarNavSubLink href="/foo/">
+                                Causes
+                            </SidebarNavSubLink>
 	              		</SidebarNavLink>
 	            	</SidebarNav>
 
@@ -100,12 +104,14 @@
 	import { defineComponent } from 'vue';
 	import SidebarNav from '@/Layouts/Partials/SidebarNav.vue';
 	import SidebarNavLink from '@/Layouts/Partials/SidebarNavLink.vue';
-    import { HomeIcon, InboxInIcon, ArchiveIcon, UsersIcon, UserAddIcon, UserGroupIcon, RefreshIcon, ClockIcon, KeyIcon, UserCircleIcon, LogoutIcon, EmojiHappyIcon } from '@heroicons/vue/solid'
+    import SidebarNavSubLink from '@/Layouts/Partials/SidebarNavSubLink.vue';
+    import { HomeIcon, InboxInIcon, ArchiveIcon, UsersIcon, UserAddIcon, UserGroupIcon, RefreshIcon, ClockIcon, KeyIcon, UserCircleIcon, LogoutIcon, EmojiHappyIcon, ChartBarIcon } from '@heroicons/vue/solid'
 
 	export default defineComponent({
 		components: {
 			SidebarNav,
 			SidebarNavLink,
+            SidebarNavSubLink,
             HomeIcon,
             InboxInIcon,
             ArchiveIcon,
@@ -117,7 +123,8 @@
             KeyIcon,
             UserCircleIcon,
             LogoutIcon,
-            EmojiHappyIcon
+            EmojiHappyIcon,
+            ChartBarIcon
 		},
 
 		methods: {
