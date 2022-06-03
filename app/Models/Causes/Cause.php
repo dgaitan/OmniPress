@@ -2,8 +2,10 @@
 
 namespace App\Models\Causes;
 
+use App\Models\CauseDonation;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * App\Models\Causes\Cause
@@ -50,6 +52,16 @@ class Cause extends Model
         'image_url',
         'beneficiary'
     ];
+
+    /**
+     * Cause Donations
+     *
+     * @return HasMany
+     */
+    public function donations(): HasMany
+    {
+        return $this->hasMany(CauseDonation::class, 'cause_id');
+    }
 
     /**
      * Get the cause type label

@@ -4,6 +4,9 @@
 	    	<span class="inline-block mr-3" v-if="$slots.icon"><slot name="icon"></slot></span>
 	    	<span><slot /></span>
 	  	</Link>
+        <ul v-if="$slots.subitems" class="pl-12">
+            <slot name="subitems"></slot>
+        </ul>
 	</li>
 </template>
 <style type="text/css">

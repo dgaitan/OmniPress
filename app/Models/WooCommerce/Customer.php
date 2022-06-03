@@ -68,6 +68,8 @@ use Laravel\Cashier\Billable;
  * @method static \Illuminate\Database\Eloquent\Builder|Customer whereTrialEndsAt($value)
  * @property-read \Illuminate\Database\Eloquent\Collection|Membership[] $memberships
  * @property-read int|null $memberships_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|UserDonation[] $donations
+ * @property-read int|null $donations_count
  */
 class Customer extends Model
 {

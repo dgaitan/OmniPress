@@ -26,6 +26,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|UserDonation whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|UserDonation whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read \App\Models\Causes\Cause|null $cause
+ * @property-read Customer|null $customer
  */
 class UserDonation extends Model
 {
