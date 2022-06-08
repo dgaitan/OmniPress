@@ -1443,6 +1443,9 @@ select {
 .pl-7 {
   padding-left: 1.75rem;
 }
+.pl-12 {
+  padding-left: 3rem;
+}
 .pb-10 {
   padding-bottom: 2.5rem;
 }
@@ -2104,6 +2107,10 @@ select {
 .hover\:text-gray-800:hover {
   --tw-text-opacity: 1;
   color: rgb(31 41 55 / var(--tw-text-opacity));
+}
+.hover\:text-gray-600:hover {
+  --tw-text-opacity: 1;
+  color: rgb(75 85 99 / var(--tw-text-opacity));
 }
 .focus\:z-10:focus {
   z-index: 10;
