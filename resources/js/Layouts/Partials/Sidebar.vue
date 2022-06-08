@@ -32,13 +32,13 @@
 	              			<template #icon><UserAddIcon class="w-5 h-5" /></template>
 	              			Memberships
 	              		</SidebarNavLink>
-                        <SidebarNavLink
+                        <!-- <SidebarNavLink
                             :href="route('kinja.causes.index')"
                             :active="route().current('kinja.causes.index')">
 	              			<template #icon><EmojiHappyIcon class="w-5 h-5" /></template>
 	              			Causes
-	              		</SidebarNavLink>
-                        <SidebarNavLink
+	              		</SidebarNavLink> -->
+                        <!-- <SidebarNavLink
                             :href="routes.analytics.index"
                             :active="isActive(routes.analytics.activeIf)">
 	              			<template #icon><ChartBarIcon class="w-5 h-5" /></template>
@@ -49,7 +49,7 @@
                                     Causes
                                 </SidebarNavSubLink>
                             </template>
-	              		</SidebarNavLink>
+	              		</SidebarNavLink> -->
 	            	</SidebarNav>
 
 	              	<!-- Admin -->
