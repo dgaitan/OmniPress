@@ -20,6 +20,13 @@ trait HasMetaData {
         return $default;
     }
 
+    /**
+     * Update meta value
+     *
+     * @param string $key
+     * @param mixed $value
+     * @return void
+     */
     public function updateMetaValue(string $key, mixed $value = null) {
         if (is_null($this->getMetaValue($key))) {
             return null;

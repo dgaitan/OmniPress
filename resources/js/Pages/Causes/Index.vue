@@ -1,0 +1,236 @@
+<template>
+    <layout title="Causes">
+
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <ListWrapper title="Causes" :exportButton="false">
+                <!-- Actions -->
+                <template #actions>
+                    <Actions
+                        :filters="filters"/>
+                </template>
+
+              <!-- FIlters -->
+              <template #filters>
+                <ListFilter @click="filterStatus('all')" :active="filters.status === '' || filters.status === 'all'">
+                  All
+                </ListFilter>
+                <ListFilter
+                  v-for="s in cause_types"
+                  @click="filterStatus(s.slug)"
+                  :key="s.slug"
+                  :active="s.slug === filters.cause_type">
+                  {{ s.label }}
+                </ListFilter>
+              </template>
+
+              <template #table>
+                <ListTable :columns="columns" :stateData="this.filters" :selectIds="selectAllIds">
+                    <template #body>
+                        <tr class="text-xs"
+                            v-for="(cause, i) in causes"
+                            :key="cause.id"
+                            v-bind:class="[isOdd(i) ? '' : 'bg-gray-50']">
+
+                            <!-- Cuase ID -->
+                            <td class="flex items-center py-5 px-6 font-medium">
+                                <input class="mr-3" type="checkbox" @change="setIds($event)" :checked="ids.includes(cause.id)" :value="cause.id">
+                                <span>#{{ cause.id }}</span>
+                            </td>
+
+                            <!-- Customer -->
+                            <td class="font-medium">
+                                {{ cause.name }}
+                            </td>
+
+                            <!-- Status -->
+                            <td class="font-medium">
+                                {{ cause.cause_type_label }}
+                            </td>
+
+                            <!-- Shipping Status -->
+                            <td class="font-medium">
+                                {{ cause.beneficiary }}
+                            </td>
+
+                            <!-- Actions -->
+                            <td class="font-medium">
+                                <jet-dropdown align="right" width="48">
+                                    <template #trigger>
+                                        <button type="button" class="inline-flex items-center px-3 py-2 border border-gray-200 text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:bg-gray-50 hover:text-gray-700 focus:outline-none focus:bg-gray-50 active:bg-gray-50 transition">
+                                            Actions
+                                        </button>
+                                    </template>
+                                    <template #content>
+                                        <div class="">
+                                            <jet-dropdown-link
+                                                :href="route('kinja.causes.show', cause.id)">
+                                                Show
+                                            </jet-dropdown-link>
+                                        </div>
+                                    </template>
+                                </jet-dropdown>
+                            </td>
+                        </tr>
+                    </template>
+                </ListTable>
+            </template>
+
+            <template #pagination>
+                <ListPagination :url="route('kinja.causes.index')" :params="this.$props" :stateData="this.filters" />
+            </template>
+            </ListWrapper>
+
+        </div>
+    </layout>
+</template>
+
+<script>
+    import { defineComponent } from 'vue'
+    import { Link } from '@inertiajs/inertia-vue3'
+    import Layout from '@/Layouts/Layout.vue'
+    import JetInput from '@/Jetstream/Input.vue'
+    import JetDropdown from '@/Jetstream/Dropdown.vue'
+    import JetDropdownLink from '@/Jetstream/DropdownLink.vue'
+    import ListWrapper from '@/Components/List/ListWrapper.vue'
+    import ListFilter from '@/Components/List/ListFilter.vue'
+    import ListTable from '@/Components/List/ListTable.vue'
+    import ListPagination from '@/Components/List/ListPagination'
+    import Actions from './Partials/CauseActions.vue'
+
+    export default defineComponent({
+        props: [
+            'sessions', 'data',
+            // Pagination Props
+            'total', 'nextUrl', 'prevUrl', '_perPage', '_currentPage',
+            // Custom Props
+            '_cause_type', 'cause_types', '_s',
+        ],
+
+        components: {
+            Layout,
+            Link,
+            JetInput,
+            JetDropdown,
+            JetDropdownLink,
+            ListWrapper,
+            ListFilter,
+            ListTable,
+            ListPagination,
+            Actions
+        },
+
+        data() {
+            return {
+                filters: {
+                    cause_type: this._cause_type ? this._cause_type : 'all',
+                    s: this._s,
+                    // Pagination Data
+                    page: this._currentPage,
+                    perPage: this._perPage
+                },
+                action: '',
+                ids: [],
+                showDetailModal: false,
+                confirmationMessage: '',
+                showActionConfirmation: false,
+                runningBulk: false,
+                showUpdateKindCash: false,
+                showFilters: false
+            }
+        },
+
+        computed: {
+            causes() {
+                return this.data.data
+            },
+
+            columns() {
+                return [
+                    {
+                        name: 'ID',
+                        sortable: true,
+                        key: 'id'
+                    },
+                    {
+                        name: 'Name',
+                        sortable: false,
+                        key: ''
+                    },
+                    {
+                        name: 'Cause Type',
+                        sortable: false,
+                        key: ''
+                    },
+                    {
+                        name: 'Beneficiary',
+                        sortable: false,
+                        key: ''
+                    },
+                    {
+                        name: '',
+                        sortable: false,
+                        key: ''
+                    }
+                ]
+            }
+        },
+
+        methods: {
+
+            filterCauseType(causeType) {
+                this.filters.cause_type = causeType
+                this.$inertia.get(route('kinja.causes.index'), {
+                    ...this.filters
+                }, { replace: true });
+            },
+
+            /**
+             *
+             */
+            setIds(e) {
+                const ID = parseInt(e.target.value);
+
+                if (e.target.checked) {
+                    this.ids.push(ID);
+                } else {
+                    this.ids.splice(this.ids.indexOf(ID), 1);
+                }
+            },
+
+            selectAllIds(checked) {
+                checked ? this.data.data.map(m => this.ids.push(m.id)) : this.ids = [];
+            },
+
+            confirmAction(action = '') {
+                this.action = action
+                if (this.ids.length === 0 && this.action !== 'run_cron') {
+                    this.confirmationMessage = 'Please select at least one membership to execute this action.'
+                } else {
+                    this.confirmationMessage = this.confirmationMessages[this.action]
+                }
+
+                this.showActionConfirmation = true
+            },
+
+            bulkActions() {
+                if (!this.action) return false;
+                this.runningBulk = true;
+
+                this.$inertia.post(route('kinja.memberships.actions'), {
+                    ids: this.ids,
+                    action: this.action,
+                    filters: this.filters
+                }, {
+                    replace: true,
+                    onSuccess: () => {
+                        this.ids = []
+                        this.action = ''
+                        this.runningBulk = false
+                        this.confirmationMessage = ''
+                        this.showActionConfirmation = false
+                    }
+                });
+            }
+        }
+    })
+</script>

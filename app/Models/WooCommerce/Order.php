@@ -2,6 +2,7 @@
 
 namespace App\Models\WooCommerce;
 
+use App\Models\Causes\Cause;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -102,6 +103,14 @@ use App\Models\Concerns\HasMetaData;
  * @property int|null $payment_id
  * @property-read \App\Models\WooCommerce\PaymentMethod|null $paymentMethod
  * @method static \Illuminate\Database\Eloquent\Builder|Order wherePaymentId($value)
+ * @property array|null $giftcards
+ * @property string|null $giftcard_total
+ * @property int|null $kindhuman_subscription_id
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
+ * @property-read int|null $notifications_count
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereGiftcardTotal($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereGiftcards($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereKindhumanSubscriptionId($value)
  */
 class Order extends Model
 {
@@ -199,6 +208,13 @@ class Order extends Model
      */
     public function items(): HasMany {
         return $this->hasMany(OrderLine::class, 'order_id');
+    }
+
+    public function getCause(): Cause|null
+    {
+        if (is_null($this->getMetaValue('cause'))) return null;
+
+        return Cause::whereCauseId($this->getMetaValue('cause'))->first();
     }
 
     /**
