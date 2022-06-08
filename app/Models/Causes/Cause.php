@@ -3,6 +3,8 @@
 namespace App\Models\Causes;
 
 use App\Models\CauseDonation;
+use App\Services\DonationsService;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -61,6 +63,62 @@ class Cause extends Model
     public function donations(): HasMany
     {
         return $this->hasMany(CauseDonation::class, 'cause_id');
+    }
+
+    /**
+     * Get Period
+     *
+     * @param Carbon|null|null $date
+     * @return CauseDonation
+     */
+    public function getPeriod(Carbon|null $date = null): CauseDonation
+    {
+        return DonationsService::getDonationPeriod($this, $date);
+    }
+    
+    /**
+     * Get Total Donated for a giving period
+     *
+     * @param Carbon|null|null $from
+     * @param Carbon|null|null $to
+     * @return float
+     */
+    public function getTotalAmountDonated(
+        bool $lifetime = true,
+        Carbon|null $from = null,
+        Carbon|null $to = null
+    ): float 
+    {
+        return DonationsService::getCauseFieldTotal(
+            cause: $this,
+            field: 'amount',
+            lifetime: $lifetime,
+            from: $from,
+            to: $to
+        );
+    }
+
+    /**
+     * Get total orders 
+     *
+     * @param boolean $lifetime
+     * @param Carbon|null|null $from
+     * @param Carbon|null|null $to
+     * @return integer
+     */
+    public function getTotalOrders(
+        bool $lifetime = true,
+        Carbon|null $from = null,
+        Carbon|null $to = null
+    ): int
+    {
+        return DonationsService::getCauseFieldTotal(
+            cause: $this,
+            field: 'total_orders',
+            lifetime: $lifetime,
+            from: $from,
+            to: $to
+        );
     }
 
     /**

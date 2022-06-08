@@ -67,4 +67,23 @@ class CauseDonation extends Model
     {
         return $this->belongsTo(Cause::class, 'cause_id');
     }
+
+    /**
+     * Add donation to this donation period
+     *
+     * @param integer|float|string $amount
+     * @return CauseDonation
+     */
+    public function addDonation(int|float|string $amount): CauseDonation
+    {
+        if (is_float($amount) || is_string($amount)) {
+            $amount = (int) ((float) $amount * 100);
+        }
+        
+        $this->amount += $amount;
+        $this->total_orders += 1;
+        $this->save();
+
+        return $this;
+    }
 }

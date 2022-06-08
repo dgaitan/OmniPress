@@ -2,6 +2,7 @@
 
 namespace App\Models\WooCommerce;
 
+use App\Models\Causes\Cause;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -207,6 +208,13 @@ class Order extends Model
      */
     public function items(): HasMany {
         return $this->hasMany(OrderLine::class, 'order_id');
+    }
+
+    public function getCause(): Cause|null
+    {
+        if (is_null($this->getMetaValue('cause'))) return null;
+
+        return Cause::whereCauseId($this->getMetaValue('cause'))->first();
     }
 
     /**
