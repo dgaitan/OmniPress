@@ -8,7 +8,7 @@ use App\Models\Causes\UserDonation;
 use App\Models\WooCommerce\Order;
 use App\Models\WooCommerce\Customer;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
 
 class DonationsService
@@ -40,6 +40,19 @@ class DonationsService
         );
 
         return $order;
+    }
+
+    public static function getCausesByDonation(
+        int $total = 5,
+        bool $lifetime = true,
+        Carbon|null $from = null,
+        Carbon|null $to = null
+    )
+    {
+        
+        // Need to implement a query to retrieve causes ordered by 
+        // the donated amount.
+        // return $query;
     }
 
     /**
