@@ -5,6 +5,7 @@ namespace App\Models\Causes;
 use App\Models\CauseDonation;
 use App\Services\DonationsService;
 use Carbon\Carbon;
+use Cknow\Money\Money;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -75,19 +76,36 @@ class Cause extends Model
     {
         return DonationsService::getDonationPeriod($this, $date);
     }
+
+    /**
+     * Get Total Amount Donated in Dollars
+     *
+     * @param boolean $lifetime
+     * @param Carbon|null|null $from
+     * @param Carbon|null|null $to
+     * @return string
+     */
+    public function getTotalAmountDonatedInDollars(
+        bool $lifetime = true,
+        Carbon|null $from = null,
+        Carbon|null $to = null
+    ): string
+    {
+        return Money::USD($this->getTotalAmountDonated())->format();
+    }
     
     /**
      * Get Total Donated for a giving period
      *
      * @param Carbon|null|null $from
      * @param Carbon|null|null $to
-     * @return float
+     * @return int
      */
     public function getTotalAmountDonated(
         bool $lifetime = true,
         Carbon|null $from = null,
         Carbon|null $to = null
-    ): float 
+    ): int 
     {
         return DonationsService::getCauseFieldTotal(
             cause: $this,

@@ -68,7 +68,7 @@ class DonationsService
         bool $lifetime = true,
         Carbon|null $from = null,
         Carbon|null $to = null
-    ): float|int
+    ): int
     {
         if (! in_array($field, ['amount', 'total_orders'])) {
             throw new InvalidArgumentException(
@@ -87,9 +87,7 @@ class DonationsService
                 ->sum($field);
         }
 
-        return $field === 'amount'
-            ? (int) $total / 100
-            : $total;
+        return (int) $total;
     }
 
     /**
