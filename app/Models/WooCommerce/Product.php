@@ -4,6 +4,7 @@ namespace App\Models\WooCommerce;
 
 use App\Models\Membership;
 use App\Models\Concerns\HasMetaData;
+use App\Models\Printforia\PrintforiaOrderItem;
 use App\Models\Subscription\SubscriptionProduct;
 use App\Models\Subscription\Subscriptable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -246,6 +247,15 @@ class Product extends Model
             'product_id',
             'product_brand_id'
         )->as('product_brands')->withTimestamps();
+    }
+
+    /**
+     * Printforia Item childs
+     *
+     * @return HasMany
+     */
+    public function printforiaItems(): HasMany {
+        return $this->hasMany(PrintforiaOrderItem::class, 'product_id');
     }
 
     /**

@@ -11,6 +11,8 @@ use Laravel\Scout\Searchable;
 use Illuminate\Notifications\Notifiable;
 use App\Observers\OrderObserver;
 use App\Models\Concerns\HasMetaData;
+use App\Models\Printforia\PrintforiaOrder;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * App\Models\WooCommerce\Order
@@ -215,6 +217,16 @@ class Order extends Model
         if (is_null($this->getMetaValue('cause'))) return null;
 
         return Cause::whereCauseId($this->getMetaValue('cause'))->first();
+    }
+
+    /**
+     * Probably an order has one printforia order
+     *
+     * @return HasOne
+     */
+    public function printforiaOrder(): HasOne
+    {
+        return $this->hasOne(PrintforiaOrder::class, 'order_id');
     }
 
     /**
