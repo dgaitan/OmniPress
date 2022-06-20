@@ -113,6 +113,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereGiftcardTotal($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereGiftcards($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereKindhumanSubscriptionId($value)
+ * @property-read PrintforiaOrder|null $printforiaOrder
  */
 class Order extends Model
 {

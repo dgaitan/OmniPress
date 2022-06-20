@@ -36,6 +36,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|PrintforiaOrderItem whereQuantity($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PrintforiaOrderItem whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property string $printforia_item_id
+ * @property-read \App\Models\Printforia\PrintforiaOrder|null $order
+ * @property-read Product|null $product
+ * @method static \Illuminate\Database\Eloquent\Builder|PrintforiaOrderItem wherePrintforiaItemId($value)
  */
 class PrintforiaOrderItem extends Model
 {
@@ -63,7 +67,8 @@ class PrintforiaOrderItem extends Model
         'kindhumans_sku',
         'quantity',
         'description',
-        'prints'
+        'prints',
+        'printforia_item_id'
     ];
 
     /**

@@ -35,6 +35,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder|PrintforiaOrder whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PrintforiaOrder whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property string $printforia_order_id
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Printforia\PrintforiaOrderItem[] $items
+ * @property-read int|null $items_count
+ * @property-read Order|null $order
+ * @method static \Illuminate\Database\Eloquent\Builder|PrintforiaOrder wherePrintforiaOrderId($value)
  */
 class PrintforiaOrder extends Model
 {
@@ -46,8 +51,8 @@ class PrintforiaOrder extends Model
      * @var string[]
      */
     protected $casts = [
-        'ship_to_address' => 'array',
-        'return_to_address' => 'array'
+        'ship_to_address' => 'object',
+        'return_to_address' => 'object'
     ];
 
     /**
@@ -62,7 +67,8 @@ class PrintforiaOrder extends Model
         'return_to_address',
         'shipping_method',
         'ioss_number',
-        'status'
+        'status',
+        'printforia_order_id'
     ];
 
     /**
@@ -83,5 +89,15 @@ class PrintforiaOrder extends Model
     public function items(): HasMany
     {
         return $this->hasMany(PrintforiaOrderItem::class, 'order_id');
+    }
+
+    /**
+     * Order Notes
+     *
+     * @return HasMany
+     */
+    public function notes(): HasMany
+    {
+        return $this->hasMany(PrintforiaOrderNote::class, 'order_id');
     }
 }

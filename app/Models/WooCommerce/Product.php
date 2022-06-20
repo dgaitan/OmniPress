@@ -100,6 +100,8 @@ use Illuminate\Notifications\Notifiable;
  * @property-read int|null $notifications_count
  * @property-read SubscriptionProduct|null $subscription
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereHasSubscription($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|PrintforiaOrderItem[] $printforiaItems
+ * @property-read int|null $printforia_items_count
  */
 class Product extends Model
 {
