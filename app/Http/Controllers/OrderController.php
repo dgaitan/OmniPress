@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\WooCommerce\Order;
 use App\Http\Resources\OrderResource;
+use App\Http\Resources\Printforia\PrintforiaOrdersCollection;
+use App\Models\Printforia\PrintforiaOrder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
@@ -144,6 +146,48 @@ class OrderController extends Controller
                 ];
             });
         });
+    }
+
+    /**
+     * Printforia Order Index View
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function printforiaOrders(Request $request)
+    {
+        $printforiaOrders = PrintforiaOrder::with('order')->orderBy('id', 'desc');
+
+        if ($request->has('s') && ! empty($request->s)) {
+            $s = $request->s;
+            $printforiaOrders->where('printforia_order_id', 'ilike', "%$s%")
+                ->orWhere('ship_to_address', 'ilike', "%$s%");
+
+            $printforiaOrders->orWhereHas('order', function ($query) use ($s) {
+                $query->where('order_id', 'ilike', "%$s%");
+            });
+        }
+
+        // Filter By Status
+        $printforiaOrders = $this->addFilterToQuery(
+            request: $request,
+            filterKey: 'status',
+            query: $printforiaOrders,
+            validFilterKeys: PrintforiaOrder::getStatusesSlugs()
+        );
+
+        $printforiaOrders = $this->paginate($request, $printforiaOrders);
+        $data = $this->getPaginationResponse($printforiaOrders);
+        $data = array_merge($data, [
+            'orders' => new PrintforiaOrdersCollection($printforiaOrders->items()),
+            '_s' => $request->input('s') ?? '',
+            '_status' => $request->input('status'),
+            'statuses' => PrintforiaOrder::STATUSES,
+            '_order' => $request->input('order') ?? 'desc',
+            '_orderBy' => $request->input('orderBy') ?? ''
+        ]);
+
+        return Inertia::render('Orders/PrintforiaOrders', $data);
     }
 
     /**

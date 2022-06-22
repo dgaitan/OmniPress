@@ -45,6 +45,35 @@ class PrintforiaOrder extends Model
 {
     use HasFactory;
 
+    const UNAPPROVED = [
+        'slug' => 'unapproved', 'label' => 'Unapproved'
+    ];
+
+    const APPROVED = [
+        'slug' => 'approved', 'label' => 'Approved'
+    ];
+
+    const IN_PROGRESS = [
+        'slug' => 'in-progress', 'label' => 'In Progress'
+    ];
+
+    const COMPLETED = [
+        'slug' => 'completed', 'label' => 'Completed'
+    ];
+
+    const REJECTED = [
+        'slug' => 'rejected', 'label' => 'Rejected'
+    ];
+
+    const CANCELED = [
+        'slug' => 'canceled', 'label' => 'Canceled'
+    ];
+
+    const STATUSES = [
+        self::UNAPPROVED, self::APPROVED, self::IN_PROGRESS,
+        self::COMPLETED, self::REJECTED, self::CANCELED
+    ];
+
     /**
      * Field Casts
      *
@@ -99,5 +128,59 @@ class PrintforiaOrder extends Model
     public function notes(): HasMany
     {
         return $this->hasMany(PrintforiaOrderNote::class, 'order_id');
+    }
+
+    /**
+     * Return the shipping address formatted
+     *
+     * @return string
+     */
+    public function shippingAddress():string {
+        $shipping = '';
+
+        if ($this->ship_to_address) {
+            $shipping = sprintf(
+                '<p>%s<br>%s %s<br>%s %s %s, %s</p>',
+                $this->ship_to_address->recipient,
+                $this->ship_to_address->address1,
+                $this->ship_to_address->address2,
+                $this->ship_to_address->city,
+                $this->ship_to_address->region,
+                $this->ship_to_address->postal_code,
+                $this->ship_to_address->country_code
+            );
+        }
+
+        return $shipping;
+    }
+
+    /* Return the return address formatted
+    *
+    * @return string
+    */
+    public function returnAddress():string {
+       $shipping = '';
+
+       if ($this->return_to_address) {
+           $shipping = sprintf(
+               '<p>%s<br>%s %s<br>%s %s %s, %s</p>',
+               $this->return_to_address->recipient,
+               $this->return_to_address->address1,
+               $this->return_to_address->address2,
+               $this->return_to_address->city,
+               $this->return_to_address->region,
+               $this->return_to_address->postal_code,
+               $this->return_to_address->country_code
+           );
+       }
+
+       return $shipping;
+    }
+
+    public static function getStatusesSlugs(): array
+    {
+        return collect(self::STATUSES)->map(function ($status) {
+            return $status['slug'];
+        })->toArray();
     }
 }

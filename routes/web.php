@@ -100,6 +100,7 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('/dashboard')->group(fun
         Route::controller(OrderController::class)->prefix('/orders')->group(function () {
             Route::get('/', 'index')->name('kinja.orders.index');
             Route::get('/export', 'export')->name('kinja.orders.export');
+            Route::get('/printforia', 'printforiaOrders')->name('kinja.orders.printforiaOrders');
             Route::get('/{id}', 'show')->name('kinja.orders.show');
         });
 
