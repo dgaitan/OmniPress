@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Notifications\Orders;
+namespace App\Notifications\Printforia;
 
+use App\Models\Printforia\PrintforiaOrder;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\SlackMessage;
 
-class NewOrderNotification extends Notification implements ShouldQueue
+class NewPrintforiaOrderNotification extends Notification
 {
     use Queueable;
 
@@ -19,7 +20,7 @@ class NewOrderNotification extends Notification implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($order)
+    public function __construct(PrintforiaOrder $order)
     {
         $this->order = $order;
     }
@@ -52,7 +53,7 @@ class NewOrderNotification extends Notification implements ShouldQueue
     public function toSlack()
     {
         return (new SlackMessage)
-            ->content(sprintf('New Printforia Order Created', $this->order->order_id))
+            ->content(sprintf('New Order (#%s) placed in Kindhumans', $this->order->order_id))
             ->attachment(function ($attachment) {
                 $attachment->title('Order Summary', $this->order->getPermalinkOnStore())
                     ->fields([

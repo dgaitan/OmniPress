@@ -42,6 +42,7 @@ class PrintforiaService {
     public static function getOrCreatePrintforiaOrder(Order $order): PrintforiaOrder|bool
     {
         if (! self::wooOrderHasPrintforia($order)) return false;
+        $order = Order::whereOrderId($order->order_id)->first(); // Is necessary to do this if order were updated
 
         $request = self::getOrderFromApi($order->getMetaValue('_printforia_order_id'));
 
@@ -68,16 +69,7 @@ class PrintforiaService {
             $orderItem = PrintforiaOrderItem::firstOrNew([
                 'printforia_item_id' => $item->id
             ]);
-
-            $productId = explode('-', $item->customer_item_reference)[1];
-            $product = Product::whereProductId($productId)->first();
-
-            if ($product) {
-                $orderItem->product_id = $product->id;
-                $orderItem->kindhumans_sku = $product->sku;
-            }
-
-            $orderItem->fill([
+            $data = [
                 'order_id' => $printforiaOrder->id,
                 'customer_item_reference' => $item->customer_item_reference,
                 'printforia_sku' => $item->sku,
@@ -85,8 +77,17 @@ class PrintforiaService {
                 'description' => $item->description,
                 'prints' => $item->prints,
                 'printforia_item_id' => $item->id
-            ]);
+            ];
 
+            $productId = explode('-', $item->customer_item_reference)[1];
+            $product = Product::whereProductId($productId)->first();
+
+            if ($product) {
+                $data['product_id'] = $product->id;
+                $data['kindhumans_sku'] = $product->sku;
+            }
+
+            $orderItem->fill($data);
             $orderItem->save();
         });
 

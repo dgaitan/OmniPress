@@ -213,6 +213,11 @@ class Order extends Model
         return $this->hasMany(OrderLine::class, 'order_id');
     }
 
+    /**
+     * Cause
+     *
+     * @return Cause|null
+     */
     public function getCause(): Cause|null
     {
         if (is_null($this->getMetaValue('cause'))) return null;
