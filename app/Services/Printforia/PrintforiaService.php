@@ -10,6 +10,10 @@ use App\Models\Printforia\PrintforiaOrderItem;
 use App\Models\Printforia\PrintforiaOrderNote;
 use App\Models\WooCommerce\Order;
 use App\Models\WooCommerce\Product;
+use Doctrine\Common\Cache\Psr6\InvalidArgument;
+use Exception;
+use Illuminate\Http\Request;
+use InvalidArgumentException;
 use stdClass;
 
 class PrintforiaService {
@@ -22,6 +26,16 @@ class PrintforiaService {
      */
     public static function getOrderFromApi(string $orderId) {
         return (new PrintforiaApiClient)->getOrder($orderId);
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param string $orderId
+     * @return PrintforiaOrder|null
+     */
+    public static function getFromOrderId(string $orderId): PrintforiaOrder|null {
+        return PrintforiaOrder::wherePrintforiaOrderId($orderId)->first();
     }
 
     /**
@@ -144,5 +158,63 @@ class PrintforiaService {
         });
 
         return $printforiaOrder;
+    }
+
+    public static function webhookActions(Request $request) {
+        if (! $request->has('status')) {
+            throw new Exception('Status is not present in response');
+        }
+
+        if ($request->type === 'order_status_change') {
+            if ($request->status === 'approved') {
+                $printforiaOrder = self::getFromOrderId($request->order_id);
+                $printforiaOrder->status = $request->status;
+                $printforiaOrder->save();
+            }
+
+            if ($request->status === 'shipped') {
+                $printforiaOrder = self::getFromOrderId($request->order_id);
+                $printforiaOrder->carrier = $request->carrier;
+                $printforiaOrder->tracking_number = $request->tracking_number;
+                $printforiaOrder->tracking_url = $request->tracking_url;
+                $printforiaOrder->save();
+            }
+        }
+    }
+
+    /**
+     * Validate Webbhook Signature
+     *
+     * @see https://developers.printforia.com/#webhooks
+     *
+     * To understand the structure of the signature. See the link pasted above.
+     *
+     * @param Request $request
+     * @throws Exception if pritnforia token is not defined
+     * @throws InvalidArgumentException if signature is not present in request.
+     * @return bool
+     */
+    public static function validateWebhookSignature(Request $request): bool {
+        $token = env('PRINTFORIA_API_KEY', false);
+
+        if (! $token) {
+            throw new Exception('Printforia Token is required to run webhooks');
+        }
+
+        if (! $request->hasHeader('X-Signature')) {
+            throw new Exception('Siganture is not present in request.');
+        }
+
+        $xSignature = explode(';', $request->header('X-Signature'));
+        $timestamp = explode('=', $xSignature[0])[1];
+        $signature = explode('=', $xSignature[1])[1];
+        $payload = json_encode($request->all());
+        $computedSignature = hash_hmac('sha256', "{$timestamp}.{$payload}", $token);
+
+        if (! hash_equals($computedSignature, $signature)) {
+            throw new Exception('Invalid Signature Request');
+        }
+
+        return true;
     }
 }

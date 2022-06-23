@@ -15,6 +15,7 @@ use App\Http\Controllers\MembershipController;
 use App\Http\Controllers\QueuesController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\WebhookController;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -133,4 +134,9 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('/dashboard')->group(fun
 
     });
 
+
+});
+
+Route::controller(WebhookController::class)->prefix('/webhooks')->name('webhooks.')->group(function () {
+    Route::post('/printforia', 'printforiaWebhook')->name('printforia');
 });
