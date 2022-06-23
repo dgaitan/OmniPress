@@ -269,6 +269,14 @@ class Product extends Model
         return $this->type === 'variation';
     }
 
+    public function featuredImage(): ProductImage|null {
+        if ($this->images->isEmpty()) {
+            return null;
+        }
+
+        return $this->images()->first();
+    }
+
     /**
      * Subscription Product if it has one
      *

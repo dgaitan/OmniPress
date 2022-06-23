@@ -8,6 +8,12 @@ use Exception;
 
 class WebhookController extends Controller
 {
+    /**
+     * Process printforia webhooks
+     *
+     * @param Request $request
+     * @return void
+     */
     public function printforiaWebhook(Request $request) {
         try {
             PrintforiaService::validateWebhookSignature($request);

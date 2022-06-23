@@ -5,14 +5,19 @@
 
 namespace App\Services\Printforia;
 
+use App\Mail\Printforia\OrderShipped;
 use App\Models\Printforia\PrintforiaOrder;
 use App\Models\Printforia\PrintforiaOrderItem;
 use App\Models\Printforia\PrintforiaOrderNote;
 use App\Models\WooCommerce\Order;
+use App\Models\WooCommerce\OrderLine;
 use App\Models\WooCommerce\Product;
 use Doctrine\Common\Cache\Psr6\InvalidArgument;
 use Exception;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Mail;
 use InvalidArgumentException;
 use stdClass;
 
@@ -81,7 +86,7 @@ class PrintforiaService {
         if (! $request->ok()) return false;
 
         $printforiaOrder = PrintforiaOrder::firstOrNew([
-            'printforia_order_id' => $data->id
+            'printforia_order_id' => $request->object()->id
         ]);
 
         $printforiaOrder = self::updateOrder($request->object(), $printforiaOrder, $order->id);
@@ -160,6 +165,13 @@ class PrintforiaService {
         return $printforiaOrder;
     }
 
+    /**
+     * Webhook actions
+     *
+     * @param Request $request
+     * @throws Exception if status is not present in request
+     * @return void
+     */
     public static function webhookActions(Request $request) {
         if (! $request->has('status')) {
             throw new Exception('Status is not present in response');
@@ -174,10 +186,14 @@ class PrintforiaService {
 
             if ($request->status === 'shipped') {
                 $printforiaOrder = self::getFromOrderId($request->order_id);
+                $printforiaOrder->status = $request->status;
                 $printforiaOrder->carrier = $request->carrier;
                 $printforiaOrder->tracking_number = $request->tracking_number;
                 $printforiaOrder->tracking_url = $request->tracking_url;
                 $printforiaOrder->save();
+
+                Mail::to($printforiaOrder->ship_to_address->email)
+                    ->queue(new OrderShipped($printforiaOrder));
             }
         }
     }
@@ -208,7 +224,7 @@ class PrintforiaService {
         $xSignature = explode(';', $request->header('X-Signature'));
         $timestamp = explode('=', $xSignature[0])[1];
         $signature = explode('=', $xSignature[1])[1];
-        $payload = json_encode($request->all());
+        $payload = json_encode($request->all(), JSON_UNESCAPED_SLASHES);
         $computedSignature = hash_hmac('sha256', "{$timestamp}.{$payload}", $token);
 
         if (! hash_equals($computedSignature, $signature)) {
@@ -216,5 +232,31 @@ class PrintforiaService {
         }
 
         return true;
+    }
+
+    /**
+     * Get Printforia Order Items has WooCOmmerce order items
+     *
+     * @param PrintforiaOrder $printforiaOrder
+     * @return Collection
+     */
+    public static function getOrderItemsHasWooCommerceItems(PrintforiaOrder $printforiaOrder): Collection
+    {
+        $cacheKey = sprintf('printforia_items_%s', $printforiaOrder->id);
+
+        if (Cache::tags('printforia')->has($cacheKey)) {
+            return Cache::tags('printforia')->get($cacheKey);
+        }
+
+        return Cache::tags('printforia')->remember(
+            $cacheKey, now()->addYear(), function () use ($printforiaOrder) {
+                $productIds = PrintforiaOrderItem::whereOrderId($printforiaOrder->id)->pluck('product_id');
+
+                return OrderLine::with('product')
+                    ->whereOrderId($printforiaOrder->order_id)
+                    ->where('product_id', $productIds)
+                    ->get();
+            }
+        );
     }
 }

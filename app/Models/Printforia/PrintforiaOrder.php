@@ -3,6 +3,7 @@
 namespace App\Models\Printforia;
 
 use App\Models\WooCommerce\Order;
+use App\Services\Printforia\PrintforiaService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -175,6 +176,10 @@ class PrintforiaOrder extends Model
        }
 
        return $shipping;
+    }
+
+    public function getItemsAsWooItems() {
+        return PrintforiaService::getOrderItemsHasWooCommerceItems($this);
     }
 
     public static function getStatusesSlugs(): array
