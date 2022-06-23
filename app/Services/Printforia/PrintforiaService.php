@@ -10,6 +10,7 @@ use App\Models\Printforia\PrintforiaOrderItem;
 use App\Models\Printforia\PrintforiaOrderNote;
 use App\Models\WooCommerce\Order;
 use App\Models\WooCommerce\Product;
+use stdClass;
 
 class PrintforiaService {
 
@@ -34,6 +35,23 @@ class PrintforiaService {
     }
 
     /**
+     * Update a printforia order
+     *
+     * @param PrintforiaOrder $printforiaOrder
+     * @return void
+     */
+    public static function updatePrintforiaOrder(PrintforiaOrder $printforiaOrder)
+    {
+        $request = self::getOrderFromApi($printforiaOrder->printforia_order_id);
+
+        if (! $request->ok()) return false;
+
+        $printforiaOrder = self::updateOrder($request->object(), $printforiaOrder, $printforiaOrder->order_id);
+
+        return PrintforiaOrder::find($printforiaOrder->id);
+    }
+
+    /**
      * Get Or Create a Printforia Order
      *
      * @param Order $order
@@ -48,14 +66,31 @@ class PrintforiaService {
 
         if (! $request->ok()) return false;
 
-        $data = $request->object();
         $printforiaOrder = PrintforiaOrder::firstOrNew([
             'printforia_order_id' => $data->id
         ]);
 
+        $printforiaOrder = self::updateOrder($request->object(), $printforiaOrder, $order->id);
+
+        return PrintforiaOrder::find($printforiaOrder->id);
+    }
+
+    /**
+     * Update printforia order data
+     *
+     * @param stdClass $data
+     * @param PrintforiaOrder $printforiaOrder
+     * @param integer $order_id
+     * @return PrintforiaOrder
+     */
+    public static function updateOrder(
+        stdClass $data,
+        PrintforiaOrder $printforiaOrder,
+        int $order_id
+    ): PrintforiaOrder {
         $printforiaOrder->fill([
             'printforia_order_id' => $data->id,
-            'order_id' => $order->id,
+            'order_id' => $order_id,
             'customer_reference' => $data->customer_reference,
             'ship_to_address' => $data->ship_to_address,
             'return_to_address' => $data->return_to_address,
@@ -108,6 +143,6 @@ class PrintforiaService {
             $orderNote->save();
         });
 
-        return PrintforiaOrder::find($printforiaOrder->id);
+        return $printforiaOrder;
     }
 }
