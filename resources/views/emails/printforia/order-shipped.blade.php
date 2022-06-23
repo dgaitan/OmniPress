@@ -265,7 +265,7 @@
                                 </td>
                                 <td bgcolor="#FFFFFF" align="left" style="padding:30px 0 30px 30px;font-size:14px;border-left:1px solid;" width="50%">
                                     <span style="text-transform:uppercase;font-weight:700;">Shipping Address</span>
-                                    {{ $shippingAddress }}
+                                    {!! $shippingAddress !!}
                             </tr>
                             </table>
                         </td>
@@ -290,7 +290,7 @@
                                             {{ $item->product->name }}
                                         </span>
                                         <span style="display:block;font-size:14px; margin-bottom: 5px;">
-                                            <strong>Price: </strong> $ {{ $item->getMoneyValue('subtotal') }}
+                                            <strong>Price: </strong> {{ $item->getMoneyValue('subtotal') }}
                                         </span>
                                         <span style="display:block;font-size:14px; margin-bottom: 5px;">
                                             <strong>Quantity: </strong> {{ $item->quantity }}

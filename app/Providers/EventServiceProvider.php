@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Events\PrintforiaOrderWasShipped;
+use App\Listeners\Printforia\SendPrintforiaOrderShippedMail;
+use App\Listeners\Printforia\UpdateWooCommeceOrder;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -18,6 +21,10 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        PrintforiaOrderWasShipped::class => [
+            SendPrintforiaOrderShippedMail::class,
+            UpdateWooCommeceOrder::class
+        ]
     ];
 
     /**

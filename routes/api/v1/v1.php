@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\V1\ProductController;
 use App\Http\Controllers\Api\V1\SyncController;
 use App\Http\Controllers\Api\V1\PaymentController;
 use App\Http\Controllers\Api\V1\CustomerController;
+use App\Http\Controllers\Api\V1\PrintforiaController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -69,6 +70,10 @@ Route::middleware('auth:sanctum')->name('kinja.api.v1.')->group(function () {
 		Route::post('/set-default', 'setDefaultPaymentMethod')->name('setDefault');
 		Route::get('/{customer_id}/default-payment-method', 'getDefaultPaymentMethod')->name('defaultPaymentMethod');
 	});
+
+    Route::controller(PrintforiaController::class)->name('printforia.')->prefix('/printforia')->group(function () {
+        Route::get('/orders/{orderId}', 'getOrder')->name('order.show');
+    });
 
 	Route::controller(CustomerController::class)->name('customers.')
 		->prefix('/customers')

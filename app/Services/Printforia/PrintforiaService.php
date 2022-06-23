@@ -5,7 +5,7 @@
 
 namespace App\Services\Printforia;
 
-use App\Mail\Printforia\OrderShipped;
+use App\Events\PrintforiaOrderWasShipped;
 use App\Models\Printforia\PrintforiaOrder;
 use App\Models\Printforia\PrintforiaOrderItem;
 use App\Models\Printforia\PrintforiaOrderNote;
@@ -17,7 +17,6 @@ use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Mail;
 use InvalidArgumentException;
 use stdClass;
 
@@ -192,8 +191,7 @@ class PrintforiaService {
                 $printforiaOrder->tracking_url = $request->tracking_url;
                 $printforiaOrder->save();
 
-                Mail::to($printforiaOrder->ship_to_address->email)
-                    ->queue(new OrderShipped($printforiaOrder));
+                PrintforiaOrderWasShipped::dispatch($printforiaOrder);
             }
         }
     }
