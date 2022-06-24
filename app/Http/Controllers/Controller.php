@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Routing\Controller as BaseController;
 use Laravel\Scout\Builder as ScoutBuilder;
 
 class Controller extends BaseController
@@ -18,7 +18,7 @@ class Controller extends BaseController
     /**
      * Execute Pagination Query
      *
-     * @param Request $request
+     * @param  Request  $request
      * @param [type] $query
      * @return void
      */
@@ -41,7 +41,8 @@ class Controller extends BaseController
      * @param [type] $pagination
      * @return array
      */
-    protected function getPaginationResponse($pagination): array {
+    protected function getPaginationResponse($pagination): array
+    {
         return [
             'total' => $pagination->total(),
             'nextUrl' => $pagination->nextPageUrl(),
@@ -57,23 +58,26 @@ class Controller extends BaseController
      *
      * Ex: title: Foo Bar
      *
-     * @param Request $request
-     * @param array $keys
+     * @param  Request  $request
+     * @param  array  $keys
      * @return object
      */
-    protected function analyzeSearchQuery(Request $request, array $keys = []): object {
+    protected function analyzeSearchQuery(Request $request, array $keys = []): object
+    {
         $data = (object) [
             's' => $request->input('s'),
-            'isValid' => $request->input('s') && ! empty( $request->input('s') ),
+            'isValid' => $request->input('s') && ! empty($request->input('s')),
             'specific' => false,
             'key' => '',
-            'segments' => explode(':', $request->input('s'))
+            'segments' => explode(':', $request->input('s')),
         ];
 
         if ($data->isValid && count($data->segments) === 2) {
             $data->key = $data->segments[0];
 
-            if (! in_array($data->key, $keys)) return $data;
+            if (! in_array($data->key, $keys)) {
+                return $data;
+            }
 
             $data->specific = true;
             $data->s = trim($data->segments[1]);
@@ -85,10 +89,10 @@ class Controller extends BaseController
     /**
      * Process Ordering Query
      *
-     * @param Request $request
-     * @param Builder|ScoutBuilder $query
-     * @param array $availableOrdering
-     * @param string $orderBy
+     * @param  Request  $request
+     * @param  Builder|ScoutBuilder  $query
+     * @param  array  $availableOrdering
+     * @param  string  $orderBy
      * @return Builder|ScoutBuilder
      */
     protected function getOrderingQuery(
@@ -112,7 +116,7 @@ class Controller extends BaseController
         $orderBy = $request->input('orderBy');
 
         if ($query instanceof ScoutBuilder) {
-            $query->query(function($q) use ($ordering, $orderBy) {
+            $query->query(function ($q) use ($ordering, $orderBy) {
                 $q->orderBy($orderBy, $ordering);
             });
         } else {

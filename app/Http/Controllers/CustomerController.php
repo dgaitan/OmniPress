@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\WooCommerce\Customer;
 use App\Http\Resources\CustomerCollection;
+use App\Models\WooCommerce\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
@@ -13,10 +13,11 @@ class CustomerController extends Controller
     /**
      * Index View
      *
-     * @param Request $request
+     * @param  Request  $request
      * @return void
      */
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
         $roles = Customer::getRoles();
         $role = '';
         $customers = null;
@@ -25,7 +26,7 @@ class CustomerController extends Controller
         // Ordering
         $availableOrdering = [
             'customer_id', 'first_name', 'username',
-            'email', 'date_created'
+            'email', 'date_created',
         ];
 
         if (
@@ -45,7 +46,7 @@ class CustomerController extends Controller
             );
         } else {
             $customers = Customer::orderBy('date_created', 'desc');
-            $cacheKey = $cacheKey . '_order_by_date_created_desc';
+            $cacheKey = $cacheKey.'_order_by_date_created_desc';
         }
 
         // Search
@@ -56,7 +57,7 @@ class CustomerController extends Controller
 
         if ($search->isValid) {
             // If the search query isn't specific
-            if (!$search->specific) {
+            if (! $search->specific) {
                 $s = $search->s;
 
                 $customers->orWhere('customer_id', 'ilike', "%$s%");
@@ -101,7 +102,7 @@ class CustomerController extends Controller
             'roles' => $roles,
             '_role' => $role,
             '_order' => $request->input('order') ?? 'desc',
-            '_orderBy' => $request->input('orderBy') ?? ''
+            '_orderBy' => $request->input('orderBy') ?? '',
         ]);
 
         return Inertia::render('Customers/Index', $data);

@@ -6,7 +6,6 @@ use App\Jobs\SingleWooCommerceSync;
 use App\Models\Membership;
 use App\Services\WooCommerce\WooCommerceService;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -48,7 +47,7 @@ class SetDefaultGiftProductJob implements ShouldQueue
                 $membership->shipping_status = Membership::SHIPPING_PENDING_STATUS;
                 $membership->save();
 
-                $cacheKey = sprintf("woocommerce_order_%s", $order_id);
+                $cacheKey = sprintf('woocommerce_order_%s', $order_id);
                 Cache::tags('orders')->forget($cacheKey);
 
                 if ($request->product_id) {

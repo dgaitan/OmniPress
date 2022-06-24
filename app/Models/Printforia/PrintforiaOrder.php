@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string|null $shipping_method
  * @property string|null $ioss_number
  * @property string $status
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|PrintforiaOrder newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PrintforiaOrder newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PrintforiaOrder query()
@@ -36,10 +37,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder|PrintforiaOrder whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PrintforiaOrder whereUpdatedAt($value)
  * @mixin \Eloquent
+ *
  * @property string $printforia_order_id
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Printforia\PrintforiaOrderItem[] $items
  * @property-read int|null $items_count
  * @property-read Order|null $order
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|PrintforiaOrder wherePrintforiaOrderId($value)
  */
 class PrintforiaOrder extends Model
@@ -47,36 +50,36 @@ class PrintforiaOrder extends Model
     use HasFactory;
 
     const UNAPPROVED = [
-        'slug' => 'unapproved', 'label' => 'Unapproved'
+        'slug' => 'unapproved', 'label' => 'Unapproved',
     ];
 
     const APPROVED = [
-        'slug' => 'approved', 'label' => 'Approved'
+        'slug' => 'approved', 'label' => 'Approved',
     ];
 
     const SHIPPED = [
-        'slug' => 'shipped', 'label' => 'Shipped'
+        'slug' => 'shipped', 'label' => 'Shipped',
     ];
 
     const IN_PROGRESS = [
-        'slug' => 'in-progress', 'label' => 'In Progress'
+        'slug' => 'in-progress', 'label' => 'In Progress',
     ];
 
     const COMPLETED = [
-        'slug' => 'completed', 'label' => 'Completed'
+        'slug' => 'completed', 'label' => 'Completed',
     ];
 
     const REJECTED = [
-        'slug' => 'rejected', 'label' => 'Rejected'
+        'slug' => 'rejected', 'label' => 'Rejected',
     ];
 
     const CANCELED = [
-        'slug' => 'canceled', 'label' => 'Canceled'
+        'slug' => 'canceled', 'label' => 'Canceled',
     ];
 
     const STATUSES = [
         self::UNAPPROVED, self::APPROVED, self::SHIPPED, self::IN_PROGRESS,
-        self::COMPLETED, self::REJECTED, self::CANCELED
+        self::COMPLETED, self::REJECTED, self::CANCELED,
     ];
 
     /**
@@ -86,7 +89,7 @@ class PrintforiaOrder extends Model
      */
     protected $casts = [
         'ship_to_address' => 'object',
-        'return_to_address' => 'object'
+        'return_to_address' => 'object',
     ];
 
     /**
@@ -102,7 +105,7 @@ class PrintforiaOrder extends Model
         'shipping_method',
         'ioss_number',
         'status',
-        'printforia_order_id'
+        'printforia_order_id',
     ];
 
     /**
@@ -143,7 +146,7 @@ class PrintforiaOrder extends Model
     public function getPermalink(): string
     {
         return route('kinja.orders.printforiaDetail', [
-            'id' => $this->printforia_order_id
+            'id' => $this->printforia_order_id,
         ]);
     }
 
@@ -155,7 +158,7 @@ class PrintforiaOrder extends Model
     public function getWooOrderPermalink(): string
     {
         return route('kinja.orders.show', [
-            'id' => $this->order->order_id
+            'id' => $this->order->order_id,
         ]);
     }
 
@@ -164,7 +167,8 @@ class PrintforiaOrder extends Model
      *
      * @return string
      */
-    public function shippingAddress():string {
+    public function shippingAddress(): string
+    {
         $shipping = '';
 
         if ($this->ship_to_address) {
@@ -187,11 +191,12 @@ class PrintforiaOrder extends Model
     *
     * @return string
     */
-    public function returnAddress():string {
-       $shipping = '';
+    public function returnAddress(): string
+    {
+        $shipping = '';
 
-       if ($this->return_to_address) {
-           $shipping = sprintf(
+        if ($this->return_to_address) {
+            $shipping = sprintf(
                '<p>%s<br>%s %s<br>%s %s %s, %s</p>',
                $this->return_to_address->recipient,
                $this->return_to_address->address1,
@@ -201,12 +206,13 @@ class PrintforiaOrder extends Model
                $this->return_to_address->postal_code,
                $this->return_to_address->country_code
            );
-       }
+        }
 
-       return $shipping;
+        return $shipping;
     }
 
-    public function getItemsAsWooItems() {
+    public function getItemsAsWooItems()
+    {
         return PrintforiaService::getOrderItemsHasWooCommerceItems($this);
     }
 

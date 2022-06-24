@@ -2,8 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Http\Resources\OrderItemCollection;
-use App\Http\Resources\PaymentMethodResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class OrderResource extends JsonResource
@@ -45,9 +43,9 @@ class OrderResource extends JsonResource
             'permalink_on_store' => $this->getPermalinkOnStore(),
             // Default Values for relationships
             'customer' => null,
-            'items' => array(),
+            'items' => [],
             'membership' => null,
-            'payment_method' => null
+            'payment_method' => null,
         ];
 
         if (! is_null($this->customer)) {

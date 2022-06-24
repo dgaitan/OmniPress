@@ -4,7 +4,6 @@ namespace App\Mail\Memberships;
 
 use App\Models\Membership;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
@@ -37,7 +36,7 @@ class MembershipCancelled extends Mailable
      */
     public function build()
     {
-        return $this->subject("We are sorry to see you go!")
+        return $this->subject('We are sorry to see you go!')
             ->view('emails.memberships.cancelled')
             ->with([
                 'activeUntil' => $this->membership->end_at->format('F j, Y'),
@@ -48,7 +47,7 @@ class MembershipCancelled extends Mailable
                 'loginPage' => sprintf(
                     '%s/login',
                     env('CLIENT_DOMAIN', 'https://kindhumans.com')
-                )
+                ),
             ]);
     }
 }

@@ -4,7 +4,6 @@ namespace App\Mail\Printforia;
 
 use App\Models\Printforia\PrintforiaOrder;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
@@ -35,12 +34,12 @@ class OrderShipped extends Mailable
      */
     public function build()
     {
-        return $this->subject("Your order has shipped")
+        return $this->subject('Your order has shipped')
             ->view('emails.printforia.order-shipped')
             ->with([
                 'order' => $this->order,
                 'shippingAddress' => $this->order->shippingAddress(),
-                'orderItems' => $this->order->getItemsAsWooItems()
+                'orderItems' => $this->order->getItemsAsWooItems(),
             ]);
     }
 }

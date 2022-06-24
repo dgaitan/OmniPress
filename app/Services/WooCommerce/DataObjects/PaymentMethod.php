@@ -2,9 +2,9 @@
 
 namespace App\Services\WooCommerce\DataObjects;
 
+use App\Models\WooCommerce\PaymentMethod as WooPaymentMethod;
 use App\Services\Contracts\DataObjectContract;
 use App\Services\DataObjects\BaseObject;
-use App\Models\WooCommerce\PaymentMethod as WooPaymentMethod;
 
 class PaymentMethod extends BaseObject implements DataObjectContract
 {
@@ -13,7 +13,8 @@ class PaymentMethod extends BaseObject implements DataObjectContract
      *
      * @return void
      */
-    protected function schema(): void {
+    protected function schema(): void
+    {
         $this->string('id');
         $this->string('title');
         $this->string('description', '');
@@ -29,7 +30,8 @@ class PaymentMethod extends BaseObject implements DataObjectContract
      *
      * @return WooPaymentMethod
      */
-    public function sync(): WooPaymentMethod {
+    public function sync(): WooPaymentMethod
+    {
         $pm = WooPaymentMethod::firstOrNew(['payment_method_id' => $this->id]);
         $data = $this->toArray('payment_method_id');
 

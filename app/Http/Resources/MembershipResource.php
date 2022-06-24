@@ -2,9 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Http\Resources\CustomerResource;
-use App\Http\Resources\KindCashResource;
-use App\Http\Resources\OrderCollection;
 use App\Models\WooCommerce\Product;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -26,7 +23,7 @@ class MembershipResource extends JsonResource
             'shipping_status' => $this->shipping_status,
             'status' => $this->status,
             'last_payment_intent' => $this->last_payment_intent,
-            'giftProduct' => null
+            'giftProduct' => null,
         ];
 
         if ($this->customer) {
@@ -51,7 +48,7 @@ class MembershipResource extends JsonResource
                     'product_id' => $giftProduct->product_id,
                     'name' => $giftProduct->name,
                     'sku' => $giftProduct->sku,
-                    'images' => $giftProduct->images
+                    'images' => $giftProduct->images,
                 ];
             }
         }

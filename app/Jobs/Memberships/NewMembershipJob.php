@@ -2,25 +2,28 @@
 
 namespace App\Jobs\Memberships;
 
+use App\Jobs\SingleWooCommerceSync;
+use App\Mail\Memberships\WelcomeMail;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Mail;
-use App\Jobs\SingleWooCommerceSync;
-use App\Mail\Memberships\WelcomeMail;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Mail;
 
 class NewMembershipJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $customerId;
+
     protected $customerEmail;
+
     protected $orderId;
+
     protected $giftProductId;
+
     protected $membershipProductId;
 
     /**

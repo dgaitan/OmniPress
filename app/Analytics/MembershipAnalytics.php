@@ -2,13 +2,12 @@
 
 namespace App\Analytics;
 
-use App\Models\Membership;
-use App\Models\KindCash;
 use App\Analytics\Base\Analytics;
+use App\Models\Membership;
 use Illuminate\Database\Eloquent\Builder;
 
-class MembershipAnalytics extends Analytics {
-
+class MembershipAnalytics extends Analytics
+{
     /**
      * Model to analyze
      *
@@ -33,18 +32,20 @@ class MembershipAnalytics extends Analytics {
     /**
      * Get The total Orders
      *
-     * @return integer
+     * @return int
      */
-    public function getTotalMemberships(): int {
+    public function getTotalMemberships(): int
+    {
         return $this->getRangeQueryset()->count();
     }
 
     /**
      * Get The total Orders
      *
-     * @return integer
+     * @return int
      */
-    public function getPeriodTotalMemberships(): int {
+    public function getPeriodTotalMemberships(): int
+    {
         return $this->getPeriodQueryset()->count();
     }
 
@@ -53,7 +54,8 @@ class MembershipAnalytics extends Analytics {
      *
      * @return void
      */
-    public function getTotalPercentageDifference() {
+    public function getTotalPercentageDifference()
+    {
         return $this->calculatePercentageComparisson(
             $this->getTotalMemberships(), $this->getPeriodTotalMemberships()
         );
@@ -64,7 +66,8 @@ class MembershipAnalytics extends Analytics {
      *
      * @return Builder
      */
-    protected function getRangeQueryset(): Builder {
+    protected function getRangeQueryset(): Builder
+    {
         if (is_null($this->rangeQueryset)) {
             $this->rangeQueryset = $this->model::whereBetween(
                 'start_at',
@@ -80,7 +83,8 @@ class MembershipAnalytics extends Analytics {
      *
      * @return Builder
      */
-    protected function getPeriodQueryset(): Builder {
+    protected function getPeriodQueryset(): Builder
+    {
         return $this->model::whereBetween(
             'start_at',
             $this->getPeriodDates()

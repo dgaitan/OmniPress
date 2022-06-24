@@ -2,22 +2,23 @@
 
 namespace App\Jobs\Memberships;
 
-use Exception;
 use App\Models\Membership;
+use Carbon\Carbon;
+use Exception;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Carbon\Carbon;
 
 class RenewMembershipJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected int $membership_id = 0;
+
     protected bool $force = false;
+
     protected int $index = 1;
 
     /**
@@ -43,10 +44,10 @@ class RenewMembershipJob implements ShouldQueue
             $membership = Membership::find($this->membership_id);
 
             if (is_null($membership)) {
-                throw new Exception("Membership Not Found");
+                throw new Exception('Membership Not Found');
             }
 
-            if ( ! $this->force && $membership->daysUntilRenewal() > 0 ) {
+            if (! $this->force && $membership->daysUntilRenewal() > 0) {
                 throw new Exception(
                     sprintf(
                         "Membership with ID #%s isn't expired.",
@@ -59,19 +60,19 @@ class RenewMembershipJob implements ShouldQueue
             // Renovation
             if (! $membership->customer->hasPaymentMethod()) {
                 if ($membership->daysExpired() > 30) {
-                    $membership->expire("Membership expired because was impossible find a payment method in 30 days.");
+                    $membership->expire('Membership expired because was impossible find a payment method in 30 days.');
                 } else {
                     $membership->sendPaymentNotFoundNotification($this->index);
                     $membership->status = Membership::IN_RENEWAL_STATUS;
                     $membership->logs()->create([
-                        'description' => "Mebership renewal failed because we wasn't able to find a payment method for the customer."
+                        'description' => "Mebership renewal failed because we wasn't able to find a payment method for the customer.",
                     ]);
                 }
 
                 $membership->shipping_status = 'N/A';
                 $membership->save();
 
-                throw new Exception("Customer does not have a payment method");
+                throw new Exception('Customer does not have a payment method');
             }
 
             /**
@@ -97,7 +98,7 @@ class RenewMembershipJob implements ShouldQueue
                 $membership->customer->charge(
                     $membership->price ?? 3500,
                     $membership->customer->defaultPaymentMethod()->id,
-                    ['description' => "Membership Renewal"]
+                    ['description' => 'Membership Renewal']
                 );
 
                 $membership->status = Membership::AWAITING_PICK_GIFT_STATUS;
@@ -111,8 +112,8 @@ class RenewMembershipJob implements ShouldQueue
                 $order_line_items = [
                     [
                         'product_id' => $membership->product_id,
-                        'quantity' => 1
-                    ]
+                        'quantity' => 1,
+                    ],
                 ];
 
                 $orderParams = [
@@ -130,17 +131,17 @@ class RenewMembershipJob implements ShouldQueue
                     'meta_data' => [
                         [
                             'key' => '_created_from_kinja_api',
-                            'value' => 'yes'
+                            'value' => 'yes',
                         ],
                         [
                             'key' => '_status',
-                            'value' => 'kh-awm'
+                            'value' => 'kh-awm',
                         ],
                         [
                             'key' => '_membership_id',
-                            'value' => $membership->id
-                        ]
-                    ]
+                            'value' => $membership->id,
+                        ],
+                    ],
                 ];
 
                 $wooService = \App\Services\WooCommerce\WooCommerceService::make();
@@ -152,14 +153,13 @@ class RenewMembershipJob implements ShouldQueue
                 if ($order->id) {
                     $order->update([
                         'has_membership' => true,
-                        'membership_id' => $membership->id
+                        'membership_id' => $membership->id,
                     ]);
                     $membership->pending_order_id = $order->order_id;
                     $membership->save();
                 }
 
                 $membership->sendMembershipRenewedMail();
-
             } catch (\Laravel\Cashier\Exceptions\IncompletePayment $exception) {
                 $membership->catchRenewalError($exception->payment->status);
             } catch (Exception $e) {
@@ -167,10 +167,11 @@ class RenewMembershipJob implements ShouldQueue
             }
 
             $membership->save();
+
             return $membership;
-        } catch ( Exception $e ) {
+        } catch (Exception $e) {
             $membership->logs()->create([
-                'description' => sprintf("Renewal Error: %s", $e->getMessage())
+                'description' => sprintf('Renewal Error: %s', $e->getMessage()),
             ]);
 
             return $e->getMessage();

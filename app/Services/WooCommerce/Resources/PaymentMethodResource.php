@@ -3,8 +3,8 @@
 namespace App\Services\WooCommerce\Resources;
 
 use App\Services\Contracts\ResourceContract;
-use App\Services\WooCommerce\Factories\PaymentMethodFactory;
 use App\Services\Resources\BaseResource;
+use App\Services\WooCommerce\Factories\PaymentMethodFactory;
 
 class PaymentMethodResource extends BaseResource implements ResourceContract
 {
@@ -27,19 +27,22 @@ class PaymentMethodResource extends BaseResource implements ResourceContract
      *
      * Basically Sync all elements
      *
-     * @param integer $per_page
+     * @param  int  $per_page
      * @return void
      */
-    public function syncAll(int|null $perPage, int $page = 1, int $sync_id = 0): void {
+    public function syncAll(int|null $perPage, int $page = 1, int $sync_id = 0): void
+    {
         $sync = \App\Models\Sync::find($sync_id);
 
-        if ($sync->status === \App\Models\Sync::COMPLETED) return;
+        if ($sync->status === \App\Models\Sync::COMPLETED) {
+            return;
+        }
 
         try {
             $response = $this->all();
 
             if ($response) {
-                $response->map(fn($item) => $item->sync());
+                $response->map(fn ($item) => $item->sync());
                 $sync->current_page = $page + 1;
                 $sync->save();
             }

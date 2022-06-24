@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $user_id
  * @property int|null $order_id
  * @property-read \App\Models\Membership|null $membership
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|MembershipLog newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|MembershipLog newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|MembershipLog query()
@@ -35,14 +36,16 @@ class MembershipLog extends Model
     use HasFactory;
 
     protected $fillable = [
-        'description', 'customer_id', 'user_id', 'order_id'
+        'description', 'customer_id', 'user_id', 'order_id',
     ];
 
     /**
      * [membership description]
+     *
      * @return [type] [description]
      */
-    public function membership() {
+    public function membership()
+    {
         return $this->belongsTo(Membership::class, 'membership_id');
     }
 }

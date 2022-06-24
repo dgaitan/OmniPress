@@ -2,8 +2,8 @@
 
 namespace App\Services\WooCommerce\Factories;
 
-use App\Services\WooCommerce\DataObjects\Customer;
 use App\Services\Contracts\FactoryContract;
+use App\Services\WooCommerce\DataObjects\Customer;
 
 class CustomerFactory implements FactoryContract
 {

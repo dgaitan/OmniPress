@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property bool $use_parent_settings
  * @property object|null $intervals
  * @property-read Product $product
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|SubscriptionProduct newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|SubscriptionProduct newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|SubscriptionProduct query()
@@ -40,7 +41,7 @@ class SubscriptionProduct extends Model
 
     protected $casts = [
         'intervals' => 'object',
-        'expiration_date' => 'date'
+        'expiration_date' => 'date',
     ];
 
     protected $fillable = [
@@ -48,7 +49,7 @@ class SubscriptionProduct extends Model
         'price',
         'fee',
         'use_parent_settings',
-        'intervals'
+        'intervals',
     ];
 
     /**

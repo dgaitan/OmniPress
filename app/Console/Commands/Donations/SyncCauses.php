@@ -41,9 +41,9 @@ class SyncCauses extends Command
     {
         $api = WooCommerceService::make();
         $api->causes()->syncAll(perPage: 100);
-        
+
         $this->info(sprintf(
-            "Total Causes Synced: %s",
+            'Total Causes Synced: %s',
             Cause::count()
         ));
     }

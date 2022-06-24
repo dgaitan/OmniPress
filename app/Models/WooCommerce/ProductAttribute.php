@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property bool|null $variation
  * @property mixed|null $options
  * @property int|null $product_id
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|ProductAttribute newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ProductAttribute newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ProductAttribute query()
@@ -38,7 +39,7 @@ class ProductAttribute extends Model
     use HasFactory;
 
     protected $casts = [
-        'options' => 'object'
+        'options' => 'object',
     ];
 
     protected $fillable = [
@@ -48,10 +49,11 @@ class ProductAttribute extends Model
         'visible',
         'variation',
         'options',
-        'product_id'
+        'product_id',
     ];
 
-    public function product() {
+    public function product()
+    {
         return $this->belongTo(Product::class, 'product_id');
     }
 }

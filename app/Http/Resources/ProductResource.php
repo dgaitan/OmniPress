@@ -48,7 +48,7 @@ class ProductResource extends JsonResource
             'attributes' => [],
             'variations' => [],
             'brands' => $this->getCollectionMapped($this->brands),
-            'parent' => null
+            'parent' => null,
         ];
 
         // if ($this->variations()->count() > 0) {
@@ -60,11 +60,11 @@ class ProductResource extends JsonResource
         }
 
         if ($this->images->isNotEmpty()) {
-            $product['images'] = $this->images->map(function($image){
+            $product['images'] = $this->images->map(function ($image) {
                 return [
                     'src' => $image->getImageUrl(),
                     'name' => $image->name,
-                    'alt' => $image->alt
+                    'alt' => $image->alt,
                 ];
             });
         }
@@ -79,19 +79,20 @@ class ProductResource extends JsonResource
     /**
      * Get collection like brands, tags or categories.
      *
-     * @param Collection $collection
+     * @param  Collection  $collection
      * @return array
      */
-    protected function getCollectionMapped(Collection $collection): array {
+    protected function getCollectionMapped(Collection $collection): array
+    {
         if ($collection->isEmpty()) {
             return [];
         }
 
-        return $collection->map(function($item) {
+        return $collection->map(function ($item) {
             return [
                 'id' => $item->id,
                 'name' => $item->name,
-                'slug' => $item->slug
+                'slug' => $item->slug,
             ];
         })->toArray();
     }

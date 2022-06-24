@@ -26,6 +26,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $sku
  * @property mixed|null $price
  * @property-read \App\Models\WooCommerce\Product|null $product
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|OrderLine newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|OrderLine newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|OrderLine query()
@@ -46,8 +47,10 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|OrderLine whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|OrderLine whereVariationId($value)
  * @mixin \Eloquent
+ *
  * @property int|null $order_id
  * @property-read \App\Models\WooCommerce\Order|null $order
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|OrderLine whereOrderId($value)
  */
 class OrderLine extends Model
@@ -61,7 +64,7 @@ class OrderLine extends Model
         'total' => 'decimal:0',
         'taxes' => 'array',
         'price' => 'decimal:0',
-        'meta_data' => 'array'
+        'meta_data' => 'array',
     ];
 
     protected $fillable = [
@@ -78,18 +81,21 @@ class OrderLine extends Model
         'meta_data',
         'sku',
         'price',
-        'order_id'
+        'order_id',
     ];
 
-    public function product() {
+    public function product()
+    {
         return $this->belongsTo(Product::class, 'product_id')->with('images', 'parent');
     }
 
-    public function order() {
+    public function order()
+    {
         return $this->belongsTo(Order::class, 'order_id');
     }
 
-    public function setNameAttribute($value) {
+    public function setNameAttribute($value)
+    {
         $value = explode('-', $value);
 
         $this->attributes['name'] = implode(' ', $value);

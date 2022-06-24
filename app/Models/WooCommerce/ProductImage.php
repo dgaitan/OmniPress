@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $alt
  * @property int $product_id
  * @property-read \App\Models\WooCommerce\Product $product
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|ProductImage newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ProductImage newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ProductImage query()
@@ -40,7 +41,7 @@ class ProductImage extends Model
 
     protected $casts = [
         'date_created' => 'datetime',
-        'date_modified' => 'datetime'
+        'date_modified' => 'datetime',
     ];
 
     protected $fillable = [
@@ -50,10 +51,11 @@ class ProductImage extends Model
         'alt',
         'date_created',
         'date_modified',
-        'product_image_id'
+        'product_image_id',
     ];
 
-    public function product() {
+    public function product()
+    {
         return $this->belongsTo(Product::class, 'product_id');
     }
 
@@ -62,7 +64,8 @@ class ProductImage extends Model
      *
      * @return string
      */
-    public function getImageUrl(): string {
+    public function getImageUrl(): string
+    {
         $imageUrl = '';
 
         if ($this->src) {
@@ -77,7 +80,8 @@ class ProductImage extends Model
         return $imageUrl;
     }
 
-    public function toArray() {
+    public function toArray()
+    {
         $data = parent::toArray();
 
         if ($data['src']) {

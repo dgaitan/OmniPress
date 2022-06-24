@@ -15,7 +15,7 @@ class ProductObserver
      */
     public function updated(Product $product)
     {
-        if (in_array($product->stock_quantity, [1,3,5,10])) {
+        if (in_array($product->stock_quantity, [1, 3, 5, 10])) {
             // $product->notify((new LowStockNotification($product))->delay(now()->addMinute()));
         }
     }

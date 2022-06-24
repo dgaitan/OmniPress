@@ -2,9 +2,9 @@
 
 namespace App\Services\WooCommerce\DataObjects;
 
+use App\Models\WooCommerce\Customer as WooCustomer;
 use App\Services\Contracts\DataObjectContract;
 use App\Services\DataObjects\BaseObject;
-use App\Models\WooCommerce\Customer as WooCustomer;
 
 class Customer extends BaseObject implements DataObjectContract
 {
@@ -13,7 +13,8 @@ class Customer extends BaseObject implements DataObjectContract
      *
      * @return void
      */
-    protected function schema(): void {
+    protected function schema(): void
+    {
         $this->integer('id');
         $this->string('date_created', null);
         $this->string('date_modified', null);
@@ -34,7 +35,8 @@ class Customer extends BaseObject implements DataObjectContract
      *
      * @return WooCustomer
      */
-    public function sync(): WooCustomer {
+    public function sync(): WooCustomer
+    {
         $customer = WooCustomer::firstOrNew(['customer_id' => $this->id]);
         $data = $this->toArray('customer_id');
 
@@ -44,8 +46,12 @@ class Customer extends BaseObject implements DataObjectContract
             foreach ($data['meta_data'] as $meta) {
                 $meta = (array) $meta;
 
-                if (! isset($meta['key'])) continue;
-                if ($meta['key'] === '_stripe_customer') continue;
+                if (! isset($meta['key'])) {
+                    continue;
+                }
+                if ($meta['key'] === '_stripe_customer') {
+                    continue;
+                }
 
                 $meta_data[] = $meta;
             }

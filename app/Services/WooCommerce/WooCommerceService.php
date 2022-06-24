@@ -3,14 +3,14 @@
 namespace App\Services\WooCommerce;
 
 use App\Services\Concerns\CanBeFaked;
-use App\Services\Contracts\ServiceContract;
 use App\Services\Contracts\ResourceContract;
-use App\Services\WooCommerce\Resources\OrderResource;
-use App\Services\WooCommerce\Resources\CustomerResource;
-use App\Services\WooCommerce\Resources\ProductResource;
-use App\Services\WooCommerce\Resources\MembershipResource;
-use App\Services\WooCommerce\Resources\PaymentMethodResource;
+use App\Services\Contracts\ServiceContract;
 use App\Services\WooCommerce\Resources\CauseResource;
+use App\Services\WooCommerce\Resources\CustomerResource;
+use App\Services\WooCommerce\Resources\MembershipResource;
+use App\Services\WooCommerce\Resources\OrderResource;
+use App\Services\WooCommerce\Resources\PaymentMethodResource;
+use App\Services\WooCommerce\Resources\ProductResource;
 use Automattic\WooCommerce\Client as WooCommerce;
 
 class WooCommerceService implements ServiceContract
@@ -20,15 +20,16 @@ class WooCommerceService implements ServiceContract
     /**
      * Service Constructor
      *
-     * @param string $domain
-     * @param string $key
-     * @param string $secret
+     * @param  string  $domain
+     * @param  string  $key
+     * @param  string  $secret
      */
     public function __construct(
         public string $domain,
         public string $key,
         public string $secret,
-    ) {}
+    ) {
+    }
 
     /**
      * Create a new WooCommerce Request
@@ -37,14 +38,13 @@ class WooCommerceService implements ServiceContract
      */
     public function makeRequest(): WooCommerce
     {
-
         $request = new WooCommerce(
             $this->domain,
             $this->key,
             $this->secret,
             [
                 'timeout' => env('WOO_TIMEOUT', 20),
-                'user_agent' => 'KinjaOmniClient'
+                'user_agent' => 'KinjaOmniClient',
             ]
         );
 
@@ -116,7 +116,8 @@ class WooCommerceService implements ServiceContract
      *
      * @return ServiceContract
      */
-    public static function make(): ServiceContract {
+    public static function make(): ServiceContract
+    {
         return resolve(WooCommerceService::class);
     }
 }

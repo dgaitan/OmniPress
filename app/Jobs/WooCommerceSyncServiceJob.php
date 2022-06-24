@@ -4,7 +4,6 @@ namespace App\Jobs;
 
 use App\Models\Sync;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -24,7 +23,7 @@ class WooCommerceSyncServiceJob implements ShouldQueue
     /**
      * Sync Id
      *
-     * @var integer
+     * @var int
      */
     protected int $sync_id;
 

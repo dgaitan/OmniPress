@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string|null $body
  * @property string|null $order_status_code
  * @property string|null $note_date
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|PrintforiaOrderNote newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PrintforiaOrderNote newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PrintforiaOrderNote query()
@@ -40,7 +41,7 @@ class PrintforiaOrderNote extends Model
      * @var array
      */
     protected $casts = [
-        'note_date' => 'datetime'
+        'note_date' => 'datetime',
     ];
 
     protected $fillable = [
@@ -48,7 +49,7 @@ class PrintforiaOrderNote extends Model
         'title',
         'body',
         'order_status_code',
-        'note_date'
+        'note_date',
     ];
 
     /**

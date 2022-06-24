@@ -2,9 +2,9 @@
 
 namespace App\Services\WooCommerce\DataObjects;
 
+use App\Models\WooCommerce\Tag;
 use App\Services\Contracts\DataObjectContract;
 use App\Services\DataObjects\BaseObject;
-use App\Models\WooCommerce\Tag;
 
 class ProductTag extends BaseObject implements DataObjectContract
 {
@@ -13,7 +13,8 @@ class ProductTag extends BaseObject implements DataObjectContract
      *
      * @return void
      */
-    protected function schema(): void {
+    protected function schema(): void
+    {
         $this->integer('id');
         $this->string('name');
         $this->string('slug');
@@ -24,7 +25,8 @@ class ProductTag extends BaseObject implements DataObjectContract
      *
      * @return Tag
      */
-    public function sync(): Tag {
+    public function sync(): Tag
+    {
         $tag = Tag::firstOrNew(['woo_tag_id' => $this->id]);
         $tag->fill($this->toArray('woo_tag_id'));
         $tag->save();
