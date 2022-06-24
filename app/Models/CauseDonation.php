@@ -30,6 +30,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|CauseDonation whereTotalOrders($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CauseDonation whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read Cause|null $cause
  */
 class CauseDonation extends Model
 {

@@ -4,6 +4,7 @@ namespace App\Models\WooCommerce;
 
 use App\Models\Membership;
 use App\Models\Concerns\HasMetaData;
+use App\Models\Printforia\PrintforiaOrderItem;
 use App\Models\Subscription\SubscriptionProduct;
 use App\Models\Subscription\Subscriptable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -99,6 +100,8 @@ use Illuminate\Notifications\Notifiable;
  * @property-read int|null $notifications_count
  * @property-read SubscriptionProduct|null $subscription
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereHasSubscription($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|PrintforiaOrderItem[] $printforiaItems
+ * @property-read int|null $printforia_items_count
  */
 class Product extends Model
 {
@@ -249,12 +252,29 @@ class Product extends Model
     }
 
     /**
+     * Printforia Item childs
+     *
+     * @return HasMany
+     */
+    public function printforiaItems(): HasMany {
+        return $this->hasMany(PrintforiaOrderItem::class, 'product_id');
+    }
+
+    /**
      * IS the current producdt a variation?
      *
      * @return boolean
      */
     public function isVariation() {
         return $this->type === 'variation';
+    }
+
+    public function featuredImage(): ProductImage|null {
+        if ($this->images->isEmpty()) {
+            return null;
+        }
+
+        return $this->images()->first();
     }
 
     /**

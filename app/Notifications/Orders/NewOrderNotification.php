@@ -52,7 +52,7 @@ class NewOrderNotification extends Notification implements ShouldQueue
     public function toSlack()
     {
         return (new SlackMessage)
-            ->content(sprintf('New Order (#%s) placed in Kindhumans', $this->order->order_id))
+            ->content(sprintf('New Order Created', $this->order->order_id))
             ->attachment(function ($attachment) {
                 $attachment->title('Order Summary', $this->order->getPermalinkOnStore())
                     ->fields([

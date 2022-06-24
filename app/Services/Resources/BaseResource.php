@@ -185,4 +185,25 @@ abstract class BaseResource {
 
         return null;
     }
+
+    public function update(
+        int|string $element_id,
+        array $params,
+        bool $sync = false
+    ): DataObjectContract|Model|bool {
+        $api = $this->service->makeRequest();
+        $response = $api->put(sprintf('%s/%s', $this->endpoint, $element_id), $params);
+
+        if ($response) {
+            $dataObject = $this->factory::make(attributes: (array) $response);
+
+            if ($sync) {
+                return $dataObject->sync();
+            }
+
+            return $dataObject;
+        }
+
+        return false;
+    }
 }

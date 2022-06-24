@@ -33,6 +33,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder|Cause whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Cause whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|CauseDonation[] $donations
+ * @property-read int|null $donations_count
  */
 class Cause extends Model
 {

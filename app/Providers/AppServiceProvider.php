@@ -2,12 +2,14 @@
 
 namespace App\Providers;
 
+use App\Models\Printforia\PrintforiaOrder;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Cashier\Cashier;
 use App\Models\WooCommerce\Customer;
 use App\Models\WooCommerce\Order;
 use App\Models\WooCommerce\Product;
 use App\Observers\OrderObserver;
+use App\Observers\PrintforiaOrderObserver;
 use App\Observers\ProductObserver;
 use App\Services\WooCommerce\WooCommerceService;
 
@@ -44,5 +46,6 @@ class AppServiceProvider extends ServiceProvider
         Cashier::useCustomerModel(Customer::class);
         Order::observe(OrderObserver::class);
         Product::observe(ProductObserver::class);
+        PrintforiaOrder::observe(PrintforiaOrderObserver::class);
     }
 }

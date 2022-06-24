@@ -38,15 +38,15 @@ export default defineComponent({
 
     methods: {
         getStatusColor() {
-            if (['active', 'processing', 'subscriber', 'publish'].includes(this.status)) {
+            if (['active', 'processing', 'subscriber', 'publish', 'approved'].includes(this.status)) {
                 return 'green';
             }
 
-            if (['completed', 'shipped', 'kh_affiliate'].includes(this.status)) {
+            if (['completed', 'shipped', 'kh_affiliate', 'completed'].includes(this.status)) {
                 return 'sky';
             }
 
-            if (['pending', 'in_renewal', 'administrator'].includes(this.status)) {
+            if (['pending', 'in_renewal', 'administrator', 'shipped'].includes(this.status)) {
                 return 'cyan'
             }
 
