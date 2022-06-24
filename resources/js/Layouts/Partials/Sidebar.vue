@@ -14,9 +14,16 @@
 	            			<template #icon><HomeIcon class="w-5 h-5" /></template>
 	            			Home
 	            		</SidebarNavLink>
-                        <SidebarNavLink :href="route('kinja.orders.index')" :active="route().current('kinja.orders.index')">
+                        <SidebarNavLink :href="route(routes.orders.index)" :active="isActive(routes.orders.activeIf)">
 	            			<template #icon><InboxInIcon class="w-5 h-5" /></template>
 	            			Orders
+
+                            <template v-if="isActive(routes.orders.activeIf)" #subitems>
+                                <SidebarNavSubLink
+                                    :href="route('kinja.orders.printforiaOrders')" :active="route().current('kinja.orders.printforiaOrders')">
+                                    Printforia
+                                </SidebarNavSubLink>
+                            </template>
 	            		</SidebarNavLink>
                         <SidebarNavLink :href="route('kinja.products.index')" :active="route().current('kinja.products.index')">
 	              			<template #icon><ArchiveIcon class="w-5 h-5" /></template>
@@ -27,11 +34,29 @@
 	              			Customers
 	              		</SidebarNavLink>
                         <SidebarNavLink
-                            :href="route('kinja.memberships.index')"
-                            :active="route().current('kinja.memberships.index')">
+                            :href="routes.memberships.index"
+                            :active="isActive(routes.memberships.activeIf)">
 	              			<template #icon><UserAddIcon class="w-5 h-5" /></template>
 	              			Memberships
 	              		</SidebarNavLink>
+                        <!-- <SidebarNavLink
+                            :href="route('kinja.causes.index')"
+                            :active="route().current('kinja.causes.index')">
+	              			<template #icon><EmojiHappyIcon class="w-5 h-5" /></template>
+	              			Causes
+	              		</SidebarNavLink> -->
+                        <!-- <SidebarNavLink
+                            :href="routes.analytics.index"
+                            :active="isActive(routes.analytics.activeIf)">
+	              			<template #icon><ChartBarIcon class="w-5 h-5" /></template>
+	              			Analytics
+
+                            <template v-if="isActive(routes.analytics.activeIf)" #subitems>
+                                <SidebarNavSubLink href="/foo/">
+                                    Causes
+                                </SidebarNavSubLink>
+                            </template>
+	              		</SidebarNavLink> -->
 	            	</SidebarNav>
 
 	              	<!-- Admin -->
@@ -88,12 +113,14 @@
 	import { defineComponent } from 'vue';
 	import SidebarNav from '@/Layouts/Partials/SidebarNav.vue';
 	import SidebarNavLink from '@/Layouts/Partials/SidebarNavLink.vue';
-    import { HomeIcon, InboxInIcon, ArchiveIcon, UsersIcon, UserAddIcon, UserGroupIcon, RefreshIcon, ClockIcon, KeyIcon, UserCircleIcon, LogoutIcon } from '@heroicons/vue/solid'
+    import SidebarNavSubLink from '@/Layouts/Partials/SidebarNavSubLink.vue';
+    import { HomeIcon, InboxInIcon, ArchiveIcon, UsersIcon, UserAddIcon, UserGroupIcon, RefreshIcon, ClockIcon, KeyIcon, UserCircleIcon, LogoutIcon, EmojiHappyIcon, ChartBarIcon } from '@heroicons/vue/solid'
 
 	export default defineComponent({
 		components: {
 			SidebarNav,
 			SidebarNavLink,
+            SidebarNavSubLink,
             HomeIcon,
             InboxInIcon,
             ArchiveIcon,
@@ -104,13 +131,44 @@
             ClockIcon,
             KeyIcon,
             UserCircleIcon,
-            LogoutIcon
+            LogoutIcon,
+            EmojiHappyIcon,
+            ChartBarIcon
 		},
+
+        data() {
+            return {
+                routes: {
+                    orders: {
+                        index: 'kinja.orders.index',
+                        activeIf: [
+                            'kinja.orders.index', 'kinja.orders.show',
+                            'kinja.orders.printforiaOrders'
+                        ]
+                    },
+                    memberships: {
+                        index: route('kinja.memberships.index'),
+                        activeIf: ['kinja.memberships.index', 'kinja.memberships.show']
+                    },
+                    analytics: {
+                        index: route('kinja.analytics.index'),
+                        activeIf: [
+                            'kinja.analytics.index',
+                            'kinja.analytics.causes'
+                        ]
+                    }
+                }
+            }
+        },
 
 		methods: {
 			logout() {
                 this.$inertia.post(route('logout'));
             },
+
+            isActive(routes = []) {
+                return routes.includes(route().current())
+            }
 		}
 	})
 </script>

@@ -2,6 +2,7 @@
 
 namespace App\Models\WooCommerce;
 
+use App\Models\Concerns\HasMoney;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -52,6 +53,7 @@ use Illuminate\Database\Eloquent\Model;
 class OrderLine extends Model
 {
     use HasFactory;
+    use HasMoney;
 
     protected $casts = [
         'subtotal' => 'decimal:0',

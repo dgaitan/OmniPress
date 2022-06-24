@@ -2,6 +2,7 @@
 
 namespace App\Models\WooCommerce;
 
+use App\Models\Causes\UserDonation;
 use App\Models\Membership;
 use App\Models\Concerns\HasMetaData;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -67,6 +68,8 @@ use Laravel\Cashier\Billable;
  * @method static \Illuminate\Database\Eloquent\Builder|Customer whereTrialEndsAt($value)
  * @property-read \Illuminate\Database\Eloquent\Collection|Membership[] $memberships
  * @property-read int|null $memberships_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|UserDonation[] $donations
+ * @property-read int|null $donations_count
  */
 class Customer extends Model
 {
@@ -125,6 +128,16 @@ class Customer extends Model
      */
     public function memberships(): HasMany {
         return $this->hasMany(Membership::class);
+    }
+
+    /**
+     * Customer donation
+     *
+     * @return HasMany
+     */
+    public function donations(): HasMany
+    {
+        return $this->hasMany(UserDonation::class, 'customer_id');
     }
 
     /**
@@ -224,21 +237,21 @@ class Customer extends Model
      * @return void
      */
     public function setPaymentMethodsFromCustomerId()
-    {   
+    {
         $stripCustomerId = $this->getMetaValue('_stripe_customer_id', null);
-        
+
         if (! is_null($stripCustomerId)) {
             try {
-                // Try retrieve the customer to avoid 
+                // Try retrieve the customer to avoid
                 $this->stripe()->customers->retrieve($stripCustomerId, []);
                 $this->stripe_id = $stripCustomerId;
                 $this->save();
-                
+
                 $paymentMethods = $this->stripe()->customers->allPaymentMethods(
                     $stripCustomerId,
                     ['type' => 'card']
                 );
-    
+
                 if ($paymentMethods) {
                     foreach ($paymentMethods as $paymentMethod) {
                         $this->addPaymentMethod($paymentMethod->id);
@@ -247,12 +260,12 @@ class Customer extends Model
             } catch (\Stripe\Exception\InvalidRequestException $e) {
                 $this->stripe_id = null;
                 $this->save();
-                
+
                 return $e->getMessage();
             } catch (\Stripe\Exception\InvalidArgumentException $e) {
                 $this->stripe_id = null;
                 $this->save();
-                
+
                 return $e->getMessage();
             }
         }

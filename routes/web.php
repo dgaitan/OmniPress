@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AnalyticsController;
+use App\Http\Controllers\CauseController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -13,8 +15,8 @@ use App\Http\Controllers\MembershipController;
 use App\Http\Controllers\QueuesController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\WebhookController;
 use Illuminate\Support\Facades\Auth;
-use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 /*
 |--------------------------------------------------------------------------
@@ -99,7 +101,12 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('/dashboard')->group(fun
         Route::controller(OrderController::class)->prefix('/orders')->group(function () {
             Route::get('/', 'index')->name('kinja.orders.index');
             Route::get('/export', 'export')->name('kinja.orders.export');
+            Route::get('/printforia', 'printforiaOrders')->name('kinja.orders.printforiaOrders');
             Route::get('/{id}', 'show')->name('kinja.orders.show');
+        });
+
+        Route::controller(AnalyticsController::class)->prefix('/analytics')->group(function () {
+            Route::get('/', 'index')->name('kinja.analytics.index');
         });
     });
 
@@ -114,11 +121,12 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('/dashboard')->group(fun
             Route::put('/{id}/update-kind-cash', 'updateKindCash')->name('updateKindCash');
             Route::post('/{id}/test/manually-renew', 'testManuallyRenew')->name('testManuallyRenew');
         });
-    });
 
-    // Analytics View
-    Route::prefix('/analytics')->group(function () {
-
+        // Causes
+        Route::controller(CauseController::class)->prefix('/causes')->name('causes.')->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/{id}', 'show')->name('show');
+        });
     });
 
     // Crm Views
@@ -126,4 +134,9 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('/dashboard')->group(fun
 
     });
 
+
+});
+
+Route::controller(WebhookController::class)->prefix('/webhooks')->name('webhooks.')->group(function () {
+    Route::post('/printforia', 'printforiaWebhook')->name('printforia');
 });
