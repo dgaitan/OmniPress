@@ -12,11 +12,8 @@
             <p class="text-sm font-medium mb-2">{{ item.product.name }}</p>
             <p class="text-xs text-gray-500 mb-2"><span class="text-gray-700 font-medium">SKU:</span> {{ item.product.sku }}</p>
             <p class="text-xs text-gray-500 mb-2"><span class="text-gray-700 font-medium">PRINTFORIA SKU:</span> {{ item.sku }}</p>
-            <p class="text-xs text-gray-500"><span class="text-gray-700 font-medium">QUANTITY:</span> {{ item.quantity }}</p>
-            <!-- <div class="mt-5">
-                <span class="text-sm font-semibold text-gray-800">Quantity <span class="text-gray-500 ml-1">{{ item.quantity }}</span></span>
-                <span class="text-gray-400 mx-3">|</span>
-            </div> -->
+            <p class="text-xs text-gray-500 mb-2"><span class="text-gray-700 font-medium">QUANTITY:</span> {{ item.quantity }}</p>
+            <p class="text-xs text-gray-500 mb-2"><span class="text-gray-700 font-medium">PRINTFORIA ITEM ID:</span> {{ item.item_id }}</p>
         </div>
     </div>
 </template>
