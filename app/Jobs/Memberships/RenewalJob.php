@@ -4,14 +4,12 @@ namespace App\Jobs\Memberships;
 
 use App\Models\Membership;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Cache;
-use Carbon\Carbon;
 
 class RenewalJob implements ShouldQueue
 {
@@ -50,12 +48,10 @@ class RenewalJob implements ShouldQueue
 
             // While the query has more page, keep running it
             while ($hasMorePages) {
-
                 foreach ($items as $key => $membership) {
                     // If the membership is active, send reminders
                     // or maybe renew it.
                     if ($membership->isActive()) {
-
                         $membership->maybeSendRenewalReminder($mailQueue++);
 
                         if ($membership->expireToday()) {
@@ -70,7 +66,7 @@ class RenewalJob implements ShouldQueue
                     }
 
                     if (($membership->isInRenewal() || $membership->isCancelled()) && $membership->daysExpired() > 30) {
-                        $membership->expire("Membership expired because was impossible find a payment method in 30 days.");
+                        $membership->expire('Membership expired because was impossible find a payment method in 30 days.');
                     }
 
                     if ($membership->isAwaitingPickGift()) {
@@ -87,7 +83,7 @@ class RenewalJob implements ShouldQueue
 
                 // Increment the page
                 $currentPage = $currentPage + 1;
-                Paginator::currentPageResolver(function() use ($currentPage) {
+                Paginator::currentPageResolver(function () use ($currentPage) {
                     return $currentPage;
                 });
 
@@ -96,7 +92,6 @@ class RenewalJob implements ShouldQueue
                 $hasMorePages = $query->count() > 0;
                 $items = $query->items();
             }
-
         }
     }
 }

@@ -47,7 +47,7 @@ class CalculateCauseDonations extends Command
         CauseDonation::truncate();
 
         while ($orders->isNotEmpty()) {
-            $this->info(sprintf("Calculation Page #%s", $page));
+            $this->info(sprintf('Calculation Page #%s', $page));
             $page++;
 
             $orders->map(function ($order) {
@@ -58,6 +58,6 @@ class CalculateCauseDonations extends Command
             $orders = Order::skip($offset)->take($perPage)->get();
         }
 
-        $this->info("Calculation finished");
+        $this->info('Calculation finished');
     }
 }

@@ -4,7 +4,8 @@ namespace App\Services\DataObjects;
 
 use Illuminate\Database\Eloquent\Model;
 
-abstract class BaseObject {
+abstract class BaseObject
+{
     /**
      * Field Schema
      *
@@ -15,9 +16,10 @@ abstract class BaseObject {
     /**
      * Constructor.
      *
-     * @param array $attributes
+     * @param  array  $attributes
      */
-    public function __construct(public array $attributes) {
+    public function __construct(public array $attributes)
+    {
         $this->schema();
         $this->buildAttributes();
     }
@@ -34,7 +36,8 @@ abstract class BaseObject {
      *
      * @return array
      */
-    public function toArray(string $idField = 'id'): array {
+    public function toArray(string $idField = 'id'): array
+    {
         $attributes = $this->attributes;
         $attributes[$idField] = $this->id;
 
@@ -46,11 +49,14 @@ abstract class BaseObject {
      *
      * @return void
      */
-    protected function buildAttributes(): void {
+    protected function buildAttributes(): void
+    {
         $attributes = [];
 
         foreach ($this->attributes as $key => $value) {
-            if (! in_array($key, array_keys($this->fields))) continue;
+            if (! in_array($key, array_keys($this->fields))) {
+                continue;
+            }
             $attributes[$key] = $this->getFieldValue($key, $value);
         }
 
@@ -60,11 +66,12 @@ abstract class BaseObject {
     /**
      * Get the right value of a field
      *
-     * @param string $key
-     * @param mixed $value
+     * @param  string  $key
+     * @param  mixed  $value
      * @return mixed
      */
-    protected function getFieldValue(string $key, $value) {
+    protected function getFieldValue(string $key, $value)
+    {
         $field = (object) $this->fields[$key];
 
         if (! $value || is_null($value)) {
@@ -99,11 +106,12 @@ abstract class BaseObject {
      *
      * @return array
      */
-    protected function getMetaData(): array {
+    protected function getMetaData(): array
+    {
         $meta_data = [];
 
         if ($this->meta_data) {
-            $meta_data = collect($this->meta_data)->map(function($meta) {
+            $meta_data = collect($this->meta_data)->map(function ($meta) {
                 return (array) $meta;
             });
         }
@@ -114,10 +122,10 @@ abstract class BaseObject {
     /**
      * Sync Collection
      *
-     * @param string $key
-     * @param string $fieldName
-     * @param string $dataObject
-     * @param Model $parent
+     * @param  string  $key
+     * @param  string  $fieldName
+     * @param  string  $dataObject
+     * @param  Model  $parent
      * @return void
      */
     protected function syncCollection(
@@ -154,78 +162,85 @@ abstract class BaseObject {
     /**
      * Register A boolean Field
      *
-     * @param string $name
-     * @param boolean $default
+     * @param  string  $name
+     * @param  bool  $default
      * @return void
      */
-    protected function boolean(string $name, $default = false) {
+    protected function boolean(string $name, $default = false)
+    {
         $this->addField($name, 'boolean', $default);
     }
 
     /**
      * Register a string field
      *
-     * @param string $name
-     * @param string $default
+     * @param  string  $name
+     * @param  string  $default
      * @return void
      */
-    protected function string(string $name, $default = '') {
+    protected function string(string $name, $default = '')
+    {
         $this->addField($name, 'string', $default);
     }
 
     /**
      * Register an Array field
      *
-     * @param string $name
-     * @param array $default
+     * @param  string  $name
+     * @param  array  $default
      * @return void
      */
-    protected function array(string $name, $default = []) {
+    protected function array(string $name, $default = [])
+    {
         $this->addField($name, 'array', $default);
     }
 
     /**
      * Register an integer field
      *
-     * @param string $name
-     * @param integer $default
+     * @param  string  $name
+     * @param  int  $default
      * @return void
      */
-    protected function integer(string $name, $default = 0) {
+    protected function integer(string $name, $default = 0)
+    {
         $this->addField($name, 'integer', $default);
     }
 
     /**
      * Regsiter a money field
      *
-     * @param string $name
-     * @param integer $default
+     * @param  string  $name
+     * @param  int  $default
      * @return void
      */
-    protected function money(string $name, $default = 0) {
+    protected function money(string $name, $default = 0)
+    {
         $this->addField($name, 'money', $default);
     }
 
     /**
      * Register a float field
      *
-     * @param string $name
-     * @param integer $default
+     * @param  string  $name
+     * @param  int  $default
      * @return void
      */
-    protected function float(string $name, $default = 0) {
+    protected function float(string $name, $default = 0)
+    {
         $this->addField($name, 'float', $default);
     }
 
     /**
      * Register a field
      *
-     * @param string $name
-     * @param string $type
+     * @param  string  $name
+     * @param  string  $type
      * @param [type] $default
      * @return void
      */
-    protected function addField(string $name, string $type, $default = null) {
+    protected function addField(string $name, string $type, $default = null)
+    {
         $this->fields[$name] = [
             'name' => $name,
             'type' => $type,
@@ -233,7 +248,8 @@ abstract class BaseObject {
         ];
     }
 
-    public function __get(string $key) {
+    public function __get(string $key)
+    {
         return isset($this->attributes[$key])
             ? $this->attributes[$key]
             : null;

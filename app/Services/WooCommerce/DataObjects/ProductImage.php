@@ -2,9 +2,9 @@
 
 namespace App\Services\WooCommerce\DataObjects;
 
+use App\Models\WooCommerce\ProductImage as WooProductImage;
 use App\Services\Contracts\DataObjectContract;
 use App\Services\DataObjects\BaseObject;
-use App\Models\WooCommerce\ProductImage as WooProductImage;
 
 class ProductImage extends BaseObject implements DataObjectContract
 {
@@ -13,7 +13,8 @@ class ProductImage extends BaseObject implements DataObjectContract
      *
      * @return void
      */
-    protected function schema(): void {
+    protected function schema(): void
+    {
         $this->integer('id');
         $this->string('date_created', null);
         $this->string('date_modified', null);
@@ -28,7 +29,8 @@ class ProductImage extends BaseObject implements DataObjectContract
      *
      * @return WooProductImage
      */
-    public function sync(): WooProductImage {
+    public function sync(): WooProductImage
+    {
         $image = WooProductImage::firstOrNew(['product_image_id' => $this->id]);
         $image->fill($this->toArray('product_image_id'));
         $image->save();

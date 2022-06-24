@@ -2,11 +2,11 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use App\Imports\ProductImport;
 use App\Imports\CustomerImport;
-use App\Imports\OrderImport;
 use App\Imports\MembershipImport;
+use App\Imports\OrderImport;
+use App\Imports\ProductImport;
+use Illuminate\Console\Command;
 
 class ImportFromCSV extends Command
 {
@@ -49,11 +49,12 @@ class ImportFromCSV extends Command
             'products' => ProductImport::class,
             'orders' => OrderImport::class,
             'customers' => CustomerImport::class,
-            'memberships' => MembershipImport::class
+            'memberships' => MembershipImport::class,
         ];
 
-        if (!in_array($this->argument('content_type'), array_keys($importers))) {
+        if (! in_array($this->argument('content_type'), array_keys($importers))) {
             $this->error('Content type not valid. Please use products, customers or orders.');
+
             return 0;
         }
 

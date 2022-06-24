@@ -2,11 +2,9 @@
 
 namespace App\Listeners\Printforia;
 
-use App\Mail\Printforia\OrderShipped;
 use App\Events\PrintforiaOrderWasShipped;
+use App\Mail\Printforia\OrderShipped;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 
 class SendPrintforiaOrderShippedMail
 {

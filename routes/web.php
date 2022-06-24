@@ -2,21 +2,21 @@
 
 use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\CauseController;
+use App\Http\Controllers\CouponController;
+use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MembershipController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\QueuesController;
+use App\Http\Controllers\SyncController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\WebhookController;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use JoelButcher\Socialstream\Http\Controllers\OAuthController;
-use App\Http\Controllers\SyncController;
-use App\Http\Controllers\CustomerController;
-use App\Http\Controllers\CouponController;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\OrderController;
-use App\Http\Controllers\MembershipController;
-use App\Http\Controllers\QueuesController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\WebhookController;
-use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,7 +47,6 @@ Route::get(
     [OAuthController::class, 'handleProviderCallback']
 )->middleware('kindhumans.email')->name('oauth.callback');
 
-
 Route::middleware(['auth:sanctum', 'verified'])->prefix('/dashboard')->group(function () {
     Route::get('/', [DashboardController::class, 'dashboard'])->name('dashboard');
 
@@ -55,26 +54,26 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('/dashboard')->group(fun
     Route::prefix('/admin')
         ->middleware(['role:super_admin|admin'])
         ->group(function () {
-        // Sync Routes
-        Route::controller(SyncController::class)
+            // Sync Routes
+            Route::controller(SyncController::class)
             ->middleware(['can:run_sync'])->name('kinja.sync.')->prefix('/sync')->group(function () {
-            Route::get('/', 'index')->name('index');
-            Route::post('/execute', 'execute')->name('execute');
-            Route::get('/logs/{id}', 'logs')->name('logs');
-            Route::get('/check', 'check')->name('check');
-        });
+                Route::get('/', 'index')->name('index');
+                Route::post('/execute', 'execute')->name('execute');
+                Route::get('/logs/{id}', 'logs')->name('logs');
+                Route::get('/check', 'check')->name('check');
+            });
 
-        // Queues
-        Route::controller(QueuesController::class)
+            // Queues
+            Route::controller(QueuesController::class)
             ->middleware(['can:admin_queues'])->name('kinja.queues.')->prefix('/queues')->group(function () {
-            Route::get('/', 'index')->name('index');
-        });
+                Route::get('/', 'index')->name('index');
+            });
 
-        Route::controller(UserController::class)
+            Route::controller(UserController::class)
             ->middleware('can:assign_roles')->name('kinja.users.')->prefix('/users')->group(function () {
-            Route::get('/', 'index')->name('index');
+                Route::get('/', 'index')->name('index');
+            });
         });
-    });
 
     // Store Views
     Route::prefix('/store')->group(function () {
@@ -132,10 +131,7 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('/dashboard')->group(fun
 
     // Crm Views
     Route::prefix('/crm')->group(function () {
-
     });
-
-
 });
 
 Route::controller(WebhookController::class)->prefix('/webhooks')->name('webhooks.')->group(function () {

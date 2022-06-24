@@ -2,22 +2,22 @@
 
 namespace Tests\Feature\Models;
 
-use DateTime;
 use App\Models\User;
 
-class UserModelTest extends BaseModelTest {
-    
-    public function test_user_creation_with_role() : void {
+class UserModelTest extends BaseModelTest
+{
+    public function test_user_creation_with_role(): void
+    {
         $org = $this->create_org();
         $org->createRolesAndPermissions();
         setPermissionsTeamId($org->id);
 
         $user = User::create([
-            'name' => 'John', 
+            'name' => 'John',
             'email' => 'john@foo.com',
-            'password' => 'secret'
+            'password' => 'secret',
         ]);
-        
+
         $user->load('roles');
         $user->load('permissions');
         $user->assignRole('manager');
@@ -26,16 +26,16 @@ class UserModelTest extends BaseModelTest {
         $newUser = User::create([
             'name' => 'New User',
             'email' => 'new@user.com',
-            'password' => 'secret'
+            'password' => 'secret',
         ]);
 
         $newOrg = $this->create_org([
             'owner_id' => $newUser->id,
             'is_default' => false,
             'status' => 1,
-            'name' => 'Org 2'
+            'name' => 'Org 2',
         ]);
-        
+
         $newOrg->createRolesAndPermissions();
         setPermissionsTeamId($newOrg->id);
 

@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $slug
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\WooCommerce\Product[] $products
  * @property-read int|null $products_count
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Category newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Category newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Category query()
@@ -26,7 +27,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereWooCategoryId($value)
  * @mixin \Eloquent
+ *
  * @property int|null $service_id
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereServiceId($value)
  */
 class Category extends Model
@@ -36,14 +39,15 @@ class Category extends Model
     protected $fillable = [
         'name',
         'slug',
-        'woo_category_id'
+        'woo_category_id',
     ];
 
-    public function products() {
+    public function products()
+    {
         return $this->belongsToMany(
-            Product::class, 
-            'product_category', 
-            'category_id', 
+            Product::class,
+            'product_category',
+            'category_id',
             'product_id'
         )->as('products')->withTimestamps();
     }

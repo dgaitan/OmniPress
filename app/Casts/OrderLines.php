@@ -6,18 +6,16 @@ use App\Data\Order\CouponLineData;
 use App\Data\Order\FeeLineData;
 use App\Data\Order\ShippingLineData;
 use App\Data\Order\TaxLineData;
-use App\Data\Product\ProductSettingData;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 
 class OrderLines implements CastsAttributes
 {
-
-	protected $dataHandlers = [
-		'tax_lines' => TaxLineData::class,
-		'shipping_lines' => ShippingLineData::class,
-		'fee_lines' => FeeLineData::class,
-		'coupon_lines' => CouponLineData::class,
-	];
+    protected $dataHandlers = [
+        'tax_lines' => TaxLineData::class,
+        'shipping_lines' => ShippingLineData::class,
+        'fee_lines' => FeeLineData::class,
+        'coupon_lines' => CouponLineData::class,
+    ];
 
     /**
      * Cast the given value.
@@ -30,10 +28,10 @@ class OrderLines implements CastsAttributes
      */
     public function get($model, $key, $value, $attributes)
     {
-    	if (!array_key_exists($key, $this->dataHandlers) || !$value) {
-    		return $value;
-    	}
-        
+        if (! array_key_exists($key, $this->dataHandlers) || ! $value) {
+            return $value;
+        }
+
         return $this->dataHandlers[$key]::collection(json_decode($value, true));
     }
 
@@ -48,10 +46,10 @@ class OrderLines implements CastsAttributes
      */
     public function set($model, $key, $value, $attributes)
     {
-        if (!is_string($value) || is_array($value)) {
+        if (! is_string($value) || is_array($value)) {
             $value = json_encode($value);
         }
-        
+
         return $value;
     }
 }

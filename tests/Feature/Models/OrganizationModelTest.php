@@ -6,13 +6,14 @@ use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
-class OrganizationModelTest extends BaseModelTest {
-
-    public function test_organization_relation() : void {
+class OrganizationModelTest extends BaseModelTest
+{
+    public function test_organization_relation(): void
+    {
         $user = $this->create_user();
 
         $org = new Organization();
-        $org->name = "Org 1";
+        $org->name = 'Org 1';
         $org->is_default = true;
         $org->status = 1;
         $org->save();
@@ -23,7 +24,7 @@ class OrganizationModelTest extends BaseModelTest {
         $this->assertEquals($user->email, $org->owner->email);
 
         // test Owner data
-        $this->assertEquals("Org 1", $org->name);
+        $this->assertEquals('Org 1', $org->name);
         $this->assertTrue($org->is_default);
         $this->assertEquals(1, $org->status);
 
@@ -31,23 +32,24 @@ class OrganizationModelTest extends BaseModelTest {
         $this->assertEquals('Org 1', $user->my_organizations()->first()->name);
     }
 
-    public function test_users_on_organization() : void {
+    public function test_users_on_organization(): void
+    {
         $user1 = User::create([
             'name' => 'John 1',
             'email' => 'john@doe1.com',
-            'password' => Hash::make('secret')
+            'password' => Hash::make('secret'),
         ]);
 
         $user2 = User::create([
             'name' => 'John 2',
             'email' => 'john@doe2.com',
-            'password' => Hash::make('secret')
+            'password' => Hash::make('secret'),
         ]);
 
         $owner = $this->create_user();
 
         $org = new Organization();
-        $org->name = "Org 1";
+        $org->name = 'Org 1';
         $org->owner_id = $owner->id;
         $org->is_default = true;
         $org->status = 1;
@@ -56,17 +58,16 @@ class OrganizationModelTest extends BaseModelTest {
         $org->members()->attach([$owner->id, $user1->id, $user2->id]);
 
         $this->assertEquals(3, $org->members()->count());
-        
-        $this->assertEquals("Org 1", $user1->organizations()->first()->name);
-        
-        $new_member = $org->members()->create(array(
+
+        $this->assertEquals('Org 1', $user1->organizations()->first()->name);
+
+        $new_member = $org->members()->create([
             'name' => 'David',
             'email' => 'gaitan@drums.com',
-            'password' => Hash::make('secret')
-        ));
+            'password' => Hash::make('secret'),
+        ]);
 
         $this->assertEquals('David', $new_member->name);
         $this->assertEquals(4, $org->members()->count());
     }
-
 }

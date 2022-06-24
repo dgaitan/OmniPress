@@ -5,8 +5,8 @@ namespace App\Services\Printforia;
 use Illuminate\Support\Facades\Http;
 use InvalidArgumentException;
 
-class PrintforiaApiClient {
-
+class PrintforiaApiClient
+{
     /**
      * Printforia API Key
      *
@@ -24,7 +24,8 @@ class PrintforiaApiClient {
     /**
      * INitialize Printforia Apli Client
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->apiKey = env('PRINTFORIA_API_KEY', '');
         $this->apiUrl = env('PRINTFORIA_API_URL', 'https://api-sandbox.printforia.com/v2/');
 
@@ -38,10 +39,11 @@ class PrintforiaApiClient {
     /**
      * GEt a simple order
      *
-     * @param string $orderId
+     * @param  string  $orderId
      * @return void
      */
-    public function getOrder(string $orderId) {
+    public function getOrder(string $orderId)
+    {
         return $this->request()->get(
             $this->getApiUrl(sprintf('orders/%s', $orderId))
         );
@@ -50,10 +52,11 @@ class PrintforiaApiClient {
     /**
      * GEt Api Url
      *
-     * @param string $endpoint
+     * @param  string  $endpoint
      * @return string
      */
-    public function getApiUrl(string $endpoint): string {
+    public function getApiUrl(string $endpoint): string
+    {
         return sprintf(
             '%s%s',
             $this->apiUrl,
@@ -63,12 +66,12 @@ class PrintforiaApiClient {
 
     /**
      * INitialize Api Request
-     *
      */
-    public function request() {
+    public function request()
+    {
         return Http::withHeaders([
             'X-Token' => $this->apiKey,
-            'Content-Type' => 'application/json'
+            'Content-Type' => 'application/json',
         ]);
     }
 }

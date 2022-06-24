@@ -4,10 +4,9 @@ namespace App\Notifications\Printforia;
 
 use App\Models\Printforia\PrintforiaOrder;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\SlackMessage;
+use Illuminate\Notifications\Notification;
 
 class NewPrintforiaOrderNotification extends Notification
 {
@@ -60,7 +59,7 @@ class NewPrintforiaOrderNotification extends Notification
                         'Customer' => $this->order->getCustomerInfo(),
                         'Date Completed' => $this->order->date_created->format('F j, Y'),
                         'Payment Method' => $this->order->getPaymentMethodName(),
-                        'Total' => $this->order->getTotal()
+                        'Total' => $this->order->getTotal(),
                     ]);
             });
     }

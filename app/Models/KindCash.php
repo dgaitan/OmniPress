@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Cache;
  * @property int $membership_id
  * @property float $points
  * @property float|null $last_earned
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|KindCash newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|KindCash newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|KindCash query()
@@ -25,6 +26,7 @@ use Illuminate\Support\Facades\Cache;
  * @method static \Illuminate\Database\Eloquent\Builder|KindCash wherePoints($value)
  * @method static \Illuminate\Database\Eloquent\Builder|KindCash whereUpdatedAt($value)
  * @mixin \Eloquent
+ *
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\KindCashLog[] $logs
  * @property-read int|null $logs_count
  * @property-read \App\Models\Membership|null $membership
@@ -34,10 +36,11 @@ class KindCash extends Model
     use HasFactory;
 
     protected $fillable = [
-        'points', 'last_earned'
+        'points', 'last_earned',
     ];
 
-    public function membership() {
+    public function membership()
+    {
         return $this->belongsTo(Membership::class);
     }
 
@@ -46,90 +49,105 @@ class KindCash extends Model
      *
      * @return float
      */
-    public function cashForHuman(): float {
+    public function cashForHuman(): float
+    {
         return (float) ($this->points / 100);
     }
 
     /**
      * [logs description]
+     *
      * @return [type] [description]
      */
-    public function logs() {
+    public function logs()
+    {
         return $this->hasMany(KindCashLog::class, 'kind_cash_id')->orderBy('id', 'desc');
     }
 
     /**
      * [addRedeemedLog description]
-     * @param int $points [description]
+     *
+     * @param  int  $points [description]
      */
-    public function addRedeemedLog(int $points, string $description = '', $date = null) {
+    public function addRedeemedLog(int $points, string $description = '', $date = null)
+    {
         $this->addLog('redeem', $points, $description, $date);
     }
 
     /**
      * [addInitialLog description]
-     * @param string $description [description]
+     *
+     * @param  string  $description [description]
      */
-    public function addInitialLog(string $description = '', $date = null) {
+    public function addInitialLog(string $description = '', $date = null)
+    {
         $this->addLog('initialize', $this->points, $description, $date);
     }
 
     /**
      * [addEarnLog description]
-     * @param int    $points      [description]
-     * @param string $description [description]
+     *
+     * @param  int  $points      [description]
+     * @param  string  $description [description]
      */
-    public function addEarnLog(int $points, string $description = '', $date = null) {
+    public function addEarnLog(int $points, string $description = '', $date = null)
+    {
         $this->addLog('earned', $points, $description, $date);
     }
 
     /**
      * [addLog description]
-     * @param string $event       [description]
-     * @param int    $points      [description]
-     * @param string $description [description]
+     *
+     * @param  string  $event       [description]
+     * @param  int  $points      [description]
+     * @param  string  $description [description]
      */
-    public function addLog(string $event, int $points, string $description = '', $date = null) {
+    public function addLog(string $event, int $points, string $description = '', $date = null)
+    {
         $this->logs()->create([
             'date' => $date ? (new \Carbon\Carbon(strtotime($date)))->toDateTimeString() : \Carbon\Carbon::now(),
             'event' => $event,
             'points' => $points,
-            'description' => $description
+            'description' => $description,
         ]);
     }
 
     /**
      * [addOrderLog description]
-     * @param int    $points   [description]
-     * @param int    $order_id [description]
+     *
+     * @param  int  $points   [description]
+     * @param  int  $order_id [description]
      * @param [type] $date     [description]
      */
-    public function addOrderLog(int $points, int $order_id, $date = null) {
+    public function addOrderLog(int $points, int $order_id, $date = null)
+    {
         $this->logs()->create([
             'date' => $date ? (new \Carbon\Carbon(strtotime($date)))->toDateTimeString() : \Carbon\Carbon::now(),
             'event' => 'earned',
             'points' => $points,
             'order_id' => $order_id,
-            'description' => 'Earned by order purchase.'
+            'description' => 'Earned by order purchase.',
         ]);
     }
 
-    public function addCash(int $points, string $message) {
+    public function addCash(int $points, string $message)
+    {
         $newPoints = $points + $this->points;
 
         $this->update([
             'points' => $newPoints,
-            'last_earned' => $points
+            'last_earned' => $points,
         ]);
 
         $this->addEarnLog($points, $message);
     }
 
-    public function redeemCash(int $points, string $message, int $order_id) {
+    public function redeemCash(int $points, string $message, int $order_id)
+    {
         $newPoints = (int) ($this->points - $points);
 
         $this->update([
-            'points' => $newPoints
+            'points' => $newPoints,
         ]);
 
         $this->logs()->create([
@@ -137,15 +155,17 @@ class KindCash extends Model
             'event' => 'redeem',
             'points' => $points,
             'order_id' => $order_id,
-            'description' => $message
+            'description' => $message,
         ]);
     }
 
     /**
      * [toArray description]
+     *
      * @return [type] [description]
      */
-    public function toArray($isSingle = false) {
+    public function toArray($isSingle = false)
+    {
         $cash = parent::toArray();
         $cash['last_earned'] = is_null($cash['last_earned']) ? 0 : $cash['last_earned'];
         $cash['points'] = is_null($cash['points']) ? 0 : $cash['points'];
@@ -164,11 +184,12 @@ class KindCash extends Model
      *
      * @return void
      */
-    protected static function boot() {
+    protected static function boot()
+    {
         parent::boot();
 
         // Forget Membership Cache
-        static::saving(function() {
+        static::saving(function () {
             Cache::tags('memberships')->flush();
         });
     }

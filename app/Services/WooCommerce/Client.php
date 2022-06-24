@@ -4,35 +4,42 @@ namespace App\Services\WooCommerce;
 
 use Automattic\WooCommerce\Client as WooCommerce;
 
-abstract class Client {
+abstract class Client
+{
     protected $domain;
+
     protected $secret;
+
     protected $key;
+
     protected $service;
+
     protected $api;
 
-    public function __construct(\App\Models\Service $service) {
+    public function __construct(\App\Models\Service $service)
+    {
         $this->service = $service;
         $this->setCredentials();
         $this->loadApi();
     }
 
-    protected function setCredentials() {
+    protected function setCredentials()
+    {
         $this->domain = $this->service->access->domain;
         $this->secret = $this->service->access->customer_secret;
         $this->key = $this->service->access->customer_key;
     }
 
-    protected function loadApi() {
+    protected function loadApi()
+    {
         $this->api = new WooCommerce(
             $this->domain,
             $this->key,
             $this->secret,
             [
                 'version' => 'wc/v3',
-                'user_agent' => 'woo_omni_agent_client'
+                'user_agent' => 'woo_omni_agent_client',
             ]
         );
     }
 }
-

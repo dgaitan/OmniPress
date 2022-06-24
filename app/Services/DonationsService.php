@@ -5,10 +5,9 @@ namespace App\Services;
 use App\Models\CauseDonation;
 use App\Models\Causes\Cause;
 use App\Models\Causes\UserDonation;
-use App\Models\WooCommerce\Order;
 use App\Models\WooCommerce\Customer;
+use App\Models\WooCommerce\Order;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
 
 class DonationsService
@@ -18,7 +17,7 @@ class DonationsService
      * and a month period. This function basically add donations amount to
      * a Cause Donation Period.
      *
-     * @param Order $order
+     * @param  Order  $order
      * @return Order
      */
     public static function addCauseDonation(Order $order): Order
@@ -30,7 +29,9 @@ class DonationsService
 
         $cause = Cause::whereCauseId($order->getMetavalue('cause'))->first();
 
-        if (is_null($cause)) return $order;
+        if (is_null($cause)) {
+            return $order;
+        }
 
         $causeDonationPeriod = DonationsService::getOrCreateDonationPeriod(
             cause: $cause, date: $order->date_created
@@ -47,10 +48,9 @@ class DonationsService
         bool $lifetime = true,
         Carbon|null $from = null,
         Carbon|null $to = null
-    )
-    {
-        
-        // Need to implement a query to retrieve causes ordered by 
+    ) {
+
+        // Need to implement a query to retrieve causes ordered by
         // the donated amount.
         // return $query;
     }
@@ -58,7 +58,7 @@ class DonationsService
     /**
      * Get the current donation period
      *
-     * @param Cause $cause
+     * @param  Cause  $cause
      * @return CauseDonation
      */
     public static function getCurrentDonationPeriod(Cause $cause): CauseDonation
@@ -69,10 +69,10 @@ class DonationsService
     /**
      * Get Total Cause Donation
      *
-     * @param Cause $cause
-     * @param boolean $lifetime
-     * @param Carbon|null|null $from
-     * @param Carbon|null|null $to
+     * @param  Cause  $cause
+     * @param  bool  $lifetime
+     * @param  Carbon|null|null  $from
+     * @param  Carbon|null|null  $to
      * @return float
      */
     public static function getCauseFieldTotal(
@@ -81,16 +81,15 @@ class DonationsService
         bool $lifetime = true,
         Carbon|null $from = null,
         Carbon|null $to = null
-    ): int
-    {
+    ): int {
         if (! in_array($field, ['amount', 'total_orders'])) {
             throw new InvalidArgumentException(
                 'Invalid cause field to calculate a total. Please be sure of be using: amount or total_orders'
             );
         }
-        
+
         $total = 0;
-        
+
         if ($lifetime) {
             $total = $cause->donations()->sum($field);
         } else {
@@ -106,8 +105,8 @@ class DonationsService
     /**
      * Get or Create a donation period based on a date
      *
-     * @param Cause $cause
-     * @param Carbon|null|null $date
+     * @param  Cause  $cause
+     * @param  Carbon|null|null  $date
      * @return CauseDonation
      */
     public static function getOrCreateDonationPeriod(
@@ -130,14 +129,13 @@ class DonationsService
     /**
      * Create a donation period
      *
-     * @param Cause $cause
-     * @param Carbon|null|null $date
+     * @param  Cause  $cause
+     * @param  Carbon|null|null  $date
      * @return CauseDonation
      */
     public static function createDonationPeriod(
         Cause $cause, Carbon|null $date = null
-    ): CauseDonation
-    {
+    ): CauseDonation {
         $date = is_null($date) ? now() : $date;
 
         return CauseDonation::create([
@@ -145,22 +143,21 @@ class DonationsService
             'from' => $date->startOfMonth()->toDateString(),
             'to' => $date->endOfMonth()->toDateString(),
             'amount' => 0,
-            'total_orders' => 0
+            'total_orders' => 0,
         ]);
     }
-    
+
     /**
      * Get a donation period for a giving date.
      *
-     * @param Cause $cause
-     * @param Carbon|null|null $date
+     * @param  Cause  $cause
+     * @param  Carbon|null|null  $date
      * @return CauseDonation|null
      */
     public static function getDonationPeriod(
         Cause $cause,
         Carbon|null $date = null
-    ): CauseDonation|null
-    {
+    ): CauseDonation|null {
         $date = is_null($date) ? now() : $date;
 
         return CauseDonation::where('cause_id', $cause->id)
@@ -168,17 +165,19 @@ class DonationsService
             ->where('to', $date->endOfMonth()->toDateString())
             ->first();
     }
-    
+
     /**
      * Calculate user Donations
      *
-     * @param Customer $customer
+     * @param  Customer  $customer
      * @return Customer|Collection
      */
     public static function calculateCustomerDonations(Customer $customer): Customer|Collection
     {
         // Customer should has orders to calcualte donations
-        if (! $customer->orders || $customer->orders->count() === 0) return $customer;
+        if (! $customer->orders || $customer->orders->count() === 0) {
+            return $customer;
+        }
 
         // Reset calculations if customer has ones.
         if ($customer->donations && $customer->donations->count() > 0) {
@@ -198,13 +197,15 @@ class DonationsService
     /**
      * Assign Order Donation to Customer
      *
-     * @param Order $order
-     * @return integer
+     * @param  Order  $order
+     * @return int
      */
     public static function addOrderDonationToCustomer(Order $order): int
     {
         // Order needs to has a customer to calculate things.
-        if (is_null($order->customer)) return 0;
+        if (is_null($order->customer)) {
+            return 0;
+        }
 
         // Order must has Cause and Total Donated data. Otherwise it will return zero.
         if (! $order->getMetaValue('cause') || ! $order->getMetaValue('total_donated')) {
@@ -214,7 +215,9 @@ class DonationsService
         $cause = Cause::whereCauseId($order->getMetaValue('cause'))->first();
 
         // Cause must exists. Otherwise it will return zero.
-        if (is_null($cause)) return 0;
+        if (is_null($cause)) {
+            return 0;
+        }
 
         $donation = $order->customer->donations()
             ->whereCauseId($cause->id)
@@ -224,7 +227,7 @@ class DonationsService
             $donation = UserDonation::create([
                 'customer_id' => $order->customer->id,
                 'cause_id' => $cause->id,
-                'donation' => 0
+                'donation' => 0,
             ]);
         }
 
@@ -236,13 +239,12 @@ class DonationsService
     /**
      * Get date string of a giving date.
      *
-     * @param Carbon|null|null $date
+     * @param  Carbon|null|null  $date
      * @return Carbon
      */
     public static function getDateString(
         Carbon|null $date = null
-    ): string
-    {
+    ): string {
         $date = is_null($date) ? now() : $date;
 
         return $date->toDateString();

@@ -2,8 +2,8 @@
 
 namespace App\Casts;
 
-use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use App\Data\Product\ProductSettingData;
+use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 
 class ProductSetting implements CastsAttributes
 {
@@ -18,7 +18,7 @@ class ProductSetting implements CastsAttributes
      */
     public function get($model, $key, $value, $attributes)
     {
-        return !is_null($value) ? ProductSettingData::from(json_decode($value, true)) : $value;
+        return ! is_null($value) ? ProductSettingData::from(json_decode($value, true)) : $value;
     }
 
     /**
@@ -32,10 +32,10 @@ class ProductSetting implements CastsAttributes
      */
     public function set($model, $key, $value, $attributes)
     {
-        if (!is_string($value) || is_array($value)) {
+        if (! is_string($value) || is_array($value)) {
             $value = json_encode($value);
         }
-        
+
         return $value;
     }
 }

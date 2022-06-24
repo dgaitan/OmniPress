@@ -6,17 +6,17 @@ use App\Http\Controllers\Controller;
 use App\Models\WooCommerce\Product;
 use Illuminate\Http\Request;
 
-
 class ProductController extends Controller
 {
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
         $perPage = 10;
 
         if ($request->input('perPage')) {
             $perPage = $request->input('perPage');
         }
 
-        if ($request->input('s') && !empty($request->input('s'))) {
+        if ($request->input('s') && ! empty($request->input('s'))) {
             $products = Product::searchByKey($request->input('s'));
         } else {
             $products = Product::with(['categories', 'tags', 'images'])->orderBy('date_created', 'desc');
@@ -24,7 +24,7 @@ class ProductController extends Controller
         }
 
         $products = $products->paginate($perPage);
-        
+
         return response()->json([
             'data' => collect($products->items())->map(function ($product) {
                 return $product->toArray(['withImages' => true]);

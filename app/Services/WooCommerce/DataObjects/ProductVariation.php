@@ -2,11 +2,8 @@
 
 namespace App\Services\WooCommerce\DataObjects;
 
-use App\Services\Contracts\DataObjectContract;
-use App\Services\WooCommerce\DataObjects\ProductImage;
-use App\Services\WooCommerce\DataObjects\ProductAttribute;
 use App\Models\WooCommerce\Product as WooProduct;
-use App\Services\WooCommerce\DataObjects\Product;
+use App\Services\Contracts\DataObjectContract;
 
 class ProductVariation extends Product implements DataObjectContract
 {
@@ -15,7 +12,8 @@ class ProductVariation extends Product implements DataObjectContract
      *
      * @return void
      */
-    protected function schema(): void {
+    protected function schema(): void
+    {
         parent::schema();
 
         $this->integer('parent_id');
@@ -26,7 +24,8 @@ class ProductVariation extends Product implements DataObjectContract
      *
      * @return WooProduct
      */
-    public function sync(): WooProduct {
+    public function sync(): WooProduct
+    {
         $product = WooProduct::firstOrNew(['product_id' => $this->id]);
         $data = $this->toArray('product_id');
         unset($data['categories']);

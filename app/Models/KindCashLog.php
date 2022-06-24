@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $event
  * @property string|null $date
  * @property int|null $order_id
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|KindCashLog newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|KindCashLog newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|KindCashLog query()
@@ -26,9 +27,11 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|KindCashLog whereOrderId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|KindCashLog whereUpdatedAt($value)
  * @mixin \Eloquent
+ *
  * @property int|null $points
  * @property string|null $description
  * @property-read \App\Models\KindCash|null $kindCash
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|KindCashLog whereDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder|KindCashLog wherePoints($value)
  */
@@ -37,15 +40,16 @@ class KindCashLog extends Model
     use HasFactory;
 
     protected $casts = [
-        'date' => 'datetime'
+        'date' => 'datetime',
     ];
 
     protected $fillable = [
         'event', 'date', 'order_id',
-        'points', 'description'
+        'points', 'description',
     ];
 
-    public function kindCash() {
+    public function kindCash()
+    {
         return $this->belongsTo(KindCash::class, 'kind_cash_id');
     }
 }

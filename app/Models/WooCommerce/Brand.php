@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $woo_brand_id
  * @property string|null $name
  * @property string|null $slug
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Brand newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Brand newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Brand query()
@@ -24,6 +25,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Brand whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Brand whereWooBrandId($value)
  * @mixin \Eloquent
+ *
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\WooCommerce\Product[] $products
  * @property-read int|null $products_count
  */
@@ -34,10 +36,11 @@ class Brand extends Model
     protected $fillable = [
         'woo_brand_id',
         'name',
-        'slug'
+        'slug',
     ];
 
-    public function products() {
+    public function products()
+    {
         return $this->belongsToMany(
             Product::class,
             'product_brand',

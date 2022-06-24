@@ -11,7 +11,8 @@ final class ServiceType
 {
     public const WOOCOMMERCE = 'woocommerce';
 
-    public static function default() {
+    public static function default()
+    {
         return self::WOOCOMMERCE;
     }
 }

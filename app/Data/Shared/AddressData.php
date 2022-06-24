@@ -4,8 +4,8 @@ namespace App\Data\Shared;
 
 use Spatie\LaravelData\Data;
 
-class AddressData extends Data {
-    
+class AddressData extends Data
+{
     public function __construct(
         public ?string $first_name,
         public ?string $last_name,
@@ -19,6 +19,5 @@ class AddressData extends Data {
         public ?string $email,
         public ?string $phone
     ) {
-
     }
 }

@@ -28,7 +28,7 @@ class CustomerResource extends JsonResource
             'shipping' => $this->shipping,
             'is_paying_customer' => $this->is_paying_customer,
             'avatar_url' => $this->avatar_url,
-            'meta_data' => $this->meta_data ?? []
+            'meta_data' => $this->meta_data ?? [],
         ];
     }
 }

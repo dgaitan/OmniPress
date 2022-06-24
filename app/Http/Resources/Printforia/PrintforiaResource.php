@@ -30,7 +30,7 @@ class PrintforiaResource extends JsonResource
             'ship_to_address_formatted' => $this->shippingAddress(),
             'return_to_address_formatted' => $this->returnAddress(),
             'items' => [],
-            'notes' => []
+            'notes' => [],
         ];
 
         if ($this->items->isNotEmpty()) {
@@ -48,8 +48,8 @@ class PrintforiaResource extends JsonResource
                         'product_id' => $item->product->product_id,
                         'name' => $item->product->name,
                         'sku' => $item->product->sku,
-                        'image' => $item->product->featuredImage()
-                    ]
+                        'image' => $item->product->featuredImage(),
+                    ],
                 ];
             });
         }
@@ -61,7 +61,7 @@ class PrintforiaResource extends JsonResource
                     'title' => $note->title,
                     'body' => $note->body,
                     'order_status_code' => $note->order_status_code,
-                    'note_date' => $note->note_date->diffForHumans()
+                    'note_date' => $note->note_date->diffForHumans(),
                 ];
             });
         }

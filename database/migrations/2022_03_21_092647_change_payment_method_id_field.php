@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('payment_methods', function(Blueprint $table) {
+        Schema::table('payment_methods', function (Blueprint $table) {
             $table->string('payment_method_id')->default('')->change();
         });
     }

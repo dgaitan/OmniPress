@@ -12,7 +12,6 @@ use App\Models\Printforia\PrintforiaOrderNote;
 use App\Models\WooCommerce\Order;
 use App\Models\WooCommerce\OrderLine;
 use App\Models\WooCommerce\Product;
-use Doctrine\Common\Cache\Psr6\InvalidArgument;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
@@ -20,49 +19,54 @@ use Illuminate\Support\Facades\Cache;
 use InvalidArgumentException;
 use stdClass;
 
-class PrintforiaService {
-
+class PrintforiaService
+{
     /**
      * Get an order from api
      *
-     * @param string $orderId
+     * @param  string  $orderId
      * @return void
      */
-    public static function getOrderFromApi(string $orderId) {
+    public static function getOrderFromApi(string $orderId)
+    {
         return (new PrintforiaApiClient)->getOrder($orderId);
     }
 
     /**
      * Undocumented function
      *
-     * @param string $orderId
+     * @param  string  $orderId
      * @return PrintforiaOrder|null
      */
-    public static function getFromOrderId(string $orderId): PrintforiaOrder|null {
+    public static function getFromOrderId(string $orderId): PrintforiaOrder|null
+    {
         return PrintforiaOrder::wherePrintforiaOrderId($orderId)->first();
     }
 
     /**
      * Woo Order has a printforia order related?
      *
-     * @param Order $order
-     * @return boolean
+     * @param  Order  $order
+     * @return bool
      */
-    public static function wooOrderHasPrintforia(Order $order): bool {
+    public static function wooOrderHasPrintforia(Order $order): bool
+    {
         return ! empty($order->getMetaValue('_printforia_order_id'));
     }
 
     /**
      * Update a printforia order
      *
-     * @param PrintforiaOrder $printforiaOrder
+     * @param  PrintforiaOrder  $printforiaOrder
      * @return void
      */
     public static function updatePrintforiaOrder(PrintforiaOrder $printforiaOrder)
     {
         $request = self::getOrderFromApi($printforiaOrder->printforia_order_id);
 
-        if (! $request->ok()) return false;
+        if (! $request->ok()) {
+            return false;
+        }
 
         $printforiaOrder = self::updateOrder($request->object(), $printforiaOrder, $printforiaOrder->order_id);
 
@@ -72,20 +76,24 @@ class PrintforiaService {
     /**
      * Get Or Create a Printforia Order
      *
-     * @param Order $order
+     * @param  Order  $order
      * @return void
      */
     public static function getOrCreatePrintforiaOrder(Order $order): PrintforiaOrder|bool
     {
-        if (! self::wooOrderHasPrintforia($order)) return false;
+        if (! self::wooOrderHasPrintforia($order)) {
+            return false;
+        }
         $order = Order::whereOrderId($order->order_id)->first(); // Is necessary to do this if order were updated
 
         $request = self::getOrderFromApi($order->getMetaValue('_printforia_order_id'));
 
-        if (! $request->ok()) return false;
+        if (! $request->ok()) {
+            return false;
+        }
 
         $printforiaOrder = PrintforiaOrder::firstOrNew([
-            'printforia_order_id' => $request->object()->id
+            'printforia_order_id' => $request->object()->id,
         ]);
 
         $printforiaOrder = self::updateOrder($request->object(), $printforiaOrder, $order->id);
@@ -96,9 +104,9 @@ class PrintforiaService {
     /**
      * Update printforia order data
      *
-     * @param stdClass $data
-     * @param PrintforiaOrder $printforiaOrder
-     * @param integer $order_id
+     * @param  stdClass  $data
+     * @param  PrintforiaOrder  $printforiaOrder
+     * @param  int  $order_id
      * @return PrintforiaOrder
      */
     public static function updateOrder(
@@ -120,7 +128,7 @@ class PrintforiaService {
 
         collect($data->items)->map(function ($item) use ($printforiaOrder) {
             $orderItem = PrintforiaOrderItem::firstOrNew([
-                'printforia_item_id' => $item->id
+                'printforia_item_id' => $item->id,
             ]);
             $data = [
                 'order_id' => $printforiaOrder->id,
@@ -129,7 +137,7 @@ class PrintforiaService {
                 'quantity' => $item->quantity,
                 'description' => $item->description,
                 'prints' => $item->prints,
-                'printforia_item_id' => $item->id
+                'printforia_item_id' => $item->id,
             ];
 
             $productId = explode('-', $item->customer_item_reference)[1];
@@ -147,7 +155,7 @@ class PrintforiaService {
         collect($data->order_notes)->map(function ($note) use ($printforiaOrder) {
             $orderNote = PrintforiaOrderNote::firstOrNew([
                 'title' => $note->title,
-                'order_id' => $printforiaOrder->id
+                'order_id' => $printforiaOrder->id,
             ]);
 
             $orderNote->fill([
@@ -155,7 +163,7 @@ class PrintforiaService {
                 'title' => $note->title,
                 'body' => $note->body,
                 'order_status_code' => $note->order_status_code,
-                'note_date' => $note->note_date
+                'note_date' => $note->note_date,
             ]);
 
             $orderNote->save();
@@ -167,11 +175,13 @@ class PrintforiaService {
     /**
      * Webhook actions
      *
-     * @param Request $request
-     * @throws Exception if status is not present in request
+     * @param  Request  $request
      * @return void
+     *
+     * @throws Exception if status is not present in request
      */
-    public static function webhookActions(Request $request) {
+    public static function webhookActions(Request $request)
+    {
         if (! $request->has('status')) {
             throw new Exception('Status is not present in response');
         }
@@ -203,12 +213,14 @@ class PrintforiaService {
      *
      * To understand the structure of the signature. See the link pasted above.
      *
-     * @param Request $request
+     * @param  Request  $request
+     * @return bool
+     *
      * @throws Exception if pritnforia token is not defined
      * @throws InvalidArgumentException if signature is not present in request.
-     * @return bool
      */
-    public static function validateWebhookSignature(Request $request): bool {
+    public static function validateWebhookSignature(Request $request): bool
+    {
         $token = env('PRINTFORIA_API_KEY', false);
 
         if (! $token) {
@@ -235,7 +247,7 @@ class PrintforiaService {
     /**
      * Get Printforia Order Items has WooCOmmerce order items
      *
-     * @param PrintforiaOrder $printforiaOrder
+     * @param  PrintforiaOrder  $printforiaOrder
      * @return Collection
      */
     public static function getOrderItemsHasWooCommerceItems(PrintforiaOrder $printforiaOrder): Collection

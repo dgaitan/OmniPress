@@ -2,14 +2,15 @@
 
 namespace App\Exports\Products;
 
-use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\FromArray;
+use Maatwebsite\Excel\Concerns\WithHeadings;
 
 class ProductSubscriptionExport implements FromArray, WithHeadings
 {
     protected array $products;
 
-    public function __construct(array $products) {
+    public function __construct(array $products)
+    {
         $this->products = $products;
     }
 
@@ -23,13 +24,13 @@ class ProductSubscriptionExport implements FromArray, WithHeadings
             'Type',
             'Price',
             'Fee',
-            'Intervals'
+            'Intervals',
         ];
     }
 
     /**
-    * @return array
-    */
+     * @return array
+     */
     public function array(): array
     {
         return $this->products;

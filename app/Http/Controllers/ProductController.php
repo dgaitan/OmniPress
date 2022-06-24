@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Exports\Products\ProductSubscriptionExport;
-use App\Models\WooCommerce\Product;
 use App\Http\Resources\ProductCollection;
 use App\Http\Resources\ProductResource;
+use App\Models\WooCommerce\Product;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Maatwebsite\Excel\Facades\Excel;
@@ -15,10 +15,11 @@ class ProductController extends Controller
     /**
      * Product Index View
      *
-     * @param Request $request
+     * @param  Request  $request
      * @return array
      */
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
         $statuses = [
             ['slug' => 'publish', 'label' => 'Publish'],
             ['slug' => 'draft', 'label' => 'Draft'],
@@ -61,7 +62,7 @@ class ProductController extends Controller
             '_status' => $request->input('status'),
             'statuses' => $statuses,
             '_order' => $request->input('order') ?? 'desc',
-            '_orderBy' => $request->input('orderBy') ?? ''
+            '_orderBy' => $request->input('orderBy') ?? '',
         ]);
 
         return Inertia::render('Products/Index', $data);
@@ -70,11 +71,12 @@ class ProductController extends Controller
     /**
      * Product Detail
      *
-     * @param Request $request
-     * @param int $id
+     * @param  Request  $request
+     * @param  int  $id
      * @return void
      */
-    public function show(Request $request, $id) {
+    public function show(Request $request, $id)
+    {
         $product = Product::with('tags', 'categories', 'brands', 'images')
             ->whereProductId($id)
             ->first();
@@ -84,15 +86,16 @@ class ProductController extends Controller
         }
 
         return Inertia::render('Products/Detail', [
-            'product' => new ProductResource($product)
+            'product' => new ProductResource($product),
         ]);
     }
 
-    public function exportSubscriptions(Request $request) {
+    public function exportSubscriptions(Request $request)
+    {
         $products = Product::getSubscriptions()->get();
         $data = [];
         $filename = sprintf(
-            "kindhumans_product_subscriptions_%s_%s.csv",
+            'kindhumans_product_subscriptions_%s_%s.csv',
             $products->count(),
             now()->format('Y-m-d-H:i:s')
         );
@@ -104,7 +107,7 @@ class ProductController extends Controller
                 if ($product->type === 'variable' && $product->variations->isNotEmpty()) {
                     $data = array_merge(
                         $data,
-                        $product->variations->map(fn($p) => Product::prepareToSubscriptionExport($p))->toArray()
+                        $product->variations->map(fn ($p) => Product::prepareToSubscriptionExport($p))->toArray()
                     );
                 }
             }
