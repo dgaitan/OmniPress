@@ -1275,6 +1275,9 @@ select {
   --tw-bg-opacity: 1;
   background-color: rgb(224 242 254 / var(--tw-bg-opacity));
 }
+.bg-gray-100\/5 {
+  background-color: rgb(243 244 246 / 0.05);
+}
 .bg-opacity-25 {
   --tw-bg-opacity: 0.25;
 }

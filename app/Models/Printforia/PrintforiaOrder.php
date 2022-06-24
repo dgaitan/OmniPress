@@ -54,6 +54,10 @@ class PrintforiaOrder extends Model
         'slug' => 'approved', 'label' => 'Approved'
     ];
 
+    const SHIPPED = [
+        'slug' => 'shipped', 'label' => 'Shipped'
+    ];
+
     const IN_PROGRESS = [
         'slug' => 'in-progress', 'label' => 'In Progress'
     ];
@@ -71,7 +75,7 @@ class PrintforiaOrder extends Model
     ];
 
     const STATUSES = [
-        self::UNAPPROVED, self::APPROVED, self::IN_PROGRESS,
+        self::UNAPPROVED, self::APPROVED, self::SHIPPED, self::IN_PROGRESS,
         self::COMPLETED, self::REJECTED, self::CANCELED
     ];
 
@@ -129,6 +133,30 @@ class PrintforiaOrder extends Model
     public function notes(): HasMany
     {
         return $this->hasMany(PrintforiaOrderNote::class, 'order_id');
+    }
+
+    /**
+     * Printforia Detail Permalink
+     *
+     * @return string
+     */
+    public function getPermalink(): string
+    {
+        return route('kinja.orders.printforiaDetail', [
+            'id' => $this->printforia_order_id
+        ]);
+    }
+
+    /**
+     * Printforia WooOrder Link
+     *
+     * @return string
+     */
+    public function getWooOrderPermalink(): string
+    {
+        return route('kinja.orders.show', [
+            'id' => $this->order->order_id
+        ]);
     }
 
     /**

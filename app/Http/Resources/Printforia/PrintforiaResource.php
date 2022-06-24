@@ -20,6 +20,7 @@ class PrintforiaResource extends JsonResource
                 'id' => $this->order->id,
                 'order_id' => $this->order->order_id,
             ],
+            'created_at' => $this->order->created_at->diffForHumans(),
             'status' => $this->status,
             'printforia_order_id' => $this->printforia_order_id,
             'shipping_method' => $this->shipping_method,
@@ -42,6 +43,25 @@ class PrintforiaResource extends JsonResource
                     'quantity' => $item->quantity,
                     'description' => $item->description,
                     'prints' => $item->prints,
+                    'product' => [
+                        'id' => $item->product->id,
+                        'product_id' => $item->product->product_id,
+                        'name' => $item->product->name,
+                        'sku' => $item->product->sku,
+                        'image' => $item->product->featuredImage()
+                    ]
+                ];
+            });
+        }
+
+        if ($this->notes->isNotEmpty()) {
+            $data['notes'] = $this->notes->map(function ($note) {
+                return [
+                    'id' => $note->id,
+                    'title' => $note->title,
+                    'body' => $note->body,
+                    'order_status_code' => $note->order_status_code,
+                    'note_date' => $note->note_date->diffForHumans()
                 ];
             });
         }
