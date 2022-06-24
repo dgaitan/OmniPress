@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands\Imports;
 
-use Illuminate\Console\Command;
 use App\Imports\ProductImport;
+use Illuminate\Console\Command;
 
 class Products extends Command
 {

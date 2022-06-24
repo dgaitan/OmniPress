@@ -23,10 +23,11 @@ class OrderObserver
     /**
      * Undocumented function
      *
-     * @param Order $order
+     * @param  Order  $order
      * @return void
      */
-    public function updated(Order $order) {
+    public function updated(Order $order)
+    {
         // PrintforiaService::getOrCreatePrintforiaOrder($order);
     }
 }

@@ -2,15 +2,14 @@
 
 namespace App\Jobs\Memberships;
 
-use Exception;
 use App\Models\Membership;
+use Carbon\Carbon;
+use Exception;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Carbon\Carbon;
 
 class ManualRenewMembershipJob implements ShouldQueue
 {
@@ -39,7 +38,7 @@ class ManualRenewMembershipJob implements ShouldQueue
             $membership = Membership::find($this->membership_id);
 
             if (is_null($membership)) {
-                throw new Exception("Membership Not Found");
+                throw new Exception('Membership Not Found');
             }
 
             $membership->status = Membership::AWAITING_PICK_GIFT_STATUS;
@@ -53,8 +52,8 @@ class ManualRenewMembershipJob implements ShouldQueue
             $order_line_items = [
                 [
                     'product_id' => $membership->product_id,
-                    'quantity' => 1
-                ]
+                    'quantity' => 1,
+                ],
             ];
 
             $orderParams = [
@@ -72,17 +71,17 @@ class ManualRenewMembershipJob implements ShouldQueue
                 'meta_data' => [
                     [
                         'key' => '_created_from_kinja_api',
-                        'value' => 'yes'
+                        'value' => 'yes',
                     ],
                     [
                         'key' => '_status',
-                        'value' => 'kh-awm'
+                        'value' => 'kh-awm',
                     ],
                     [
                         'key' => '_membership_id',
-                        'value' => $membership->id
-                    ]
-                ]
+                        'value' => $membership->id,
+                    ],
+                ],
             ];
 
             $wooService = \App\Services\WooCommerce\WooCommerceService::make();
@@ -94,7 +93,7 @@ class ManualRenewMembershipJob implements ShouldQueue
             if ($order->id) {
                 $order->update([
                     'has_membership' => true,
-                    'membership_id'  => $membership->id
+                    'membership_id'  => $membership->id,
                 ]);
                 $membership->pending_order_id = $order->order_id;
                 $membership->save();
@@ -103,6 +102,7 @@ class ManualRenewMembershipJob implements ShouldQueue
             $membership->sendMembershipRenewedMail();
 
             $membership->save();
+
             return $membership;
         } catch (Exception $e) {
             return $e->getMessage();

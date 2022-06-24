@@ -2,8 +2,8 @@
 
 namespace App\Services\WooCommerce\Factories;
 
-use App\Services\WooCommerce\DataObjects\Membership;
 use App\Services\Contracts\FactoryContract;
+use App\Services\WooCommerce\DataObjects\Membership;
 
 class MembershipFactory implements FactoryContract
 {

@@ -11,7 +11,7 @@ class QueuesController extends Controller
     /**
      * QUeues Index
      *
-     * @param Request $request
+     * @param  Request  $request
      * @return void
      */
     public function index(Request $request)
@@ -19,7 +19,7 @@ class QueuesController extends Controller
         $queues = Db::table('failed_jobs')->get();
 
         return Inertia::render('Queues/Index', [
-            'queues' => $queues
+            'queues' => $queues,
         ]);
     }
 }

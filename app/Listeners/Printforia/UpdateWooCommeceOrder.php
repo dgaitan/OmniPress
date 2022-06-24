@@ -4,8 +4,6 @@ namespace App\Listeners\Printforia;
 
 use App\Events\PrintforiaOrderWasShipped;
 use App\Jobs\Printforia\SyncOrdersIfCompleted;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 
 class UpdateWooCommeceOrder
 {

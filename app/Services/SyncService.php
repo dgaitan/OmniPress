@@ -2,20 +2,20 @@
 
 namespace App\Services;
 
-use Exception;
 use App\Models\Sync;
-use App\Servies\WooCommerce\WooCommerceService;
 use App\Services\Contracts\ServiceContract;
+use App\Servies\WooCommerce\WooCommerceService;
+use Exception;
 
-class SyncService {
-
+class SyncService
+{
     /**
      * Availiable Services
      *
      * @var array
      */
     protected $services = [
-        'woocommerce' => WooCommerceService::class
+        'woocommerce' => WooCommerceService::class,
     ];
 
     /**
@@ -28,12 +28,12 @@ class SyncService {
     /**
      * Load the service
      *
-     * @param string $service
+     * @param  string  $service
      */
     public function __construct(string $service)
     {
         if (! in_array($service, array_keys($this->services))) {
-            throw new Exception("Service Does Not Exists");
+            throw new Exception('Service Does Not Exists');
         }
 
         $this->service = resolve($this->services[$service]);
@@ -49,8 +49,8 @@ class SyncService {
         return $this->service;
     }
 
-    public function find(string $resource, int $id) {
-
+    public function find(string $resource, int $id)
+    {
     }
 
     // protected function initializeSync(string $resource) {
@@ -60,10 +60,11 @@ class SyncService {
     /**
      * Build a new service
      *
-     * @param string $service
+     * @param  string  $service
      * @return void
      */
-    public static function make(string $service) {
+    public static function make(string $service)
+    {
         return new self($service);
     }
 }

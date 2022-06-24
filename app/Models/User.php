@@ -2,17 +2,17 @@
 
 namespace App\Models;
 
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Support\Facades\Cache;
+use JoelButcher\Socialstream\HasConnectedAccounts;
+use JoelButcher\Socialstream\SetsProfilePhotoFromUrl;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
-use JoelButcher\Socialstream\HasConnectedAccounts;
-use JoelButcher\Socialstream\SetsProfilePhotoFromUrl;
 
 /**
  * App\Models\User
@@ -40,6 +40,7 @@ use JoelButcher\Socialstream\SetsProfilePhotoFromUrl;
  * @property-read int|null $syncs_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Sanctum\PersonalAccessToken[] $tokens
  * @property-read int|null $tokens_count
+ *
  * @method static \Database\Factories\UserFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|User newQuery()
@@ -58,10 +59,12 @@ use JoelButcher\Socialstream\SetsProfilePhotoFromUrl;
  * @method static \Illuminate\Database\Eloquent\Builder|User whereTwoFactorSecret($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
  * @mixin \Eloquent
+ *
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Permission\Models\Permission[] $permissions
  * @property-read int|null $permissions_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\Spatie\Permission\Models\Role[] $roles
  * @property-read int|null $roles_count
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|User permission($permissions)
  * @method static \Illuminate\Database\Eloquent\Builder|User role($roles, $guard = null)
  */
@@ -131,7 +134,8 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->getPhotoUrl();
     }
 
-    public function syncs() {
+    public function syncs()
+    {
         return $this->hasMany(Sync::class);
     }
 
@@ -140,11 +144,12 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @return void
      */
-    protected static function boot() {
+    protected static function boot()
+    {
         parent::boot();
 
         // Forget Membership Cache
-        static::saving(function() {
+        static::saving(function () {
             Cache::tags('account')->flush();
         });
     }

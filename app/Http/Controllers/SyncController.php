@@ -2,32 +2,35 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\SyncResource;
+use App\Models\Sync;
+use App\Rules\SyncContentType;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use App\Models\Sync;
-use App\Http\Resources\SyncResource;
-use App\Rules\SyncContentType;
 
 class SyncController extends Controller
 {
-    public function index() {
+    public function index()
+    {
         $syncs = Sync::with('user')->take(10)->orderBy('id', 'desc')->get();
 
         return Inertia::render('Sync/Index', [
             'syncs' => count($syncs) > 0 ? SyncResource::collection($syncs) : [],
-            'sync' => count($syncs) > 0 ? new SyncResource($syncs->first()) : []
+            'sync' => count($syncs) > 0 ? new SyncResource($syncs->first()) : [],
         ]);
     }
 
     /**
      * [execute description]
-     * @param  Request $request [description]
+     *
+     * @param  Request  $request [description]
      * @return [type]           [description]
      */
-    public function execute(Request $request) {
+    public function execute(Request $request)
+    {
         $request->validateWithBag('syncForm', [
             'content_type' => ['required', new SyncContentType],
-            'description' => ['max:500']
+            'description' => ['max:500'],
         ]);
 
         Sync::initialize(
@@ -42,16 +45,19 @@ class SyncController extends Controller
 
     /**
      * [check description]
-     * @param  Request $request [description]
+     *
+     * @param  Request  $request [description]
      * @return [type]           [description]
      */
-    public function check(Request $request) {
+    public function check(Request $request)
+    {
         $data = \App\Http\Clients\Client::checkConnection();
 
         return $data['environment'];
     }
 
-    public function logs(Request $request, $id) {
+    public function logs(Request $request, $id)
+    {
         $sync = Sync::find($id);
 
         dd($sync->logs()->get()->toArray());

@@ -2,11 +2,10 @@
 
 namespace App\Mail\Memberships;
 
+use App\Models\Membership;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use App\Models\Membership;
 
 class RenewalReminder extends Mailable
 {
@@ -29,7 +28,7 @@ class RenewalReminder extends Mailable
     /**
      * Days until renewal
      *
-     * @var integer
+     * @var int
      */
     protected $days = 0;
 
@@ -51,8 +50,7 @@ class RenewalReminder extends Mailable
      */
     public function build()
     {
-
-        return $this->subject(sprintf("Your membership will renew in %s days", $this->days))
+        return $this->subject(sprintf('Your membership will renew in %s days', $this->days))
             ->view('emails.memberships.renewal-reminder')
             ->with([
                 'customerName' => $this->membership->customer->getFullName(),

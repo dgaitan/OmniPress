@@ -16,6 +16,7 @@ class SyncNewMemberOrder implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $membership_id = 0;
+
     protected $order_id = 0;
 
     /**
@@ -41,7 +42,7 @@ class SyncNewMemberOrder implements ShouldQueue
         $order = Order::whereOrderId($this->order_id)->first();
         $order->update([
             'has_membership' => true,
-            'membership_id' => $this->membership_id
+            'membership_id' => $this->membership_id,
         ]);
 
         Cache::forget('dashboard_stats');

@@ -5,15 +5,15 @@ namespace App\Data\Order;
 use App\Data\BaseData;
 use Spatie\LaravelData\DataCollection;
 
-class LineItemData extends BaseData {
-
+class LineItemData extends BaseData
+{
     public static $id_field = 'line_item_id';
 
     protected static $priceFields = [
         'subtotal',
         'subtotal_tax',
         'total',
-        'product_price'
+        'product_price',
     ];
 
     protected static $collectionFields = [
@@ -36,6 +36,5 @@ class LineItemData extends BaseData {
         public string|null $sku,
         public float|null $product_price
     ) {
-
     }
 }

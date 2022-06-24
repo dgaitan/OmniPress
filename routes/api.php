@@ -24,6 +24,6 @@ Route::middleware('auth:sanctum')->get('/products', function (Request $request) 
     } else {
         $products = \App\Models\WooCommerce\Product::take(10);
     }
-    
+
     return $products->orderBy('date_created', 'desc')->get();
 });

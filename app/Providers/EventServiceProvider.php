@@ -23,8 +23,8 @@ class EventServiceProvider extends ServiceProvider
         ],
         PrintforiaOrderWasShipped::class => [
             SendPrintforiaOrderShippedMail::class,
-            UpdateWooCommeceOrder::class
-        ]
+            UpdateWooCommeceOrder::class,
+        ],
     ];
 
     /**

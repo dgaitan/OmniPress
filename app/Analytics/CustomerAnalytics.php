@@ -2,13 +2,12 @@
 
 namespace App\Analytics;
 
-use App\Models\WooCommerce\Customer;
 use App\Analytics\Base\Analytics;
+use App\Models\WooCommerce\Customer;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\DB;
 
-class CustomerAnalytics extends Analytics {
-
+class CustomerAnalytics extends Analytics
+{
     /**
      * Model to analyze
      *
@@ -33,22 +32,25 @@ class CustomerAnalytics extends Analytics {
     /**
      * Get The total Orders
      *
-     * @return integer
+     * @return int
      */
-    public function getTotalCustomers(): int {
+    public function getTotalCustomers(): int
+    {
         return $this->getRangeQueryset()->count();
     }
 
     /**
      * Get The total Orders
      *
-     * @return integer
+     * @return int
      */
-    public function getPeriodTotalCustomers(): int {
+    public function getPeriodTotalCustomers(): int
+    {
         return $this->getPeriodQueryset()->count();
     }
 
-    public function getTotalPercentageDifference() {
+    public function getTotalPercentageDifference()
+    {
         return $this->calculatePercentageComparisson(
             $this->getTotalCustomers(), $this->getPeriodTotalCustomers()
         );
@@ -59,7 +61,8 @@ class CustomerAnalytics extends Analytics {
      *
      * @return Builder
      */
-    protected function getRangeQueryset(): Builder {
+    protected function getRangeQueryset(): Builder
+    {
         if (is_null($this->rangeQueryset)) {
             $this->rangeQueryset = $this->model::whereBetween(
                 'date_created',
@@ -69,13 +72,14 @@ class CustomerAnalytics extends Analytics {
 
         return $this->rangeQueryset;
     }
-    
+
     /**
      * Get Period Queryset
      *
      * @return Builder
      */
-    protected function getPeriodQueryset(): Builder {
+    protected function getPeriodQueryset(): Builder
+    {
         return $this->model::whereBetween(
             'date_created',
             $this->getPeriodDates()

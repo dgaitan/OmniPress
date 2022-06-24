@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $woo_tag_id
  * @property string|null $name
  * @property string|null $slug
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Tag newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Tag newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Tag query()
@@ -24,9 +25,11 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Tag whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Tag whereWooTagId($value)
  * @mixin \Eloquent
+ *
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\WooCommerce\Product[] $products
  * @property-read int|null $products_count
  * @property int|null $service_id
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Tag whereServiceId($value)
  */
 class Tag extends Model
@@ -36,14 +39,15 @@ class Tag extends Model
     protected $fillable = [
         'woo_tag_id',
         'name',
-        'slug'
+        'slug',
     ];
 
-    public function products() {
+    public function products()
+    {
         return $this->belongsToMany(
-            Product::class, 
-            'product_tag', 
-            'tag_id', 
+            Product::class,
+            'product_tag',
+            'tag_id',
             'product_id'
         )->as('products')->withTimestamps();
     }

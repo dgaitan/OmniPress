@@ -2,8 +2,8 @@
 
 namespace App\Casts;
 
-use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use App\Data\Shared\AddressData;
+use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 
 class Address implements CastsAttributes
 {
@@ -18,7 +18,7 @@ class Address implements CastsAttributes
      */
     public function get($model, $key, $value, $attributes)
     {
-        return !is_null( $value ) ? AddressData::from(json_decode($value, true)) : array();
+        return ! is_null($value) ? AddressData::from(json_decode($value, true)) : [];
     }
 
     /**
@@ -32,10 +32,10 @@ class Address implements CastsAttributes
      */
     public function set($model, $key, $value, $attributes)
     {
-        if (!is_string($value) || is_array($value)) {
+        if (! is_string($value) || is_array($value)) {
             $value = json_encode($value);
         }
-        
+
         return $value;
     }
 }

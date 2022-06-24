@@ -5,12 +5,12 @@ namespace App\Models\Subscription;
 use Carbon\Carbon;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
-trait Subscriptable {
-
+trait Subscriptable
+{
     /**
      * Undocumented function
      *
-     * @return boolean
+     * @return bool
      */
     public function isSubscription(): bool
     {
@@ -39,7 +39,7 @@ trait Subscriptable {
                 : null,
             'price' => (int) ((float) $this->getMetaValue('_ks_recurring_price', 0) * 100),
             'fee' => (int) ((float) $this->getMetaValue('_ks_subscription_fee', 0) * 100),
-            'intervals' => unserialize($this->getMetaValue('_kh_period_intervals', ''))
+            'intervals' => unserialize($this->getMetaValue('_kh_period_intervals', '')),
         ];
 
         if ($this->isVariation()) {
@@ -68,10 +68,10 @@ trait Subscriptable {
             ->where('type', '!=', 'variation');
     }
 
-    public static function prepareToSubscriptionExport($product): array 
+    public static function prepareToSubscriptionExport($product): array
     {
         $intervals = '';
-        
+
         if ($product->subscription->intervals) {
             $intervals = collect($product->subscription->intervals)->map(function ($i) {
                 return sprintf(
@@ -84,7 +84,7 @@ trait Subscriptable {
 
             $intervals = implode(' | ', $intervals);
         }
-        
+
         $data[] = [
             'id' => $product->id,
             'parent' => $product->isVariation() ? $product->parent_id : '',
@@ -93,7 +93,7 @@ trait Subscriptable {
             'type' => $product->type,
             'price' => $product->subscription->price / 100,
             'fee' => $product->subscription->fee,
-            'intervarls' => $intervals
+            'intervarls' => $intervals,
         ];
 
         return $data;

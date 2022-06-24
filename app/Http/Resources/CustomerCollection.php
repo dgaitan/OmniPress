@@ -14,7 +14,7 @@ class CustomerCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-        return collect($this->collection)->map(function($customer) {
+        return collect($this->collection)->map(function ($customer) {
             return [
                 'id' => $customer->id,
                 'customer_id' => $customer->customer_id,
@@ -26,7 +26,7 @@ class CustomerCollection extends ResourceCollection
                 'role' => $customer->role,
                 'avatar' => $customer->avatar_url,
                 'storePermalink' => $customer->getPermalinkOnStore(),
-                'date_created' => $customer->getDateCreated()
+                'date_created' => $customer->getDateCreated(),
             ];
         });
     }

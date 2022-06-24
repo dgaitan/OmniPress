@@ -35,7 +35,7 @@ class CalculateAllCustomerDonations extends Command
         $customers = Customer::skip($offset)->take($perPage)->get();
 
         while ($customers->isNotEmpty()) {
-            $this->info(sprintf("Calculation Page #%s", $page));
+            $this->info(sprintf('Calculation Page #%s', $page));
             $page++;
 
             $customers->map(function ($customer) {
@@ -46,6 +46,6 @@ class CalculateAllCustomerDonations extends Command
             $customers = Customer::skip($offset)->take($perPage)->get();
         }
 
-        $this->info("Calculation finished");
+        $this->info('Calculation finished');
     }
 }

@@ -2,18 +2,18 @@
 
 namespace App\Models\WooCommerce;
 
-use App\Models\Membership;
 use App\Models\Concerns\HasMetaData;
+use App\Models\Membership;
 use App\Models\Printforia\PrintforiaOrderItem;
-use App\Models\Subscription\SubscriptionProduct;
 use App\Models\Subscription\Subscriptable;
+use App\Models\Subscription\SubscriptionProduct;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Laravel\Scout\Searchable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Scout\Searchable;
 
 /**
  * App\Models\WooCommerce\Product
@@ -44,6 +44,7 @@ use Illuminate\Notifications\Notifiable;
  * @property mixed $sale_price
  * @property array $settings
  * @property array $meta_data
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Product newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Product newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Product query()
@@ -74,6 +75,7 @@ use Illuminate\Notifications\Notifiable;
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereVirtual($value)
  * @mixin \Eloquent
+ *
  * @property-read Product|null $children
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\WooCommerce\ProductImage[] $images
  * @property-read int|null $images_count
@@ -84,7 +86,9 @@ use Illuminate\Notifications\Notifiable;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\WooCommerce\Tag[] $tags
  * @property-read int|null $tags_count
  * @property int|null $service_id
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereServiceId($value)
+ *
  * @property-read Service|null $service
  * @property-read \Illuminate\Database\Eloquent\Collection|Membership[] $memberships
  * @property-read int|null $memberships_count
@@ -99,7 +103,9 @@ use Illuminate\Notifications\Notifiable;
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
  * @property-read int|null $notifications_count
  * @property-read SubscriptionProduct|null $subscription
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereHasSubscription($value)
+ *
  * @property-read \Illuminate\Database\Eloquent\Collection|PrintforiaOrderItem[] $printforiaItems
  * @property-read int|null $printforia_items_count
  */
@@ -117,7 +123,7 @@ class Product extends Model
         'sale_price' => 'decimal:2',
         'settings' => 'object',
         'meta_data' => 'array',
-        'date_created' => 'datetime'
+        'date_created' => 'datetime',
     ];
 
     protected $fillable = [
@@ -144,7 +150,7 @@ class Product extends Model
         'sale_price',
         'settings',
         'meta_data',
-        'is_subscription'
+        'is_subscription',
     ];
 
     /**
@@ -177,9 +183,11 @@ class Product extends Model
 
     /**
      * [categories description]
+     *
      * @return [type] [description]
      */
-    public function categories() {
+    public function categories()
+    {
         return $this->belongsToMany(
             Category::class,
             'product_category',
@@ -190,9 +198,11 @@ class Product extends Model
 
     /**
      * [tags description]
+     *
      * @return [type] [description]
      */
-    public function tags() {
+    public function tags()
+    {
         return $this->belongsToMany(
             Tag::class,
             'product_tag',
@@ -203,9 +213,11 @@ class Product extends Model
 
     /**
      * [memberships description]
+     *
      * @return [type] [description]
      */
-    public function memberships() {
+    public function memberships()
+    {
         return $this->belongsToMany(
             Membership::class,
             'membership_product',
@@ -214,7 +226,8 @@ class Product extends Model
         )->as('memberships')->withTimestamps();
     }
 
-    public function attributes() {
+    public function attributes()
+    {
         return $this->belongsToMany(
             ProductAttribute::class,
             'product_attribute',
@@ -228,7 +241,8 @@ class Product extends Model
      *
      * @return
      */
-    public function productAttributes() {
+    public function productAttributes()
+    {
         return $this->belongsToMany(
             ProductAttribute::class,
             'product_attribute',
@@ -242,7 +256,8 @@ class Product extends Model
      *
      * @return
      */
-    public function brands() {
+    public function brands()
+    {
         return $this->belongsToMany(
             Brand::class,
             'product_brand',
@@ -256,20 +271,23 @@ class Product extends Model
      *
      * @return HasMany
      */
-    public function printforiaItems(): HasMany {
+    public function printforiaItems(): HasMany
+    {
         return $this->hasMany(PrintforiaOrderItem::class, 'product_id');
     }
 
     /**
      * IS the current producdt a variation?
      *
-     * @return boolean
+     * @return bool
      */
-    public function isVariation() {
+    public function isVariation()
+    {
         return $this->type === 'variation';
     }
 
-    public function featuredImage(): ProductImage|null {
+    public function featuredImage(): ProductImage|null
+    {
         if ($this->images->isEmpty()) {
             return null;
         }
@@ -292,7 +310,8 @@ class Product extends Model
      *
      * @return string
      */
-    public function getKinjaPermalink(): string {
+    public function getKinjaPermalink(): string
+    {
         return route('kinja.products.show', [$this->product_id]);
     }
 
@@ -301,7 +320,8 @@ class Product extends Model
      *
      * @return string
      */
-    public function getStorePermalink(): string {
+    public function getStorePermalink(): string
+    {
         return sprintf(
             '%s/wp-admin/post.php?post=%s&action=edit',
             env('CLIENT_DOMAIN', 'https://kindhumans.com'),
@@ -341,7 +361,7 @@ class Product extends Model
             'stock_status' => $this->stock_status,
             'categories' => $this->categories()->pluck('name')->toArray(),
             'tags' => $this->tags()->pluck('name')->toArray(),
-            'brands' => $this->tags()->pluck('name')->toArray()
+            'brands' => $this->tags()->pluck('name')->toArray(),
         ];
     }
 
@@ -361,14 +381,16 @@ class Product extends Model
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    protected function makeAllSearchableUsing($query) {
+    protected function makeAllSearchableUsing($query)
+    {
         return $query->with(['categories', 'tags', 'brands']);
     }
 
-    public function toArray(array $args = []) {
+    public function toArray(array $args = [])
+    {
         $array = parent::toArray();
         $args = array_replace([
-            'withImages' => false
+            'withImages' => false,
         ], $args);
 
         $array['categories'] = collect($this->categories)->map(function ($cat) {
@@ -394,7 +416,8 @@ class Product extends Model
         return $array;
     }
 
-    public static function searchByKey(string $q) {
+    public static function searchByKey(string $q)
+    {
         $q = explode(':', $q);
 
         if (count($q) === 1) {
@@ -405,7 +428,7 @@ class Product extends Model
         $query = trim($q[1]);
         $searchBy = [
             'product_id', 'name', 'slug',
-            'sku', 'type', 'status'
+            'sku', 'type', 'status',
         ];
 
         $products = self::with(['categories', 'images', 'tags'])

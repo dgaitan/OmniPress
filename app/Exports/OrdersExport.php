@@ -2,14 +2,15 @@
 
 namespace App\Exports;
 
-use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\FromArray;
+use Maatwebsite\Excel\Concerns\WithHeadings;
 
 class OrdersExport implements FromArray, WithHeadings
 {
     protected array $orders;
 
-    public function __construct(array $orders) {
+    public function __construct(array $orders)
+    {
         $this->orders = $orders;
     }
 
@@ -46,13 +47,13 @@ class OrdersExport implements FromArray, WithHeadings
             'GiveBack Type',
             'Donated Amount',
             'Bucket Cause',
-            'Beneficiary Cause'
+            'Beneficiary Cause',
         ];
     }
 
     /**
-    * @return array
-    */
+     * @return array
+     */
     public function array(): array
     {
         return $this->memberships;

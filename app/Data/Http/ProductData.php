@@ -2,18 +2,18 @@
 
 namespace App\Data\Http;
 
-use App\Casts\ProductSetting;
-use Spatie\LaravelData\DataCollection;
 use App\Data\BaseData;
 use App\Data\Product\ProductSettingData;
+use Spatie\LaravelData\DataCollection;
 
-class ProductData extends BaseData {
+class ProductData extends BaseData
+{
     public static $id_field = 'product_id';
 
     protected static $priceFields = [
         'price',
         'regular_price',
-        'sale_price'
+        'sale_price',
     ];
 
     protected static $booleanFields = [
@@ -23,7 +23,7 @@ class ProductData extends BaseData {
         'virtual',
         'downloadable',
         'sold_individually',
-        'manage_stock'
+        'manage_stock',
     ];
 
     protected static $collectionFields = [
@@ -31,7 +31,7 @@ class ProductData extends BaseData {
         'categories' => \App\Data\Product\CategoryData::class,
         'tags' => \App\Data\Product\TagData::class,
         'attributes' => \App\Data\Product\AttributeData::class,
-        'images' => \App\Data\Product\ImageData::class
+        'images' => \App\Data\Product\ImageData::class,
     ];
 
     public function __construct(
@@ -70,19 +70,21 @@ class ProductData extends BaseData {
         public ProductSettingData $settings,
     ) {
         $this->stock_quantity = $stock_quantity ?? 0;
-        $this->name = $name ?? "";
-        $this->slug = $slug ?? "";
-        $this->type = $type ?? "";
+        $this->name = $name ?? '';
+        $this->slug = $slug ?? '';
+        $this->type = $type ?? '';
     }
 
-    public static function _processResponse(array $data): array {
+    public static function _processResponse(array $data): array
+    {
         $_data = parent::_processResponse($data);
         $_data['settings'] = ProductSettingData::_fromResponse($data);
 
         return $_data;
     }
 
-    public static function _processRow(array $data): array {
+    public static function _processRow(array $data): array
+    {
         $_data = parent::_processRow($data);
         $_data['settings'] = ProductSettingData::_fromCSV($data);
 

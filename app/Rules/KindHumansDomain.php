@@ -4,17 +4,17 @@ namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Support\Str;
-use App\Models\User;
 
 class KindHumansDomain implements Rule
 {
-    
     /**
      * Create a new rule instance.
      *
      * @return void
      */
-    public function __construct() {}
+    public function __construct()
+    {
+    }
 
     /**
      * Determine if the validation rule passes.
@@ -33,7 +33,7 @@ class KindHumansDomain implements Rule
      *
      * @return string
      */
-    public function message() : string
+    public function message(): string
     {
         return 'Invalid email domain. Please be sure you are using a kindhumans.com email';
     }

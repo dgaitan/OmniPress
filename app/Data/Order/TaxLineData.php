@@ -5,12 +5,13 @@ namespace App\Data\Order;
 use App\Data\BaseData;
 use Spatie\LaravelData\DataCollection;
 
-class TaxLineData extends BaseData {
+class TaxLineData extends BaseData
+{
     public static $id_field = 'tax_line_id';
 
     protected static $priceFields = [
         'tax_total',
-        'shipping_tax_total'
+        'shipping_tax_total',
     ];
 
     protected static $collectionFields = [
@@ -18,7 +19,7 @@ class TaxLineData extends BaseData {
     ];
 
     protected static $booleanFields = [
-        'compound'
+        'compound',
     ];
 
     public function __construct(
@@ -32,6 +33,5 @@ class TaxLineData extends BaseData {
         /** @var \App\Data\Shared\MetaData[] */
         public ?DataCollection $meta_data,
     ) {
-
     }
 }

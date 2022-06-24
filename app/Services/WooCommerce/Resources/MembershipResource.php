@@ -3,8 +3,8 @@
 namespace App\Services\WooCommerce\Resources;
 
 use App\Services\Contracts\ResourceContract;
-use App\Services\WooCommerce\Factories\MembershipFactory;
 use App\Services\Resources\BaseResource;
+use App\Services\WooCommerce\Factories\MembershipFactory;
 
 class MembershipResource extends BaseResource implements ResourceContract
 {
@@ -35,11 +35,13 @@ class MembershipResource extends BaseResource implements ResourceContract
     /**
      * Run Add Gift PRoduct To ORder
      *
-     * @param integer $order_id
+     * @param  int  $order_id
      * @return object|null|false
      */
-    public function addGiftProduct(int $order_id) {
+    public function addGiftProduct(int $order_id)
+    {
         $request = $this->service()->makeRequest();
+
         return $request->put(
             sprintf('%s/%s/set-gift', $this->endpoint, $order_id),
             []

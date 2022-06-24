@@ -3,8 +3,8 @@
 namespace App\Services\WooCommerce\Resources;
 
 use App\Services\Contracts\ResourceContract;
-use App\Services\WooCommerce\Factories\CustomerFactory;
 use App\Services\Resources\BaseResource;
+use App\Services\WooCommerce\Factories\CustomerFactory;
 
 class CustomerResource extends BaseResource implements ResourceContract
 {
@@ -27,9 +27,10 @@ class CustomerResource extends BaseResource implements ResourceContract
      *
      * @return array
      */
-    protected function requestParams(): array {
+    protected function requestParams(): array
+    {
         return [
-            'role' => 'all'
+            'role' => 'all',
         ];
     }
 }

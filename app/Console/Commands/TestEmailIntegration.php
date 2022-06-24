@@ -39,6 +39,5 @@ class TestEmailIntegration extends Command
     {
         \Illuminate\Support\Facades\Mail::to('dgaitan@kindhumans.com')
             ->send(new \App\Mail\TestMail);
-
     }
 }

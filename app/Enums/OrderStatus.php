@@ -12,15 +12,23 @@ use MyCLabs\Enum\Enum;
 final class OrderStatus extends Enum
 {
     private const PENDING = 'pending';
+
     private const PROCESSING = 'processing';
+
     private const ON_HOLD = 'on-hold';
+
     private const COMPLETED = 'completed';
+
     private const CANCELLED = 'cancelled';
+
     private const REFUNDED = 'refunded';
+
     private const FAILED = 'failed';
+
     private const TRASH = 'trash';
 
-    public static function default() {
+    public static function default()
+    {
         return self::PENDING();
     }
 }
