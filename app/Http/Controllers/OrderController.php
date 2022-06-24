@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\WooCommerce\Order;
 use App\Http\Resources\OrderResource;
 use App\Http\Resources\Printforia\PrintforiaOrdersCollection;
+use App\Http\Resources\Printforia\PrintforiaResource;
 use App\Models\Printforia\PrintforiaOrder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -188,6 +189,27 @@ class OrderController extends Controller
         ]);
 
         return Inertia::render('Orders/PrintforiaOrders', $data);
+    }
+
+    /**
+     * Printforia Detail
+     *
+     * @param Request $request
+     * @param [type] $id
+     * @return void
+     */
+    public function printforiaDetail(Request $request, $id) {
+        $printforiaOrder = PrintforiaOrder::with(['order', 'items'])
+            ->wherePrintforiaOrderId($id)
+            ->first();
+
+        if (is_null($printforiaOrder)) {
+            abort(404);
+        }
+
+        return Inertia::render('Orders/PrintforiaDetail', [
+            'order' => new PrintforiaResource($printforiaOrder)
+        ]);
     }
 
     /**

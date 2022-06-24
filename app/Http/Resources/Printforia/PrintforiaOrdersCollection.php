@@ -29,6 +29,8 @@ class PrintforiaOrdersCollection extends ResourceCollection
                 'return_to_address' => $order->return_to_address,
                 'ship_to_address_formatted' => $order->shippingAddress(),
                 'return_to_address_formatted' => $order->returnAddress(),
+                'permalink' => $order->getPermalink(),
+                'woo_permalink' => $order->getWooOrderPermalink()
             ];
 
             return $data;

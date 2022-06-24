@@ -143,7 +143,8 @@
                         index: 'kinja.orders.index',
                         activeIf: [
                             'kinja.orders.index', 'kinja.orders.show',
-                            'kinja.orders.printforiaOrders'
+                            'kinja.orders.printforiaOrders',
+                            'kinja.orders.printforiaDetail'
                         ]
                     },
                     memberships: {

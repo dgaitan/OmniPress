@@ -34,31 +34,31 @@
                                 v-bind:class="[isOdd(i) ? '' : 'bg-gray-50']">
 
                                 <!-- Printforia Order ID -->
-                                <td class="flex items-start py-5 px-6 font-medium">
+                                <td class="flex items-start py-5 px-6 font-medium cursor-pointer" @click="goToDetail(order)">
                                     <input class="mr-3" type="checkbox" @change="setIds($event)" :checked="ids.includes(order.id)" :value="order.id">
                                     {{ order.printforia_order_id }}
                                 </td>
 
                                 <!-- Order Id -->
-                                <td class="font-medium px-2">
+                                <td class="font-medium px-2 cursor-pointer" @click="goToDetail(order)">
                                     #{{ order.order.order_id }}
                                 </td>
 
                                 <!-- Status -->
-                                <td class="font-medium px-2">
+                                <td class="font-medium px-2 cursor-pointer" @click="goToDetail(order)">
                                     <Status :status="order.status" />
                                 </td>
 
                                 <!-- Email -->
-                                <td class="font-medium px-2">
+                                <td class="font-medium px-2 cursor-pointer" @click="goToDetail(order)">
                                     {{ order.ship_to_address.email }}
                                 </td>
 
-                                <td class="px-2 py-3 font-medium text-gray-500" width="250px">
+                                <td class="px-2 py-3 font-medium text-gray-500 cursor-pointer" width="250px" @click="goToDetail(order)">
                                     <span v-html="order.ship_to_address_formatted"></span>
                                 </td>
 
-                                <td class="px-2 font-medium text-gray-500" width="250px">
+                                <td class="px-2 font-medium text-gray-500 cursor-pointer" width="250px" @click="goToDetail(order)">
                                     <span v-html="order.return_to_address_formatted"></span>
                                 </td>
 
@@ -72,10 +72,10 @@
                                         </template>
                                         <template #content>
                                             <div class="">
-                                                <jet-dropdown-link href="">
+                                                <jet-dropdown-link :href="order.permalink" as="a">
                                                     Show
                                                 </jet-dropdown-link>
-                                                <jet-dropdown-link href="product.store_permalink" as="a" target="_blank">See WooCommerce Order</jet-dropdown-link>
+                                                <jet-dropdown-link :href="order.woo_permalink" as="a">See WooCommerce Order</jet-dropdown-link>
                                             </div>
                                         </template>
                                     </jet-dropdown>
@@ -189,6 +189,10 @@
         },
 
         methods: {
+            goToDetail(order) {
+                this.$inertia.visit(order.permalink)
+            },
+
             parseRole(role) {
               return role ? role.split('_').join(' ') : ''
             },
