@@ -29,6 +29,7 @@ class PrintforiaResource extends JsonResource
             'return_to_address' => $this->return_to_address,
             'ship_to_address_formatted' => $this->shippingAddress(),
             'return_to_address_formatted' => $this->returnAddress(),
+            'permalink' => $this->getPermalink(),
             'items' => [],
             'notes' => [],
         ];

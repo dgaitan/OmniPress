@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\Printforia\PrintforiaResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class OrderResource extends JsonResource
@@ -46,6 +47,7 @@ class OrderResource extends JsonResource
             'items' => [],
             'membership' => null,
             'payment_method' => null,
+            'printforia_order' => null
         ];
 
         if (! is_null($this->customer)) {
@@ -66,6 +68,14 @@ class OrderResource extends JsonResource
             $order['payment_method'] = new PaymentMethodResource(
                 $this->paymentMethod
             );
+        }
+
+        if ($this->printforiaOrder) {
+            $order['printforia_order'] = [
+                'id' => $this->printforiaOrder->printforia_order_id,
+                'status' => $this->printforiaOrder->status,
+                'permalink' => $this->printforiaOrder->getPermalink()
+            ];
         }
 
         return $order;
