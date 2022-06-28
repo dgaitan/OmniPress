@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string|null $cause_type
  * @property string|null $image_url
  * @property string|null $beneficiary
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Cause newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Cause newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Cause query()
@@ -33,6 +34,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder|Cause whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Cause whereUpdatedAt($value)
  * @mixin \Eloquent
+ *
+ * @property-read \Illuminate\Database\Eloquent\Collection|CauseDonation[] $donations
+ * @property-read int|null $donations_count
  */
 class Cause extends Model
 {
@@ -45,7 +49,7 @@ class Cause extends Model
      */
     public static $causeTypes = [
         'fixed' => 'Collab for Cause',
-        'bucket' => 'Bucket Cause'
+        'bucket' => 'Bucket Cause',
     ];
 
     protected $fillable = [
@@ -53,7 +57,7 @@ class Cause extends Model
         'name',
         'cause_type',
         'image_url',
-        'beneficiary'
+        'beneficiary',
     ];
 
     /**
@@ -69,7 +73,7 @@ class Cause extends Model
     /**
      * Get Period
      *
-     * @param Carbon|null|null $date
+     * @param  Carbon|null|null  $date
      * @return CauseDonation
      */
     public function getPeriod(Carbon|null $date = null): CauseDonation
@@ -80,33 +84,31 @@ class Cause extends Model
     /**
      * Get Total Amount Donated in Dollars
      *
-     * @param boolean $lifetime
-     * @param Carbon|null|null $from
-     * @param Carbon|null|null $to
+     * @param  bool  $lifetime
+     * @param  Carbon|null|null  $from
+     * @param  Carbon|null|null  $to
      * @return string
      */
     public function getTotalAmountDonatedInDollars(
         bool $lifetime = true,
         Carbon|null $from = null,
         Carbon|null $to = null
-    ): string
-    {
+    ): string {
         return Money::USD($this->getTotalAmountDonated())->format();
     }
-    
+
     /**
      * Get Total Donated for a giving period
      *
-     * @param Carbon|null|null $from
-     * @param Carbon|null|null $to
+     * @param  Carbon|null|null  $from
+     * @param  Carbon|null|null  $to
      * @return int
      */
     public function getTotalAmountDonated(
         bool $lifetime = true,
         Carbon|null $from = null,
         Carbon|null $to = null
-    ): int 
-    {
+    ): int {
         return DonationsService::getCauseFieldTotal(
             cause: $this,
             field: 'amount',
@@ -117,19 +119,18 @@ class Cause extends Model
     }
 
     /**
-     * Get total orders 
+     * Get total orders
      *
-     * @param boolean $lifetime
-     * @param Carbon|null|null $from
-     * @param Carbon|null|null $to
-     * @return integer
+     * @param  bool  $lifetime
+     * @param  Carbon|null|null  $from
+     * @param  Carbon|null|null  $to
+     * @return int
      */
     public function getTotalOrders(
         bool $lifetime = true,
         Carbon|null $from = null,
         Carbon|null $to = null
-    ): int
-    {
+    ): int {
         return DonationsService::getCauseFieldTotal(
             cause: $this,
             field: 'total_orders',
@@ -192,7 +193,7 @@ class Cause extends Model
         foreach (self::$causeTypes as $slug => $label) {
             $types[] = [
                 'slug' => $slug,
-                'label' => $label
+                'label' => $label,
             ];
         }
 

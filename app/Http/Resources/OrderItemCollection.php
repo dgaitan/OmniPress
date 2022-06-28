@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Http\Resources\ProductResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class OrderItemCollection extends ResourceCollection
@@ -15,7 +14,7 @@ class OrderItemCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-        $items = collect($this->collection)->map(function($item){
+        $items = collect($this->collection)->map(function ($item) {
             $line = [
                 'id' => $item->id,
                 'order_line_id' => $item->order_line_id,
@@ -31,7 +30,7 @@ class OrderItemCollection extends ResourceCollection
                 'meta_data' => $item->taxes,
                 'sku' => $item->sku,
                 'price' => $item->price,
-                'product' => null
+                'product' => null,
             ];
 
             if (! is_null($item->product)) {
@@ -40,7 +39,7 @@ class OrderItemCollection extends ResourceCollection
 
             return $line;
         });
-        
+
         return $items;
     }
 }

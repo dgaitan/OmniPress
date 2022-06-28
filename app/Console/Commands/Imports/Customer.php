@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands\Imports;
 
-use Illuminate\Console\Command;
 use App\Imports\CustomerImport;
+use Illuminate\Console\Command;
 
 class Customer extends Command
 {

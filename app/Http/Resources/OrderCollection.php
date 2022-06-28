@@ -14,7 +14,7 @@ class OrderCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-        $orders = collect($this->collection)->map(function($order) {
+        $orders = collect($this->collection)->map(function ($order) {
             $data = [
                 'id' => $order->id,
                 'order_id' => $order->order_id,
@@ -23,14 +23,14 @@ class OrderCollection extends ResourceCollection
                 'shipping' => $order->shipping,
                 'date' => $order->getDateCompleted(),
                 'permalink' => $order->getPermalink(),
-                'storePermalink' => $order->getPermalinkOnStore()
+                'storePermalink' => $order->getPermalinkOnStore(),
             ];
 
             if ($order->customer) {
                 $customer = $order->customer ? [
                     'customer_id' => $order->customer->id,
                     'name' => $order->customer->getFullName(),
-                    'email' => $order->customer->email
+                    'email' => $order->customer->email,
                 ] : null;
 
                 $data['customer'] = $customer;

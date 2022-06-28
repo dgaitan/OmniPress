@@ -42,12 +42,10 @@ class CreateProductsTable extends Migration
             $table->integer('regular_price')->default(0)->nullable();
             $table->integer('sale_price')->default(0)->nullable();
 
-            
             $table->jsonb('settings')->nullable();
             $table->jsonb('meta_data')->nullable();
 
             $table->index(['slug', 'sku', 'status', 'stock_status', 'product_id']);
-
         });
     }
 

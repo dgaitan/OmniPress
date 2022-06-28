@@ -5,8 +5,8 @@ namespace App\Notifications\Orders;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\SlackMessage;
+use Illuminate\Notifications\Notification;
 
 class NewOrderNotification extends Notification implements ShouldQueue
 {
@@ -52,14 +52,14 @@ class NewOrderNotification extends Notification implements ShouldQueue
     public function toSlack()
     {
         return (new SlackMessage)
-            ->content(sprintf('New Order (#%s) placed in Kindhumans', $this->order->order_id))
+            ->content(sprintf('New Order Created', $this->order->order_id))
             ->attachment(function ($attachment) {
                 $attachment->title('Order Summary', $this->order->getPermalinkOnStore())
                     ->fields([
                         'Customer' => $this->order->getCustomerInfo(),
                         'Date Completed' => $this->order->date_created->format('F j, Y'),
                         'Payment Method' => $this->order->getPaymentMethodName(),
-                        'Total' => $this->order->getTotal()
+                        'Total' => $this->order->getTotal(),
                     ]);
             });
     }

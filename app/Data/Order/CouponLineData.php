@@ -5,12 +5,13 @@ namespace App\Data\Order;
 use App\Data\BaseData;
 use Spatie\LaravelData\DataCollection;
 
-class CouponLineData extends BaseData {
+class CouponLineData extends BaseData
+{
     public static $id_field = 'coupon_line_id';
 
     protected static $priceFields = [
         'discount',
-        'discount_tax'
+        'discount_tax',
     ];
 
     protected static $collectionFields = [
@@ -26,6 +27,5 @@ class CouponLineData extends BaseData {
         public ?DataCollection $meta_data,
 
     ) {
-
     }
 }

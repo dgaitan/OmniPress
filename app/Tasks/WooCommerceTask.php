@@ -2,21 +2,19 @@
 
 namespace App\Tasks;
 
-use App\Models\Sync;
+use App\Helpers\API\Testeable;
 use App\Http\Clients\Client;
 use App\Http\Clients\WooCommerce\WooCommerceClient;
-use App\Tasks\WooCommerce\CustomerTask;
+use App\Models\Sync;
 use App\Tasks\WooCommerce\CouponTask;
+use App\Tasks\WooCommerce\CustomerTask;
+use App\Tasks\WooCommerce\MembershipTask;
 use App\Tasks\WooCommerce\OrderTask;
 use App\Tasks\WooCommerce\ProductTask;
-use App\Tasks\WooCommerce\MembershipTask;
-use App\Helpers\API\Testeable;
 use Illuminate\Support\Facades\Log;
-use Carbon\Carbon;
 
-
-class WooCommerceTask {
-
+class WooCommerceTask
+{
     use Testeable;
 
     /**
@@ -40,7 +38,7 @@ class WooCommerceTask {
         'products' => ProductTask::class,
         'coupons' => CouponTask::class,
         'orders' => OrderTask::class,
-        'memberships' => MembershipTask::class
+        'memberships' => MembershipTask::class,
     ];
 
     /**
@@ -51,7 +49,8 @@ class WooCommerceTask {
      *
      * @param Sync
      */
-    public function __construct(Sync|null $sync = null) {
+    public function __construct(Sync|null $sync = null)
+    {
         $this->sync = $sync;
         $this->client = new WooCommerceClient(
             new Client
@@ -65,17 +64,19 @@ class WooCommerceTask {
      *
      * @return array
      */
-    public function getAvailableTasks(): array {
+    public function getAvailableTasks(): array
+    {
         return array_keys($this->tasks);
     }
 
     /**
      * Set if a request is single
      *
-     * @param  bool    $isSingle [description]
-     * @return boolean           [description]
+     * @param  bool  $isSingle [description]
+     * @return bool           [description]
      */
-    public function setId(int $id) {
+    public function setId(int $id)
+    {
         $this->id = $id;
     }
 
@@ -84,7 +85,8 @@ class WooCommerceTask {
      *
      * @return void
      */
-    protected function loadTasks() : void {
+    protected function loadTasks(): void
+    {
         foreach ($this->tasks as $task => $handler) {
             $this->tasks[$task] = new $handler($this->client);
 
@@ -102,38 +104,46 @@ class WooCommerceTask {
      * @param  array
      * @return void
      */
-    public function syncCustomers(array $syncArgs = []): void {
+    public function syncCustomers(array $syncArgs = []): void
+    {
         Log::info('Syncing Customers');
         $this->sync('customers', $syncArgs);
     }
 
-    public function syncCoupons(array $syncArgs = []) {
+    public function syncCoupons(array $syncArgs = [])
+    {
         $this->sync('coupons', $syncArgs);
     }
 
-    public function syncOrders(array $syncArgs = []) {
+    public function syncOrders(array $syncArgs = [])
+    {
         $this->sync('orders', $syncArgs);
     }
 
-    public function syncProducts(array $syncArgs = []) {
+    public function syncProducts(array $syncArgs = [])
+    {
         $this->sync('products', $syncArgs);
     }
 
-    public function _sync(string $type, array $syncArgs = []) {
+    public function _sync(string $type, array $syncArgs = [])
+    {
         $this->sync($type, $syncArgs);
     }
 
-    public function dispatch(array $syncArgs = []) {
+    public function dispatch(array $syncArgs = [])
+    {
         $this->sync(strtolower($this->sync->content_type), $syncArgs);
     }
 
     /**
      * [push description]
-     * @param  string $task   [description]
+     *
+     * @param  string  $task   [description]
      * @param  array  $params [description]
      * @return [type]         [description]
      */
-    public function push(string $task, array $params = []) {
+    public function push(string $task, array $params = [])
+    {
         $task = $this->tasks[$task];
 
         if ($this->isTesting) {
@@ -147,11 +157,13 @@ class WooCommerceTask {
 
     /**
      * [sync description]
-     * @param  string $task     [description]
+     *
+     * @param  string  $task     [description]
      * @param  array  $syncArgs [description]
      * @return [type]           [description]
      */
-    protected function sync(string $task, array $syncArgs = []): void {
+    protected function sync(string $task, array $syncArgs = []): void
+    {
         $task = $this->tasks[$task];
 
         if ($this->isTesting) {
@@ -178,7 +190,6 @@ class WooCommerceTask {
         // if ($results) {
         //     if ($this->isTesting) {
         //     } else {
-
 
         //         // Iterate the page result
         //         foreach ($results as $page => $results) {

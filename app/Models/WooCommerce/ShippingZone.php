@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $title
  * @property int $order
  * @property mixed|null $locations
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|ShippingZone newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ShippingZone newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ShippingZone query()

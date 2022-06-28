@@ -21,7 +21,7 @@ class CauseCollection extends ResourceCollection
                 'cause_type' => $cause->cause_type,
                 'cause_type_label' => $cause->getCauseType(),
                 'image_url' => $cause->getImage(),
-                'beneficiary' => $cause->beneficiary
+                'beneficiary' => $cause->beneficiary,
             ];
         });
     }

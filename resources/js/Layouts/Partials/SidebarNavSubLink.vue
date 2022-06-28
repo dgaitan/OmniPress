@@ -23,7 +23,7 @@
 		computed: {
 			classes() {
 				return this.active
-					? 'flex text-md items-center text-md py-2 px-3 text-cyan-500 bg-gray-400/10 transition-all rounded-r-lg border-l-4 border-cyan-400 transition-all'
+					? 'flex text-md items-center text-md py-2 px-3 text-cyan-500 transition-all transition-all'
 					: 'flex text-md items-center py-2 px-3 text-gray-400 hover:text-gray-600 transition-all rounded'
 			}
 		}

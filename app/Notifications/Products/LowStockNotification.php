@@ -6,8 +6,8 @@ use App\Models\WooCommerce\Product;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\SlackMessage;
+use Illuminate\Notifications\Notification;
 
 class LowStockNotification extends Notification implements ShouldQueue
 {
@@ -70,7 +70,7 @@ class LowStockNotification extends Notification implements ShouldQueue
                 $attachment->title($this->product->name, $this->product->getStorePermalink())
                     ->fields([
                         'Product ID' => $this->product->product_id,
-                        'Stock Quantity' => $this->product->stock_quantity
+                        'Stock Quantity' => $this->product->stock_quantity,
                     ]);
             });
     }

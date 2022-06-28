@@ -2,12 +2,11 @@
 
 namespace App\Services\WooCommerce\DataObjects;
 
+use App\Models\WooCommerce\Customer;
+use App\Models\WooCommerce\Order as WooOrder;
+use App\Models\WooCommerce\PaymentMethod;
 use App\Services\Contracts\DataObjectContract;
 use App\Services\DataObjects\BaseObject;
-use App\Services\WooCommerce\DataObjects\OrderLine;
-use App\Models\WooCommerce\Order as WooOrder;
-use App\Models\WooCommerce\Customer;
-use App\Models\WooCommerce\PaymentMethod;
 
 class Order extends BaseObject implements DataObjectContract
 {
@@ -16,7 +15,8 @@ class Order extends BaseObject implements DataObjectContract
      *
      * @return void
      */
-    protected function schema(): void {
+    protected function schema(): void
+    {
         $this->integer('id');
         $this->integer('parent_id', null);
         $this->integer('number');
@@ -63,7 +63,8 @@ class Order extends BaseObject implements DataObjectContract
      *
      * @return WooOrder
      */
-    public function sync(): WooOrder {
+    public function sync(): WooOrder
+    {
         $data = $this->toArray('order_id');
         unset($data['line_items']);
 

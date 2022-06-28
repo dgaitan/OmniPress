@@ -2,10 +2,10 @@
 
 namespace App\Services\WooCommerce\DataObjects;
 
-use App\Services\Contracts\DataObjectContract;
-use App\Services\DataObjects\BaseObject;
 use App\Models\WooCommerce\OrderLine as WooOrderLine;
 use App\Models\WooCommerce\Product;
+use App\Services\Contracts\DataObjectContract;
+use App\Services\DataObjects\BaseObject;
 
 class OrderLine extends BaseObject implements DataObjectContract
 {
@@ -14,7 +14,8 @@ class OrderLine extends BaseObject implements DataObjectContract
      *
      * @return void
      */
-    protected function schema(): void {
+    protected function schema(): void
+    {
         $this->integer('id');
         $this->string('name');
         $this->integer('product_id');
@@ -36,7 +37,8 @@ class OrderLine extends BaseObject implements DataObjectContract
      *
      * @return WooOrderLine
      */
-    public function sync(): WooOrderLine {
+    public function sync(): WooOrderLine
+    {
         $orderLine = WooOrderLine::firstOrNew(['order_line_id' => $this->id]);
         $orderLine->fill($this->toArray('order_line_id'));
 

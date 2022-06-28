@@ -20,7 +20,7 @@ class PaymentMethodResource extends JsonResource
             'title' => $this->title,
             'description' => $this->description,
             'method_title' => $this->method_title,
-            'method_description' => $this->method_description
+            'method_description' => $this->method_description,
         ];
     }
 }

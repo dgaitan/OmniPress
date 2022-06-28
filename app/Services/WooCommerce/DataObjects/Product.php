@@ -2,25 +2,19 @@
 
 namespace App\Services\WooCommerce\DataObjects;
 
+use App\Models\WooCommerce\Product as WooProduct;
 use App\Services\Contracts\DataObjectContract;
 use App\Services\DataObjects\BaseObject;
-use App\Services\WooCommerce\DataObjects\ProductCategory;
-use App\Services\WooCommerce\DataObjects\ProductTag;
-use App\Services\WooCommerce\DataObjects\ProductImage;
-use App\Services\WooCommerce\DataObjects\ProductAttribute;
-use App\Services\WooCommerce\DataObjects\ProductSetting;
-use App\Services\WooCommerce\DataObjects\ProductVariation;
-use App\Services\WooCommerce\DataObjects\ProductBrand;
-use App\Models\WooCommerce\Product as WooProduct;
 
 class Product extends BaseObject implements DataObjectContract
 {
     /**
      * Constructor.
      *
-     * @param array $attributes
+     * @param  array  $attributes
      */
-    public function __construct(public array $attributes) {
+    public function __construct(public array $attributes)
+    {
         parent::__construct($attributes);
 
         $this->attributes['settings'] = (new ProductSetting((array) $attributes))->toArray();
@@ -31,7 +25,8 @@ class Product extends BaseObject implements DataObjectContract
      *
      * @return void
      */
-    protected function schema(): void {
+    protected function schema(): void
+    {
         $this->integer('id');
         $this->string('name');
         $this->string('slug');
@@ -68,7 +63,8 @@ class Product extends BaseObject implements DataObjectContract
      *
      * @return WooProduct
      */
-    public function sync(): WooProduct {
+    public function sync(): WooProduct
+    {
         $product = WooProduct::firstOrNew(['product_id' => $this->id]);
         $data = $this->toArray('product_id');
         unset($data['categories']);

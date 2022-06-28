@@ -2,15 +2,16 @@
 
 namespace App\Services\Resources;
 
-use Exception;
 use App\Services\Contracts\DataObjectContract;
-use App\Services\Contracts\ServiceContract;
 use App\Services\Contracts\FactoryContract;
-use Illuminate\Support\Collection;
+use App\Services\Contracts\ServiceContract;
+use Exception;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 
-abstract class BaseResource {
+abstract class BaseResource
+{
     /**
      * Sometimes the endpoint is different that the
      * Resource name.
@@ -45,9 +46,10 @@ abstract class BaseResource {
     /**
      * A Resource should receive a Service
      *
-     * @param ServiceContract $service
+     * @param  ServiceContract  $service
      */
-    public function __construct(ServiceContract $service) {
+    public function __construct(ServiceContract $service)
+    {
         $this->service = $service;
     }
 
@@ -66,19 +68,20 @@ abstract class BaseResource {
      *
      * @return Collection
      */
-    public function all(array $params = []): Collection|bool {
-        if (!isset($params['per_page'])) {
+    public function all(array $params = []): Collection|bool
+    {
+        if (! isset($params['per_page'])) {
             $params['per_page'] = 100;
         }
 
         $api = $this->service->makeRequest();
         $response = $api->get($this->endpoint, $params);
 
-        if (!$response) {
+        if (! $response) {
             return false;
         }
 
-        return collect($response)->map(fn(object $item) => $this->factory::make(
+        return collect($response)->map(fn (object $item) => $this->factory::make(
             attributes: (array) $item
         ));
     }
@@ -86,10 +89,11 @@ abstract class BaseResource {
     /**
      * Find a
      *
-     * @param integer $order_id
+     * @param  int  $order_id
      * @return DataObjectContract
      */
-    public function find(int $id): DataObjectContract {
+    public function find(int $id): DataObjectContract
+    {
         $api = $this->service->makeRequest();
         $response = $api->get(sprintf('%s/%s', $this->endpoint, $id));
 
@@ -101,10 +105,11 @@ abstract class BaseResource {
      *
      * Basically Sync all elements
      *
-     * @param integer $per_page
+     * @param  int  $per_page
      * @return void
      */
-    public function syncAll(int|null $perPage, int $page = 1, int $sync_id = 0): void {
+    public function syncAll(int|null $perPage, int $page = 1, int $sync_id = 0): void
+    {
         if (! $perPage) {
             $perPage = env('KINDHUMANS_SYNC_PER_PAGE', 100);
         }
@@ -112,13 +117,15 @@ abstract class BaseResource {
         $sync = \App\Models\Sync::find($sync_id);
         $params = array_merge(['per_page' => $perPage, 'page' => $page], $this->requestParams());
 
-        if ($sync->isCompleted()) return;
+        if ($sync->isCompleted()) {
+            return;
+        }
 
         try {
             $response = $this->all($params);
 
             if ($response) {
-                $response->map(fn($item) => $item->sync());
+                $response->map(fn ($item) => $item->sync());
                 $sync->current_page = $page + 1;
                 $sync->save();
                 \App\Jobs\WooCommerceSyncServiceJob::dispatch($sync->id);
@@ -131,7 +138,6 @@ abstract class BaseResource {
             $sync->save();
             $sync->add_log(sprintf('Error: %s', $e->getMessage()));
         }
-
     }
 
     /**
@@ -139,21 +145,24 @@ abstract class BaseResource {
      *
      * @return array
      */
-    protected function requestParams(): array {
+    protected function requestParams(): array
+    {
         return [];
     }
 
     /**
      * Find an object and sync it
      *
-     * @param integer $id
+     * @param  int  $id
      * @return Model|bool
      */
-    public function findAndSync(int $id): Model|bool {
+    public function findAndSync(int $id): Model|bool
+    {
         $element = $this->find($id);
 
         if ($element) {
             Cache::forget('dashboard_stats');
+
             return $element->sync();
         }
 
@@ -163,7 +172,7 @@ abstract class BaseResource {
     /**
      * Create an element or object
      *
-     * @param DataObjectContract $dataObject
+     * @param  DataObjectContract  $dataObject
      * @return DataObjectContract|Model|null
      */
     public function create(
@@ -184,5 +193,26 @@ abstract class BaseResource {
         }
 
         return null;
+    }
+
+    public function update(
+        int|string $element_id,
+        array $params,
+        bool $sync = false
+    ): DataObjectContract|Model|bool {
+        $api = $this->service->makeRequest();
+        $response = $api->put(sprintf('%s/%s', $this->endpoint, $element_id), $params);
+
+        if ($response) {
+            $dataObject = $this->factory::make(attributes: (array) $response);
+
+            if ($sync) {
+                return $dataObject->sync();
+            }
+
+            return $dataObject;
+        }
+
+        return false;
     }
 }

@@ -2,8 +2,8 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class ProductCollection extends ResourceCollection
 {
@@ -15,8 +15,8 @@ class ProductCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-        return collect($this->collection)->map(function($product) {
-            $data =  [
+        return collect($this->collection)->map(function ($product) {
+            $data = [
                 'id' => $product->id,
                 'name' => $product->name,
                 'slug' => $product->slug,
@@ -35,7 +35,7 @@ class ProductCollection extends ResourceCollection
                 'status' => $product->status,
                 'stock_quantity' => $product->stock_quantity,
                 'type' => $product->type,
-                'image' => null
+                'image' => null,
             ];
 
             if ($product->images->isNotEmpty()) {
@@ -49,19 +49,20 @@ class ProductCollection extends ResourceCollection
     /**
      * Get collection like brands, tags or categories.
      *
-     * @param Collection $collection
+     * @param  Collection  $collection
      * @return array
      */
-    protected function getCollectionMapped(Collection $collection): array {
+    protected function getCollectionMapped(Collection $collection): array
+    {
         if ($collection->isEmpty()) {
             return [];
         }
 
-        return $collection->map(function($item) {
+        return $collection->map(function ($item) {
             return [
                 'id' => $item->id,
                 'name' => $item->name,
-                'slug' => $item->slug
+                'slug' => $item->slug,
             ];
         })->toArray();
     }

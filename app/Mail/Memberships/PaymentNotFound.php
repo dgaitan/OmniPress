@@ -2,11 +2,10 @@
 
 namespace App\Mail\Memberships;
 
+use App\Models\Membership;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use App\Models\Membership;
 
 class PaymentNotFound extends Mailable
 {
@@ -38,7 +37,7 @@ class PaymentNotFound extends Mailable
      */
     public function build()
     {
-        return $this->subject("We can not find a payment method for your kindhumans membership renewal.")
+        return $this->subject('We can not find a payment method for your kindhumans membership renewal.')
             ->view('emails.memberships.payment-not-found')
             ->with([
                 'customerName' => $this->membership->customer->getFullName(),

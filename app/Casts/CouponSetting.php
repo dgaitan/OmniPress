@@ -2,8 +2,8 @@
 
 namespace App\Casts;
 
-use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use App\Data\Coupon\CouponSettingData;
+use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 
 class CouponSetting implements CastsAttributes
 {
@@ -32,10 +32,10 @@ class CouponSetting implements CastsAttributes
      */
     public function set($model, $key, $value, $attributes)
     {
-        if (!is_string($value) || is_array($value)) {
+        if (! is_string($value) || is_array($value)) {
             $value = json_encode($value);
         }
-        
+
         return $value;
     }
 }

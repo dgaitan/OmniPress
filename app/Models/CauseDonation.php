@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $to
  * @property int $amount
  * @property int $total_orders
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|CauseDonation newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|CauseDonation newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|CauseDonation query()
@@ -30,6 +31,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|CauseDonation whereTotalOrders($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CauseDonation whereUpdatedAt($value)
  * @mixin \Eloquent
+ *
+ * @property-read Cause|null $cause
  */
 class CauseDonation extends Model
 {
@@ -45,7 +48,7 @@ class CauseDonation extends Model
         'from',
         'to',
         'amount',
-        'total_orders'
+        'total_orders',
     ];
 
     /**
@@ -55,7 +58,7 @@ class CauseDonation extends Model
      */
     protected $casts = [
         'from' => 'date',
-        'to' => 'date'
+        'to' => 'date',
     ];
 
     /**
@@ -71,7 +74,7 @@ class CauseDonation extends Model
     /**
      * Add donation to this donation period
      *
-     * @param integer|float|string $amount
+     * @param  int|float|string  $amount
      * @return CauseDonation
      */
     public function addDonation(int|float|string $amount): CauseDonation
@@ -79,7 +82,7 @@ class CauseDonation extends Model
         if (is_float($amount) || is_string($amount)) {
             $amount = (int) ((float) $amount * 100);
         }
-        
+
         $this->amount += $amount;
         $this->total_orders += 1;
         $this->save();

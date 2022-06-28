@@ -3,10 +3,9 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use App\Models\User;
 use Illuminate\Http\Request;
-use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Str;
+use Laravel\Socialite\Facades\Socialite;
 
 class MustBeKindhumans
 {
@@ -29,10 +28,10 @@ class MustBeKindhumans
             'dan@kindhumans.com',
             'sam@kindhumans.com',
             'ora@kindhumans.com',
-            'tconnoly@kindhumans.com'
+            'tconnoly@kindhumans.com',
         ];
 
-        if (!Str::endsWith($user->getEmail(), 'kindhumans.com')) {
+        if (! Str::endsWith($user->getEmail(), 'kindhumans.com')) {
             return redirect()->route('register')->withErrors(
                 'Invalid email domain. Please be sure you are using a kindhumans.com email'
             );
@@ -43,6 +42,7 @@ class MustBeKindhumans
                 'Invalid email. Please be sure of using a valid kindhumans.com email'
             );
         }
+
         return $next($request);
     }
 }

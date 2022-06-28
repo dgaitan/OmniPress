@@ -2,17 +2,18 @@
 
 namespace App\Data\Http;
 
-use Spatie\LaravelData\DataCollection;
-use App\Data\Shared\AddressData;
 use App\Data\BaseData;
+use App\Data\Shared\AddressData;
+use Spatie\LaravelData\DataCollection;
 
-class CustomerData extends BaseData {
+class CustomerData extends BaseData
+{
     public static $id_field = 'customer_id';
 
     protected static $collectionFields = [
-        'meta_data' => \App\Data\Shared\MetaData::class
+        'meta_data' => \App\Data\Shared\MetaData::class,
     ];
-    
+
     public function __construct(
         public int $customer_id,
         public ?string $date_created,
@@ -27,29 +28,28 @@ class CustomerData extends BaseData {
         public bool $is_paying_customer,
         public ?string $avatar_url,
         /** @var \App\Data\Shared\MetaData[] */
-        public ?DataCollection $meta_data 
+        public ?DataCollection $meta_data
     ) {
-
     }
 
-    // public static function _fromResponse(array $data) : static { 
+    // public static function _fromResponse(array $data) : static {
     //     $attributes = static::getAttributes();
     //     $_data = [];
-        
+
     //     if ($data) {
     //         foreach ($data as $key => $value) {
     //             if ($key === 'id') {
     //                 $_data['customer_id'] = $value;
     //             }
-                
+
     //             if (!in_array($key, $attributes)) {
     //                 continue;
     //             }
-                
+
     //             if (is_null($value)) {
     //                 $value = "N/A";
     //             }
-                
+
     //             if ($key === 'shipping' || $key === 'billing') {
     //                 $value = (array) $value;
     //             }
@@ -62,7 +62,7 @@ class CustomerData extends BaseData {
     //                     if (isset($meta['key']) && $meta['key'] === '_stripe_customer') {
     //                         continue;
     //                     }
-                        
+
     //                     $meta_data[] = $meta;
     //                 }
 

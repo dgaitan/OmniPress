@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('kinja:renew-membership-task')->dailyAt('04:00');
+        $schedule->command('printforia:check-orders')->hourly();
     }
 
     /**

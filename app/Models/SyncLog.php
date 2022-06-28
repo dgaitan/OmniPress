@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property int $sync_id
  * @property string $description
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|SyncLog newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|SyncLog newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|SyncLog query()
@@ -22,6 +23,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|SyncLog whereSyncId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SyncLog whereUpdatedAt($value)
  * @mixin \Eloquent
+ *
  * @property-read \App\Models\Sync|null $sync
  */
 class SyncLog extends Model
@@ -29,12 +31,13 @@ class SyncLog extends Model
     use HasFactory;
 
     protected $casts = [
-        'created_at' => 'datetime'
+        'created_at' => 'datetime',
     ];
 
     protected $fillable = ['description'];
 
-    public function sync() {
+    public function sync()
+    {
         return $this->belongsTo(Sync::class, 'sync_id');
     }
 }

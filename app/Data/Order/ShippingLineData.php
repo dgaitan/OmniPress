@@ -5,12 +5,13 @@ namespace App\Data\Order;
 use App\Data\BaseData;
 use Spatie\LaravelData\DataCollection;
 
-class ShippingLineData extends BaseData {
+class ShippingLineData extends BaseData
+{
     public static $id_field = 'shipping_line_id';
 
     protected static $priceFields = [
         'total_tax',
-        'total'
+        'total',
     ];
 
     protected static $collectionFields = [
@@ -27,6 +28,5 @@ class ShippingLineData extends BaseData {
         /** @var \App\Data\Shared\MetaData[] */
         public ?DataCollection $meta_data,
     ) {
-
     }
 }

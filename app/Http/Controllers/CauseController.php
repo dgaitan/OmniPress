@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\Causes\CauseCollection;
 use App\Models\Causes\Cause;
-use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -13,7 +12,7 @@ class CauseController extends Controller
     /**
      * Undocumented function
      *
-     * @param Request $request
+     * @param  Request  $request
      * @return void
      */
     public function index(Request $request)
@@ -22,7 +21,6 @@ class CauseController extends Controller
         $perPage = $request->has('perPage')
             ? $request->input('perPage')
             : 100;
-
 
         // Filter by cause type
         if (
@@ -52,7 +50,7 @@ class CauseController extends Controller
                 ? $request->input('cause_type')
                 : '',
             'cause_types' => Cause::getCauseTypes(),
-            '_s' => $request->input('s') ?? ''
+            '_s' => $request->input('s') ?? '',
         ]);
 
         return Inertia::render('Causes/Index', $data);

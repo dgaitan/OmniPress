@@ -2,18 +2,20 @@
 
 namespace Tests\Utils;
 
-class WooCommerceClientTestResponses {
-
-    public static function data() : array {
+class WooCommerceClientTestResponses
+{
+    public static function data(): array
+    {
         return [
             'customers' => self::customerData(),
             'coupons' => self::couponData(),
             'orders' => self::orderData(),
-            'products' => self::productData()
+            'products' => self::productData(),
         ];
     }
 
-    public static function customerData(): array {
+    public static function customerData(): array
+    {
         return json_decode('[
             {
               "id": 26,
@@ -119,9 +121,10 @@ class WooCommerceClientTestResponses {
             }
         ]', true);
     }
-    
-    public static function couponData(): array {
-      return json_decode('[
+
+    public static function couponData(): array
+    {
+        return json_decode('[
         {
           "id": 720,
           "code": "free shipping",
@@ -207,8 +210,9 @@ class WooCommerceClientTestResponses {
       ]', true);
     }
 
-    public static function orderData() : array {
-      return json_decode('[
+    public static function orderData(): array
+    {
+        return json_decode('[
         {
           "id": 727,
           "parent_id": 0,
@@ -525,8 +529,9 @@ class WooCommerceClientTestResponses {
       ]');
     }
 
-    public static function productData() : array {
-      return json_decode('[
+    public static function productData(): array
+    {
+        return json_decode('[
         {
           "id": 799,
           "name": "Ship Your Idea",

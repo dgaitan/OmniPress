@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Models\Team;
-use App\Models\Organization;
 use App\Http\Controllers\Controller;
+use App\Models\Organization;
+use App\Models\Team;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
@@ -33,7 +33,7 @@ class VerifyEmailController extends Controller
             $team->save();
 
             $team->organization()->save(Organization::forceCreate([
-                'name' => $team->name
+                'name' => $team->name,
             ]));
 
             $user->ownedTeams()->save($team);
