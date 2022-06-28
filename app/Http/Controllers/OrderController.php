@@ -83,7 +83,7 @@ class OrderController extends Controller
 
         if (is_null($order)) {
             $order = Cache::tags('orders')->remember($cacheKey, 86430, function () use ($id) {
-                $order = Order::with('items', 'customer', 'paymentMethod')
+                $order = Order::with('items', 'customer', 'paymentMethod', 'printforiaOrder')
                     ->whereOrderId($id)
                     ->first();
 

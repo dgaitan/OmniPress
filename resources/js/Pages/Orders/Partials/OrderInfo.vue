@@ -28,13 +28,26 @@
             <Label>Shipping</Label>
             <div class="text-sm text-gray-600" v-html="order.shipping_address"></div>
         </Column>
-        <Column>
+        <Column class="mb-3">
             <Label>Payment Method</Label>
             <div v-if="order.payment_method" class="text-sm text-gray-600">
                 {{ order.payment_method.title }}
             </div>
             <div v-else class="text-sm text-gray-600">
                 Free
+            </div>
+        </Column>
+        <Column v-if="order.printforia_order">
+            <Label>Printforia Order</Label>
+            <div class="text-sm text-gray-600 bg-gray-100 p-3 rounded cursor-pointer" @click="$inertia.visit(order.printforia_order.permalink)">
+                <span class="block mb-2">
+                    <strong class="inline-block mr-2">Order ID</strong>
+                    {{ order.printforia_order.id }}
+                </span>
+                <span class="flex items-center">
+                    <strong class="inline-block mr-2">Status</strong>
+                    <Status class="ml-3" :status="order.printforia_order.status" />
+                </span>
             </div>
         </Column>
     </Box>
@@ -44,6 +57,7 @@ import { defineComponent } from 'vue'
 import Box from '@/Components/Content/Box.vue'
 import Column from '@/Components/Layouts/Column.vue'
 import Label from '@/Components/Content/Label.vue'
+import Status from '@/Components/Status.vue'
 
 export default defineComponent({
     props: {
@@ -53,7 +67,8 @@ export default defineComponent({
     components: {
         Box,
         Column,
-        Label
+        Label,
+        Status
     }
 })
 </script>
