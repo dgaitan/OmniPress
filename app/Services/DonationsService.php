@@ -25,6 +25,11 @@ class DonationsService
         });
     }
 
+    /**
+     * Calculate all customer donations
+     *
+     * @return void
+     */
     public static function calculateAllCustomerDonations(): void {
         QueryService::walkTrough(Customer::query(), function ($customer) {
             DonationsService::calculateCustomerDonations($customer);
