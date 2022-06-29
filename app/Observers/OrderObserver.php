@@ -6,6 +6,7 @@ use App\Jobs\Donations\OrderWasSyncedJob;
 use App\Jobs\Printforia\PrintforiaSync;
 use App\Models\WooCommerce\Order;
 use App\Notifications\Orders\NewOrderNotification;
+use Illuminate\Support\Facades\Cache;
 
 class OrderObserver
 {
@@ -18,8 +19,8 @@ class OrderObserver
     public function created(Order $order)
     {
         $order->notify((new NewOrderNotification($order))->delay(now()->addMinute()));
-        PrintforiaSync::dispatch($order)->delay(now()->addSeconds(40));
         OrderWasSyncedJob::dispatch($order)->delay(now()->addSeconds(30));
+        PrintforiaSync::dispatch($order)->delay(now()->addSeconds(40));
     }
 
     /**
@@ -30,6 +31,7 @@ class OrderObserver
      */
     public function updated(Order $order)
     {
-        // PrintforiaService::getOrCreatePrintforiaOrder($order);
+        $cacheKey = sprintf('woocommerce_order_%s', $order->order_id);
+        Cache::tags('orders')->forget($cacheKey);
     }
 }
