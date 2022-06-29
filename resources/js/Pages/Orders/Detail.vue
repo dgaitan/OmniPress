@@ -20,6 +20,7 @@
                     <OrderShipping
                         v-if="order.data.shipping_lines.length > 0"
                         :order="order.data" />
+                    <OrderDonations v-if="order.data.donations && order.data.donations.length > 0" :order="order.data" />
                 </Column>
             </Row>
         </Container>
@@ -37,6 +38,7 @@ import OrderLines from './Partials/OrderLines.vue'
 import OrderTotals from './Partials/OrderTotals.vue'
 import OrderInfo from './Partials/OrderInfo.vue'
 import OrderShipping from './Partials/OrderShipping.vue'
+import OrderDonations from './Partials/OrderDonations.vue'
 import Button from '@/Components/Button.vue'
 
 export default defineComponent({
@@ -54,6 +56,7 @@ export default defineComponent({
         OrderTotals,
         OrderInfo,
         OrderShipping,
+        OrderDonations,
         Button
     },
 

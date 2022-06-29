@@ -47,7 +47,8 @@ class OrderResource extends JsonResource
             'items' => [],
             'membership' => null,
             'payment_method' => null,
-            'printforia_order' => null
+            'printforia_order' => null,
+            'donations' => null
         ];
 
         if (! is_null($this->customer)) {
@@ -76,6 +77,11 @@ class OrderResource extends JsonResource
                 'status' => $this->printforiaOrder->status,
                 'permalink' => $this->printforiaOrder->getPermalink()
             ];
+        }
+
+        if ($this->donations->isNotEmpty()) {
+            $order['donations'] = $this->getDonations();
+            $order['total_donations'] = $this->totalDonated()->format();
         }
 
         return $order;

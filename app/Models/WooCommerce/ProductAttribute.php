@@ -18,7 +18,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property bool|null $variation
  * @property mixed|null $options
  * @property int|null $product_id
- *
  * @method static \Illuminate\Database\Eloquent\Builder|ProductAttribute newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ProductAttribute newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ProductAttribute query()
