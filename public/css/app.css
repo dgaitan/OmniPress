@@ -1275,9 +1275,6 @@ select {
   --tw-bg-opacity: 1;
   background-color: rgb(224 242 254 / var(--tw-bg-opacity));
 }
-.bg-gray-100\/5 {
-  background-color: rgb(243 244 246 / 0.05);
-}
 .bg-opacity-25 {
   --tw-bg-opacity: 0.25;
 }
@@ -1308,6 +1305,9 @@ select {
 }
 .p-5 {
   padding: 1.25rem;
+}
+.p-3 {
+  padding: 0.75rem;
 }
 .px-4 {
   padding-left: 1rem;

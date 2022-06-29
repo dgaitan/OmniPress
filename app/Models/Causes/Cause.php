@@ -21,7 +21,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string|null $cause_type
  * @property string|null $image_url
  * @property string|null $beneficiary
- *
  * @method static \Illuminate\Database\Eloquent\Builder|Cause newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Cause newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Cause query()
@@ -34,9 +33,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder|Cause whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Cause whereUpdatedAt($value)
  * @mixin \Eloquent
- *
  * @property-read \Illuminate\Database\Eloquent\Collection|CauseDonation[] $donations
  * @property-read int|null $donations_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Causes\OrderDonation[] $orderDonations
+ * @property-read int|null $order_donations_count
  */
 class Cause extends Model
 {
@@ -68,6 +68,15 @@ class Cause extends Model
     public function donations(): HasMany
     {
         return $this->hasMany(CauseDonation::class, 'cause_id');
+    }
+
+    /**
+     * Order Donations
+     *
+     * @return HasMany
+     */
+    public function orderDonations(): HasMany {
+        return $this->hasMany(OrderDonation::class);
     }
 
     /**
@@ -169,6 +178,21 @@ class Cause extends Model
         }
 
         return $imageUrl;
+    }
+
+    /**
+     * Cause exists?
+     *
+     * @param mixed $causeId
+     * @return boolean
+     */
+    public static function causeExists(mixed $causeId): bool
+    {
+        return self::whereCauseId($causeId)->exists();
+    }
+
+    public static function findCause(mixed $causeId): self|null {
+        return self::whereCauseId($causeId)->first();
     }
 
     /**
