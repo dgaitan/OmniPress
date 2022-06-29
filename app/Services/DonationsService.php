@@ -13,10 +13,21 @@ use InvalidArgumentException;
 
 class DonationsService
 {
+    /**
+     * Calculate ORder Donations in generall
+     *
+     * @return void
+     */
     public static function calculateOrderDonations(): void
     {
         QueryService::walkTrough(Order::query(), function ($order) {
             DonationsService::loadOrderDonations($order);
+        });
+    }
+
+    public static function calculateAllCustomerDonations(): void {
+        QueryService::walkTrough(Customer::query(), function ($customer) {
+            DonationsService::calculateCustomerDonations($customer);
         });
     }
 
@@ -228,28 +239,23 @@ class DonationsService
      * Calculate user Donations
      *
      * @param  Customer  $customer
-     * @return Customer|Collection
+     * @return void
      */
-    public static function calculateCustomerDonations(Customer $customer): Customer|Collection
+    public static function calculateCustomerDonations(Customer $customer): void
     {
         // Customer should has orders to calcualte donations
         if (! $customer->orders || $customer->orders->count() === 0) {
-            return $customer;
+            return;
         }
 
         // Reset calculations if customer has ones.
         if ($customer->donations && $customer->donations->count() > 0) {
-            $customer->donations->map(function ($donation) {
-                $donation->donation = 0;
-                $donation->save();
-            });
+            $customer->donations()->delete();
         }
 
         $customer->orders->map(function ($order) {
             DonationsService::addOrderDonationToCustomer($order);
         });
-
-        return $customer->donations;
     }
 
     /**
@@ -258,40 +264,32 @@ class DonationsService
      * @param  Order  $order
      * @return int
      */
-    public static function addOrderDonationToCustomer(Order $order): int
+    public static function addOrderDonationToCustomer(Order $order): void
     {
         // Order needs to has a customer to calculate things.
         if (is_null($order->customer)) {
-            return 0;
+            return;
         }
 
-        // Order must has Cause and Total Donated data. Otherwise it will return zero.
-        if (! $order->getMetaValue('cause') || ! $order->getMetaValue('total_donated')) {
-            return 0;
+        if ($order->donations->isEmpty()) {
+            return;
         }
 
-        $cause = Cause::whereCauseId($order->getMetaValue('cause'))->first();
+        $order->donations->map(function ($donation) use ($order) {
+            $userDonation = UserDonation::whereCauseId($donation->cause->id)
+                ->whereCustomerId($order->customer->id)
+                ->first();
 
-        // Cause must exists. Otherwise it will return zero.
-        if (is_null($cause)) {
-            return 0;
-        }
+            if (is_null($userDonation)) {
+                $userDonation = UserDonation::create([
+                    'customer_id' => $order->customer->id,
+                    'cause_id' => $donation->cause->id,
+                    'donation' => 0
+                ]);
+            }
 
-        $donation = $order->customer->donations()
-            ->whereCauseId($cause->id)
-            ->first();
-
-        if (is_null($donation)) {
-            $donation = UserDonation::create([
-                'customer_id' => $order->customer->id,
-                'cause_id' => $cause->id,
-                'donation' => 0,
-            ]);
-        }
-
-        $donation = $donation->addDonation($order->getMetaValue('total_donated'));
-
-        return $donation->donation;
+            $userDonation->addDonation($donation->amount);
+        });
     }
 
     /**
