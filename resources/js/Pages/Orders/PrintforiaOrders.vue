@@ -72,7 +72,7 @@
                                         </template>
                                         <template #content>
                                             <div class="">
-                                                <jet-dropdown-link :href="order.permalink" as="a">
+                                                <jet-dropdown-link :href="order.permalink" @click="goToDetail(order)">
                                                     Show
                                                 </jet-dropdown-link>
                                                 <jet-dropdown-link :href="order.woo_permalink" as="a">See WooCommerce Order</jet-dropdown-link>
