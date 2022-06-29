@@ -2,6 +2,7 @@
 
 namespace App\Services\WooCommerce\DataObjects;
 
+use App\Jobs\Donations\OrderWasSyncedJob;
 use App\Models\WooCommerce\Customer;
 use App\Models\WooCommerce\Order as WooOrder;
 use App\Models\WooCommerce\PaymentMethod;
