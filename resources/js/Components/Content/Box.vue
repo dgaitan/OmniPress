@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-white rounded mb-10 border border-gray-200 shadow-gray-200 shadow-sm">
+    <div class="bg-white rounded mb-5 border border-gray-200 shadow-gray-200 shadow-sm">
         <div v-if="headline" class="p-4 border-b border-gray-200 flex justify-between w-full">
             <h3 class="mr-2 text-lg font-medium">
                 {{ headline }}

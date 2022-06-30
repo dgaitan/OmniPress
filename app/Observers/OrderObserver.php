@@ -3,9 +3,10 @@
 namespace App\Observers;
 
 use App\Jobs\Donations\OrderWasSyncedJob;
-use App\Jobs\Printforia\PrintforiaSync;
+use App\Jobs\Printforia\ProcessPrintforiaOrderJob;
 use App\Models\WooCommerce\Order;
 use App\Notifications\Orders\NewOrderNotification;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Cache;
 
 class OrderObserver
@@ -19,8 +20,11 @@ class OrderObserver
     public function created(Order $order)
     {
         $order->notify((new NewOrderNotification($order))->delay(now()->addMinute()));
-        OrderWasSyncedJob::dispatch($order)->delay(now()->addSeconds(30));
-        PrintforiaSync::dispatch($order)->delay(now()->addSeconds(40));
+
+        Bus::chain([
+            new OrderWasSyncedJob($order),
+            new ProcessPrintforiaOrderJob($order)
+        ])->dispatch();
     }
 
     /**
