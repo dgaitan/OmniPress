@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Scout\Searchable;
+use phpDocumentor\Reflection\Types\Null_;
 
 /**
  * App\Models\WooCommerce\Product
@@ -145,6 +146,7 @@ class Product extends Model
         'settings',
         'meta_data',
         'is_subscription',
+        'is_printforia'
     ];
 
     /**
@@ -280,6 +282,11 @@ class Product extends Model
         return $this->type === 'variation';
     }
 
+    /**
+     * GEt featured image
+     *
+     * @return ProductImage|null
+     */
     public function featuredImage(): ProductImage|null
     {
         if ($this->images->isEmpty()) {
@@ -321,6 +328,17 @@ class Product extends Model
             env('CLIENT_DOMAIN', 'https://kindhumans.com'),
             $this->product_id
         );
+    }
+
+    /**
+     * Find by product ID
+     *
+     * @param string|integer $productId
+     * @return self|null
+     */
+    public static function findByProductId(string|int $productId): self|null
+    {
+        return self::whereProductId($productId)->first();
     }
 
     /**

@@ -52,7 +52,7 @@ class NewPrintforiaOrderNotification extends Notification
     public function toSlack()
     {
         return (new SlackMessage)
-            ->content(sprintf('New Order (#%s) placed in Kindhumans', $this->order->order_id))
+            ->content(sprintf('New Printforia Order (#%s) placed in Kindhumans', $this->order->printforia_order_id))
             ->attachment(function ($attachment) {
                 $attachment->title('Order Summary', $this->order->getPermalinkOnStore())
                     ->fields([
