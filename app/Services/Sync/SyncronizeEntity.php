@@ -10,6 +10,15 @@ use Illuminate\Validation\Rule;
 class SyncronizeEntity extends BaseService
 {
     /**
+     * Undocumented function
+     *
+     * @param [type] $content_type
+     * @param [type] $element_id
+     */
+    public function __construct(public $content_type, public $element_id)
+    {}
+
+    /**
      * Service ruules
      *
      * @return array
@@ -29,11 +38,7 @@ class SyncronizeEntity extends BaseService
      */
     public function handle()
     {
-        parent::handle();
-
         SingleWooCommerceSync::dispatch($this->element_id, $this->content_type)
             ->delay(now()->addSeconds(5));
-
-
     }
 }

@@ -4,6 +4,7 @@ namespace App\Models\WooCommerce;
 
 use App\Models\Concerns\HasMetaData;
 use App\Models\Membership;
+use App\Models\Printforia\HasPrintforia;
 use App\Models\Printforia\PrintforiaOrderItem;
 use App\Models\Subscription\Subscriptable;
 use App\Models\Subscription\SubscriptionProduct;
@@ -103,6 +104,8 @@ use phpDocumentor\Reflection\Types\Null_;
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereHasSubscription($value)
  * @property-read \Illuminate\Database\Eloquent\Collection|PrintforiaOrderItem[] $printforiaItems
  * @property-read int|null $printforia_items_count
+ * @property bool|null $is_printforia
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereIsPrintforia($value)
  */
 class Product extends Model
 {
@@ -111,6 +114,7 @@ class Product extends Model
     use Subscriptable;
     use Searchable;
     use Notifiable;
+    use HasPrintforia;
 
     protected $casts = [
         'price' => 'decimal:2',

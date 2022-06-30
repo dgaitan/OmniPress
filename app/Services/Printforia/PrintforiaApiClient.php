@@ -2,6 +2,7 @@
 
 namespace App\Services\Printforia;
 
+use App\Models\WooCommerce\Order;
 use Illuminate\Support\Facades\Http;
 use InvalidArgumentException;
 
@@ -34,6 +35,56 @@ class PrintforiaApiClient
                 'Printforia Api Key is required, please check that PRINTFORIA_API_KEY exists in your .env file'
             );
         }
+    }
+
+    /**
+     * Create an Order
+     *
+     * @param Order $order
+     * @param array $items
+     * @return void
+     */
+    public function createOrder(Order $order, array $items)
+    {
+        $params = [
+            'customer_reference' => sprintf('order-%s', $order->order_id),
+            'ship_to_address' => [
+                'recipient' => sprintf(
+                    '%s %s',
+                    $order->shipping->first_name,
+                    $order->shipping->last_name
+                ),
+                'address1' => $order->shipping->address_1,
+                'address2' => $order->shipping->address_2,
+                'address3' => '',
+                'city' => $order->shipping->city,
+                'region' => $order->shipping->state,
+                'postal_code' => $order->shipping->postcode,
+                'country_code' => $order->shipping->country,
+                'email' => $order->billing->email,
+                'phone' => ''
+            ],
+            'return_to_address' => [
+                'recipient' => sprintf(
+                    '%s %s',
+                    $order->shipping->first_name,
+                    $order->shipping->last_name
+                ),
+                'address1' => $order->shipping->address_1,
+                'address2' => $order->shipping->address_2,
+                'address3' => '',
+                'city' => $order->shipping->city,
+                'region' => $order->shipping->state,
+                'postal_code' => $order->shipping->postcode,
+                'country_code' => $order->shipping->country
+            ],
+            'shipping_method' => 'standard',
+            'items' => $items
+        ];
+
+        return $this->request()->post(
+            $this->getApiUrl('orders'), $params
+        );
     }
 
     /**

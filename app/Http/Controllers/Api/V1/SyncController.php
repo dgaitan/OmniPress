@@ -3,14 +3,10 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-use App\Jobs\SingleWooCommerceSync;
-use App\Rules\SyncContentType;
 use App\Services\Sync\BulkSincronization;
 use App\Services\Sync\SyncronizeEntity;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Bus;
-use Illuminate\Support\Facades\Validator;
 
 class SyncController extends Controller
 {
@@ -27,10 +23,7 @@ class SyncController extends Controller
     public function update(Request $request)
     {
         try {
-            SyncronizeEntity::dispatch([
-                'content_type' => $request->content_type,
-                'element_id' => $request->element_id
-            ]);
+            SyncronizeEntity::dispatch($request->content_type, $request->element_id);
 
             return response()->json(['status' => 'Syncing started']);
         } catch (Exception $e) {
@@ -49,10 +42,7 @@ class SyncController extends Controller
     public function bulkSync(Request $request)
     {
         try {
-            BulkSincronization::dispatch([
-                'content_type' => $request->content_type,
-                'ids' => $request->ids
-            ]);
+            BulkSincronization::dispatch($request->content_type, $request->ids);
 
             return response()->json(['status' => 'Syncing started']);
 

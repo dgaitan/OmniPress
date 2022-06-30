@@ -3,14 +3,14 @@
 namespace App\Jobs\Printforia;
 
 use App\Models\WooCommerce\Order;
-use App\Services\Printforia\PrintforiaService;
+use App\Services\Printforia\CreatePrintforiaOrder;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class ProcessPrintforiaOrder implements ShouldQueue
+class ProcessPrintforiaOrderJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -33,6 +33,6 @@ class ProcessPrintforiaOrder implements ShouldQueue
      */
     public function handle()
     {
-        PrintforiaService::getOrCreatePrintforiaOrder($this->order);
+        CreatePrintforiaOrder::dispatchWithoutValidations($this->order);
     }
 }

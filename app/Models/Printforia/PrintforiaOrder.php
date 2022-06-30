@@ -3,6 +3,7 @@
 namespace App\Models\Printforia;
 
 use App\Models\WooCommerce\Order;
+use App\Services\Printforia\PrintforiaApiClient;
 use App\Services\Printforia\PrintforiaService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -216,11 +217,26 @@ class PrintforiaOrder extends Model
         return $shipping;
     }
 
+    /**
+     * Undocumented function
+     *
+     * @return void
+     */
     public function getItemsAsWooItems()
     {
         return PrintforiaService::getOrderItemsHasWooCommerceItems($this);
     }
 
+    public static function getOrderFromApi(string $orderId)
+    {
+        return (new PrintforiaApiClient)->getOrder($orderId);
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return array
+     */
     public static function getStatusesSlugs(): array
     {
         return collect(self::STATUSES)->map(function ($status) {

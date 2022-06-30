@@ -5,12 +5,14 @@ namespace App\Services\Sync;
 use App\Jobs\SingleWooCommerceSync;
 use App\Models\Sync;
 use App\Services\BaseService;
-use Illuminate\Bus\Batch;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Validation\Rule;
 
 class BulkSincronization extends BaseService
 {
+    public function __construct(public $content_type, public $ids)
+    {}
+
     /**
      * Service ruules
      *
@@ -31,8 +33,6 @@ class BulkSincronization extends BaseService
      */
     public function handle()
     {
-        parent::handle();
-
         $tasks = collect($this->ids)->map(function ($id) {
             return new SingleWooCommerceSync($id, $this->content_type);
         });

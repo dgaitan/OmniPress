@@ -3,21 +3,16 @@
 namespace App\Services;
 
 use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use ReflectionClass;
+use ReflectionProperty;
 
 abstract class BaseService
 {
-    protected array $data;
+    public array $_data = [];
 
-    /**
-     * Constructor
-     *
-     * @param array $data
-     */
-    public function __construct(array $data = []) {
-        $this->data = $data;
-        $this->handle();
-    }
+    public bool $withoutValidations = false;
 
     /**
      * Dispatch Service
@@ -25,9 +20,49 @@ abstract class BaseService
      * @param array $data
      * @return static
      */
-    public static function dispatch(array $data = []): static
+    public static function dispatch(...$args): static
     {
-        return new static($data);
+        return (new static(...$args))->execute();
+    }
+
+    /**
+     * Dispatch this service without validate
+     * params
+     *
+     * @param mixed ...$args
+     * @return static
+     */
+    public static function dispatchWithoutValidations(...$args): static
+    {
+        return (new static(...$args))
+            ->skipValidations()
+            ->execute();
+    }
+
+    /**
+     * Set service without validations
+     *
+     * @return self
+     */
+    public function skipValidations(): self
+    {
+        $this->withoutValidations = true;
+
+        return $this;
+    }
+
+    /**
+     * Execute the service
+     *
+     * @return static
+     */
+    public function execute(): static
+    {
+        $this->getProperties();
+        $this->validate();
+        $this->handle();
+
+        return $this;
     }
 
     /**
@@ -57,31 +92,36 @@ abstract class BaseService
      */
     public function validate(): bool
     {
-        $validator = Validator::make($this->data, $this->rules());
+        if ($this->withoutValidations) return true;
+
+        $validator = Validator::make($this->_data, $this->rules());
 
         if ($validator->fails()) {
             throw new Exception($validator->errors());
         }
 
-        $this->data = $validator->validated();
+        $this->_data = $validator->validated();
 
         return true;
     }
 
     /**
-     * Get a data like property
+     * GEt propertties
      *
-     * @param string $key
-     * @return mixed
+     * @return void
      */
-    public function __get(string $key)
+    protected function getProperties(): void
     {
-        if (! array_key_exists($key, $this->data)) {
-            throw new Exception(
-                sprintf('Invalid Argument Call in Service %s', static::class)
-            );
+        if ($this->withoutValidations) return;
+
+        $class = new ReflectionClass($this);
+        $props = $class->getProperties(ReflectionProperty::IS_PUBLIC | ReflectionProperty::IS_PROTECTED);
+
+        if ($props) {
+            foreach ($props as $prop) {
+                $this->_data[$prop->getName()] = $this->{$prop->getName()};
+            }
         }
 
-        return $this->data[$key];
     }
 }
