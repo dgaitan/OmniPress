@@ -56,6 +56,7 @@ class Product extends BaseObject implements DataObjectContract
         $this->array('brands');
         $this->array('settings');
         $this->array('product_variations');
+        $this->boolean('is_printforia');
     }
 
     /**

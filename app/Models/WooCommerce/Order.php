@@ -443,6 +443,17 @@ class Order extends Model
     }
 
     /**
+     * Find an order
+     *
+     * @param string|integer $orderId
+     * @return Order|null
+     */
+    public static function findByOrderId(string|int $orderId): Order|null
+    {
+        return self::whereOrderId($orderId)->first();
+    }
+
+    /**
      * Convert Order to Array
      *
      * @param  bool  $isSingle

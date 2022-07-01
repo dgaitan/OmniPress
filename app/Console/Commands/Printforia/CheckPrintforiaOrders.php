@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands\Printforia;
 
-use App\Jobs\Printforia\CheckPrintforiaOrders as PrintforiaCheckPrintforiaOrders;
+use App\Jobs\Printforia\CheckPrintforiaOrdersJob;
 use Illuminate\Console\Command;
 
 class CheckPrintforiaOrders extends Command
@@ -28,6 +28,6 @@ class CheckPrintforiaOrders extends Command
      */
     public function handle()
     {
-        PrintforiaCheckPrintforiaOrders::dispatch();
+        CheckPrintforiaOrdersJob::dispatch();
     }
 }
