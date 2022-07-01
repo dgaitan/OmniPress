@@ -32,13 +32,15 @@ class SyncOrdersIfCompleted implements ShouldQueue
      */
     public function handle()
     {
-        if ($this->printforiaOrder->status !== 'shipped') {
+        $order = PrintforiaOrder::find($this->printforiaOrder->id);
+
+        if (!in_array($order->status, ['shipped', 'completed'])) {
             return;
         }
 
         $api = \App\Services\WooCommerce\WooCommerceService::make();
         $api->orders()->update(
-            $this->printforiaOrder->order->order_id,
+            $order->order_id,
             ['status' => 'completed'],
             true
         );
