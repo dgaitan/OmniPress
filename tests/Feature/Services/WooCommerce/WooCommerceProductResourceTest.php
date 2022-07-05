@@ -2,11 +2,14 @@
 
 namespace Tests\Feature\Services\WooCommerce;
 
+use App\Models\WooCommerce\Category;
 use App\Models\WooCommerce\Product as WooCommerceProduct;
+use App\Models\WooCommerce\ProductImage;
 use App\Services\WooCommerce\DataObjects\Product;
 use App\Services\WooCommerce\Resources\ProductResource;
 use App\Services\WooCommerce\WooCommerceService;
 use Carbon\Carbon;
+use Cknow\Money\Money;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
 use Tests\Feature\Http\BaseHttp;
@@ -85,5 +88,20 @@ class WooCommerceProductResourceTest extends BaseHttp
         $this->assertInstanceOf(Carbon::class, $product->date_created);
         $this->assertEquals(2, $product->categories->count());
         $this->assertEquals(2, $product->images->count());
+
+        $category = $product->categories()->whereWooCategoryId(9)->first();
+        $this->assertInstanceOf(Category::class, $category);
+        $this->assertEquals(9, $category->woo_category_id);
+        $this->assertEquals('Clothing', $category->name);
+        $this->assertEquals('clothing', $category->slug);
+
+        $featuredImage = $product->featuredImage();
+        $this->assertInstanceOf(ProductImage::class, $featuredImage);
+        $this->assertEquals('https://example.com/wp-content/uploads/2017/03/T_2_front-4.jpg', $featuredImage->src);
+
+        // testing money
+        $this->assertEquals(2199, $product->price);
+        $this->assertInstanceOf(Money::class, $product->getMoneyValue('price'));
+        $this->assertEquals('$21.99', $product->getMoneyValue('price')->format());
     }
 }
