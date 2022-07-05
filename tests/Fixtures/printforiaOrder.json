@@ -1,0 +1,45 @@
+{
+    "id": "V1StGXR8_Z5jdHi6B-myT",
+    "customer_reference": "order-1000",
+    "status": "created",
+    "ship_to_address": {
+      "recipient": "John H. Watson",
+      "address1": "221 Baker Street",
+      "address2": "Unit B",
+      "address3": "",
+      "city": "Washougal",
+      "region": "WA",
+      "postal_code": "98671",
+      "country_code": "US",
+      "email": "john.watson@example.com",
+      "phone": "555-555-5555"
+    },
+    "return_to_address": {
+      "recipient": "Returns Department",
+      "address1": "4060 South Grant Street",
+      "address2": "",
+      "address3": "",
+      "city": "Washougal",
+      "region": "WA",
+      "postal_code": "98671",
+      "country_code": "US"
+    },
+    "shipping_method": "standard",
+    "ioss_number": "3212345",
+    "items": [
+      {
+        "id": "Uakgb_J5m9g-0JDMbcJqLJ",
+        "customer_item_reference": "item-1",
+        "sku": "gildan-5000-black-l",
+        "quantity": 1,
+        "description": "One Life, One World - T-Shirt - Large",
+        "prints": [
+          {
+            "image_url": "http://example.com/image.png",
+            "mockup_url": "http://example.com/mockup.png",
+            "location": "front"
+          }
+        ]
+      }
+    ]
+}

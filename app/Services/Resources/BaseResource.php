@@ -101,6 +101,59 @@ abstract class BaseResource
     }
 
     /**
+     * Get an element
+     *
+     * @param  int|string  $id
+     * @return DataObjectContract
+     */
+    public function get(int|string $id): DataObjectContract|null
+    {
+        $response = $this->service->request()->get(
+            sprintf('%s/%s', $this->endpoint, $id)
+        );
+
+        if (! $response->ok()) {
+            return null;
+        }
+
+        return $this->factory::make(attributes: (array) $response->json());
+    }
+
+    /**
+     * Collect elements
+     *
+     * @param  array  $params
+     * @return Collection|null
+     */
+    public function collect(array $params = []): Collection|null
+    {
+        if (! isset($params['per_page'])) {
+            $params['per_page'] = 100;
+        }
+
+        $response = $this->service->request()->get($this->endpoint, $params);
+
+        if ($response->failed()) {
+            return null;
+        }
+
+        return collect($response->json())->map(fn (array $item) => $this->factory::make(
+            attributes: $item
+        ));
+    }
+
+    public function getAndSync(int|string $id): Model|null
+    {
+        $order = $this->get($id);
+
+        if (is_null($order)) {
+            return null;
+        }
+
+        return $order->sync();
+    }
+
+    /**
      * Get all and sync.
      *
      * Basically Sync all elements

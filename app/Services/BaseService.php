@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use Exception;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use ReflectionClass;
 use ReflectionProperty;
@@ -17,7 +16,7 @@ abstract class BaseService
     /**
      * Dispatch Service
      *
-     * @param array $data
+     * @param  array  $data
      * @return static
      */
     public static function dispatch(...$args): static
@@ -29,7 +28,7 @@ abstract class BaseService
      * Dispatch this service without validate
      * params
      *
-     * @param mixed ...$args
+     * @param  mixed  ...$args
      * @return static
      */
     public static function dispatchWithoutValidations(...$args): static
@@ -88,11 +87,13 @@ abstract class BaseService
     /**
      * Validate
      *
-     * @return boolean
+     * @return bool
      */
     public function validate(): bool
     {
-        if ($this->withoutValidations) return true;
+        if ($this->withoutValidations) {
+            return true;
+        }
 
         $validator = Validator::make($this->_data, $this->rules());
 
@@ -112,7 +113,9 @@ abstract class BaseService
      */
     protected function getProperties(): void
     {
-        if ($this->withoutValidations) return;
+        if ($this->withoutValidations) {
+            return;
+        }
 
         $class = new ReflectionClass($this);
         $props = $class->getProperties(ReflectionProperty::IS_PUBLIC | ReflectionProperty::IS_PROTECTED);
@@ -122,6 +125,5 @@ abstract class BaseService
                 $this->_data[$prop->getName()] = $this->{$prop->getName()};
             }
         }
-
     }
 }

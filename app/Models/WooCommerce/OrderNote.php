@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $note
  * @property bool $customer_note
  * @property bool $added_by_user
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|OrderNote newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|OrderNote newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|OrderNote query()

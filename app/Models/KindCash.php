@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Cache;
  * @property int $membership_id
  * @property float $points
  * @property float|null $last_earned
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|KindCash newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|KindCash newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|KindCash query()
@@ -25,6 +26,7 @@ use Illuminate\Support\Facades\Cache;
  * @method static \Illuminate\Database\Eloquent\Builder|KindCash wherePoints($value)
  * @method static \Illuminate\Database\Eloquent\Builder|KindCash whereUpdatedAt($value)
  * @mixin \Eloquent
+ *
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\KindCashLog[] $logs
  * @property-read int|null $logs_count
  * @property-read \App\Models\Membership|null $membership

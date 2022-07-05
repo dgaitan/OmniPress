@@ -18,7 +18,7 @@ trait HasMoney
     /**
      * Get MOney Value
      *
-     * @param integer $amount
+     * @param  int  $amount
      * @return object
      */
     public function getAsMoney(int $amount): Money
@@ -29,8 +29,8 @@ trait HasMoney
     /**
      * Parse a value to a integer
      *
-     * @param mixed $value
-     * @return integer
+     * @param  mixed  $value
+     * @return int
      */
     public static function valueToMoney(mixed $value): int
     {

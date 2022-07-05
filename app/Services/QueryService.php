@@ -3,13 +3,11 @@
 namespace App\Services;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 
 class QueryService
 {
     public static function walkTrough(Builder $query, $callback)
     {
-
         $offset = 0;
         $perPage = 100;
         $page = 1;

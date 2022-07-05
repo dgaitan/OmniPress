@@ -14,7 +14,8 @@ class SyncOrderLineItemProducts extends BaseService
      * @param [type] $element_id
      */
     public function __construct(public Order $order)
-    {}
+    {
+    }
 
     /**
      * Handle the Service

@@ -21,7 +21,8 @@ class ProcessPrintforiaOrder extends BaseService
     public function __construct(
         public Order $order,
         public PrintforiaOrder $printforiaOrder
-    ) {}
+    ) {
+    }
 
     /**
      * Handle the Service

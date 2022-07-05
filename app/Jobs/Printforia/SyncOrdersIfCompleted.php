@@ -34,7 +34,7 @@ class SyncOrdersIfCompleted implements ShouldQueue
     {
         $order = PrintforiaOrder::find($this->printforiaOrder->id);
 
-        if (!in_array($order->status, ['shipped', 'completed'])) {
+        if (! in_array($order->status, ['shipped', 'completed'])) {
             return;
         }
 

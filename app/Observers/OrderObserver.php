@@ -23,7 +23,7 @@ class OrderObserver
 
         Bus::chain([
             new OrderWasSyncedJob($order),
-            new ProcessPrintforiaOrderJob($order)
+            new ProcessPrintforiaOrderJob($order),
         ])->dispatch();
     }
 
