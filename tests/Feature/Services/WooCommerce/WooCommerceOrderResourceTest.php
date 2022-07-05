@@ -34,7 +34,7 @@ class WooCommerceOrderResourceTest extends BaseHttp
         $api = WooCommerceService::make();
 
         Http::fake([
-            '*' => Http::response(
+            'http://host.docker.internal:10003/wp-json/wc/v3/orders/727' => Http::response(
                 body: $this->fixture('WooCommerce/OrderDetail'),
                 status: 200
             ),
@@ -53,7 +53,7 @@ class WooCommerceOrderResourceTest extends BaseHttp
         $api = WooCommerceService::make();
 
         Http::fake([
-            '*' => Http::response(
+            'http://host.docker.internal:10003/wp-json/wc/v3/orders/727' => Http::response(
                 body: $this->fixture('WooCommerce/OrderDetail'),
                 status: 408
             ),
@@ -69,7 +69,7 @@ class WooCommerceOrderResourceTest extends BaseHttp
         $api = WooCommerceService::make();
 
         Http::fake([
-            '*' => Http::response(
+            'http://host.docker.internal:10003/wp-json/wc/v3/orders/727' => Http::response(
                 body: $this->fixture('WooCommerce/OrderDetail'),
                 status: 200
             ),
@@ -88,7 +88,7 @@ class WooCommerceOrderResourceTest extends BaseHttp
         $api = WooCommerceService::make();
 
         Http::fake([
-            '*' => Http::response(
+            'http://host.docker.internal:10003/wp-json/wc/v3/orders*' => Http::response(
                 body: $this->fixture('WooCommerce/OrderList'),
                 status: 200
             ),
@@ -106,7 +106,7 @@ class WooCommerceOrderResourceTest extends BaseHttp
         $api = WooCommerceService::make();
 
         Http::fake([
-            '*' => Http::response(
+            'http://host.docker.internal:10003/wp-json/wc/v3/orders*' => Http::response(
                 body: $this->fixture('WooCommerce/OrderList'),
                 status: 408
             ),

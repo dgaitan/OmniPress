@@ -53,12 +53,12 @@ class WooCommerceProductResourceTest extends BaseHttp
         $this->assertEquals(2, count($product->images));
     }
 
-    public function test_exception_when_retrieve_an_order_detail()
+    public function test_exception_when_retrieve_a_product_detail()
     {
         $api = WooCommerceService::make();
 
         Http::fake([
-            '*' => Http::response(
+            'http://host.docker.internal:10003/wp-json/wc/v3/products/794' => Http::response(
                 body: $this->fixture('WooCommerce/ProductDetail'),
                 status: 408
             ),
@@ -75,7 +75,7 @@ class WooCommerceProductResourceTest extends BaseHttp
         $api = WooCommerceService::make();
 
         Http::fake([
-            '*' => Http::response(
+            'http://host.docker.internal:10003/wp-json/wc/v3/products/794' => Http::response(
                 body: $this->fixture('WooCommerce/ProductDetail'),
                 status: 200
             ),
@@ -104,4 +104,18 @@ class WooCommerceProductResourceTest extends BaseHttp
         $this->assertInstanceOf(Money::class, $product->getMoneyValue('price'));
         $this->assertEquals('$21.99', $product->getMoneyValue('price')->format());
     }
+
+    // public function test_product_variable_must_have_the_right_attributes()
+    // {
+    //     $api = WooCommerceService::make();
+
+    //     Http::fake([
+    //         '*' => Http::response(
+    //             body: $this->fixture('WooCommerce/ProductDetail'),
+    //             status: 200
+    //         ),
+    //     ]);
+
+
+    // }
 }

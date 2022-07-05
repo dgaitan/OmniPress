@@ -108,7 +108,7 @@ abstract class BaseResource
      */
     public function get(int|string $id): DataObjectContract|null
     {
-        $response = $this->service->request()->get(
+        $response = $this->service->get(
             sprintf('%s/%s', $this->endpoint, $id)
         );
 
@@ -131,7 +131,7 @@ abstract class BaseResource
             $params['per_page'] = 100;
         }
 
-        $response = $this->service->request()->get($this->endpoint, $params);
+        $response = $this->service->get($this->endpoint, $params);
 
         if ($response->failed()) {
             return null;
