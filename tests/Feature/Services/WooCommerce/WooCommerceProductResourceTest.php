@@ -105,17 +105,72 @@ class WooCommerceProductResourceTest extends BaseHttp
         $this->assertEquals('$21.99', $product->getMoneyValue('price')->format());
     }
 
-    // public function test_product_variable_must_have_the_right_attributes()
-    // {
-    //     $api = WooCommerceService::make();
+    public function test_product_variations_api_response_is_correct()
+    {
+        $api = WooCommerceService::make();
 
-    //     Http::fake([
-    //         '*' => Http::response(
-    //             body: $this->fixture('WooCommerce/ProductDetail'),
-    //             status: 200
-    //         ),
-    //     ]);
+        Http::fake([
+            'http://host.docker.internal:10003/wp-json/wc/v3/products/539489' => Http::response(
+                body: $this->fixture('WooCommerce/ProductVariableDetail'),
+                status: 200
+            ),
+        ]);
 
+        $product = $api->get('products/539489');
 
-    // }
+        $this->assertTrue($product->ok());
+        $this->assertEquals('variable', $product->object()->type);
+        $this->assertEquals(6, count($product->object()->product_variations));
+    }
+
+    public function test_product_variation_api_resource_is_correct()
+    {
+        $api = WooCommerceService::make();
+
+        Http::fake([
+            'http://host.docker.internal:10003/wp-json/wc/v3/products/539489' => Http::response(
+                body: $this->fixture('WooCommerce/ProductVariableDetail'),
+                status: 200
+            ),
+        ]);
+
+        $product = $api->products()->get(539489);
+
+        $this->assertInstanceOf(Product::class, $product);
+        $this->assertEquals('variable', $product->type);
+        $this->assertEquals(6, count($product->product_variations));
+    }
+
+    public function test_product_variation_sync()
+    {
+        $this->disableScout();
+        $api = WooCommerceService::make();
+
+        Http::fake([
+            'http://host.docker.internal:10003/wp-json/wc/v3/products/539489' => Http::response(
+                body: $this->fixture('WooCommerce/ProductVariableDetail'),
+                status: 200
+            ),
+        ]);
+
+        $product = $api->products()->getAndSync(539489);
+
+        $this->assertInstanceOf(WooCommerceProduct::class, $product);
+        $this->assertEquals('variable', $product->type);
+        $this->assertTrue($product->variations->isNotEmpty());
+        $this->assertEquals(6, $product->variations->count());
+
+        // it must exists a product variation with this slug
+        $this->assertTrue($product->variations()->whereSlug('kinja-tee-ocean-x-small')->exists());
+
+        $productVariation = $product->variations()
+            ->whereSlug('kinja-tee-ocean-x-small')
+            ->first();
+
+        $this->assertInstanceOf(WooCommerceProduct::class, $productVariation);
+        $this->assertEquals(539489, $productVariation->parent->product_id);
+        $this->assertEquals('Kinja Tee - Ocean - X-Small', $productVariation->name);
+        $this->assertEquals('variation', $productVariation->type);
+
+    }
 }
