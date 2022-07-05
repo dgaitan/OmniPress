@@ -6,6 +6,7 @@ use App\Models\WooCommerce\Order as WooCommerceOrder;
 use App\Services\WooCommerce\DataObjects\Order;
 use App\Services\WooCommerce\Resources\OrderResource;
 use App\Services\WooCommerce\WooCommerceService;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
@@ -77,6 +78,9 @@ class WooCommerceOrderResourceTest extends BaseHttp
         $order = $api->orders()->getAndSync(727);
 
         $this->assertInstanceOf(WooCommerceOrder::class, $order);
+        $this->assertEquals(727, $order->order_id);
+        $this->assertInstanceOf(Carbon::class, $order->date_created);
+        $this->assertEquals(2, $order->items->count());
     }
 
     public function test_getting_order_list()
