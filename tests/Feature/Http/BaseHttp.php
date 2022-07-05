@@ -24,4 +24,12 @@ class BaseHttp extends TestCase
             associative: true,
         );
     }
+
+    public function getUrl(string $endpoint): string
+    {
+        return sprintf(
+            'http://host.docker.internal:10003/wp-json/wc/v3/%s',
+            $endpoint
+        );
+    }
 }
