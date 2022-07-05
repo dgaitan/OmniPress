@@ -26,6 +26,8 @@ class OrderRequestsTest extends TestCase
 
         $this->assertTrue($request->ok());
         $this->assertEquals(200, $request->status());
+        $this->assertEquals('V1StGXR8_Z5jdHi6B-myT', $request->object()->id);
+        $this->assertEquals('created', $request->object()->status);
     }
 
     public function fixture(string $name): array
