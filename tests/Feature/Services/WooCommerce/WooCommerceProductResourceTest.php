@@ -171,6 +171,5 @@ class WooCommerceProductResourceTest extends BaseHttp
         $this->assertEquals(539489, $productVariation->parent->product_id);
         $this->assertEquals('Kinja Tee - Ocean - X-Small', $productVariation->name);
         $this->assertEquals('variation', $productVariation->type);
-
     }
 }
