@@ -37,7 +37,7 @@ class WooCommerceOrderResourceTest extends BaseHttp
             '*' => Http::response(
                 body: $this->fixture('WooCommerce/OrderDetail'),
                 status: 200
-            )
+            ),
         ]);
 
         $order = $api->orders()->get(727);
@@ -56,7 +56,7 @@ class WooCommerceOrderResourceTest extends BaseHttp
             '*' => Http::response(
                 body: $this->fixture('WooCommerce/OrderDetail'),
                 status: 408
-            )
+            ),
         ]);
 
         $order = $api->orders()->get(727);
@@ -72,7 +72,7 @@ class WooCommerceOrderResourceTest extends BaseHttp
             '*' => Http::response(
                 body: $this->fixture('WooCommerce/OrderDetail'),
                 status: 200
-            )
+            ),
         ]);
 
         $order = $api->orders()->getAndSync(727);
@@ -91,7 +91,7 @@ class WooCommerceOrderResourceTest extends BaseHttp
             '*' => Http::response(
                 body: $this->fixture('WooCommerce/OrderList'),
                 status: 200
-            )
+            ),
         ]);
 
         $orders = $api->orders()->collect();
@@ -109,7 +109,7 @@ class WooCommerceOrderResourceTest extends BaseHttp
             '*' => Http::response(
                 body: $this->fixture('WooCommerce/OrderList'),
                 status: 408
-            )
+            ),
         ]);
 
         $orders = $api->orders()->collect();

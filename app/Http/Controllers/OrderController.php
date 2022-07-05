@@ -278,7 +278,6 @@ class OrderController extends Controller
                     $query->orWhere('order_id', 'ilike', "%$s%");
                     $query->orWhere('total', 'ilike', "%$s%");
                 });
-
             } else {
                 $orders->where($search->key, 'ilike', "$search->s%");
             }

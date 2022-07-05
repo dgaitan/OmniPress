@@ -10,7 +10,6 @@ class AssignOrderDonationToCustomer extends BaseService
 {
     public function __construct(public $order_id)
     {
-
     }
 
     /**
@@ -21,7 +20,7 @@ class AssignOrderDonationToCustomer extends BaseService
     public function rules(): array
     {
         return [
-            'order_id' => ['required', 'integer']
+            'order_id' => ['required', 'integer'],
         ];
     }
 
@@ -52,7 +51,7 @@ class AssignOrderDonationToCustomer extends BaseService
                 $userDonation = UserDonation::create([
                     'customer_id' => $order->customer->id,
                     'cause_id' => $donation->cause->id,
-                    'donation' => 0
+                    'donation' => 0,
                 ]);
             }
 

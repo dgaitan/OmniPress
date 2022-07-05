@@ -74,7 +74,7 @@ class WooCommerceService implements ServiceContract
     /**
      * Get Endpoint url
      *
-     * @param string $endpoint
+     * @param  string  $endpoint
      * @return string
      */
     public function getEndpointUrl(string $endpoint): string
@@ -85,7 +85,7 @@ class WooCommerceService implements ServiceContract
     /**
      * Get an element
      *
-     * @param string $endpoint
+     * @param  string  $endpoint
      * @return Response
      */
     public function get(string $endpoint, array $query = []): Response
@@ -99,8 +99,8 @@ class WooCommerceService implements ServiceContract
     /**
      * Post Request
      *
-     * @param string $endpoint
-     * @param array $data
+     * @param  string  $endpoint
+     * @param  array  $data
      * @return Response
      */
     public function post(string $endpoint, array $data = []): Response

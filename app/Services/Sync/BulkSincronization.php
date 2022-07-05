@@ -11,7 +11,8 @@ use Illuminate\Validation\Rule;
 class BulkSincronization extends BaseService
 {
     public function __construct(public $content_type, public $ids)
-    {}
+    {
+    }
 
     /**
      * Service ruules
@@ -22,7 +23,7 @@ class BulkSincronization extends BaseService
     {
         return [
             'content_type' => ['required', 'string', Rule::in(Sync::RESOURCES_TYPES)],
-            'ids' => ['required', 'array']
+            'ids' => ['required', 'array'],
         ];
     }
 

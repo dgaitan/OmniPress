@@ -39,6 +39,5 @@ class CheckPrintforiaOrdersJob implements ShouldQueue
                 SyncOrdersIfCompleted::dispatch($printforiaOrder);
             }
         );
-
     }
 }

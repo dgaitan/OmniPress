@@ -16,7 +16,8 @@ class SyncronizeEntity extends BaseService
      * @param [type] $element_id
      */
     public function __construct(public $content_type, public $element_id)
-    {}
+    {
+    }
 
     /**
      * Service ruules
@@ -27,7 +28,7 @@ class SyncronizeEntity extends BaseService
     {
         return [
             'content_type' => ['required', 'string', Rule::in(Sync::RESOURCES_TYPES)],
-            'element_id' => ['required', 'integer']
+            'element_id' => ['required', 'integer'],
         ];
     }
 

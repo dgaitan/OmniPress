@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $to
  * @property int $amount
  * @property int $total_orders
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|CauseDonation newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|CauseDonation newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|CauseDonation query()
@@ -30,6 +31,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|CauseDonation whereTotalOrders($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CauseDonation whereUpdatedAt($value)
  * @mixin \Eloquent
+ *
  * @property-read Cause|null $cause
  */
 class CauseDonation extends Model

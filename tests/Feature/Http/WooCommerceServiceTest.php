@@ -3,11 +3,10 @@
 namespace Tests\Feature\Http;
 
 use App\Services\WooCommerce\WooCommerceService;
+use Automattic\WooCommerce\Client as WooCommerce;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
-use Tests\Feature\Http\BaseHttp;
-use Automattic\WooCommerce\Client as WooCommerce;
 
 class WooCommerceServiceTest extends BaseHttp
 {
@@ -53,10 +52,10 @@ class WooCommerceServiceTest extends BaseHttp
             'https://api.com' => Http::response(
                 body: [
                     'status' => 'ok',
-                    'message' => 'Have fun!'
+                    'message' => 'Have fun!',
                 ],
                 status: 200
-            )
+            ),
         ]);
 
         $res = $api->request()->get('https://api.com');
@@ -73,7 +72,7 @@ class WooCommerceServiceTest extends BaseHttp
             $this->getEndpointUrl('orders/727') => Http::response(
                 body: $this->fixture('WooCommerce/OrderDetail'),
                 status: 200
-            )
+            ),
         ]);
 
         $res = $api->get('orders/727');

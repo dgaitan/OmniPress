@@ -34,13 +34,15 @@ trait HasPrintforia
         $prints = [];
         $printsData = $this->getMetaValue('_printforia_prints_field');
 
-        if (! $printsData) return $prints;
+        if (! $printsData) {
+            return $prints;
+        }
 
         foreach ($printsData as $print) {
             $prints[] = [
                 'image_url' => $print['image_url'],
                 'mockup_url' => $print['mockup_url'],
-                'location' => $print['location']
+                'location' => $print['location'],
             ];
         }
 

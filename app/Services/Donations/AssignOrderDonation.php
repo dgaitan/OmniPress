@@ -10,7 +10,8 @@ use App\Services\BaseService;
 class AssignOrderDonation extends BaseService
 {
     public function __construct(public $order_id)
-    {}
+    {
+    }
 
     /**
      * Rules
@@ -20,7 +21,7 @@ class AssignOrderDonation extends BaseService
     public function rules(): array
     {
         return [
-            'order_id' => ['required', 'integer']
+            'order_id' => ['required', 'integer'],
         ];
     }
 
@@ -39,7 +40,7 @@ class AssignOrderDonation extends BaseService
                 OrderDonation::updateOrCreate([
                     'cause_id' => $cause->id,
                     'order_id' => $order->id,
-                    'amount' => OrderDonation::valueToMoney($amount)
+                    'amount' => OrderDonation::valueToMoney($amount),
                 ]);
             }
         }
@@ -59,13 +60,12 @@ class AssignOrderDonation extends BaseService
                     OrderDonation::updateOrCreate([
                         'cause_id' => $cause->id,
                         'order_id' => $order->id,
-                        'amount' => OrderDonation::valueToMoney($donation)
+                        'amount' => OrderDonation::valueToMoney($donation),
                     ]);
                 }
 
                 $currentIndex++;
             }
         }
-
     }
 }

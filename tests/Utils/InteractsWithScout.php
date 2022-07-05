@@ -50,7 +50,7 @@ trait InteractsWithScout
             })
             ->toArray();
 
-        if (!empty($indexes)) {
+        if (! empty($indexes)) {
             \Storage::delete($indexes);
         }
 
@@ -71,7 +71,7 @@ trait InteractsWithScout
             /**
              * Always return a null engine
              *
-             * @param null|string $name
+             * @param  null|string  $name
              * @return \Laravel\Scout\Engines\Engine
              */
             public function engine($name = null)

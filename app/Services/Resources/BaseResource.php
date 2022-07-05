@@ -103,7 +103,7 @@ abstract class BaseResource
     /**
      * Get an element
      *
-     * @param integer|string $id
+     * @param  int|string  $id
      * @return DataObjectContract
      */
     public function get(int|string $id): DataObjectContract|null
@@ -122,7 +122,7 @@ abstract class BaseResource
     /**
      * Collect elements
      *
-     * @param array $params
+     * @param  array  $params
      * @return Collection|null
      */
     public function collect(array $params = []): Collection|null

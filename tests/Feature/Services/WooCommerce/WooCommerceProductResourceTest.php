@@ -6,11 +6,11 @@ use App\Models\WooCommerce\Product as WooCommerceProduct;
 use App\Services\WooCommerce\DataObjects\Product;
 use App\Services\WooCommerce\Resources\ProductResource;
 use App\Services\WooCommerce\WooCommerceService;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
 use Tests\Feature\Http\BaseHttp;
 use Tests\Utils\InteractsWithScout;
-use Carbon\Carbon;
 
 class WooCommerceProductResourceTest extends BaseHttp
 {
@@ -36,7 +36,7 @@ class WooCommerceProductResourceTest extends BaseHttp
             '*' => Http::response(
                 body: $this->fixture('WooCommerce/ProductDetail'),
                 status: 200
-            )
+            ),
         ]);
 
         $product = $api->products()->get(794);
@@ -58,7 +58,7 @@ class WooCommerceProductResourceTest extends BaseHttp
             '*' => Http::response(
                 body: $this->fixture('WooCommerce/ProductDetail'),
                 status: 408
-            )
+            ),
         ]);
 
         $products = $api->products()->get(794);
@@ -75,7 +75,7 @@ class WooCommerceProductResourceTest extends BaseHttp
             '*' => Http::response(
                 body: $this->fixture('WooCommerce/ProductDetail'),
                 status: 200
-            )
+            ),
         ]);
 
         $product = $api->products()->getAndSync(794);

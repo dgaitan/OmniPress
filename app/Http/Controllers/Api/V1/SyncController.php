@@ -45,7 +45,6 @@ class SyncController extends Controller
             BulkSincronization::dispatch($request->content_type, $request->ids);
 
             return response()->json(['status' => 'Syncing started']);
-
         } catch (Exception $e) {
             return response()->json([
                 'errors' => json_decode($e->getMessage()),

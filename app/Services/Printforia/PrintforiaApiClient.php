@@ -41,8 +41,8 @@ class PrintforiaApiClient
     /**
      * Create an Order
      *
-     * @param Order $order
-     * @param array $items
+     * @param  Order  $order
+     * @param  array  $items
      * @return void
      */
     public function createOrder(Order $order, array $items)
@@ -63,7 +63,7 @@ class PrintforiaApiClient
                 'postal_code' => $order->shipping->postcode,
                 'country_code' => $order->shipping->country,
                 'email' => $order->billing->email,
-                'phone' => ''
+                'phone' => '',
             ],
             'return_to_address' => [
                 'recipient' => sprintf(
@@ -77,10 +77,10 @@ class PrintforiaApiClient
                 'city' => $order->shipping->city,
                 'region' => $order->shipping->state,
                 'postal_code' => $order->shipping->postcode,
-                'country_code' => $order->shipping->country
+                'country_code' => $order->shipping->country,
             ],
             'shipping_method' => 'standard',
-            'items' => $items
+            'items' => $items,
         ];
 
         return $this->request()->post(

@@ -29,10 +29,10 @@ class PrintforiaApiClientTest extends BaseHttp
             'https://api.com' => Http::response(
                 body: [
                     'status' => 'ok',
-                    'message' => 'Have fun!'
+                    'message' => 'Have fun!',
                 ],
                 status: 200
-            )
+            ),
         ]);
 
         $request = $api->request()->get('https://api.com');
@@ -61,7 +61,7 @@ class PrintforiaApiClientTest extends BaseHttp
             'https://api-sandbox.printforia.com/v2/orders/V1StGXR8_Z5jdHi6B-myT' => Http::response(
                 body: $this->fixture('printforiaOrder'),
                 status: 200
-            )
+            ),
         ]);
 
         $api = new PrintforiaApiClient;

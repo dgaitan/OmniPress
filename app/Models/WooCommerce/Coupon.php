@@ -25,6 +25,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property bool $individual_use
  * @property mixed $settings
  * @property array|null $meta_data
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Coupon newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Coupon newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Coupon query()
@@ -44,8 +45,11 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Coupon whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Coupon whereUsageCount($value)
  * @mixin \Eloquent
+ *
  * @property int|null $service_id
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Coupon whereServiceId($value)
+ *
  * @property-read Service|null $service
  */
 class Coupon extends Model

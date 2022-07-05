@@ -30,7 +30,8 @@ class DonationsService
      *
      * @return void
      */
-    public static function calculateAllCustomerDonations(): void {
+    public static function calculateAllCustomerDonations(): void
+    {
         QueryService::walkTrough(Customer::query(), function ($customer) {
             DonationsService::calculateCustomerDonations($customer);
         });
@@ -39,7 +40,7 @@ class DonationsService
     /**
      * Load Donations for an order
      *
-     * @param Order $order
+     * @param  Order  $order
      * @return Order
      */
     public static function loadOrderDonations(Order $order): Order
@@ -55,7 +56,7 @@ class DonationsService
                 OrderDonation::updateOrCreate([
                     'cause_id' => $cause->id,
                     'order_id' => $order->id,
-                    'amount' => OrderDonation::valueToMoney($amount)
+                    'amount' => OrderDonation::valueToMoney($amount),
                 ]);
             }
         }
@@ -75,7 +76,7 @@ class DonationsService
                     OrderDonation::updateOrCreate([
                         'cause_id' => $cause->id,
                         'order_id' => $order->id,
-                        'amount' => OrderDonation::valueToMoney($donation)
+                        'amount' => OrderDonation::valueToMoney($donation),
                     ]);
                 }
 
@@ -289,7 +290,7 @@ class DonationsService
                 $userDonation = UserDonation::create([
                     'customer_id' => $order->customer->id,
                     'cause_id' => $donation->cause->id,
-                    'donation' => 0
+                    'donation' => 0,
                 ]);
             }
 

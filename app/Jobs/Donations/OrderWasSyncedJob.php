@@ -8,7 +8,6 @@ use App\Services\Donations\AssignOrderDonation;
 use App\Services\Donations\AssignOrderDonationToCustomer;
 use App\Services\Sync\Orders\SyncOrderLineItemProducts;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;

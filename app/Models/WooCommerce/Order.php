@@ -53,6 +53,7 @@ use Laravel\Scout\Searchable;
  * @property int $order_id
  * @property int|null $customer_id
  * @property-read \App\Models\WooCommerce\Customer|null $customer
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Order newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Order newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Order query()
@@ -89,33 +90,44 @@ use Laravel\Scout\Searchable;
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereVersion($value)
  * @mixin \Eloquent
+ *
  * @property int|null $service_id
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereServiceId($value)
+ *
  * @property mixed|null $tax_lines
  * @property mixed|null $shipping_lines
  * @property mixed|null $coupon_lines
  * @property mixed|null $fee_lines
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\WooCommerce\OrderLine[] $items
  * @property-read int|null $items_count
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereCouponLines($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereFeeLines($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereShippingLines($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereTaxLines($value)
+ *
  * @property int|null $membership_id
  * @property bool $has_membership
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereHasMembership($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereMembershipId($value)
+ *
  * @property int|null $payment_id
  * @property-read \App\Models\WooCommerce\PaymentMethod|null $paymentMethod
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Order wherePaymentId($value)
+ *
  * @property array|null $giftcards
  * @property string|null $giftcard_total
  * @property int|null $kindhuman_subscription_id
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
  * @property-read int|null $notifications_count
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereGiftcardTotal($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereGiftcards($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereKindhumanSubscriptionId($value)
+ *
  * @property-read PrintforiaOrder|null $printforiaOrder
  * @property-read \Illuminate\Database\Eloquent\Collection|OrderDonation[] $donations
  * @property-read int|null $donations_count
@@ -276,12 +288,12 @@ class Order extends Model
                     'cause' => [
                         'id' => $donation->cause->id,
                         'name' => $donation->cause->name,
-                        'type' => $donation->cause->getCauseType()
+                        'type' => $donation->cause->getCauseType(),
                     ],
                     'amount' => [
                         'value' => $donation->amount,
-                        'format' => $donation->getMoneyValue('amount')->format()
-                    ]
+                        'format' => $donation->getMoneyValue('amount')->format(),
+                    ],
                 ];
             });
         });
@@ -445,7 +457,7 @@ class Order extends Model
     /**
      * Find an order
      *
-     * @param string|integer $orderId
+     * @param  string|int  $orderId
      * @return Order|null
      */
     public static function findByOrderId(string|int $orderId): Order|null
