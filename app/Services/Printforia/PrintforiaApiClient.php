@@ -3,6 +3,7 @@
 namespace App\Services\Printforia;
 
 use App\Models\WooCommerce\Order;
+use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
 use InvalidArgumentException;
 
@@ -118,7 +119,7 @@ class PrintforiaApiClient
     /**
      * INitialize Api Request
      */
-    public function request()
+    public function request(): PendingRequest
     {
         return Http::withHeaders([
             'X-Token' => $this->apiKey,
