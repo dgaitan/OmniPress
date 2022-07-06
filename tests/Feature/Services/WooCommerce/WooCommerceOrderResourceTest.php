@@ -5,13 +5,18 @@ namespace Tests\Feature\Services\WooCommerce;
 use App\Models\WooCommerce\Customer;
 use App\Models\WooCommerce\Order as WooCommerceOrder;
 use App\Models\WooCommerce\PaymentMethod;
+use App\Notifications\Orders\NewOrderNotification;
+use App\Services\Donations\AssignOrderDonation;
 use App\Services\WooCommerce\DataObjects\Order;
 use App\Services\WooCommerce\Resources\OrderResource;
 use App\Services\WooCommerce\WooCommerceService;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Queue;
 use Tests\Feature\Http\BaseHttp;
 
 class WooCommerceOrderResourceTest extends BaseHttp
@@ -184,7 +189,13 @@ class WooCommerceOrderResourceTest extends BaseHttp
             )
         ]);
 
+        Notification::fake();
+        Bus::fake();
+
         $order = $api->orders()->getAndSync(549799);
+
+        // We notify to admins that new order were created.
+        Notification::assertSentTo($order, NewOrderNotification::class);
 
         $this->assertInstanceOf(WooCommerceOrder::class, $order);
         $this->assertEquals('processing', $order->status);

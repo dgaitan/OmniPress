@@ -4,9 +4,6 @@ namespace App\Jobs\Donations;
 
 use App\Jobs\SingleWooCommerceSync;
 use App\Models\WooCommerce\Order;
-use App\Services\Donations\AssignOrderDonation;
-use App\Services\Donations\AssignOrderDonationToCustomer;
-use App\Services\Sync\Orders\SyncOrderLineItemProducts;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -34,10 +31,6 @@ class OrderWasSyncedJob implements ShouldQueue
      */
     public function handle()
     {
-        SyncOrderLineItemProducts::dispatchWithoutValidations($this->order);
-        AssignOrderDonation::dispatch($this->order->id);
-        AssignOrderDonationToCustomer::dispatch($this->order->id);
-
         if ($this->order->customer) {
             SingleWooCommerceSync::dispatch($this->order->customer->customer_id, 'customers');
         }

@@ -17,7 +17,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string|null $body
  * @property string|null $order_status_code
  * @property string|null $note_date
- *
  * @method static \Illuminate\Database\Eloquent\Builder|PrintforiaOrderNote newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PrintforiaOrderNote newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PrintforiaOrderNote query()
@@ -30,7 +29,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|PrintforiaOrderNote whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PrintforiaOrderNote whereUpdatedAt($value)
  * @mixin \Eloquent
- *
  * @property-read \App\Models\Printforia\PrintforiaOrder|null $order
  */
 class PrintforiaOrderNote extends Model

@@ -4,6 +4,7 @@ namespace App\Services\Printforia;
 
 use App\Models\WooCommerce\Order;
 use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use InvalidArgumentException;
 
@@ -45,7 +46,7 @@ class PrintforiaApiClient
      * @param  array  $items
      * @return void
      */
-    public function createOrder(Order $order, array $items)
+    public function createOrder(Order $order, array $items): Response
     {
         $params = [
             'customer_reference' => sprintf('order-%s', $order->order_id),

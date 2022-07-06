@@ -23,7 +23,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string|null $shipping_method
  * @property string|null $ioss_number
  * @property string $status
- *
  * @method static \Illuminate\Database\Eloquent\Builder|PrintforiaOrder newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PrintforiaOrder newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PrintforiaOrder query()
@@ -38,20 +37,16 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder|PrintforiaOrder whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PrintforiaOrder whereUpdatedAt($value)
  * @mixin \Eloquent
- *
  * @property string $printforia_order_id
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Printforia\PrintforiaOrderItem[] $items
  * @property-read int|null $items_count
  * @property-read Order|null $order
- *
  * @method static \Illuminate\Database\Eloquent\Builder|PrintforiaOrder wherePrintforiaOrderId($value)
- *
  * @property string|null $carrier
  * @property string|null $tracking_number
  * @property string|null $tracking_url
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Printforia\PrintforiaOrderNote[] $notes
  * @property-read int|null $notes_count
- *
  * @method static \Illuminate\Database\Eloquent\Builder|PrintforiaOrder whereCarrier($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PrintforiaOrder whereTrackingNumber($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PrintforiaOrder whereTrackingUrl($value)

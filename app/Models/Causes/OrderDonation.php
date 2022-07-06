@@ -19,7 +19,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $amount
  * @property-read \App\Models\Causes\Cause|null $cause
  * @property-read Order|null $order
- *
  * @method static \Illuminate\Database\Eloquent\Builder|OrderDonation newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|OrderDonation newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|OrderDonation query()

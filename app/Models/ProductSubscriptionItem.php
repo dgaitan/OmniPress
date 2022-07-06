@@ -22,7 +22,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $fee
  * @property string $total
  * @property mixed|null $interval_choices
- *
  * @method static \Illuminate\Database\Eloquent\Builder|SubscriptionItem newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|SubscriptionItem newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|SubscriptionItem query()

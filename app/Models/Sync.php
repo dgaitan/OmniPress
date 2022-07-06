@@ -17,7 +17,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $status
  * @property array $info
  * @property-read \App\Models\User|null $user
- *
  * @method static \Illuminate\Database\Eloquent\Builder|Sync newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Sync newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Sync query()
@@ -29,7 +28,6 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Sync whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Sync whereUserId($value)
  * @mixin \Eloquent
- *
  * @property string $name
  * @property string $content_type
  * @property int|null $intents
@@ -37,19 +35,14 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read int|null $logs_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\SyncNote[] $notes
  * @property-read int|null $notes_count
- *
  * @method static \Illuminate\Database\Eloquent\Builder|Sync whereContentType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Sync whereIntents($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Sync whereName($value)
- *
  * @property string|null $batch_id
  * @property int|null $current_page
- *
  * @method static \Illuminate\Database\Eloquent\Builder|Sync whereBatchId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Sync whereCurrentPage($value)
- *
  * @property int|null $per_page
- *
  * @method static \Illuminate\Database\Eloquent\Builder|Sync wherePerPage($value)
  */
 class Sync extends Model
