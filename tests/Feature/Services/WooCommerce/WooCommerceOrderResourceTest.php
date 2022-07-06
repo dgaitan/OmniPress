@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Services\WooCommerce;
 
+use App\Models\WooCommerce\Customer;
 use App\Models\WooCommerce\Order as WooCommerceOrder;
 use App\Models\WooCommerce\PaymentMethod;
 use App\Services\WooCommerce\DataObjects\Order;
@@ -146,5 +147,55 @@ class WooCommerceOrderResourceTest extends BaseHttp
         );
         $this->assertEquals($paymentMethod->id, $order->paymentMethod->id);
         $this->assertTrue(is_null($order->customer));
+    }
+
+    public function test_creating_an_order_with_customer(): void
+    {
+        $paymentMethod = PaymentMethod::create([
+            'payment_method_id' => 'kindhumans_stripe_gateway',
+            'title' => 'Credit Card',
+            'order' => 1,
+            'enabled' => true,
+            'method_title' => 'Kindhumans Payment Gateway',
+        ]);
+
+        $customer = Customer::create([
+            'customer_id' => 2064,
+            'email' => 'smlueker@yahoo.com',
+            'first_name' => 'John',
+            'last_name' => 'Bar',
+            'role' => 'customer',
+            'username' => 'smlueker',
+            'billing' => '{}',
+            'shipping' => '{}',
+            'is_paying_customer' => false
+        ]);
+
+        $api = WooCommerceService::make();
+
+        Http::fake([
+            $this->getUrl(endpoint: 'orders/549799') => Http::response(
+                body: $this->fixture('WooCommerce/OrderWithCustomer'),
+                status: 200
+            ),
+            $this->getUrl(endpoint: 'customers/2064') => Http::response(
+                body: $this->fixture('WooCommerce/CustomerDetail'),
+                status: 200
+            )
+        ]);
+
+        $order = $api->orders()->getAndSync(549799);
+
+        $this->assertInstanceOf(WooCommerceOrder::class, $order);
+        $this->assertEquals('processing', $order->status);
+        $this->assertInstanceOf(PaymentMethod::class, $order->paymentMethod);
+        $this->assertEquals(
+            $paymentMethod->payment_method_id,
+            $order->paymentMethod->payment_method_id
+        );
+
+        $this->assertInstanceOf(Customer::class, $order->customer);
+        $this->assertEquals($customer->email, $order->customer->email);
+        $this->assertEquals($customer->customer_id, $order->customer->customer_id);
     }
 }

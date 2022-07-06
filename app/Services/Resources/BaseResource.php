@@ -150,13 +150,13 @@ abstract class BaseResource
      */
     public function getAndSync(int|string $id): Model|null
     {
-        $order = $this->get($id);
+        $item = $this->get($id);
 
-        if (is_null($order)) {
+        if (is_null($item)) {
             return null;
         }
 
-        return $order->sync();
+        return $item->sync();
     }
 
     /**
