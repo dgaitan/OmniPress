@@ -123,7 +123,7 @@ class WooCommerceOrderResourceTest extends BaseHttp
             'title' => 'Credit Card',
             'order' => 1,
             'enabled' => true,
-            'method_title' => 'Kindhumans Payment Gateway'
+            'method_title' => 'Kindhumans Payment Gateway',
         ]);
 
         $api = WooCommerceService::make();
@@ -141,7 +141,7 @@ class WooCommerceOrderResourceTest extends BaseHttp
         $this->assertEquals('completed', $order->status);
         $this->assertInstanceOf(PaymentMethod::class, $order->paymentMethod);
         $this->assertEquals(
-            $paymentMethod->payment_method_id, 
+            $paymentMethod->payment_method_id,
             $order->paymentMethod->payment_method_id
         );
         $this->assertEquals($paymentMethod->id, $order->paymentMethod->id);

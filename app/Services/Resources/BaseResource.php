@@ -145,7 +145,7 @@ abstract class BaseResource
     /**
      * Get And Syncronize an item
      *
-     * @param integer|string $id
+     * @param  int|string  $id
      * @return Model|null
      */
     public function getAndSync(int|string $id): Model|null
@@ -162,7 +162,7 @@ abstract class BaseResource
     /**
      * Collect elements and syncronize it
      *
-     * @param array $params
+     * @param  array  $params
      * @return Collection|null
      */
     public function collectAndSync(array $params = []): Collection|null
@@ -173,7 +173,7 @@ abstract class BaseResource
             return null;
         }
 
-        return $response->map(fn($item) => $item->sync());
+        return $response->map(fn ($item) => $item->sync());
     }
 
     /**

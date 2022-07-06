@@ -2,11 +2,8 @@
 
 namespace Tests\Feature\Services\WooCommerce;
 
-use App\Models\WooCommerce\Customer as WooCommerceCustomer;
 use App\Models\WooCommerce\PaymentMethod as WooCommercePaymentMethod;
-use App\Services\WooCommerce\DataObjects\Customer;
 use App\Services\WooCommerce\DataObjects\PaymentMethod;
-use App\Services\WooCommerce\Resources\CustomerResource;
 use App\Services\WooCommerce\Resources\PaymentMethodResource;
 use App\Services\WooCommerce\WooCommerceService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -21,7 +18,7 @@ class WooCommercePaymentMethodTest extends BaseHttp
     {
         $api = WooCommerceService::make();
 
-    $this->assertTrue(method_exists($api, 'paymentMethods'));
+        $this->assertTrue(method_exists($api, 'paymentMethods'));
         $this->assertInstanceOf(PaymentMethodResource::class, $api->paymentMethods());
         $this->assertClassHasAttribute('endpoint', PaymentMethodResource::class);
         $this->assertClassHasAttribute('factory', PaymentMethodResource::class);
@@ -96,7 +93,7 @@ class WooCommercePaymentMethodTest extends BaseHttp
         $this->assertEquals('Credit Card', $paymentMethod->title);
         $this->assertEquals('Kindhumans Stripe Gateway', $paymentMethod->method_title);
         $this->assertEquals(
-            'Custom Stripe Gateway for Kindhumans Checkout', 
+            'Custom Stripe Gateway for Kindhumans Checkout',
             $paymentMethod->method_description
         );
     }
