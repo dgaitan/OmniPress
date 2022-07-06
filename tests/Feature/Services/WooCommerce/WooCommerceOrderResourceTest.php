@@ -3,6 +3,7 @@
 namespace Tests\Feature\Services\WooCommerce;
 
 use App\Models\WooCommerce\Order as WooCommerceOrder;
+use App\Models\WooCommerce\PaymentMethod;
 use App\Services\WooCommerce\DataObjects\Order;
 use App\Services\WooCommerce\Resources\OrderResource;
 use App\Services\WooCommerce\WooCommerceService;
@@ -115,8 +116,35 @@ class WooCommerceOrderResourceTest extends BaseHttp
         $this->assertTrue(is_null($orders));
     }
 
-    protected function getEndpointUrl(string $endpoint): string
+    public function test_creating_an_order_with_a_guest_user(): void
     {
-        return sprintf('%s%s', $this->apiUrl, $endpoint);
+        $paymentMethod = PaymentMethod::create([
+            'payment_method_id' => 'kindhumans_stripe_gateway',
+            'title' => 'Credit Card',
+            'order' => 1,
+            'enabled' => true,
+            'method_title' => 'Kindhumans Payment Gateway'
+        ]);
+
+        $api = WooCommerceService::make();
+
+        Http::fake([
+            $this->getUrl('orders/418136') => Http::response(
+                body: $this->fixture('WooCommerce/OrderDetailWithGuestCustomer'),
+                status: 200
+            ),
+        ]);
+
+        $order = $api->orders()->getAndSync(418136);
+
+        $this->assertInstanceOf(WooCommerceOrder::class, $order);
+        $this->assertEquals('completed', $order->status);
+        $this->assertInstanceOf(PaymentMethod::class, $order->paymentMethod);
+        $this->assertEquals(
+            $paymentMethod->payment_method_id, 
+            $order->paymentMethod->payment_method_id
+        );
+        $this->assertEquals($paymentMethod->id, $order->paymentMethod->id);
+        $this->assertTrue(is_null($order->customer));
     }
 }
