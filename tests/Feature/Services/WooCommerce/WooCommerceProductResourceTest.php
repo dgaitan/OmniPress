@@ -58,7 +58,7 @@ class WooCommerceProductResourceTest extends BaseHttp
         $api = WooCommerceService::make();
 
         Http::fake([
-            'http://host.docker.internal:10003/wp-json/wc/v3/products/794' => Http::response(
+            $this->getUrl('products/794') => Http::response(
                 body: $this->fixture('WooCommerce/ProductDetail'),
                 status: 408
             ),
@@ -75,7 +75,7 @@ class WooCommerceProductResourceTest extends BaseHttp
         $api = WooCommerceService::make();
 
         Http::fake([
-            'http://host.docker.internal:10003/wp-json/wc/v3/products/794' => Http::response(
+            $this->getUrl('products/794') => Http::response(
                 body: $this->fixture('WooCommerce/ProductDetail'),
                 status: 200
             ),
@@ -110,7 +110,7 @@ class WooCommerceProductResourceTest extends BaseHttp
         $api = WooCommerceService::make();
 
         Http::fake([
-            'http://host.docker.internal:10003/wp-json/wc/v3/products/539489' => Http::response(
+            $this->getUrl('products/539489') => Http::response(
                 body: $this->fixture('WooCommerce/ProductVariableDetail'),
                 status: 200
             ),
@@ -128,7 +128,7 @@ class WooCommerceProductResourceTest extends BaseHttp
         $api = WooCommerceService::make();
 
         Http::fake([
-            'http://host.docker.internal:10003/wp-json/wc/v3/products/539489' => Http::response(
+            $this->getUrl('products/539489') => Http::response(
                 body: $this->fixture('WooCommerce/ProductVariableDetail'),
                 status: 200
             ),
@@ -147,7 +147,7 @@ class WooCommerceProductResourceTest extends BaseHttp
         $api = WooCommerceService::make();
 
         Http::fake([
-            'http://host.docker.internal:10003/wp-json/wc/v3/products/539489' => Http::response(
+            $this->getUrl('products/539489') => Http::response(
                 body: $this->fixture('WooCommerce/ProductVariableDetail'),
                 status: 200
             ),

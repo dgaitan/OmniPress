@@ -93,7 +93,7 @@ class WooCommerceCustomerResourceTest extends BaseHttp
         $this->assertEquals(2202, $customer->customer_id);
         $this->assertEquals('subscriber', $customer->role);
         $this->assertEquals('David Ram', $customer->getfullName());
-        $this->assertEquals('http://kind.humans/wp-admin/user-edit.php?user_id=2202', $customer->getPermalinkOnStore());
+        $this->assertEquals('https://kindhumans.com/wp-admin/user-edit.php?user_id=2202', $customer->getPermalinkOnStore());
 
         $customerLooked = WooCommerceCustomer::getByEmail(email: 'ram@ram.com');
         $this->assertEquals('David Ram', $customer->username);

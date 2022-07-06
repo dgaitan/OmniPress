@@ -28,7 +28,8 @@ class BaseHttp extends TestCase
     public function getUrl(string $endpoint): string
     {
         return sprintf(
-            'http://host.docker.internal:10003/wp-json/wc/v3/%s',
+            '%s/wp-json/wc/v3/%s',
+            env('WOO_CUSTOMER_DOMAIN'),
             $endpoint
         );
     }

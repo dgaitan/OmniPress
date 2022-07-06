@@ -16,8 +16,6 @@ class WooCommerceOrderResourceTest extends BaseHttp
 {
     use RefreshDatabase;
 
-    protected $apiUrl = 'http://host.docker.internal:10003/wp-json/wc/v3/';
-
     public function test_order_resource_instance()
     {
         $api = WooCommerceService::make();
@@ -34,7 +32,7 @@ class WooCommerceOrderResourceTest extends BaseHttp
         $api = WooCommerceService::make();
 
         Http::fake([
-            'http://host.docker.internal:10003/wp-json/wc/v3/orders/727' => Http::response(
+            $this->getUrl(endpoint: 'orders/727') => Http::response(
                 body: $this->fixture('WooCommerce/OrderDetail'),
                 status: 200
             ),
@@ -53,7 +51,7 @@ class WooCommerceOrderResourceTest extends BaseHttp
         $api = WooCommerceService::make();
 
         Http::fake([
-            'http://host.docker.internal:10003/wp-json/wc/v3/orders/727' => Http::response(
+            $this->getUrl('orders/727') => Http::response(
                 body: $this->fixture('WooCommerce/OrderDetail'),
                 status: 408
             ),
@@ -69,7 +67,7 @@ class WooCommerceOrderResourceTest extends BaseHttp
         $api = WooCommerceService::make();
 
         Http::fake([
-            'http://host.docker.internal:10003/wp-json/wc/v3/orders/727' => Http::response(
+            $this->getUrl('orders/727') => Http::response(
                 body: $this->fixture('WooCommerce/OrderDetail'),
                 status: 200
             ),
@@ -88,7 +86,7 @@ class WooCommerceOrderResourceTest extends BaseHttp
         $api = WooCommerceService::make();
 
         Http::fake([
-            'http://host.docker.internal:10003/wp-json/wc/v3/orders*' => Http::response(
+            $this->getUrl('orders*') => Http::response(
                 body: $this->fixture('WooCommerce/OrderList'),
                 status: 200
             ),
@@ -106,7 +104,7 @@ class WooCommerceOrderResourceTest extends BaseHttp
         $api = WooCommerceService::make();
 
         Http::fake([
-            'http://host.docker.internal:10003/wp-json/wc/v3/orders*' => Http::response(
+            $this->getUrl('orders*') => Http::response(
                 body: $this->fixture('WooCommerce/OrderList'),
                 status: 408
             ),
