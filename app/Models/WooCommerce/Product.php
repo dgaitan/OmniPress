@@ -3,6 +3,7 @@
 namespace App\Models\WooCommerce;
 
 use App\Models\Concerns\HasMetaData;
+use App\Models\Concerns\HasMoney;
 use App\Models\Membership;
 use App\Models\Printforia\HasPrintforia;
 use App\Models\Printforia\PrintforiaOrderItem;
@@ -121,6 +122,7 @@ class Product extends Model
     use Searchable;
     use Notifiable;
     use HasPrintforia;
+    use HasMoney;
 
     protected $casts = [
         'price' => 'decimal:2',

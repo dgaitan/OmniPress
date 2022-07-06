@@ -93,8 +93,9 @@ class Product extends BaseObject implements DataObjectContract
 
         if ($product->type === 'variable' && $this->product_variations) {
             foreach ($this->product_variations as $variation) {
-                $variation->parent_id = $product->id;
-                (new ProductVariation((array) $variation))->sync();
+                $variation = (array) $variation;
+                $variation['parent_id'] = $product->id;
+                (new ProductVariation($variation))->sync();
             }
         }
 

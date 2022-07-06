@@ -2,9 +2,10 @@
 
 namespace Tests\Feature\Models;
 
-use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\Feature\Http\BaseHttp;
 
-abstract class BaseModelTest extends TestCase
+abstract class BaseModelTest extends BaseHttp
 {
-    // Silence
+    use RefreshDatabase;
 }

@@ -69,7 +69,7 @@ class WooCommerceServiceTest extends BaseHttp
         $api = WooCommerceService::make();
 
         Http::fake([
-            $this->getEndpointUrl('orders/727') => Http::response(
+            $this->getUrl('orders/727') => Http::response(
                 body: $this->fixture('WooCommerce/OrderDetail'),
                 status: 200
             ),

@@ -24,4 +24,13 @@ class BaseHttp extends TestCase
             associative: true,
         );
     }
+
+    public function getUrl(string $endpoint): string
+    {
+        return sprintf(
+            '%s/wp-json/wc/v3/%s',
+            env('WOO_CUSTOMER_DOMAIN'),
+            $endpoint
+        );
+    }
 }

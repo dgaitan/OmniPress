@@ -108,7 +108,7 @@ abstract class BaseResource
      */
     public function get(int|string $id): DataObjectContract|null
     {
-        $response = $this->service->request()->get(
+        $response = $this->service->get(
             sprintf('%s/%s', $this->endpoint, $id)
         );
 
@@ -131,7 +131,7 @@ abstract class BaseResource
             $params['per_page'] = 100;
         }
 
-        $response = $this->service->request()->get($this->endpoint, $params);
+        $response = $this->service->get($this->endpoint, $params);
 
         if ($response->failed()) {
             return null;
@@ -142,6 +142,12 @@ abstract class BaseResource
         ));
     }
 
+    /**
+     * Get And Syncronize an item
+     *
+     * @param integer|string $id
+     * @return Model|null
+     */
     public function getAndSync(int|string $id): Model|null
     {
         $order = $this->get($id);
@@ -151,6 +157,23 @@ abstract class BaseResource
         }
 
         return $order->sync();
+    }
+
+    /**
+     * Collect elements and syncronize it
+     *
+     * @param array $params
+     * @return Collection|null
+     */
+    public function collectAndSync(array $params = []): Collection|null
+    {
+        $response = $this->collect(params: $params);
+
+        if (is_null($response)) {
+            return null;
+        }
+
+        return $response->map(fn($item) => $item->sync());
     }
 
     /**
