@@ -17,8 +17,12 @@ class AssignOrderDonationAction
      * @param integer|string $orderId
      * @return void
      */
-    public function handle(int|string $orderId)
+    public function handle(int|string|Order $orderId)
     {
+        if ($orderId instanceof Order) {
+            $orderId = $orderId->id;
+        }
+
         $order = Order::find($orderId);
 
         if (

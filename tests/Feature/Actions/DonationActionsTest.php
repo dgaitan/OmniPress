@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Actions;
 
+use App\Actions\Donations\AssignOrderDonationAction;
 use App\Models\Causes\Cause;
 use App\Models\Causes\OrderDonation;
 use App\Models\WooCommerce\Order;
@@ -66,5 +67,15 @@ class DonationActionsTest extends BaseAction
         });
 
         $this->assertEquals($donations, $order->getDonations());
+
+        // If I run the AssignOrderDonationACtion again it shouldn't increase the amount.
+        AssignOrderDonationAction::run($order);
+
+        $order = Order::whereOrderId(418136)->first();
+
+        $this->assertEquals(123, $order->donations->sum('amount'));
+        $this->assertEquals('$1.23', $order->totalDonated()->formated());
+        $this->assertInstanceOf(OrderDonation::class, $order->donations->first());
+        $this->assertEquals(1, $order->donations->count());
     }
 }
