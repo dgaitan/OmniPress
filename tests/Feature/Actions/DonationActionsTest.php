@@ -77,5 +77,8 @@ class DonationActionsTest extends BaseAction
         $this->assertEquals('$1.23', $order->totalDonated()->formated());
         $this->assertInstanceOf(OrderDonation::class, $order->donations->first());
         $this->assertEquals(1, $order->donations->count());
+
+        // Now let us test the data from Cause
+
     }
 }

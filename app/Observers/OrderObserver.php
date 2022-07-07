@@ -2,14 +2,11 @@
 
 namespace App\Observers;
 
-use App\Actions\Donations\AssignOrderDonationAction;
 use App\Actions\Donations\AssignOrderDonationToCustomerAction;
 use App\Actions\Printforia\MaybeCreatePrintforiaOrderAction;
 use App\Actions\WooCommerce\Orders\SyncCustomerIfExistsAction;
-use App\Actions\WooCommerce\Orders\SyncOrderLineItemProductsAction;
 use App\Jobs\Donations\AssignOrderDonationJob;
-use App\Jobs\Donations\OrderWasSyncedJob;
-use App\Jobs\Printforia\ProcessPrintforiaOrderJob;
+use App\Jobs\Pritnforia\MaybeCreatePrintforiaOrderJob;
 use App\Jobs\WooCommerce\Orders\SyncOrderLineItemProductsJob;
 use App\Models\WooCommerce\Order;
 use App\Notifications\Orders\NewOrderNotification;
@@ -33,7 +30,7 @@ class OrderObserver
             new AssignOrderDonationJob($order->id),
             AssignOrderDonationToCustomerAction::makeJob($order->id),
             SyncCustomerIfExistsAction::makeJob($order),
-            MaybeCreatePrintforiaOrderAction::makeJob($order)
+            new MaybeCreatePrintforiaOrderJob($order)
         ])->dispatch();
     }
 

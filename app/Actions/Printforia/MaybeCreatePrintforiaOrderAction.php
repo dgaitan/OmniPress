@@ -13,6 +13,7 @@ class MaybeCreatePrintforiaOrderAction
 
     public function handle(Order $order)
     {
+        $order = Order::find($order->id);
         $printforiaOrderItems = [];
 
         foreach ($order->items as $item) {
@@ -29,7 +30,7 @@ class MaybeCreatePrintforiaOrderAction
             ->createOrder($order, $printforiaOrderItems);
 
         if ($response->ok()) {
-            CreateOrUpdatePrintforiaOrderAction::run($response->object()->id);
+            CreateOrUpdatePrintforiaOrderAction::run($order, $response->object()->id);
         }
     }
 

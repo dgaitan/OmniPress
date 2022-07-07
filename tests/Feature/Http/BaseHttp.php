@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Http;
 
+use App\Services\WooCommerce\WooCommerceService;
 use InvalidArgumentException;
 use Tests\TestCase;
 
@@ -32,5 +33,10 @@ class BaseHttp extends TestCase
             env('WOO_CUSTOMER_DOMAIN'),
             $endpoint
         );
+    }
+
+    protected function get_woocommerce_service(): WooCommerceService
+    {
+        return WooCommerceService::make();
     }
 }

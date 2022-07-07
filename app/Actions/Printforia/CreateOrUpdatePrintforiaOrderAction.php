@@ -5,6 +5,7 @@ namespace App\Actions\Printforia;
 use App\Models\Printforia\PrintforiaOrder;
 use App\Models\Printforia\PrintforiaOrderItem;
 use App\Models\Printforia\PrintforiaOrderNote;
+use App\Models\WooCommerce\Order;
 use App\Models\WooCommerce\Product;
 use App\Services\Printforia\PrintforiaApiClient;
 use Lorisleiva\Actions\Concerns\AsAction;
@@ -14,7 +15,7 @@ class CreateOrUpdatePrintforiaOrderAction
 {
     use AsAction;
 
-    public function handle(string $printforiaOrderId)
+    public function handle(Order $order, string $printforiaOrderId)
     {
         $request = (new PrintforiaApiClient)->getOrder($printforiaOrderId);
 
@@ -28,7 +29,7 @@ class CreateOrUpdatePrintforiaOrderAction
 
         $printforiaOrder->fill([
             'printforia_order_id' => $printforiaApiData->id,
-            'order_id' => $this->order->id, // It refers to the order id in kinja and not in kindhumans woocommerce
+            'order_id' => $order->id, // It refers to the order id in kinja and not in kindhumans woocommerce
             'customer_reference' => $printforiaApiData->customer_reference,
             'ship_to_address' => $printforiaApiData->ship_to_address,
             'return_to_address' => $printforiaApiData->return_to_address,
@@ -36,6 +37,7 @@ class CreateOrUpdatePrintforiaOrderAction
             'ioss_number' => $printforiaApiData->ioss_number,
             'status' => $printforiaApiData->status,
         ]);
+        $printforiaOrder->save();
 
         $this->collectItems($printforiaApiData, $printforiaOrder);
         $this->collectNotes($printforiaApiData, $printforiaOrder);
@@ -87,6 +89,8 @@ class CreateOrUpdatePrintforiaOrderAction
         stdClass $printforiaApiData,
         PrintforiaOrder $printforiaOrder
     ) {
+        if (! property_exists($printforiaApiData, 'order_notes')) return;
+
         collect($printforiaApiData->order_notes)->map(function ($note) use ($printforiaOrder) {
             $orderNote = PrintforiaOrderNote::firstOrNew([
                 'title' => $note->title,
