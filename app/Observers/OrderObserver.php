@@ -29,8 +29,8 @@ class OrderObserver
         $order->notify((new NewOrderNotification($order))->delay(now()->addMinute()));
 
         Bus::chain([
-            SyncOrderLineItemProductsAction::makeJob($order),
-            AssignOrderDonationAction::makeJob($order->id),
+            new SyncOrderLineItemProductsJob($order),
+            new AssignOrderDonationJob($order->id),
             AssignOrderDonationToCustomerAction::makeJob($order->id),
             SyncCustomerIfExistsAction::makeJob($order),
             MaybeCreatePrintforiaOrderAction::makeJob($order)

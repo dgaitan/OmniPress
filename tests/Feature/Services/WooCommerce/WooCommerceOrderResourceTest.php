@@ -2,11 +2,15 @@
 
 namespace Tests\Feature\Services\WooCommerce;
 
+use App\Actions\Donations\AssignOrderDonationAction;
+use App\Actions\Donations\AssignOrderDonationToCustomerAction;
+use App\Actions\WooCommerce\Orders\SyncOrderLineItemProductsAction;
+use App\Jobs\Donations\AssignOrderDonationJob;
+use App\Jobs\WooCommerce\Orders\SyncOrderLineItemProductsJob;
 use App\Models\WooCommerce\Customer;
 use App\Models\WooCommerce\Order as WooCommerceOrder;
 use App\Models\WooCommerce\PaymentMethod;
 use App\Notifications\Orders\NewOrderNotification;
-use App\Services\Donations\AssignOrderDonation;
 use App\Services\WooCommerce\DataObjects\Order;
 use App\Services\WooCommerce\Resources\OrderResource;
 use App\Services\WooCommerce\WooCommerceService;
@@ -208,5 +212,38 @@ class WooCommerceOrderResourceTest extends BaseHttp
         $this->assertInstanceOf(Customer::class, $order->customer);
         $this->assertEquals($customer->email, $order->customer->email);
         $this->assertEquals($customer->customer_id, $order->customer->customer_id);
+    }
+
+    public function test_syncing_order_items_after_create_an_order()
+    {
+        Http::fake([
+            $this->getUrl(endpoint: 'orders/549799') => Http::response(
+                body: $this->fixture('WooCommerce/OrderWithCustomer'),
+                status: 200
+            ),
+            $this->getUrl(endpoint: 'customers/2064') => Http::response(
+                body: $this->fixture('WooCommerce/CustomerDetail'),
+                status: 200
+            ),
+            $this->getUrl(endpoint: 'payment_gateways/kindhumans_stripe_gateway') => Http::response(
+                body: $this->fixture('WooCommerce/PaymentMethodDetail'),
+                status: 200
+            )
+        ]);
+
+        $api = WooCommerceService::make();
+
+        Notification::fake();
+        Bus::fake([
+            SyncOrderLineItemProductsJob::class
+        ]);
+
+        $api->paymentMethods()->getAndSync('kindhumans_stripe_gateway');
+        $api->customers()->getAndSync(2064);
+        $order = $api->orders()->getAndSync(549799);
+
+        Bus::assertDispatched(SyncOrderLineItemProductsJob::class);
+        
+        $this->assertEquals(2, $order->items->count());
     }
 }
