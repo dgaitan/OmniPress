@@ -5,13 +5,11 @@ namespace Tests\Feature\Actions;
 use App\Actions\Printforia\MaybeCreatePrintforiaOrderAction;
 use App\Actions\WooCommerce\Orders\SyncOrderLineItemProductsAction;
 use App\Jobs\Pritnforia\MaybeCreatePrintforiaOrderJob;
-use App\Jobs\WooCommerce\Orders\SyncOrderLineItemProductsJob;
 use App\Models\Printforia\PrintforiaOrder;
 use App\Models\WooCommerce\Order;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Notification;
-use Illuminate\Support\Facades\Queue;
 
 class PrintforiaActionsTest extends BaseAction
 {
@@ -70,7 +68,6 @@ class PrintforiaActionsTest extends BaseAction
         $this->assertEquals('Bl2gAKAJuW9dPqiKxndwK', $order->printforiaOrder->printforia_order_id);
         $this->assertEquals('order-550013', $order->printforiaOrder->customer_reference);
         $this->assertEquals(1, $order->printforiaOrder->items()->count());
-        // MaybeCreatePrintforiaOrderAction::assertPushed();
     }
 
     protected function getPrintforiaUrl(string $endpoint): string
