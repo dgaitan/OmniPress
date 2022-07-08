@@ -19,6 +19,7 @@ class PrintforiaResource extends JsonResource
             'order' => [
                 'id' => $this->order->id,
                 'order_id' => $this->order->order_id,
+                'permalink' => $this->order->getPermalink()
             ],
             'created_at' => $this->order->created_at->diffForHumans(),
             'status' => $this->status,
@@ -29,6 +30,9 @@ class PrintforiaResource extends JsonResource
             'return_to_address' => $this->return_to_address,
             'ship_to_address_formatted' => $this->shippingAddress(),
             'return_to_address_formatted' => $this->returnAddress(),
+            'carrier' => $this->carrier,
+            'tracking_url' => $this->tracking_url,
+            'tracking_number' => $this->tracking_number,
             'permalink' => $this->getPermalink(),
             'items' => [],
             'notes' => [],
