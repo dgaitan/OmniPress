@@ -16,6 +16,7 @@ use App\Services\WooCommerce\Resources\OrderResource;
 use App\Services\WooCommerce\WooCommerceService;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\Client\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Http;
@@ -243,7 +244,55 @@ class WooCommerceOrderResourceTest extends BaseHttp
         $order = $api->orders()->getAndSync(549799);
 
         Bus::assertDispatched(SyncOrderLineItemProductsJob::class);
-        
+
         $this->assertEquals(2, $order->items->count());
+    }
+
+    public function test_order_resource_should_be_able_to_update_an_order(): void
+    {
+        Http::fake([
+            $this->getUrl(endpoint: 'orders/550019') => function (Request $request) {
+                if ($request->method() == 'GET') {
+                    return Http::response(
+                        body: $this->fixture('WooCommerce/OrderGetResponse'),
+                        status: 200
+                    );
+                }
+
+                if ($request->method() == 'PUT') {
+                    return Http::response(
+                        body: $this->fixture('WooCommerce/OrderPutResponse'),
+                        status: 200
+                    );
+                }
+            }
+        ]);
+
+        $api = WooCommerceService::make();
+
+        Notification::fake();
+        Bus::fake();
+
+        $order = $api->orders()->getAndSync(550019);
+
+        // At this time the order shouldn't have this meta key
+        $this->assertTrue(is_null($order->getMetaValue('mi_new_key_from_api')));
+        $this->assertEquals('processing', $order->status);
+
+        // We're going to update the order
+        $order = $api->orders()->update(element_id: 550019, params: [
+            'status' => 'completed',
+            'meta_data' => [
+                [
+                    'key' => 'mi_new_key_from_api',
+                    'value' => 'my_new_value_from_api'
+                ]
+            ]
+        ], sync: true);
+
+        // Now the data must be updated
+        $this->assertTrue(! is_null($order->getMetaValue('mi_new_key_from_api')));
+        $this->assertEquals('my_new_value_from_api', $order->getMetaValue('mi_new_key_from_api'));
+        $this->assertEquals('completed', $order->status);
     }
 }

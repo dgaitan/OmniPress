@@ -3,7 +3,6 @@
 namespace App\Observers;
 
 use App\Actions\Donations\AssignOrderDonationToCustomerAction;
-use App\Actions\Printforia\MaybeCreatePrintforiaOrderAction;
 use App\Actions\WooCommerce\Orders\SyncCustomerIfExistsAction;
 use App\Jobs\Donations\AssignOrderDonationJob;
 use App\Jobs\Pritnforia\MaybeCreatePrintforiaOrderJob;
