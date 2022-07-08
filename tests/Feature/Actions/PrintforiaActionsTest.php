@@ -159,6 +159,9 @@ class PrintforiaActionsTest extends BaseAction
         // Testing PRintforia Order
         $this->assertEquals(1, $order->printforiaOrder->items->count());
         $this->assertEquals(2, $order->printforiaOrder->items->first()->quantity);
+
+        // Order should has the order printforia id
+        $this->assertEquals('Bl2gAKAJuW9dPqiKxndwK', $order->getMetaValue('_printforia_order_id'));
     }
 
     protected function getPrintforiaUrl(string $endpoint): string
