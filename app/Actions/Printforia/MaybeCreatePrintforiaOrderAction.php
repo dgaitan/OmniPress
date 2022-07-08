@@ -2,6 +2,7 @@
 
 namespace App\Actions\Printforia;
 
+use App\Actions\WooCommerce\Orders\UpdateOrderAction;
 use App\Models\WooCommerce\Order;
 use App\Models\WooCommerce\Product;
 use App\Services\Printforia\PrintforiaApiClient;
@@ -31,6 +32,13 @@ class MaybeCreatePrintforiaOrderAction
 
         if ($response->ok()) {
             CreateOrUpdatePrintforiaOrderAction::run($order, $response->object()->id);
+            UpdateOrderAction::run(
+                $order->order_id,
+                ['meta_data' => [
+                    ['key' => '_printforia_order_id', 'value' => $response->object()->id],
+                ]],
+                true
+            );
         }
     }
 

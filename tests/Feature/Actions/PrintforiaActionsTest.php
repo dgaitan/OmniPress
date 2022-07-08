@@ -10,6 +10,7 @@ use App\Models\Printforia\PrintforiaOrder;
 use App\Models\WooCommerce\Customer;
 use App\Models\WooCommerce\Order;
 use App\Models\WooCommerce\Product;
+use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Notification;
@@ -78,10 +79,21 @@ class PrintforiaActionsTest extends BaseAction
         $this->disableScout();
 
         Http::fake([
-            $this->getUrl(endpoint: 'orders/550013') => Http::response(
-                body: $this->fixture(name: 'WooCommerce/Printforia/OrderWithCustomer'),
-                status: 200
-            ),
+            $this->getUrl(endpoint: 'orders/550013') => function (Request $request) {
+                if ($request->method() === 'GET') {
+                    return Http::response(
+                        body: $this->fixture(name: 'WooCommerce/Printforia/OrderWithCustomer'),
+                        status: 200
+                    );
+                }
+
+                if ($request->method() === 'PUT') {
+                    return Http::response(
+                        body: $this->fixture(name: 'WooCommerce/Printforia/OrderWithCustomerUpdated'),
+                        status: 200
+                    );
+                }
+            },
             $this->getUrl(endpoint: 'payment_gateways/kindhumans_stripe_gateway') => Http::response(
                 body: $this->fixture(name: 'WooCommerce/PaymentMethodDetail'),
                 status: 200
