@@ -24,6 +24,7 @@ class ExampleTest extends TestCase
         // $response = $this->get('/dashboard');
         // $response->assertStatus(200);
         $this->assertTrue(true);
+        $this->assertFalse(false);
     }
 
     public function test_user_factory()
