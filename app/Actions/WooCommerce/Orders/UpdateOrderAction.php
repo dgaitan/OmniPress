@@ -18,6 +18,7 @@ class UpdateOrderAction
         }
 
         $api = WooCommerceService::make();
+
         return $api->orders()->update(
             element_id: $orderId, params: $params, sync: true
         );

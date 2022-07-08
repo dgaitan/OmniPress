@@ -1,7 +1,7 @@
 {
     "id": 550013,
     "parent_id": 0,
-    "status": "processing",
+    "status": "completed",
     "currency": "USD",
     "version": "5.5.1",
     "prices_include_tax": false,

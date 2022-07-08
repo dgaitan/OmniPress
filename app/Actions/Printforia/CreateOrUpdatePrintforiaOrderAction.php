@@ -41,6 +41,8 @@ class CreateOrUpdatePrintforiaOrderAction
 
         $this->collectItems($printforiaApiData, $printforiaOrder);
         $this->collectNotes($printforiaApiData, $printforiaOrder);
+
+        return $printforiaOrder;
     }
 
     /**
