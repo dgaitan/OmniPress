@@ -2,6 +2,7 @@
 
 namespace App\Jobs\Printforia;
 
+use App\Actions\WooCommerce\Orders\UpdateOrderAction;
 use App\Models\Printforia\PrintforiaOrder;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -38,11 +39,8 @@ class SyncOrdersIfCompleted implements ShouldQueue
             return;
         }
 
-        $api = \App\Services\WooCommerce\WooCommerceService::make();
-        $api->orders()->update(
-            $order->order_id,
-            ['status' => 'completed'],
-            true
-        );
+        UpdateOrderAction::run($order->order->order_id, [
+            'status' => 'completed'
+        ], true);
     }
 }
