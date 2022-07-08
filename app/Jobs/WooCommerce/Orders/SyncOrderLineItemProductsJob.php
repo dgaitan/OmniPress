@@ -5,7 +5,6 @@ namespace App\Jobs\WooCommerce\Orders;
 use App\Actions\WooCommerce\Orders\SyncOrderLineItemProductsAction;
 use App\Models\WooCommerce\Order;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;

@@ -114,8 +114,8 @@ class WooCommerceService implements ServiceContract
     /**
      * Put Request
      *
-     * @param string $endpoint
-     * @param array $data
+     * @param  string  $endpoint
+     * @param  array  $data
      * @return Response
      */
     public function put(string $endpoint, array $data = []): Response

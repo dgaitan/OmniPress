@@ -7,9 +7,8 @@ use App\Models\Causes\Cause;
 use App\Models\Causes\OrderDonation;
 use App\Models\WooCommerce\Order;
 use App\Services\WooCommerce\WooCommerceService;
-use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Http;
-use Tests\Feature\Actions\BaseAction;
+use Illuminate\Support\Facades\Notification;
 
 class DonationActionsTest extends BaseAction
 {
@@ -31,7 +30,7 @@ class DonationActionsTest extends BaseAction
             $this->getUrl(endpoint: 'causes*') => Http::response(
                 body: $this->fixture('causesList'),
                 status: 200
-            )
+            ),
         ]);
 
         Notification::fake();
@@ -79,6 +78,5 @@ class DonationActionsTest extends BaseAction
         $this->assertEquals(1, $order->donations->count());
 
         // Now let us test the data from Cause
-
     }
 }

@@ -29,6 +29,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $shipping_method
  * @property int|null $payment_intents
  * @property int|null $active_order_id
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|ProductSubscription newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ProductSubscription newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ProductSubscription query()

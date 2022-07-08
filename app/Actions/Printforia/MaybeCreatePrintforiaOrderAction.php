@@ -25,7 +25,9 @@ class MaybeCreatePrintforiaOrderAction
             $printforiaOrderItems[] = $this->getPrintforiaLineItem($item->product, $item->quantity);
         }
 
-        if (count($printforiaOrderItems) === 0) return;
+        if (count($printforiaOrderItems) === 0) {
+            return;
+        }
 
         $response = (new PrintforiaApiClient)
             ->createOrder($order, $printforiaOrderItems);
@@ -57,7 +59,7 @@ class MaybeCreatePrintforiaOrderAction
             ),
             'quantity' => $quantity,
             'sku' => $product->getPrintforiaSku(),
-            'description'=> $product->getPrintforiaDescription(),
+            'description' => $product->getPrintforiaDescription(),
             'prints' => $product->getPrintforiaPrints(),
         ];
     }

@@ -18,7 +18,7 @@ class CheckPrintforiaOrderAction
 
         if (in_array($printforiaOrder->status, ['shipped', 'completed'])) {
             UpdateOrderAction::run($printforiaOrder->order->order_id, [
-                'status' => 'completed'
+                'status' => 'completed',
             ], true);
         }
     }

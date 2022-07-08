@@ -92,7 +92,7 @@ class WooCommerceServiceTest extends BaseHttp
         Http::fake([
             'https://api.com/v1/put' => Http::response(
                 body: [
-                    'status' => 'ok'
+                    'status' => 'ok',
                 ],
                 status: 200
             ),
@@ -102,15 +102,14 @@ class WooCommerceServiceTest extends BaseHttp
             'meta_data' => [
                 [
                     'key' => 'mi_new_key_from_api',
-                    'value' => 'my_new_value_from_api'
-                ]
-            ]
+                    'value' => 'my_new_value_from_api',
+                ],
+            ],
         ]);
 
         $this->assertTrue($request->ok());
         $this->assertEquals(200, $request->status());
         $this->assertEquals('ok', $request->object()->status);
-
     }
 
     protected function getEndpointUrl(string $endpoint): string

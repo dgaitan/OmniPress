@@ -19,10 +19,12 @@ class CreateOrUpdatePrintforiaOrderAction
     {
         $request = (new PrintforiaApiClient)->getOrder($printforiaOrderId);
 
-        if (! $request->ok()) return;
+        if (! $request->ok()) {
+            return;
+        }
 
         $printforiaOrder = PrintforiaOrder::firstOrNew([
-            'printforia_order_id' => $printforiaOrderId
+            'printforia_order_id' => $printforiaOrderId,
         ]);
 
         $printforiaApiData = $request->object();
@@ -91,7 +93,9 @@ class CreateOrUpdatePrintforiaOrderAction
         stdClass $printforiaApiData,
         PrintforiaOrder $printforiaOrder
     ) {
-        if (! property_exists($printforiaApiData, 'order_notes')) return;
+        if (! property_exists($printforiaApiData, 'order_notes')) {
+            return;
+        }
 
         collect($printforiaApiData->order_notes)->map(function ($note) use ($printforiaOrder) {
             $orderNote = PrintforiaOrderNote::firstOrNew([

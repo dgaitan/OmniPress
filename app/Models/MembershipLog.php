@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $user_id
  * @property int|null $order_id
  * @property-read \App\Models\Membership|null $membership
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|MembershipLog newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|MembershipLog newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|MembershipLog query()

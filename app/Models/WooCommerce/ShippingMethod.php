@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $method_title
  * @property string|null $method_description
  * @property mixed|null $settings
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|ShippingMethod newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ShippingMethod newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ShippingMethod query()

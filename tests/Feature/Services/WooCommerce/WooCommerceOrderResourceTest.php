@@ -2,10 +2,6 @@
 
 namespace Tests\Feature\Services\WooCommerce;
 
-use App\Actions\Donations\AssignOrderDonationAction;
-use App\Actions\Donations\AssignOrderDonationToCustomerAction;
-use App\Actions\WooCommerce\Orders\SyncOrderLineItemProductsAction;
-use App\Jobs\Donations\AssignOrderDonationJob;
 use App\Jobs\WooCommerce\Orders\SyncOrderLineItemProductsJob;
 use App\Models\WooCommerce\Customer;
 use App\Models\WooCommerce\Order as WooCommerceOrder;
@@ -21,7 +17,6 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Notification;
-use Illuminate\Support\Facades\Queue;
 use Tests\Feature\Http\BaseHttp;
 
 class WooCommerceOrderResourceTest extends BaseHttp
@@ -178,7 +173,7 @@ class WooCommerceOrderResourceTest extends BaseHttp
             'username' => 'smlueker',
             'billing' => '{}',
             'shipping' => '{}',
-            'is_paying_customer' => false
+            'is_paying_customer' => false,
         ]);
 
         $api = WooCommerceService::make();
@@ -191,7 +186,7 @@ class WooCommerceOrderResourceTest extends BaseHttp
             $this->getUrl(endpoint: 'customers/2064') => Http::response(
                 body: $this->fixture('WooCommerce/CustomerDetail'),
                 status: 200
-            )
+            ),
         ]);
 
         Notification::fake();
@@ -229,14 +224,14 @@ class WooCommerceOrderResourceTest extends BaseHttp
             $this->getUrl(endpoint: 'payment_gateways/kindhumans_stripe_gateway') => Http::response(
                 body: $this->fixture('WooCommerce/PaymentMethodDetail'),
                 status: 200
-            )
+            ),
         ]);
 
         $api = WooCommerceService::make();
 
         Notification::fake();
         Bus::fake([
-            SyncOrderLineItemProductsJob::class
+            SyncOrderLineItemProductsJob::class,
         ]);
 
         $api->paymentMethods()->getAndSync('kindhumans_stripe_gateway');
@@ -265,7 +260,7 @@ class WooCommerceOrderResourceTest extends BaseHttp
                         status: 200
                     );
                 }
-            }
+            },
         ]);
 
         $api = WooCommerceService::make();
@@ -285,9 +280,9 @@ class WooCommerceOrderResourceTest extends BaseHttp
             'meta_data' => [
                 [
                     'key' => 'mi_new_key_from_api',
-                    'value' => 'my_new_value_from_api'
-                ]
-            ]
+                    'value' => 'my_new_value_from_api',
+                ],
+            ],
         ], sync: true);
 
         // Now the data must be updated

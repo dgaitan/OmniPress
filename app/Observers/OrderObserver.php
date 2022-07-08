@@ -29,7 +29,7 @@ class OrderObserver
             new AssignOrderDonationJob($order->id),
             AssignOrderDonationToCustomerAction::makeJob($order->id),
             SyncCustomerIfExistsAction::makeJob($order),
-            new MaybeCreatePrintforiaOrderJob($order)
+            new MaybeCreatePrintforiaOrderJob($order),
         ])->dispatch();
     }
 

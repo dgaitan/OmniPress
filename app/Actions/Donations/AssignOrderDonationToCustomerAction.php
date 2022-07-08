@@ -13,7 +13,7 @@ class AssignOrderDonationToCustomerAction
     /**
      * Handling the order doantion for a customer
      *
-     * @param integer|string $orderId
+     * @param  int|string  $orderId
      * @return void
      */
     public function handle(int|string $orderId): void

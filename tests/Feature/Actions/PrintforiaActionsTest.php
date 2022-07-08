@@ -6,7 +6,6 @@ use App\Actions\Printforia\CheckPrintforiaOrderAction;
 use App\Actions\Printforia\MaybeCreatePrintforiaOrderAction;
 use App\Actions\WooCommerce\Orders\SyncOrderLineItemProductsAction;
 use App\Jobs\Pritnforia\MaybeCreatePrintforiaOrderJob;
-use App\Jobs\WooCommerce\Orders\SyncOrderLineItemProductsJob;
 use App\Models\Printforia\PrintforiaOrder;
 use App\Models\WooCommerce\Customer;
 use App\Models\WooCommerce\Order;
@@ -46,12 +45,12 @@ class PrintforiaActionsTest extends BaseAction
             $this->getPrintforiaUrl(endpoint: 'orders/Bl2gAKAJuW9dPqiKxndwK') => Http::response(
                 body: $this->fixture(name: 'printforiaOrder'),
                 status: 200
-            )
+            ),
         ]);
 
         Notification::fake();
         Bus::fake([
-            MaybeCreatePrintforiaOrderJob::class
+            MaybeCreatePrintforiaOrderJob::class,
         ]);
 
         $api = $this->get_woocommerce_service();
@@ -118,12 +117,12 @@ class PrintforiaActionsTest extends BaseAction
             $this->getPrintforiaUrl(endpoint: 'orders/Bl2gAKAJuW9dPqiKxndwK') => Http::response(
                 body: $this->fixture(name: 'Printforia/PrintforiaOrderWithCustomer'),
                 status: 200
-            )
+            ),
         ]);
 
         Notification::fake();
         Bus::fake([
-            MaybeCreatePrintforiaOrderJob::class
+            MaybeCreatePrintforiaOrderJob::class,
         ]);
 
         $api = $this->get_woocommerce_service();
@@ -216,12 +215,12 @@ class PrintforiaActionsTest extends BaseAction
                 )->push(
                     body: $this->fixture(name: 'Printforia/PrintforiaOrderWithCustomerUpdated'),
                     status: 200
-                )
+                ),
         ]);
 
         Notification::fake();
         Bus::fake([
-            MaybeCreatePrintforiaOrderJob::class
+            MaybeCreatePrintforiaOrderJob::class,
         ]);
 
         $api = $this->get_woocommerce_service();

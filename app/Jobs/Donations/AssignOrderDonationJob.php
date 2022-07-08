@@ -4,7 +4,6 @@ namespace App\Jobs\Donations;
 
 use App\Actions\Donations\AssignOrderDonationAction;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;

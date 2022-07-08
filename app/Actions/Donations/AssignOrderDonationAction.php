@@ -14,7 +14,7 @@ class AssignOrderDonationAction
     /**
      * Handle the order donation
      *
-     * @param integer|string $orderId
+     * @param  int|string  $orderId
      * @return void
      */
     public function handle(int|string|Order $orderId)

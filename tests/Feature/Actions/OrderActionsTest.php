@@ -18,7 +18,7 @@ class OrderActionsTest extends BaseHttp
             $this->getUrl(endpoint: 'orders/*') => Http::response(
                 body: ['foo' => 'bar'],
                 status: 404
-            )
+            ),
         ]);
 
         $order = UpdateOrderAction::run(111, ['status' => 'ok'], true);
@@ -43,7 +43,7 @@ class OrderActionsTest extends BaseHttp
                         status: 200
                     );
                 }
-            }
+            },
         ]);
 
         $api = $this->get_woocommerce_service();
@@ -63,9 +63,9 @@ class OrderActionsTest extends BaseHttp
             'meta_data' => [
                 [
                     'key' => 'mi_new_key_from_api',
-                    'value' => 'my_new_value_from_api'
-                ]
-            ]
+                    'value' => 'my_new_value_from_api',
+                ],
+            ],
         ]);
 
         // $order var must be an instance of order now
