@@ -204,10 +204,6 @@ class PrintforiaActionsTest extends BaseAction
                 body: $this->fixture(name: 'Printforia/PrintforiaOrderWithCustomer'),
                 status: 200
             ),
-            // $this->getPrintforiaUrl(endpoint: 'orders/Bl2gAKAJuW9dPqiKxndwK') => Http::response(
-            //     body: $this->fixture(name: 'Printforia/PrintforiaOrderWithCustomer'),
-            //     status: 200
-            // ),
             $this->getPrintforiaUrl(endpoint: 'orders/Bl2gAKAJuW9dPqiKxndwK') => Http::sequence()
                 ->push(
                     body: $this->fixture(name: 'Printforia/PrintforiaOrderWithCustomer'),
