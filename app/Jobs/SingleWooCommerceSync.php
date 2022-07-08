@@ -35,6 +35,6 @@ class SingleWooCommerceSync implements ShouldQueue
     public function handle()
     {
         $api = \App\Services\WooCommerce\WooCommerceService::make();
-        $api->{$this->resource}()->findAndSync($this->id);
+        $api->{$this->resource}()->getAndSync($this->id);
     }
 }

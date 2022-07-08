@@ -112,6 +112,21 @@ class WooCommerceService implements ServiceContract
     }
 
     /**
+     * Put Request
+     *
+     * @param  string  $endpoint
+     * @param  array  $data
+     * @return Response
+     */
+    public function put(string $endpoint, array $data = []): Response
+    {
+        return $this->request()->put(
+            url: $this->getEndpointUrl(endpoint: $endpoint),
+            data: $data
+        );
+    }
+
+    /**
      * Order Resource
      *
      * @return ResourceContract

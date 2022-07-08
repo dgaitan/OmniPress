@@ -1,7 +1,7 @@
 {
     "id": "Bl2gAKAJuW9dPqiKxndwK",
     "customer_reference": "order-550013",
-    "status": "unapproved",
+    "status": "completed",
     "ship_to_address": {
         "recipient": "David Gaitan",
         "address1": "TestingAddresssssss",
@@ -36,7 +36,7 @@
             "id": "XqWq3EjO0FurjQR8IaweC",
             "customer_item_reference": "product-549970-KH000TESTL",
             "sku": "PRINTFORIA.BASIC-TEE-UNISEX.BLACK.L",
-            "quantity": 1,
+            "quantity": 2,
             "description": "Fancy Kindhumans Tee Test",
             "prints": [
                 {

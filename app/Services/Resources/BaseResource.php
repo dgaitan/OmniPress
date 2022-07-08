@@ -145,24 +145,24 @@ abstract class BaseResource
     /**
      * Get And Syncronize an item
      *
-     * @param integer|string $id
+     * @param  int|string  $id
      * @return Model|null
      */
     public function getAndSync(int|string $id): Model|null
     {
-        $order = $this->get($id);
+        $item = $this->get($id);
 
-        if (is_null($order)) {
+        if (is_null($item)) {
             return null;
         }
 
-        return $order->sync();
+        return $item->sync();
     }
 
     /**
      * Collect elements and syncronize it
      *
-     * @param array $params
+     * @param  array  $params
      * @return Collection|null
      */
     public function collectAndSync(array $params = []): Collection|null
@@ -173,7 +173,7 @@ abstract class BaseResource
             return null;
         }
 
-        return $response->map(fn($item) => $item->sync());
+        return $response->map(fn ($item) => $item->sync());
     }
 
     /**
@@ -275,20 +275,36 @@ abstract class BaseResource
         int|string $element_id,
         array $params,
         bool $sync = false
-    ): DataObjectContract|Model|bool {
-        $api = $this->service->makeRequest();
-        $response = $api->put(sprintf('%s/%s', $this->endpoint, $element_id), $params);
+    ): DataObjectContract|Model|null {
+        $response = $this->service->put(
+            endpoint: sprintf('%s/%s', $this->endpoint, $element_id),
+            data: $params
+        );
 
-        if ($response) {
-            $dataObject = $this->factory::make(attributes: (array) $response);
-
-            if ($sync) {
-                return $dataObject->sync();
-            }
-
-            return $dataObject;
+        if ($response->failed()) {
+            return null;
         }
 
-        return false;
+        $dataObject = $this->factory::make($response->json());
+
+        if ($sync) {
+            return $dataObject->sync();
+        }
+
+        return $dataObject;
+        // $api = $this->service->makeRequest();
+        // $response = $api->put(sprintf('%s/%s', $this->endpoint, $element_id), $params);
+
+        // if ($response) {
+        //     $dataObject = $this->factory::make(attributes: (array) $response);
+
+        //     if ($sync) {
+        //         return $dataObject->sync();
+        //     }
+
+        //     return $dataObject;
+        // }
+
+        // return false;
     }
 }

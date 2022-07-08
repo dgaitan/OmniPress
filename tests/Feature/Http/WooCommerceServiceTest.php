@@ -85,6 +85,33 @@ class WooCommerceServiceTest extends BaseHttp
         $this->assertIsObject($res->object()->billing);
     }
 
+    public function test_woocommerce_service_should_send_put_requests(): void
+    {
+        $api = WooCommerceService::make();
+
+        Http::fake([
+            'https://api.com/v1/put' => Http::response(
+                body: [
+                    'status' => 'ok',
+                ],
+                status: 200
+            ),
+        ]);
+
+        $request = $api->put(endpoint: 'https://api.com/v1/put', data: [
+            'meta_data' => [
+                [
+                    'key' => 'mi_new_key_from_api',
+                    'value' => 'my_new_value_from_api',
+                ],
+            ],
+        ]);
+
+        $this->assertTrue($request->ok());
+        $this->assertEquals(200, $request->status());
+        $this->assertEquals('ok', $request->object()->status);
+    }
+
     protected function getEndpointUrl(string $endpoint): string
     {
         return sprintf('%s%s', $this->apiUrl, $endpoint);

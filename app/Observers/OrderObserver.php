@@ -2,8 +2,11 @@
 
 namespace App\Observers;
 
-use App\Jobs\Donations\OrderWasSyncedJob;
-use App\Jobs\Printforia\ProcessPrintforiaOrderJob;
+use App\Actions\Donations\AssignOrderDonationToCustomerAction;
+use App\Actions\WooCommerce\Orders\SyncCustomerIfExistsAction;
+use App\Jobs\Donations\AssignOrderDonationJob;
+use App\Jobs\Pritnforia\MaybeCreatePrintforiaOrderJob;
+use App\Jobs\WooCommerce\Orders\SyncOrderLineItemProductsJob;
 use App\Models\WooCommerce\Order;
 use App\Notifications\Orders\NewOrderNotification;
 use Illuminate\Support\Facades\Bus;
@@ -22,8 +25,11 @@ class OrderObserver
         $order->notify((new NewOrderNotification($order))->delay(now()->addMinute()));
 
         Bus::chain([
-            new OrderWasSyncedJob($order),
-            new ProcessPrintforiaOrderJob($order),
+            new SyncOrderLineItemProductsJob($order),
+            new AssignOrderDonationJob($order->id),
+            AssignOrderDonationToCustomerAction::makeJob($order->id),
+            SyncCustomerIfExistsAction::makeJob($order),
+            new MaybeCreatePrintforiaOrderJob($order),
         ])->dispatch();
     }
 

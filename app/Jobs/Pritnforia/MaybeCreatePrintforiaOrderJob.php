@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Jobs\Donations;
+namespace App\Jobs\Pritnforia;
 
-use App\Jobs\SingleWooCommerceSync;
+use App\Actions\Printforia\MaybeCreatePrintforiaOrderAction;
 use App\Models\WooCommerce\Order;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -10,7 +10,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class OrderWasSyncedJob implements ShouldQueue
+class MaybeCreatePrintforiaOrderJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -21,7 +21,6 @@ class OrderWasSyncedJob implements ShouldQueue
      */
     public function __construct(protected Order $order)
     {
-        //
     }
 
     /**
@@ -31,8 +30,6 @@ class OrderWasSyncedJob implements ShouldQueue
      */
     public function handle()
     {
-        if ($this->order->customer) {
-            SingleWooCommerceSync::dispatch($this->order->customer->customer_id, 'customers');
-        }
+        MaybeCreatePrintforiaOrderAction::run($this->order);
     }
 }

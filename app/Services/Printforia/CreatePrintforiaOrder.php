@@ -74,7 +74,7 @@ class CreatePrintforiaOrder extends BaseService
             ),
             'quantity' => $quantity,
             'sku' => $product->getPrintforiaSku(),
-            'description'=> $product->getPrintforiaDescription(),
+            'description' => $product->getPrintforiaDescription(),
             'prints' => $product->getPrintforiaPrints(),
         ];
     }

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Jobs\Donations;
+namespace App\Jobs\WooCommerce\Orders;
 
-use App\Jobs\SingleWooCommerceSync;
+use App\Actions\WooCommerce\Orders\SyncOrderLineItemProductsAction;
 use App\Models\WooCommerce\Order;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -10,7 +10,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class OrderWasSyncedJob implements ShouldQueue
+class SyncOrderLineItemProductsJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -31,8 +31,6 @@ class OrderWasSyncedJob implements ShouldQueue
      */
     public function handle()
     {
-        if ($this->order->customer) {
-            SingleWooCommerceSync::dispatch($this->order->customer->customer_id, 'customers');
-        }
+        SyncOrderLineItemProductsAction::run($this->order);
     }
 }

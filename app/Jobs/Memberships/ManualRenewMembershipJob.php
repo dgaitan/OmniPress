@@ -93,7 +93,7 @@ class ManualRenewMembershipJob implements ShouldQueue
             if ($order->id) {
                 $order->update([
                     'has_membership' => true,
-                    'membership_id'  => $membership->id,
+                    'membership_id' => $membership->id,
                 ]);
                 $membership->pending_order_id = $order->order_id;
                 $membership->save();

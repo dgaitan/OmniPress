@@ -58,19 +58,19 @@ class PrintforiaApiClientTest extends BaseHttp
     public function test_printforia_get_order_detail()
     {
         Http::fake([
-            'https://api-sandbox.printforia.com/v2/orders/V1StGXR8_Z5jdHi6B-myT' => Http::response(
+            'https://api-sandbox.printforia.com/v2/orders/Bl2gAKAJuW9dPqiKxndwK' => Http::response(
                 body: $this->fixture('printforiaOrder'),
                 status: 200
             ),
         ]);
 
         $api = new PrintforiaApiClient;
-        $request = $api->getOrder(orderId: 'V1StGXR8_Z5jdHi6B-myT');
+        $request = $api->getOrder(orderId: 'Bl2gAKAJuW9dPqiKxndwK');
 
         $this->assertTrue($request->ok());
         $this->assertEquals(200, $request->status());
-        $this->assertEquals('V1StGXR8_Z5jdHi6B-myT', $request->object()->id);
-        $this->assertEquals('created', $request->object()->status);
+        $this->assertEquals('Bl2gAKAJuW9dPqiKxndwK', $request->object()->id);
+        $this->assertEquals('unapproved', $request->object()->status);
     }
 
     // public function test_printforia_create_order_detail()

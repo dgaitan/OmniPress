@@ -2,15 +2,14 @@
 
 namespace App\Jobs\Donations;
 
-use App\Jobs\SingleWooCommerceSync;
-use App\Models\WooCommerce\Order;
+use App\Actions\Donations\AssignOrderDonationAction;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class OrderWasSyncedJob implements ShouldQueue
+class AssignOrderDonationJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -19,7 +18,7 @@ class OrderWasSyncedJob implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(protected Order $order)
+    public function __construct(protected string|int $orderId)
     {
         //
     }
@@ -31,8 +30,6 @@ class OrderWasSyncedJob implements ShouldQueue
      */
     public function handle()
     {
-        if ($this->order->customer) {
-            SingleWooCommerceSync::dispatch($this->order->customer->customer_id, 'customers');
-        }
+        AssignOrderDonationAction::run($this->orderId);
     }
 }
