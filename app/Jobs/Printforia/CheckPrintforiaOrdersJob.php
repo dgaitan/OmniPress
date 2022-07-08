@@ -2,8 +2,8 @@
 
 namespace App\Jobs\Printforia;
 
+use App\Actions\Printforia\CheckPrintforiaOrderAction;
 use App\Models\Printforia\PrintforiaOrder;
-use App\Services\Printforia\ProcessPrintforiaOrder;
 use App\Services\QueryService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -35,10 +35,8 @@ class CheckPrintforiaOrdersJob implements ShouldQueue
         QueryService::walkTrough(
             PrintforiaOrder::whereIn('status', ['unapproved', 'approved', 'in-progress']),
             function ($printforiaOrder) {
-                ProcessPrintforiaOrder::dispatchWithoutValidations($printforiaOrder->order, $printforiaOrder);
-                SyncOrdersIfCompleted::dispatch($printforiaOrder);
+                CheckPrintforiaOrderAction::run($printforiaOrder);
             }
         );
-
     }
 }

@@ -22,6 +22,7 @@ class PaymentMethod extends BaseObject implements DataObjectContract
         $this->boolean('enabled', true);
         $this->string('method_title');
         $this->array('method_supports', []);
+        $this->string('method_description', '');
         $this->array('settings', []);
     }
 

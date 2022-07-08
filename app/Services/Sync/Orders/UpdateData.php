@@ -2,11 +2,8 @@
 
 namespace App\Services\Sync\Orders;
 
-use App\Jobs\SingleWooCommerceSync;
-use App\Models\Sync;
 use App\Models\WooCommerce\Order;
 use App\Services\BaseService;
-use Illuminate\Validation\Rule;
 
 class UpdateData extends BaseService
 {
@@ -17,7 +14,8 @@ class UpdateData extends BaseService
      * @param [type] $element_id
      */
     public function __construct(public Order $order, public array $params)
-    {}
+    {
+    }
 
     /**
      * Handle the Service

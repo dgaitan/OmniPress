@@ -3,6 +3,7 @@
 namespace App\Models\WooCommerce;
 
 use App\Models\Concerns\HasMetaData;
+use App\Models\Concerns\HasMoney;
 use App\Models\Membership;
 use App\Models\Printforia\HasPrintforia;
 use App\Models\Printforia\PrintforiaOrderItem;
@@ -15,7 +16,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Scout\Searchable;
-use phpDocumentor\Reflection\Types\Null_;
 
 /**
  * App\Models\WooCommerce\Product
@@ -46,6 +46,7 @@ use phpDocumentor\Reflection\Types\Null_;
  * @property mixed $sale_price
  * @property array $settings
  * @property array $meta_data
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Product newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Product newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Product query()
@@ -76,6 +77,7 @@ use phpDocumentor\Reflection\Types\Null_;
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereVirtual($value)
  * @mixin \Eloquent
+ *
  * @property-read Product|null $children
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\WooCommerce\ProductImage[] $images
  * @property-read int|null $images_count
@@ -86,7 +88,9 @@ use phpDocumentor\Reflection\Types\Null_;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\WooCommerce\Tag[] $tags
  * @property-read int|null $tags_count
  * @property int|null $service_id
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereServiceId($value)
+ *
  * @property-read Service|null $service
  * @property-read \Illuminate\Database\Eloquent\Collection|Membership[] $memberships
  * @property-read int|null $memberships_count
@@ -101,10 +105,13 @@ use phpDocumentor\Reflection\Types\Null_;
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
  * @property-read int|null $notifications_count
  * @property-read SubscriptionProduct|null $subscription
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereHasSubscription($value)
+ *
  * @property-read \Illuminate\Database\Eloquent\Collection|PrintforiaOrderItem[] $printforiaItems
  * @property-read int|null $printforia_items_count
  * @property bool|null $is_printforia
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Product whereIsPrintforia($value)
  */
 class Product extends Model
@@ -115,6 +122,7 @@ class Product extends Model
     use Searchable;
     use Notifiable;
     use HasPrintforia;
+    use HasMoney;
 
     protected $casts = [
         'price' => 'decimal:2',
@@ -150,7 +158,7 @@ class Product extends Model
         'settings',
         'meta_data',
         'is_subscription',
-        'is_printforia'
+        'is_printforia',
     ];
 
     /**
@@ -337,7 +345,7 @@ class Product extends Model
     /**
      * Find by product ID
      *
-     * @param string|integer $productId
+     * @param  string|int  $productId
      * @return self|null
      */
     public static function findByProductId(string|int $productId): self|null

@@ -3,6 +3,8 @@
 namespace App\Services\Printforia;
 
 use App\Models\WooCommerce\Order;
+use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use InvalidArgumentException;
 
@@ -40,11 +42,11 @@ class PrintforiaApiClient
     /**
      * Create an Order
      *
-     * @param Order $order
-     * @param array $items
+     * @param  Order  $order
+     * @param  array  $items
      * @return void
      */
-    public function createOrder(Order $order, array $items)
+    public function createOrder(Order $order, array $items): Response
     {
         $params = [
             'customer_reference' => sprintf('order-%s', $order->order_id),
@@ -62,7 +64,7 @@ class PrintforiaApiClient
                 'postal_code' => $order->shipping->postcode,
                 'country_code' => $order->shipping->country,
                 'email' => $order->billing->email,
-                'phone' => ''
+                'phone' => '',
             ],
             'return_to_address' => [
                 'recipient' => sprintf(
@@ -76,10 +78,10 @@ class PrintforiaApiClient
                 'city' => $order->shipping->city,
                 'region' => $order->shipping->state,
                 'postal_code' => $order->shipping->postcode,
-                'country_code' => $order->shipping->country
+                'country_code' => $order->shipping->country,
             ],
             'shipping_method' => 'standard',
-            'items' => $items
+            'items' => $items,
         ];
 
         return $this->request()->post(
@@ -118,7 +120,7 @@ class PrintforiaApiClient
     /**
      * INitialize Api Request
      */
-    public function request()
+    public function request(): PendingRequest
     {
         return Http::withHeaders([
             'X-Token' => $this->apiKey,

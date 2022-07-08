@@ -21,6 +21,7 @@
         "laravel/scout": "^9.4",
         "laravel/slack-notification-channel": "^2.4",
         "laravel/tinker": "^2.5",
+        "lorisleiva/laravel-actions": "^2.4",
         "maatwebsite/excel": "^3.1",
         "meilisearch/meilisearch-php": "^0.22.0",
         "myclabs/php-enum": "^1.8",
@@ -43,7 +44,8 @@
         "pestphp/pest-plugin-laravel": "^1.2",
         "phpunit/phpunit": "^9.5.10",
         "spatie/laravel-ignition": "^1.0",
-        "thedevsaddam/laravel-schema": "^2.0"
+        "thedevsaddam/laravel-schema": "^2.0",
+        "wulfheart/laravel-actions-ide-helper": "^0.3.0"
     },
     "autoload": {
         "psr-4": {

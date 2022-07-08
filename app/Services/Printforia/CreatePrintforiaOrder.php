@@ -17,7 +17,8 @@ class CreatePrintforiaOrder extends BaseService
      * @param [type] $element_id
      */
     public function __construct(public Order $order)
-    {}
+    {
+    }
 
     /**
      * Handle the Service
@@ -29,7 +30,9 @@ class CreatePrintforiaOrder extends BaseService
         $printforiaOrderItems = [];
 
         foreach ($this->order->items as $item) {
-            if (! $item->product->is_printforia) continue;
+            if (! $item->product->is_printforia) {
+                continue;
+            }
             $printforiaOrderItems[] = $this->getPrintforiaLineItem($item->product, $item->quantity);
         }
 
@@ -39,7 +42,7 @@ class CreatePrintforiaOrder extends BaseService
 
             if ($response->ok()) {
                 $printforiaOrder = PrintforiaOrder::firstOrNew([
-                    'printforia_order_id' => $response->object()->id
+                    'printforia_order_id' => $response->object()->id,
                 ]);
 
                 ProcessPrintforiaOrder::dispatchWithoutValidations(
@@ -49,7 +52,7 @@ class CreatePrintforiaOrder extends BaseService
                 UpdateOrderData::dispatchWithoutValidations(
                     $this->order,
                     ['meta_data' => [
-                        ['key' => '_printforia_order_id', 'value' => $response->object()->id]
+                        ['key' => '_printforia_order_id', 'value' => $response->object()->id],
                     ]]
                 );
             }
@@ -59,8 +62,8 @@ class CreatePrintforiaOrder extends BaseService
     /**
      * Get Printforia Line Item
      *
-     * @param Product $product
-     * @param integer $quantity
+     * @param  Product  $product
+     * @param  int  $quantity
      * @return array
      */
     public function getPrintforiaLineItem(Product $product, int $quantity): array
@@ -71,8 +74,8 @@ class CreatePrintforiaOrder extends BaseService
             ),
             'quantity' => $quantity,
             'sku' => $product->getPrintforiaSku(),
-            'description'=> $product->getPrintforiaDescription(),
-            'prints' => $product->getPrintforiaPrints()
+            'description' => $product->getPrintforiaDescription(),
+            'prints' => $product->getPrintforiaPrints(),
         ];
     }
 }

@@ -1,0 +1,107 @@
+{
+    "id": "kindhumans_stripe_gateway",
+    "title": "Credit Card",
+    "description": "Pay with a credit card.",
+    "order": 3,
+    "enabled": true,
+    "method_title": "Kindhumans Stripe Gateway",
+    "method_description": "Custom Stripe Gateway for Kindhumans Checkout",
+    "method_supports": [
+        "products",
+        "tokenization",
+        "subscriptions",
+        "add_payment_method",
+        "subscription_cancellation",
+        "subscription_suspension",
+        "subscription_reactivation",
+        "subscription_amount_changes",
+        "subscription_date_changes",
+        "subscription_payment_method_change",
+        "subscription_payment_method_change_customer",
+        "subscription_payment_method_change_admin"
+    ],
+    "settings": {
+        "title": {
+            "id": "title",
+            "label": "Title",
+            "description": "This controls the title for the payment method the customer sees during checkout.",
+            "type": "text",
+            "value": "Credit Card",
+            "default": "Credit Cart",
+            "tip": "This controls the title for the payment method the customer sees during checkout.",
+            "placeholder": ""
+        },
+        "instructions": {
+            "id": "instructions",
+            "label": "Instructions",
+            "description": "Instructions that will be added to the thank you page and emails.",
+            "type": "textarea",
+            "value": "",
+            "default": "",
+            "tip": "Instructions that will be added to the thank you page and emails.",
+            "placeholder": ""
+        },
+        "testmode": {
+            "id": "testmode",
+            "label": "Enable Test Mode",
+            "description": "Place the payment gateway in test mode using test API keys.",
+            "type": "checkbox",
+            "value": "yes",
+            "default": "yes",
+            "tip": "Place the payment gateway in test mode using test API keys.",
+            "placeholder": ""
+        },
+        "test_publishable_key": {
+            "id": "test_publishable_key",
+            "label": "Test Publishable Key",
+            "description": "Get your API keys from your stripe account.",
+            "type": "password",
+            "value": "pk_test_9C5X9WKcUNCMJ3eGD6wvg7kF",
+            "default": "",
+            "tip": "Get your API keys from your stripe account.",
+            "placeholder": ""
+        },
+        "test_secret_key": {
+            "id": "test_secret_key",
+            "label": "Test Secret Key",
+            "description": "Get your API keys from your stripe account.",
+            "type": "password",
+            "value": "sk_test_1Bq5O5N7XOOFGrIm6qyELU0n",
+            "default": "",
+            "tip": "Get your API keys from your stripe account.",
+            "placeholder": ""
+        },
+        "publishable_key": {
+            "id": "publishable_key",
+            "label": "Live Publishable Key",
+            "description": "Get your API keys from your stripe account.",
+            "type": "password",
+            "value": "acf-field",
+            "default": "",
+            "tip": "Get your API keys from your stripe account.",
+            "placeholder": ""
+        },
+        "secret_key": {
+            "id": "secret_key",
+            "label": "Live Secret Key",
+            "description": "Get your API keys from your stripe account.",
+            "type": "password",
+            "value": "sk_test_1Bq5O5N7XOOFGrIm6qyELU0n",
+            "default": "",
+            "tip": "Get your API keys from your stripe account.",
+            "placeholder": ""
+        }
+    },
+    "_links": {
+        "self": [
+            {
+                "href": "http://kind.humans/wp-json/wc/v3/payment_gateways/kindhumans_stripe_gateway"
+            }
+        ],
+        "collection": [
+            {
+                "href": "http://kind.humans/wp-json/wc/v3/payment_gateways"
+            }
+        ]
+    }
+}

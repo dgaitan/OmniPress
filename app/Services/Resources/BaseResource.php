@@ -101,6 +101,82 @@ abstract class BaseResource
     }
 
     /**
+     * Get an element
+     *
+     * @param  int|string  $id
+     * @return DataObjectContract
+     */
+    public function get(int|string $id): DataObjectContract|null
+    {
+        $response = $this->service->get(
+            sprintf('%s/%s', $this->endpoint, $id)
+        );
+
+        if (! $response->ok()) {
+            return null;
+        }
+
+        return $this->factory::make(attributes: (array) $response->json());
+    }
+
+    /**
+     * Collect elements
+     *
+     * @param  array  $params
+     * @return Collection|null
+     */
+    public function collect(array $params = []): Collection|null
+    {
+        if (! isset($params['per_page'])) {
+            $params['per_page'] = 100;
+        }
+
+        $response = $this->service->get($this->endpoint, $params);
+
+        if ($response->failed()) {
+            return null;
+        }
+
+        return collect($response->json())->map(fn (array $item) => $this->factory::make(
+            attributes: $item
+        ));
+    }
+
+    /**
+     * Get And Syncronize an item
+     *
+     * @param  int|string  $id
+     * @return Model|null
+     */
+    public function getAndSync(int|string $id): Model|null
+    {
+        $item = $this->get($id);
+
+        if (is_null($item)) {
+            return null;
+        }
+
+        return $item->sync();
+    }
+
+    /**
+     * Collect elements and syncronize it
+     *
+     * @param  array  $params
+     * @return Collection|null
+     */
+    public function collectAndSync(array $params = []): Collection|null
+    {
+        $response = $this->collect(params: $params);
+
+        if (is_null($response)) {
+            return null;
+        }
+
+        return $response->map(fn ($item) => $item->sync());
+    }
+
+    /**
      * Get all and sync.
      *
      * Basically Sync all elements
@@ -199,20 +275,36 @@ abstract class BaseResource
         int|string $element_id,
         array $params,
         bool $sync = false
-    ): DataObjectContract|Model|bool {
-        $api = $this->service->makeRequest();
-        $response = $api->put(sprintf('%s/%s', $this->endpoint, $element_id), $params);
+    ): DataObjectContract|Model|null {
+        $response = $this->service->put(
+            endpoint: sprintf('%s/%s', $this->endpoint, $element_id),
+            data: $params
+        );
 
-        if ($response) {
-            $dataObject = $this->factory::make(attributes: (array) $response);
-
-            if ($sync) {
-                return $dataObject->sync();
-            }
-
-            return $dataObject;
+        if ($response->failed()) {
+            return null;
         }
 
-        return false;
+        $dataObject = $this->factory::make($response->json());
+
+        if ($sync) {
+            return $dataObject->sync();
+        }
+
+        return $dataObject;
+        // $api = $this->service->makeRequest();
+        // $response = $api->put(sprintf('%s/%s', $this->endpoint, $element_id), $params);
+
+        // if ($response) {
+        //     $dataObject = $this->factory::make(attributes: (array) $response);
+
+        //     if ($sync) {
+        //         return $dataObject->sync();
+        //     }
+
+        //     return $dataObject;
+        // }
+
+        // return false;
     }
 }

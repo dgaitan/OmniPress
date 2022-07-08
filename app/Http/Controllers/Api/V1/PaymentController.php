@@ -46,7 +46,7 @@ class PaymentController extends Controller
             if ($request->customer_id) {
                 $customer = Customer::firstOrNew([
                     'customer_id' => $request->customer_id,
-                    'email'       => $request->customer_email,
+                    'email' => $request->customer_email,
                 ]);
 
                 if (! $customer->username) {

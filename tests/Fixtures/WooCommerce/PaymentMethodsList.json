@@ -1,0 +1,579 @@
+[
+    {
+        "id": "bacs",
+        "title": "Direct bank transfer",
+        "description": "Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order will not be shipped until the funds have cleared in our account.",
+        "order": 0,
+        "enabled": false,
+        "method_title": "Direct bank transfer",
+        "method_description": "Take payments in person via BACS. More commonly known as direct bank/wire transfer.",
+        "method_supports": [
+            "products"
+        ],
+        "settings": {
+            "title": {
+                "id": "title",
+                "label": "Title",
+                "description": "This controls the title which the user sees during checkout.",
+                "type": "text",
+                "value": "Direct bank transfer",
+                "default": "Direct bank transfer",
+                "tip": "This controls the title which the user sees during checkout.",
+                "placeholder": ""
+            },
+            "instructions": {
+                "id": "instructions",
+                "label": "Instructions",
+                "description": "Instructions that will be added to the thank you page and emails.",
+                "type": "textarea",
+                "value": "",
+                "default": "",
+                "tip": "Instructions that will be added to the thank you page and emails.",
+                "placeholder": ""
+            }
+        },
+        "_links": {
+            "self": [
+                {
+                    "href": "http://kind.humans/wp-json/wc/v3/payment_gateways/bacs"
+                }
+            ],
+            "collection": [
+                {
+                    "href": "http://kind.humans/wp-json/wc/v3/payment_gateways"
+                }
+            ]
+        }
+    },
+    {
+        "id": "cheque",
+        "title": "Check payments",
+        "description": "Please send a check to Store Name, Store Street, Store Town, Store State / County, Store Postcode.",
+        "order": 1,
+        "enabled": false,
+        "method_title": "Check payments",
+        "method_description": "Take payments in person via checks. This offline gateway can also be useful to test purchases.",
+        "method_supports": [
+            "products"
+        ],
+        "settings": {
+            "title": {
+                "id": "title",
+                "label": "Title",
+                "description": "This controls the title which the user sees during checkout.",
+                "type": "text",
+                "value": "Check payments",
+                "default": "Check payments",
+                "tip": "This controls the title which the user sees during checkout.",
+                "placeholder": ""
+            },
+            "instructions": {
+                "id": "instructions",
+                "label": "Instructions",
+                "description": "Instructions that will be added to the thank you page and emails.",
+                "type": "textarea",
+                "value": "",
+                "default": "",
+                "tip": "Instructions that will be added to the thank you page and emails.",
+                "placeholder": ""
+            }
+        },
+        "_links": {
+            "self": [
+                {
+                    "href": "http://kind.humans/wp-json/wc/v3/payment_gateways/cheque"
+                }
+            ],
+            "collection": [
+                {
+                    "href": "http://kind.humans/wp-json/wc/v3/payment_gateways"
+                }
+            ]
+        }
+    },
+    {
+        "id": "cod",
+        "title": "Cash on delivery",
+        "description": "Pay with cash upon delivery.",
+        "order": 2,
+        "enabled": false,
+        "method_title": "Cash on delivery",
+        "method_description": "Have your customers pay with cash (or by other means) upon delivery.",
+        "method_supports": [
+            "products"
+        ],
+        "settings": {
+            "title": {
+                "id": "title",
+                "label": "Title",
+                "description": "Payment method description that the customer will see on your checkout.",
+                "type": "text",
+                "value": "Cash on delivery",
+                "default": "Cash on delivery",
+                "tip": "Payment method description that the customer will see on your checkout.",
+                "placeholder": ""
+            },
+            "instructions": {
+                "id": "instructions",
+                "label": "Instructions",
+                "description": "Instructions that will be added to the thank you page.",
+                "type": "textarea",
+                "value": "Pay with cash upon delivery.",
+                "default": "Pay with cash upon delivery.",
+                "tip": "Instructions that will be added to the thank you page.",
+                "placeholder": ""
+            },
+            "enable_for_methods": {
+                "id": "enable_for_methods",
+                "label": "Enable for shipping methods",
+                "description": "If COD is only available for certain methods, set it up here. Leave blank to enable for all methods.",
+                "type": "multiselect",
+                "value": "",
+                "default": "",
+                "tip": "If COD is only available for certain methods, set it up here. Leave blank to enable for all methods.",
+                "placeholder": "",
+                "options": {
+                    "Flat rate": {
+                        "flat_rate": "Any &quot;Flat rate&quot; method",
+                        "flat_rate:3": "United States (US) &ndash; Flat rate (#3)"
+                    },
+                    "Free shipping": {
+                        "free_shipping": "Any &quot;Free shipping&quot; method",
+                        "free_shipping:1": "United States (US) &ndash; Free shipping (#1)",
+                        "free_shipping:2": "Other locations &ndash; Free shipping (#2)",
+                        "free_shipping:8": "Other locations &ndash; Free shipping (#8)"
+                    },
+                    "Local pickup": {
+                        "local_pickup": "Any &quot;Local pickup&quot; method"
+                    },
+                    "FedEx": {
+                        "fedex": "Any &quot;FedEx&quot; method",
+                        "fedex:5": "United States (US) &ndash; FedEx (#5)",
+                        "fedex:6": "Other locations &ndash; FedEx (#6)"
+                    },
+                    "USPS": {
+                        "usps": "Any &quot;USPS&quot; method",
+                        "usps:4": "United States (US) &ndash; USPS (#4)",
+                        "usps:7": "Other locations &ndash; USPS (#7)"
+                    }
+                }
+            },
+            "enable_for_virtual": {
+                "id": "enable_for_virtual",
+                "label": "Accept COD if the order is virtual",
+                "description": "",
+                "type": "checkbox",
+                "value": "yes",
+                "default": "yes",
+                "tip": "",
+                "placeholder": ""
+            }
+        },
+        "_links": {
+            "self": [
+                {
+                    "href": "http://kind.humans/wp-json/wc/v3/payment_gateways/cod"
+                }
+            ],
+            "collection": [
+                {
+                    "href": "http://kind.humans/wp-json/wc/v3/payment_gateways"
+                }
+            ]
+        }
+    },
+    {
+        "id": "kindhumans_stripe_gateway",
+        "title": "Credit Card",
+        "description": "Pay with a credit card.",
+        "order": 3,
+        "enabled": true,
+        "method_title": "Kindhumans Stripe Gateway",
+        "method_description": "Custom Stripe Gateway for Kindhumans Checkout",
+        "method_supports": [
+            "products",
+            "tokenization",
+            "subscriptions",
+            "add_payment_method",
+            "subscription_cancellation",
+            "subscription_suspension",
+            "subscription_reactivation",
+            "subscription_amount_changes",
+            "subscription_date_changes",
+            "subscription_payment_method_change",
+            "subscription_payment_method_change_customer",
+            "subscription_payment_method_change_admin"
+        ],
+        "settings": {
+            "title": {
+                "id": "title",
+                "label": "Title",
+                "description": "This controls the title for the payment method the customer sees during checkout.",
+                "type": "text",
+                "value": "Credit Card",
+                "default": "Credit Cart",
+                "tip": "This controls the title for the payment method the customer sees during checkout.",
+                "placeholder": ""
+            },
+            "instructions": {
+                "id": "instructions",
+                "label": "Instructions",
+                "description": "Instructions that will be added to the thank you page and emails.",
+                "type": "textarea",
+                "value": "",
+                "default": "",
+                "tip": "Instructions that will be added to the thank you page and emails.",
+                "placeholder": ""
+            },
+            "testmode": {
+                "id": "testmode",
+                "label": "Enable Test Mode",
+                "description": "Place the payment gateway in test mode using test API keys.",
+                "type": "checkbox",
+                "value": "yes",
+                "default": "yes",
+                "tip": "Place the payment gateway in test mode using test API keys.",
+                "placeholder": ""
+            },
+            "test_publishable_key": {
+                "id": "test_publishable_key",
+                "label": "Test Publishable Key",
+                "description": "Get your API keys from your stripe account.",
+                "type": "password",
+                "value": "pk_test_9C5X9WKcUNCMJ3eGD6wvg7kF",
+                "default": "",
+                "tip": "Get your API keys from your stripe account.",
+                "placeholder": ""
+            },
+            "test_secret_key": {
+                "id": "test_secret_key",
+                "label": "Test Secret Key",
+                "description": "Get your API keys from your stripe account.",
+                "type": "password",
+                "value": "sk_test_1Bq5O5N7XOOFGrIm6qyELU0n",
+                "default": "",
+                "tip": "Get your API keys from your stripe account.",
+                "placeholder": ""
+            },
+            "publishable_key": {
+                "id": "publishable_key",
+                "label": "Live Publishable Key",
+                "description": "Get your API keys from your stripe account.",
+                "type": "password",
+                "value": "acf-field",
+                "default": "",
+                "tip": "Get your API keys from your stripe account.",
+                "placeholder": ""
+            },
+            "secret_key": {
+                "id": "secret_key",
+                "label": "Live Secret Key",
+                "description": "Get your API keys from your stripe account.",
+                "type": "password",
+                "value": "sk_test_1Bq5O5N7XOOFGrIm6qyELU0n",
+                "default": "",
+                "tip": "Get your API keys from your stripe account.",
+                "placeholder": ""
+            }
+        },
+        "_links": {
+            "self": [
+                {
+                    "href": "http://kind.humans/wp-json/wc/v3/payment_gateways/kindhumans_stripe_gateway"
+                }
+            ],
+            "collection": [
+                {
+                    "href": "http://kind.humans/wp-json/wc/v3/payment_gateways"
+                }
+            ]
+        }
+    },
+    {
+        "id": "kindhumans_paypal_gateway",
+        "title": "Paypal Checkout",
+        "description": "Pay with your paypal account.",
+        "order": 5,
+        "enabled": true,
+        "method_title": "Kindhumans Paypal Gateway",
+        "method_description": "Custom Paypal Gateway for Kindhumans Checkout",
+        "method_supports": [
+            "products"
+        ],
+        "settings": {
+            "title": {
+                "id": "title",
+                "label": "Title",
+                "description": "This controls the title for the payment method the customer sees during checkout.",
+                "type": "text",
+                "value": "Paypal Checkout",
+                "default": "Paypal Checkout",
+                "tip": "This controls the title for the payment method the customer sees during checkout.",
+                "placeholder": ""
+            },
+            "instructions": {
+                "id": "instructions",
+                "label": "Instructions",
+                "description": "Instructions that will be added to the thank you page and emails.",
+                "type": "textarea",
+                "value": "",
+                "default": "",
+                "tip": "Instructions that will be added to the thank you page and emails.",
+                "placeholder": ""
+            },
+            "api_key": {
+                "id": "api_key",
+                "label": "Paypal Api Key",
+                "description": "Get your API key from your paypal developer account.",
+                "type": "password",
+                "value": "AbS3YcfRQLzt0zvMGwUyVKmGdEQNdcAZ5iqg6P1RojBt984h-ZwGQJn1CouNbYkVk6YW5eh1kjnI-L74",
+                "default": "",
+                "tip": "Get your API key from your paypal developer account.",
+                "placeholder": ""
+            }
+        },
+        "_links": {
+            "self": [
+                {
+                    "href": "http://kind.humans/wp-json/wc/v3/payment_gateways/kindhumans_paypal_gateway"
+                }
+            ],
+            "collection": [
+                {
+                    "href": "http://kind.humans/wp-json/wc/v3/payment_gateways"
+                }
+            ]
+        }
+    },
+    {
+        "id": "paypal",
+        "title": "PayPal",
+        "description": "Pay via PayPal; you can pay with your credit card if you don't have a PayPal account.",
+        "order": 6,
+        "enabled": false,
+        "method_title": "PayPal Standard",
+        "method_description": "PayPal Standard redirects customers to PayPal to enter their payment information.",
+        "method_supports": [
+            "products",
+            "refunds"
+        ],
+        "settings": {
+            "title": {
+                "id": "title",
+                "label": "Title",
+                "description": "This controls the title which the user sees during checkout.",
+                "type": "text",
+                "value": "PayPal",
+                "default": "PayPal",
+                "tip": "This controls the title which the user sees during checkout.",
+                "placeholder": ""
+            },
+            "email": {
+                "id": "email",
+                "label": "PayPal email",
+                "description": "Please enter your PayPal email address; this is needed in order to take payment.",
+                "type": "email",
+                "value": "info@kindhumans.com",
+                "default": "info@kindhumans.com",
+                "tip": "Please enter your PayPal email address; this is needed in order to take payment.",
+                "placeholder": "you@youremail.com"
+            },
+            "advanced": {
+                "id": "advanced",
+                "label": "Advanced options",
+                "description": "",
+                "type": "title",
+                "value": "",
+                "default": "",
+                "tip": "",
+                "placeholder": ""
+            },
+            "testmode": {
+                "id": "testmode",
+                "label": "Enable PayPal sandbox",
+                "description": "PayPal sandbox can be used to test payments. Sign up for a <a href=\"https://developer.paypal.com/\">developer account</a>.",
+                "type": "checkbox",
+                "value": "no",
+                "default": "no",
+                "tip": "PayPal sandbox can be used to test payments. Sign up for a <a href=\"https://developer.paypal.com/\">developer account</a>.",
+                "placeholder": ""
+            },
+            "debug": {
+                "id": "debug",
+                "label": "Enable logging",
+                "description": "Log PayPal events, such as IPN requests, inside <code>/Users/dgaitan/Documents/Code/wp/kind.humans/app/public/wp-content/uploads/wc-logs/paypal-2022-07-05-cf03e59be5d9d9c92e55581ec75836d5.log</code> Note: this may log personal information. We recommend using this for debugging purposes only and deleting the logs when finished.",
+                "type": "checkbox",
+                "value": "no",
+                "default": "no",
+                "tip": "Log PayPal events, such as IPN requests, inside <code>/Users/dgaitan/Documents/Code/wp/kind.humans/app/public/wp-content/uploads/wc-logs/paypal-2022-07-05-cf03e59be5d9d9c92e55581ec75836d5.log</code> Note: this may log personal information. We recommend using this for debugging purposes only and deleting the logs when finished.",
+                "placeholder": ""
+            },
+            "ipn_notification": {
+                "id": "ipn_notification",
+                "label": "Enable IPN email notifications",
+                "description": "Send notifications when an IPN is received from PayPal indicating refunds, chargebacks and cancellations.",
+                "type": "checkbox",
+                "value": "yes",
+                "default": "yes",
+                "tip": "Send notifications when an IPN is received from PayPal indicating refunds, chargebacks and cancellations.",
+                "placeholder": ""
+            },
+            "receiver_email": {
+                "id": "receiver_email",
+                "label": "Receiver email",
+                "description": "If your main PayPal email differs from the PayPal email entered above, input your main receiver email for your PayPal account here. This is used to validate IPN requests.",
+                "type": "email",
+                "value": "info@kindhumans.com",
+                "default": "",
+                "tip": "If your main PayPal email differs from the PayPal email entered above, input your main receiver email for your PayPal account here. This is used to validate IPN requests.",
+                "placeholder": "you@youremail.com"
+            },
+            "identity_token": {
+                "id": "identity_token",
+                "label": "PayPal identity token",
+                "description": "Optionally enable \"Payment Data Transfer\" (Profile > Profile and Settings > My Selling Tools > Website Preferences) and then copy your identity token here. This will allow payments to be verified without the need for PayPal IPN.",
+                "type": "text",
+                "value": "AbS3YcfRQLzt0zvMGwUyVKmGdEQNdcAZ5iqg6P1RojBt984h-ZwGQJn1CouNbYkVk6YW5eh1kjnI-L74",
+                "default": "",
+                "tip": "Optionally enable \"Payment Data Transfer\" (Profile > Profile and Settings > My Selling Tools > Website Preferences) and then copy your identity token here. This will allow payments to be verified without the need for PayPal IPN.",
+                "placeholder": ""
+            },
+            "invoice_prefix": {
+                "id": "invoice_prefix",
+                "label": "Invoice prefix",
+                "description": "Please enter a prefix for your invoice numbers. If you use your PayPal account for multiple stores ensure this prefix is unique as PayPal will not allow orders with the same invoice number.",
+                "type": "text",
+                "value": "WCKH-",
+                "default": "WC-",
+                "tip": "Please enter a prefix for your invoice numbers. If you use your PayPal account for multiple stores ensure this prefix is unique as PayPal will not allow orders with the same invoice number.",
+                "placeholder": ""
+            },
+            "send_shipping": {
+                "id": "send_shipping",
+                "label": "Send shipping details to PayPal instead of billing.",
+                "description": "PayPal allows us to send one address. If you are using PayPal for shipping labels you may prefer to send the shipping address rather than billing. Turning this option off may prevent PayPal Seller protection from applying.",
+                "type": "checkbox",
+                "value": "yes",
+                "default": "yes",
+                "tip": "PayPal allows us to send one address. If you are using PayPal for shipping labels you may prefer to send the shipping address rather than billing. Turning this option off may prevent PayPal Seller protection from applying.",
+                "placeholder": ""
+            },
+            "address_override": {
+                "id": "address_override",
+                "label": "Enable \"address_override\" to prevent address information from being changed.",
+                "description": "PayPal verifies addresses therefore this setting can cause errors (we recommend keeping it disabled).",
+                "type": "checkbox",
+                "value": "no",
+                "default": "no",
+                "tip": "PayPal verifies addresses therefore this setting can cause errors (we recommend keeping it disabled).",
+                "placeholder": ""
+            },
+            "paymentaction": {
+                "id": "paymentaction",
+                "label": "Payment action",
+                "description": "Choose whether you wish to capture funds immediately or authorize payment only.",
+                "type": "select",
+                "value": "sale",
+                "default": "sale",
+                "tip": "Choose whether you wish to capture funds immediately or authorize payment only.",
+                "placeholder": "",
+                "options": {
+                    "sale": "Capture",
+                    "authorization": "Authorize"
+                }
+            },
+            "image_url": {
+                "id": "image_url",
+                "label": "Image url",
+                "description": "Optionally enter the URL to a 150x50px image displayed as your logo in the upper left corner of the PayPal checkout pages.",
+                "type": "text",
+                "value": "",
+                "default": "",
+                "tip": "Optionally enter the URL to a 150x50px image displayed as your logo in the upper left corner of the PayPal checkout pages.",
+                "placeholder": "Optional"
+            },
+            "api_details": {
+                "id": "api_details",
+                "label": "API credentials",
+                "description": "Enter your PayPal API credentials to process refunds via PayPal. Learn how to access your <a href=\"https://developer.paypal.com/webapps/developer/docs/classic/api/apiCredentials/#create-an-api-signature\">PayPal API Credentials</a>.",
+                "type": "title",
+                "value": "",
+                "default": "",
+                "tip": "Enter your PayPal API credentials to process refunds via PayPal. Learn how to access your <a href=\"https://developer.paypal.com/webapps/developer/docs/classic/api/apiCredentials/#create-an-api-signature\">PayPal API Credentials</a>.",
+                "placeholder": ""
+            },
+            "api_username": {
+                "id": "api_username",
+                "label": "Live API username",
+                "description": "Get your API credentials from PayPal.",
+                "type": "text",
+                "value": "dan@kindhumans.com",
+                "default": "",
+                "tip": "Get your API credentials from PayPal.",
+                "placeholder": "Optional"
+            },
+            "api_password": {
+                "id": "api_password",
+                "label": "Live API password",
+                "description": "Get your API credentials from PayPal.",
+                "type": "password",
+                "value": "KH@P47P4l",
+                "default": "",
+                "tip": "Get your API credentials from PayPal.",
+                "placeholder": "Optional"
+            },
+            "api_signature": {
+                "id": "api_signature",
+                "label": "Live API signature",
+                "description": "Get your API credentials from PayPal.",
+                "type": "password",
+                "value": "AbS3YcfRQLzt0zvMGwUyVKmGdEQNdcAZ5iqg6P1RojBt984h-ZwGQJn1CouNbYkVk6YW5eh1kjnI-L74",
+                "default": "",
+                "tip": "Get your API credentials from PayPal.",
+                "placeholder": "Optional"
+            },
+            "sandbox_api_username": {
+                "id": "sandbox_api_username",
+                "label": "Sandbox API username",
+                "description": "Get your API credentials from PayPal.",
+                "type": "text",
+                "value": "",
+                "default": "",
+                "tip": "Get your API credentials from PayPal.",
+                "placeholder": "Optional"
+            },
+            "sandbox_api_password": {
+                "id": "sandbox_api_password",
+                "label": "Sandbox API password",
+                "description": "Get your API credentials from PayPal.",
+                "type": "password",
+                "value": "",
+                "default": "",
+                "tip": "Get your API credentials from PayPal.",
+                "placeholder": "Optional"
+            },
+            "sandbox_api_signature": {
+                "id": "sandbox_api_signature",
+                "label": "Sandbox API signature",
+                "description": "Get your API credentials from PayPal.",
+                "type": "password",
+                "value": "",
+                "default": "",
+                "tip": "Get your API credentials from PayPal.",
+                "placeholder": "Optional"
+            }
+        },
+        "_links": {
+            "self": [
+                {
+                    "href": "http://kind.humans/wp-json/wc/v3/payment_gateways/paypal"
+                }
+            ],
+            "collection": [
+                {
+                    "href": "http://kind.humans/wp-json/wc/v3/payment_gateways"
+                }
+            ]
+        }
+    }
+]

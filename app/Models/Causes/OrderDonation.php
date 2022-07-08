@@ -2,8 +2,8 @@
 
 namespace App\Models\Causes;
 
-use App\Models\WooCommerce\Order;
 use App\Models\Concerns\HasMoney;
+use App\Models\WooCommerce\Order;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $amount
  * @property-read \App\Models\Causes\Cause|null $cause
  * @property-read Order|null $order
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|OrderDonation newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|OrderDonation newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|OrderDonation query()
@@ -43,7 +44,7 @@ class OrderDonation extends Model
     protected $fillable = [
         'cause_id',
         'order_id',
-        'amount'
+        'amount',
     ];
 
     /**
@@ -61,7 +62,8 @@ class OrderDonation extends Model
      *
      * @return BelongsTo
      */
-    public function cause(): BelongsTo {
+    public function cause(): BelongsTo
+    {
         return $this->belongsTo(Cause::class);
     }
 }

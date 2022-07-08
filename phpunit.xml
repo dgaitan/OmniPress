@@ -27,5 +27,8 @@
         <server name="QUEUE_CONNECTION" value="sync"/>
         <server name="SESSION_DRIVER" value="array"/>
         <server name="TELESCOPE_ENABLED" value="false"/>
+        <server name="WOO_CUSTOMER_DOMAIN" value="http://host.docker.internal:10009" />
+        <server name="CLIENT_DOMAIN" value="https://kindhumans.com" />
+        <server name="PRINTFORIA_API_KEY" value="ositocarinosito" />
     </php>
 </phpunit>
