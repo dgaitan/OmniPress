@@ -72,6 +72,7 @@ Route::middleware('auth:sanctum')->name('kinja.api.v1.')->group(function () {
 
     Route::controller(PrintforiaController::class)->name('printforia.')->prefix('/printforia')->group(function () {
         Route::get('/orders/{orderId}', 'getOrder')->name('order.show');
+        Route::post('/webhook-values/{orderId}', 'getWebhookValues')->name('webhook-values');
     });
 
     Route::controller(CustomerController::class)->name('customers.')
