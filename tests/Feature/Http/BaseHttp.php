@@ -5,9 +5,12 @@ namespace Tests\Feature\Http;
 use App\Services\WooCommerce\WooCommerceService;
 use InvalidArgumentException;
 use Tests\TestCase;
+use Tests\Utils\InteractsWithScout;
 
 class BaseHttp extends TestCase
 {
+    use InteractsWithScout;
+
     public function fixture(string $name): array
     {
         $file = file_get_contents(
