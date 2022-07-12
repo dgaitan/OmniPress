@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\WooCommerce\Orders\UpdateOrderAction;
 use App\Http\Resources\OrderResource;
 use App\Http\Resources\Printforia\PrintforiaOrdersCollection;
 use App\Http\Resources\Printforia\PrintforiaResource;
@@ -12,6 +13,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
+use Illuminate\Support\Str;
 
 class OrderController extends Controller
 {
@@ -149,6 +151,31 @@ class OrderController extends Controller
                 ];
             });
         });
+    }
+
+    public function simulateShipHero(Request $request)
+    {
+        if (env('APP_ENV', 'local') === 'production') {
+            return abort(403);
+        }
+
+        $order = Order::find($request->get('order_id'));
+
+        if (is_null($order)) {
+            return abort(404);
+        }
+
+        UpdateOrderAction::dispatch($order, [
+            'status' => 'completed',
+            'meta_data' => [
+                ['key' => '_tracking_number', 'value' => Str::random(20)]
+            ]
+        ]);
+
+        session()->flash('flash.banner', 'Order was shipped, please wait a few seconds to see it reflected!');
+        session()->flash('flash.bannerStyle', 'success');
+
+        return back()->banner('Order was shipped, please wait a few seconds to see it reflected!');
     }
 
     /**

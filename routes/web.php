@@ -100,6 +100,7 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('/dashboard')->group(fun
         Route::controller(OrderController::class)->prefix('/orders')->group(function () {
             Route::get('/', 'index')->name('kinja.orders.index');
             Route::get('/export', 'export')->name('kinja.orders.export');
+            Route::post('/simulate-shiphero', 'simulateShipHero')->name('kinja.orders.simulateShipHero');
             Route::get('/printforia', 'printforiaOrders')->name('kinja.orders.printforiaOrders');
             Route::get('/printforia/{id}', 'printforiaDetail')->name('kinja.orders.printforiaDetail');
             Route::get('/{id}', 'show')->name('kinja.orders.show');
