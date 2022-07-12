@@ -6,6 +6,7 @@ use App\Actions\WooCommerce\Orders\UpdateOrderAction;
 use App\Http\Resources\OrderResource;
 use App\Http\Resources\Printforia\PrintforiaOrdersCollection;
 use App\Http\Resources\Printforia\PrintforiaResource;
+use App\Jobs\SingleWooCommerceSync;
 use App\Models\Printforia\PrintforiaOrder;
 use App\Models\WooCommerce\Order;
 use Carbon\Carbon;
@@ -153,6 +154,12 @@ class OrderController extends Controller
         });
     }
 
+    /**
+     * Simulate that we're shipping an order by shiphero
+     *
+     * @param Request $request
+     * @return void
+     */
     public function simulateShipHero(Request $request)
     {
         if (env('APP_ENV', 'local') === 'production') {
@@ -176,6 +183,22 @@ class OrderController extends Controller
         session()->flash('flash.bannerStyle', 'success');
 
         return back()->banner('Order was shipped, please wait a few seconds to see it reflected!');
+    }
+
+    public function syncOrder(Request $request)
+    {
+        $order = Order::find($request->get('order_id'));
+
+        if (is_null($order)) {
+            return abort(404);
+        }
+
+        SingleWooCommerceSync::dispatch($order->order_id, 'orders');
+
+        session()->flash('flash.banner', 'Sync was initialized. Please wait a few seconds to see this order updated.');
+        session()->flash('flash.bannerStyle', 'success');
+
+        return back()->banner('Sync was initialized. Please wait a few seconds to see this order updated.');
     }
 
     /**

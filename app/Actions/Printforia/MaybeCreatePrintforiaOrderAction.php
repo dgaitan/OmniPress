@@ -26,7 +26,7 @@ class MaybeCreatePrintforiaOrderAction
         }
 
         if (count($printforiaOrderItems) === 0) {
-            return;
+            return false;
         }
 
         $response = (new PrintforiaApiClient)
@@ -42,6 +42,8 @@ class MaybeCreatePrintforiaOrderAction
                 true
             );
         }
+
+        return $response->object();
     }
 
     /**
