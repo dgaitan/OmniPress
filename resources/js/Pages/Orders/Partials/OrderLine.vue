@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-wrap items-start mb-5 pb-5">
+    <div class="flex flex-wrap items-start mb-5 pb-5" v-if="item.product">
         <img v-if="item.product.images && item.product.images.length > 0" :src="item.product.images[0].src" class="h-40 w-40 mr-4 object-cover rounded-md" >
         <img
             v-else

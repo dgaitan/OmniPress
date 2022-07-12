@@ -6,7 +6,7 @@
                     <OrderIntro :order="order.data" />
                 </Column>
                 <Column :mdSize="6" class="text-right">
-                    <Button size="md" @click="goToStore()">See on kindhumans.com</Button>
+                    <OrderActions :order="order.data"/>
                 </Column>
             </Row>
 
@@ -39,6 +39,7 @@ import OrderTotals from './Partials/OrderTotals.vue'
 import OrderInfo from './Partials/OrderInfo.vue'
 import OrderShipping from './Partials/OrderShipping.vue'
 import OrderDonations from './Partials/OrderDonations.vue'
+import OrderActions from './Partials/OrderActions.vue'
 import Button from '@/Components/Button.vue'
 
 export default defineComponent({
@@ -57,6 +58,7 @@ export default defineComponent({
         OrderInfo,
         OrderShipping,
         OrderDonations,
+        OrderActions,
         Button
     },
 
@@ -70,10 +72,6 @@ export default defineComponent({
         parseRole(role) {
             return role ? role.split('_').join(' ') : ''
         },
-
-        goToStore() {
-            window.open(this.order.data.permalink_on_store, '_blank').focus();
-        }
     }
 })
 </script>
