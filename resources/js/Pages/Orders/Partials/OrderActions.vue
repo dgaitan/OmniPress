@@ -17,6 +17,11 @@
                     @click="simulateShipHero">
                     Simulate ShipHero Shipping
                 </JetDropdownLink>
+                <JetDropdownLink
+                    as="button"
+                    @click="syncOrder">
+                    Sync Order
+                </JetDropdownLink>
             </div>
         </template>
     </JetDropdown>
@@ -53,6 +58,14 @@
                     onSuccess: function () {
 
                     }
+                })
+            },
+
+            syncOrder() {
+                this.$inertia.post(route('kinja.orders.syncOrder'), {
+                    order_id: this.order.id
+                }, {
+                    replace: true,
                 })
             }
         }
