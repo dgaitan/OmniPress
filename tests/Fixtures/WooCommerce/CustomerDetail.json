@@ -1,0 +1,146 @@
+{
+    "id": 2202,
+    "date_created": "2022-05-02T08:32:45",
+    "date_created_gmt": "2022-05-02T15:32:45",
+    "date_modified": "2022-05-03T22:00:10",
+    "date_modified_gmt": "2022-05-04T05:00:10",
+    "email": "ram@ram.com",
+    "first_name": "David",
+    "last_name": "Ram",
+    "role": "subscriber",
+    "username": "David Ram",
+    "billing": {
+        "first_name": "David",
+        "last_name": "Ram",
+        "company": "",
+        "address_1": "tes",
+        "address_2": "",
+        "city": "Encinitas",
+        "postcode": "92081",
+        "country": "US",
+        "state": "CA",
+        "email": "ram@ram.com",
+        "phone": ""
+    },
+    "shipping": {
+        "first_name": "David",
+        "last_name": "Ram",
+        "company": "",
+        "address_1": "tes",
+        "address_2": "",
+        "city": "Encinitas",
+        "postcode": "92081",
+        "country": "US",
+        "state": "CA"
+    },
+    "is_paying_customer": true,
+    "avatar_url": "http://1.gravatar.com/avatar/46178b4b8e5bc2ee6b0bed5e789a1488?s=96&d=identicon&r=g",
+    "meta_data": [
+        {
+            "id": 125138,
+            "key": "facebook",
+            "value": ""
+        },
+        {
+            "id": 125140,
+            "key": "wc_last_active",
+            "value": "1651622400"
+        },
+        {
+            "id": 125142,
+            "key": "_kinja_customer_card",
+            "value": {
+                "brand": "visa",
+                "exp_month": 2,
+                "exp_year": 2023,
+                "last4": "4242"
+            }
+        },
+        {
+            "id": 125143,
+            "key": "_kinja_membership_active",
+            "value": "yes"
+        },
+        {
+            "id": 125144,
+            "key": "_kinja_membership_id",
+            "value": "770"
+        },
+        {
+            "id": 125145,
+            "key": "_kinja_membership_data",
+            "value": "{\"id\":770,\"created_at\":\"2022-05-02T15:32:57.000000Z\",\"updated_at\":\"2022-05-02T15:35:41.000000Z\",\"customer_id\":2134,\"customer_email\":\"ram@ram.com\",\"product_id\":160768,\"start_at\":\"2022-05-02T07:00:00.000000Z\",\"end_at\":\"2023-05-02T07:00:00.000000Z\",\"price\":3500,\"shipping_status\":\"pending\",\"status\":\"cancelled\",\"pending_order_id\":0,\"last_payment_intent\":\"2022-05-02T07:00:00.000000Z\",\"payment_intents\":0,\"kind_cash_id\":null,\"user_picked_gift\":true,\"gift_product_id\":544443,\"customer\":{\"id\":2134,\"created_at\":\"2022-05-02T15:32:48.000000Z\",\"updated_at\":\"2022-05-02T15:33:16.000000Z\",\"customer_id\":2202,\"date_created\":\"2022-05-02T15:32:45.000000Z\",\"date_modified\":\"2022-05-02T15:32:56.000000Z\",\"email\":\"ram@ram.com\",\"first_name\":\"David\",\"last_name\":\"Ram\",\"role\":\"subscriber\",\"username\":\"David Ram\",\"is_paying_customer\":true,\"avatar_url\":\"http://1.gravatar.com/avatar/46178b4b8e5bc2ee6b0bed5e789a1488?s=96&d=identicon&r=g\",\"has_payment_method\":true,\"default_payment_method\":{\"brand\":\"visa\",\"exp_month\":2,\"exp_year\":2023,\"last4\":\"4242\"}},\"cash\":{\"id\":770,\"created_at\":\"2022-05-02T15:32:57.000000Z\",\"updated_at\":\"2022-05-02T15:32:58.000000Z\",\"points\":70,\"last_earned\":70},\"is_active\":false,\"is_in_renewal\":false,\"is_awaiting_pick_gift\":false,\"is_expired\":false,\"is_cancelled\":true}"
+        },
+        {
+            "id": 125146,
+            "key": "_kinja_kind_cash",
+            "value": "70"
+        },
+        {
+            "id": 125149,
+            "key": "shipping_email",
+            "value": "ram@ram.com"
+        },
+        {
+            "id": 125156,
+            "key": "shipping_isValid",
+            "value": "t"
+        },
+        {
+            "id": 125157,
+            "key": "shipping_errors",
+            "value": ""
+        },
+        {
+            "id": 125167,
+            "key": "billing_isValid",
+            "value": "t"
+        },
+        {
+            "id": 125168,
+            "key": "billing_errors",
+            "value": ""
+        },
+        {
+            "id": 125169,
+            "key": "causes_donated_quantity",
+            "value": {
+                "102540": 0,
+                "102529": 0,
+                "581": 30
+            }
+        },
+        {
+            "id": 125170,
+            "key": "_causes_donated_quantity",
+            "value": "field_5db3c369013f2"
+        },
+        {
+            "id": 125173,
+            "key": "has_memberships",
+            "value": ""
+        },
+        {
+            "id": 125174,
+            "key": "memberships",
+            "value": []
+        },
+        {
+            "id": 125175,
+            "key": "current_membership_id",
+            "value": "0"
+        }
+    ],
+    "_links": {
+        "self": [
+            {
+                "href": "http://kind.humans/wp-json/wc/v3/customers/2202"
+            }
+        ],
+        "collection": [
+            {
+                "href": "http://kind.humans/wp-json/wc/v3/customers"
+            }
+        ]
+    }
+}

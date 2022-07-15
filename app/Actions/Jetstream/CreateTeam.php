@@ -34,7 +34,7 @@ class CreateTeam implements CreatesTeams
         ]));
 
         $user->currentTeam->organization()->save(Organization::forceCreate([
-            'name' => $user->currentTeam->name
+            'name' => $user->currentTeam->name,
         ]));
 
         return $team;

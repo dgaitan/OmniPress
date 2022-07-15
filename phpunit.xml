@@ -21,11 +21,14 @@
         <server name="APP_ENV" value="testing"/>
         <server name="BCRYPT_ROUNDS" value="4"/>
         <server name="CACHE_DRIVER" value="array"/>
-        <server name="DB_CONNECTION" value="pgsql"/>
-        <!-- <server name="DB_DATABASE" value="woo_omni_test"/> -->
+        <server name="DB_CONNECTION" value="sqlite"/>
+        <server name="DB_DATABASE" value=":memory:"/>
         <server name="MAIL_MAILER" value="array"/>
         <server name="QUEUE_CONNECTION" value="sync"/>
         <server name="SESSION_DRIVER" value="array"/>
         <server name="TELESCOPE_ENABLED" value="false"/>
+        <server name="WOO_CUSTOMER_DOMAIN" value="http://host.docker.internal:10009" />
+        <server name="CLIENT_DOMAIN" value="https://kindhumans.com" />
+        <server name="PRINTFORIA_API_KEY" value="ositocarinosito" />
     </php>
 </phpunit>

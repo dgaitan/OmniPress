@@ -8,6 +8,7 @@
         "php": "8.1",
         "algolia/algoliasearch-client-php": "^3.2",
         "automattic/woocommerce": "^3.0",
+        "cknow/laravel-money": "^7.0",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "http-interop/http-factory-guzzle": "^1.2",
@@ -20,6 +21,7 @@
         "laravel/scout": "^9.4",
         "laravel/slack-notification-channel": "^2.4",
         "laravel/tinker": "^2.5",
+        "lorisleiva/laravel-actions": "^2.4",
         "maatwebsite/excel": "^3.1",
         "meilisearch/meilisearch-php": "^0.22.0",
         "myclabs/php-enum": "^1.8",
@@ -32,14 +34,18 @@
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.6",
         "barryvdh/laravel-ide-helper": "^2.10",
-        "spatie/laravel-ignition": "^1.0",
         "fakerphp/faker": "^1.9.1",
         "laravel/breeze": "^1.6",
+        "laravel/pint": "^0.2.0",
         "laravel/sail": "^1.0.1",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^6.0",
+        "pestphp/pest": "^1.21",
+        "pestphp/pest-plugin-laravel": "^1.2",
         "phpunit/phpunit": "^9.5.10",
-        "thedevsaddam/laravel-schema": "^2.0"
+        "spatie/laravel-ignition": "^1.0",
+        "thedevsaddam/laravel-schema": "^2.0",
+        "wulfheart/laravel-actions-ide-helper": "^0.3.0"
     },
     "autoload": {
         "psr-4": {
@@ -84,6 +90,9 @@
         "platform-check": false,
         "platform": {
             "php": "8.1.0"
+        },
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
         }
     },
     "platform": {

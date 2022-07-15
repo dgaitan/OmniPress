@@ -2,14 +2,20 @@
 
 namespace App\Models\WooCommerce;
 
+use App\Models\Causes\Cause;
+use App\Models\Causes\OrderDonation;
+use App\Models\Concerns\HasMetaData;
+use App\Models\Concerns\HasMoney;
+use App\Models\Printforia\PrintforiaOrder;
+use Cknow\Money\Money;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Laravel\Scout\Searchable;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Notifications\Notifiable;
-use App\Observers\OrderObserver;
-use App\Models\Concerns\HasMetaData;
+use Illuminate\Support\Facades\Cache;
+use Laravel\Scout\Searchable;
 
 /**
  * App\Models\WooCommerce\Order
@@ -47,6 +53,7 @@ use App\Models\Concerns\HasMetaData;
  * @property int $order_id
  * @property int|null $customer_id
  * @property-read \App\Models\WooCommerce\Customer|null $customer
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Order newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Order newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Order query()
@@ -83,31 +90,54 @@ use App\Models\Concerns\HasMetaData;
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereVersion($value)
  * @mixin \Eloquent
+ *
  * @property int|null $service_id
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereServiceId($value)
+ *
  * @property mixed|null $tax_lines
  * @property mixed|null $shipping_lines
  * @property mixed|null $coupon_lines
  * @property mixed|null $fee_lines
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\WooCommerce\OrderLine[] $items
  * @property-read int|null $items_count
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereCouponLines($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereFeeLines($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereShippingLines($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereTaxLines($value)
+ *
  * @property int|null $membership_id
  * @property bool $has_membership
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereHasMembership($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereMembershipId($value)
+ *
  * @property int|null $payment_id
  * @property-read \App\Models\WooCommerce\PaymentMethod|null $paymentMethod
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Order wherePaymentId($value)
+ *
+ * @property array|null $giftcards
+ * @property string|null $giftcard_total
+ * @property int|null $kindhuman_subscription_id
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
+ * @property-read int|null $notifications_count
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereGiftcardTotal($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereGiftcards($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Order whereKindhumanSubscriptionId($value)
+ *
+ * @property-read PrintforiaOrder|null $printforiaOrder
+ * @property-read \Illuminate\Database\Eloquent\Collection|OrderDonation[] $donations
+ * @property-read int|null $donations_count
  */
 class Order extends Model
 {
     use HasFactory;
     use Notifiable;
     use HasMetaData;
+    use HasMoney;
 
     /**
      * Order Casting
@@ -132,7 +162,7 @@ class Order extends Model
         'shipping_lines' => 'array',
         'fee_lines' => 'array',
         'coupon_lines' => 'array',
-        'giftcards' => 'array'
+        'giftcards' => 'array',
     ];
 
     protected $fillable = [
@@ -171,7 +201,7 @@ class Order extends Model
         'fee_lines',
         'coupon_lines',
         'membership_id',
-        'giftcards'
+        'giftcards',
     ];
 
     /**
@@ -179,7 +209,8 @@ class Order extends Model
      *
      * @return BelongsTo
      */
-    public function customer(): BelongsTo {
+    public function customer(): BelongsTo
+    {
         return $this->belongsTo(Customer::class, 'customer_id');
     }
 
@@ -188,7 +219,8 @@ class Order extends Model
      *
      * @return BelongsTo
      */
-    public function paymentMethod(): BelongsTo {
+    public function paymentMethod(): BelongsTo
+    {
         return $this->belongsTo(PaymentMethod::class, 'payment_id');
     }
 
@@ -197,8 +229,84 @@ class Order extends Model
      *
      * @return HasMany
      */
-    public function items(): HasMany {
+    public function items(): HasMany
+    {
         return $this->hasMany(OrderLine::class, 'order_id');
+    }
+
+    /**
+     * Cause
+     *
+     * @return Cause|null
+     */
+    public function getCause(): Cause|null
+    {
+        if (is_null($this->getMetaValue('cause'))) {
+            return null;
+        }
+
+        return Cause::whereCauseId($this->getMetaValue('cause'))->first();
+    }
+
+    /**
+     * Order Donations
+     *
+     * @return HasMany
+     */
+    public function donations(): HasMany
+    {
+        return $this->hasMany(OrderDonation::class);
+    }
+
+    /**
+     * Total Donations AMount
+     *
+     * @return Money
+     */
+    public function totalDonated(): Money
+    {
+        return $this->getAsMoney($this->donations->sum('amount'));
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return void
+     */
+    public function getDonations()
+    {
+        $cacheKey = sprintf('order_donations_for_%s', $this->id);
+
+        if (Cache::tags('orders')->has($cacheKey)) {
+            return Cache::tags('orders')->get($cacheKey);
+        }
+
+        return Cache::tags('orders')->remember($cacheKey, now()->addYear(), function () {
+            return $this->donations->map(function ($donation) {
+                return [
+                    'id' => $donation->id,
+                    'cause' => [
+                        'id' => $donation->cause->id,
+                        'name' => $donation->cause->name,
+                        'type' => $donation->cause->getCauseType(),
+                    ],
+                    'amount' => [
+                        'value' => $donation->amount,
+                        'format' => $donation->getMoneyValue('amount')->format(),
+                    ],
+                ];
+            });
+        });
+    }
+
+    /**
+     * Probably an order has one printforia order
+     *
+     * @return HasOne
+     */
+    public function printforiaOrder(): HasOne
+    {
+        return $this->hasOne(PrintforiaOrder::class, 'order_id');
     }
 
     /**
@@ -228,7 +336,8 @@ class Order extends Model
      *
      * @return string
      */
-    public function shippingAddress():string {
+    public function shippingAddress(): string
+    {
         $shipping = '';
 
         if ($this->shipping) {
@@ -251,7 +360,8 @@ class Order extends Model
      *
      * @return string
      */
-    public function billingAddress():string {
+    public function billingAddress(): string
+    {
         $billing = '';
 
         if ($this->billing) {
@@ -269,7 +379,8 @@ class Order extends Model
         return $billing;
     }
 
-    public function getPaymentMethodName(): string {
+    public function getPaymentMethodName(): string
+    {
         if ($this->payment_id) {
             return $this->paymentMethod->title;
         }
@@ -282,7 +393,8 @@ class Order extends Model
      *
      * @return string
      */
-    public function getDateCompleted(): string {
+    public function getDateCompleted(): string
+    {
         if ($this->date_created->diffInDays(\Carbon\Carbon::now()) > 1) {
             return $this->date_created->format('F j, Y');
         }
@@ -293,9 +405,10 @@ class Order extends Model
     /**
      * GEt Subtotal
      *
-     * @return integer
+     * @return int
      */
-    public function getSubtotal(): int {
+    public function getSubtotal(): int
+    {
         return $this->items()->sum('subtotal');
     }
 
@@ -304,7 +417,8 @@ class Order extends Model
      *
      * @return string
      */
-    public function getPermalink(): string {
+    public function getPermalink(): string
+    {
         return route('kinja.orders.show', [$this->order_id]);
     }
 
@@ -313,7 +427,8 @@ class Order extends Model
      *
      * @return string
      */
-    public function getPermalinkOnStore(): string {
+    public function getPermalinkOnStore(): string
+    {
         return sprintf(
             '%s/wp-admin/post.php?post=%s&action=edit',
             env('CLIENT_DOMAIN', 'https://kindhumans.com'),
@@ -326,7 +441,8 @@ class Order extends Model
      *
      * @return void
      */
-    public function getCouponCodes() {
+    public function getCouponCodes()
+    {
         $coupons = collect($this->coupon_lines);
 
         if ($coupons->count() === 0) {
@@ -339,12 +455,24 @@ class Order extends Model
     }
 
     /**
+     * Find an order
+     *
+     * @param  string|int  $orderId
+     * @return Order|null
+     */
+    public static function findByOrderId(string|int $orderId): Order|null
+    {
+        return self::whereOrderId($orderId)->first();
+    }
+
+    /**
      * Convert Order to Array
      *
-     * @param boolean $isSingle
+     * @param  bool  $isSingle
      * @return array
      */
-    public function toArray(bool $isSingle = false): array {
+    public function toArray(bool $isSingle = false): array
+    {
         $data = parent::toArray();
         $data['date'] = $this->getDateCompleted();
         $data['sub_total'] = $this->getSubtotal();
@@ -381,11 +509,11 @@ class Order extends Model
         $customer = $this->customer ? [
             'customer_id' => $this->customer->id,
             'name' => $this->customer->getFullName(),
-            'email' => $this->customer->email
+            'email' => $this->customer->email,
         ] : [
             'id' => 0,
             'name' => $this->billing ? sprintf('%s %s', $this->billing->first_name, $this->billing->last_name) : '',
-            'email' => $this->billing ? $this->billing->email : ''
+            'email' => $this->billing ? $this->billing->email : '',
         ];
 
         $array['customer'] = $customer;

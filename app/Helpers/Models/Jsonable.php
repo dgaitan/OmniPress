@@ -2,79 +2,82 @@
 
 namespace App\Helpers\Models;
 
+use App\Data\Shared\AddressData;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\DataCollection;
-use App\Data\Shared\AddressData;
 
-trait Jsonable {
-
+trait Jsonable
+{
     /**
      * Get Data Collection from a json value.
-     * 
-     * @param string $data - A class that extends from Spatie\LaravelData\Data
-     * @param string $value - normally should be an json in string format
+     *
+     * @param  string  $data - A class that extends from Spatie\LaravelData\Data
+     * @param  string  $value - normally should be an json in string format
      * @return DataCollection
      */
     protected function getDataCollectionFrom(
         string $data, string|array $value
-    ) : DataCollection {
+    ): DataCollection {
         return $data::collection($this->getJsonField($value));
     }
 
     /**
      * Get Data From a json
-     * 
-     * @param Data $data - A class that extends from Spatie\LaravelData\Data
-     * @param string $value - normally should be an json in string format
-     * @return Data 
+     *
+     * @param  Data  $data - A class that extends from Spatie\LaravelData\Data
+     * @param  string  $value - normally should be an json in string format
+     * @return Data
      */
     protected function getDataFrom(
         string $data, string|array $value
-    ) : Data {
-        return $data::from( $this->getJsonField($value) );
+    ): Data {
+        return $data::from($this->getJsonField($value));
     }
 
     /**
      * Generate a Data Collection and return a json string to store in db
-     * 
-     * @param string $data - A class that extends from Spatie\LaravelData\Data
-     * @param string $value - normally should be an json in string format
+     *
+     * @param  string  $data - A class that extends from Spatie\LaravelData\Data
+     * @param  string  $value - normally should be an json in string format
      * @return string
      */
     protected function getCollectionJson(
         string $data, string $value
-    ) : string {
+    ): string {
         return $data::collection($this->getJsonField($value))->toJson();
     }
 
     /**
      * Get a data in json format to be stored
-     * 
-     * @param string $data - A class that extends from Spatie\LaravelData\Data
-     * @param string $value - normally should be an json in string format
+     *
+     * @param  string  $data - A class that extends from Spatie\LaravelData\Data
+     * @param  string  $value - normally should be an json in string format
      * @return string
      */
     protected function getDataJson(
         string $data, string $value
-    ) : string {
+    ): string {
         return $data::from($this->getJsonField($value))->toJson();
     }
 
-    protected function getAddressDataJson($address) : string {
+    protected function getAddressDataJson($address): string
+    {
         return $this->getDataJson(AddressData::class, $address);
     }
 
-    protected function getAddressData($address) : AddressData {
+    protected function getAddressData($address): AddressData
+    {
         return $this->getDataFrom(AddressData::class, $address);
     }
 
     /**
      * Decode a json string to an array
-     * 
-     * @param string $value
+     *
+     * @param  string  $value
      * @return array
      */
-    protected function getJsonField($value) : array {
+    protected function getJsonField($value): array
+    {
         return json_decode($value, true);
     }
 }

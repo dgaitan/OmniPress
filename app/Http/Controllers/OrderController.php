@@ -2,18 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\WooCommerce\Order;
+use App\Actions\WooCommerce\Orders\UpdateOrderAction;
 use App\Http\Resources\OrderResource;
+use App\Http\Resources\Printforia\PrintforiaOrdersCollection;
+use App\Http\Resources\Printforia\PrintforiaResource;
+use App\Jobs\SingleWooCommerceSync;
+use App\Models\Printforia\PrintforiaOrder;
+use App\Models\WooCommerce\Order;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Str;
 
 class OrderController extends Controller
 {
     /**
      * [index description]
+     *
      * @return [type] [description]
      */
     public function index(Request $request)
@@ -22,7 +29,7 @@ class OrderController extends Controller
             ['slug' => 'processing', 'label' => 'Processing'],
             ['slug' => 'completed', 'label' => 'Completed'],
             ['slug' => 'pending', 'label' => 'Pending Payment'],
-            ['slug' => 'failed', 'label' => 'Failed']
+            ['slug' => 'failed', 'label' => 'Failed'],
         ];
         $status = '';
         $orders = $this->queryset($request);
@@ -33,11 +40,11 @@ class OrderController extends Controller
                 $customer = $order->customer ? [
                     'customer_id' => $order->customer->id,
                     'name' => $order->customer->getFullName(),
-                    'email' => $order->customer->email
+                    'email' => $order->customer->email,
                 ] : [
                     'id' => 0,
                     'name' => sprintf('%s %s', $order->billing->first_name, $order->billing->last_name),
-                    'email' => $order->billing->email
+                    'email' => $order->billing->email,
                 ];
 
                 return [
@@ -50,7 +57,7 @@ class OrderController extends Controller
                     'date' => $order->getDateCompleted(),
                     'permalink' => $order->getPermalink(),
                     'storePermalink' => $order->getPermalinkOnStore(),
-                    'customer' => $customer
+                    'customer' => $customer,
                 ];
             }),
             '_s' => $request->input('s') ?? '',
@@ -68,18 +75,18 @@ class OrderController extends Controller
     /**
      * Show Order Detail
      *
-     * @param Request $request
-     * @param int $id
+     * @param  Request  $request
+     * @param  int  $id
      * @return void
      */
     public function show(Request $request, $id)
     {
-        $cacheKey = sprintf("woocommerce_order_%s", $id);
+        $cacheKey = sprintf('woocommerce_order_%s', $id);
         $order = Cache::tags('orders')->get($cacheKey, null);
 
         if (is_null($order)) {
-            $order = Cache::tags('orders')->remember($cacheKey, 86430, function() use ($id) {
-                $order = Order::with('items', 'customer', 'paymentMethod')
+            $order = Cache::tags('orders')->remember($cacheKey, 86430, function () use ($id) {
+                $order = Order::with('items', 'customer', 'paymentMethod', 'printforiaOrder')
                     ->whereOrderId($id)
                     ->first();
 
@@ -92,21 +99,22 @@ class OrderController extends Controller
         }
 
         return Inertia::render('Orders/Detail', [
-            'order' => $order
+            'order' => $order,
         ]);
     }
 
     /**
      * It needs to be completed
      *
-     * @param Request $request
+     * @param  Request  $request
      * @return void
      */
-    public function export(Request $request) {
+    public function export(Request $request)
+    {
         $orders = $this->queryset($request, Order::with('customer', 'items'));
         $orders = $orders->get();
         $orders = $orders->map(function ($order) {
-            return $order->items->map(function($item) use ($order) {
+            return $order->items->map(function ($item) use ($order) {
                 return [
                     'id' => $order->order_id,
                     'date' => $order->date_created
@@ -117,7 +125,7 @@ class OrderController extends Controller
                     'first_name' => $order->billing->first_name,
                     'email' => $order->billing->email,
                     'active_membership' => $order->customer_id
-                        ? ( $order->customer->hasMemberships() ? 'Yes' : 'No' )
+                        ? ($order->customer->hasMemberships() ? 'Yes' : 'No')
                         : 'No',
                     'address' => sprintf(
                         '%s %s',
@@ -140,19 +148,131 @@ class OrderController extends Controller
                     'price' => $item->product->price / 100,
                     'qty' => $item->quantity,
                     'total_tax' => $item->subtotal_tax,
-                    'subtotal' => $item->subtotal
+                    'subtotal' => $item->subtotal,
                 ];
             });
         });
     }
 
     /**
-     * Process Orders Queryset
+     * Simulate that we're shipping an order by shiphero
      *
      * @param Request $request
+     * @return void
+     */
+    public function simulateShipHero(Request $request)
+    {
+        if (env('APP_ENV', 'local') === 'production') {
+            return abort(403);
+        }
+
+        $order = Order::find($request->get('order_id'));
+
+        if (is_null($order)) {
+            return abort(404);
+        }
+
+        UpdateOrderAction::dispatch($order, [
+            'status' => 'completed',
+            'meta_data' => [
+                ['key' => '_tracking_number', 'value' => Str::random(20)]
+            ]
+        ]);
+
+        session()->flash('flash.banner', 'Order was shipped, please wait a few seconds to see it reflected!');
+        session()->flash('flash.bannerStyle', 'success');
+
+        return back()->banner('Order was shipped, please wait a few seconds to see it reflected!');
+    }
+
+    public function syncOrder(Request $request)
+    {
+        $order = Order::find($request->get('order_id'));
+
+        if (is_null($order)) {
+            return abort(404);
+        }
+
+        SingleWooCommerceSync::dispatch($order->order_id, 'orders');
+
+        session()->flash('flash.banner', 'Sync was initialized. Please wait a few seconds to see this order updated.');
+        session()->flash('flash.bannerStyle', 'success');
+
+        return back()->banner('Sync was initialized. Please wait a few seconds to see this order updated.');
+    }
+
+    /**
+     * Printforia Order Index View
+     *
+     * @param  Request  $request
+     * @return void
+     */
+    public function printforiaOrders(Request $request)
+    {
+        $printforiaOrders = PrintforiaOrder::with('order')->orderBy('id', 'desc');
+
+        if ($request->has('s') && ! empty($request->s)) {
+            $s = $request->s;
+            $printforiaOrders->where('printforia_order_id', 'ilike', "%$s%")
+                ->orWhere('ship_to_address', 'ilike', "%$s%");
+
+            $printforiaOrders->orWhereHas('order', function ($query) use ($s) {
+                $query->where('order_id', 'ilike', "%$s%");
+            });
+        }
+
+        // Filter By Status
+        $printforiaOrders = $this->addFilterToQuery(
+            request: $request,
+            filterKey: 'status',
+            query: $printforiaOrders,
+            validFilterKeys: PrintforiaOrder::getStatusesSlugs()
+        );
+
+        $printforiaOrders = $this->paginate($request, $printforiaOrders);
+        $data = $this->getPaginationResponse($printforiaOrders);
+        $data = array_merge($data, [
+            'orders' => new PrintforiaOrdersCollection($printforiaOrders->items()),
+            '_s' => $request->input('s') ?? '',
+            '_status' => $request->input('status'),
+            'statuses' => PrintforiaOrder::STATUSES,
+            '_order' => $request->input('order') ?? 'desc',
+            '_orderBy' => $request->input('orderBy') ?? '',
+        ]);
+
+        return Inertia::render('Orders/PrintforiaOrders', $data);
+    }
+
+    /**
+     * Printforia Detail
+     *
+     * @param  Request  $request
+     * @param [type] $id
+     * @return void
+     */
+    public function printforiaDetail(Request $request, $id)
+    {
+        $printforiaOrder = PrintforiaOrder::with(['order', 'items'])
+            ->wherePrintforiaOrderId($id)
+            ->first();
+
+        if (is_null($printforiaOrder)) {
+            abort(404);
+        }
+
+        return Inertia::render('Orders/PrintforiaDetail', [
+            'order' => new PrintforiaResource($printforiaOrder),
+        ]);
+    }
+
+    /**
+     * Process Orders Queryset
+     *
+     * @param  Request  $request
      * @return Builder
      */
-    protected function queryset(Request $request, $baseQuery = null): Builder {
+    protected function queryset(Request $request, $baseQuery = null): Builder
+    {
         $orders = $baseQuery ?? Order::with('customer');
 
         // Ordering
@@ -185,18 +305,16 @@ class OrderController extends Controller
 
             if ($fromDate && $toDate) {
                 $orders->whereBetween('date_created', [$fromDate, $toDate]);
-
-            } else if (is_null($fromDate)) {
+            } elseif (is_null($fromDate)) {
                 $orders->where('date_created', '<=', $toDate);
             }
-
         }
 
         // Search
         $search = $this->analyzeSearchQuery($request, ['order_id', 'total']);
         if ($search->isValid) {
             // If the search query isn't specific
-            if (!$search->specific) {
+            if (! $search->specific) {
                 $s = $search->s;
 
                 $orders->where(function ($query) use ($s) {
@@ -210,7 +328,6 @@ class OrderController extends Controller
                     $query->orWhere('order_id', 'ilike', "%$s%");
                     $query->orWhere('total', 'ilike', "%$s%");
                 });
-
             } else {
                 $orders->where($search->key, 'ilike', "$search->s%");
             }

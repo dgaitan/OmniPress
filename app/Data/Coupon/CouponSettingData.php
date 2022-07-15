@@ -4,7 +4,8 @@ namespace App\Data\Coupon;
 
 use App\Data\BaseData;
 
-class CouponSettingData extends BaseData {
+class CouponSettingData extends BaseData
+{
     public function __construct(
         public ?string $usage_count,
         public ?array $product_ids,
@@ -21,6 +22,5 @@ class CouponSettingData extends BaseData {
         public ?array $email_restrictions,
         public ?array $used_by
     ) {
-
     }
 }

@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class UserRolesSeeder extends Seeder
 {
@@ -25,34 +25,34 @@ class UserRolesSeeder extends Seeder
             'see_coupons', 'analyze_coupons', 'export_coupons',
             'see_orders', 'analyze_orders', 'export_orders',
             'see_products', 'analyze_products', 'export_products',
-            'see_payment_methods'
+            'see_payment_methods',
         ];
 
         // Admin Perms
         $adminPerms = [
             'add_user', 'assign_roles', 'run_sync', 'manage_api_tokens',
-            'see_roles', 'add_external_user',...$kindhumansTeam
+            'see_roles', 'add_external_user', ...$kindhumansTeam,
         ];
 
         // Super Admin Abilities
         $superAdminPerms = [
             'maintenance', 'add_roles', 'add_super_admin',
-            'edit_roles', ...$adminPerms
+            'edit_roles', ...$adminPerms,
         ];
 
         $permissionsByRole = [
             'super_admin' => $superAdminPerms,
             'admin' => $adminPerms,
-            'kindhumans_team' => $kindhumansTeam
+            'kindhumans_team' => $kindhumansTeam,
         ];
 
-        foreach ( $permissionsByRole as $role => $permissions ) {
+        foreach ($permissionsByRole as $role => $permissions) {
             $role = Role::firstOrCreate(['name' => $role]);
             $perms = [];
 
-            foreach ( $permissions as $perm ) {
+            foreach ($permissions as $perm) {
                 $perms[] = Permission::firstOrCreate([
-                    'name' => $perm
+                    'name' => $perm,
                 ]);
             }
 

@@ -2,21 +2,23 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Http\Controllers\Controller;
+use App\Models\WooCommerce\Customer;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Cashier\Exceptions\IncompletePayment;
-use App\Http\Controllers\Controller;
-use App\Models\WooCommerce\Customer;
 
 class PaymentController extends Controller
 {
     /**
      * [intent description]
-     * @param  Request $request [description]
+     *
+     * @param  Request  $request [description]
      * @return [type]           [description]
      */
-    public function intent(Request $request) {
+    public function intent(Request $request)
+    {
         try {
             // Validate the params
             $validator = Validator::make($request->all(), [
@@ -26,13 +28,13 @@ class PaymentController extends Controller
                 'customer_email' => 'nullable|email',
                 'customer_username' => 'nullable|string',
                 'description' => 'required|string',
-                'save' => 'nullable|boolean'
+                'save' => 'nullable|boolean',
             ]);
 
             // If validation fails, return error listed with 400 http code
             if ($validator->fails()) {
                 return response()->json([
-                    'errors' => $validator->errors()
+                    'errors' => $validator->errors(),
                 ], 400);
             }
 
@@ -44,7 +46,7 @@ class PaymentController extends Controller
             if ($request->customer_id) {
                 $customer = Customer::firstOrNew([
                     'customer_id' => $request->customer_id,
-                    'email'       => $request->customer_email
+                    'email' => $request->customer_email,
                 ]);
 
                 if (! $customer->username) {
@@ -63,50 +65,50 @@ class PaymentController extends Controller
                     } catch (\Laravel\Cashier\Exceptions\InvalidPaymentMethod $e) {
                         $defaultCard = $customer->addAndAssignDefaultPaymentMethod($request->token);
                     }
-
                 }
             }
 
             $customer->charge($request->amount, $request->token, [
-                'description' => $request->description
+                'description' => $request->description,
             ]);
 
             return response()->json([
                 'status' => 'succeeded',
-                'card' => $defaultCard ? $defaultCard['card'] : []
+                'card' => $defaultCard ? $defaultCard['card'] : [],
             ], 200);
-
         } catch (IncompletePayment $exception) {
             return response()->json([
                 'status' => $exception->payment->status,
-                'error' => serialize( $exception )
+                'error' => serialize($exception),
             ], 200);
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'failed',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 200);
         }
     }
 
     /**
      * [direct description]
-     * @param  Request $request [description]
+     *
+     * @param  Request  $request [description]
      * @return [type]           [description]
      */
-    public function direct(Request $request) {
+    public function direct(Request $request)
+    {
         try {
             // Validate the params
             $validator = Validator::make($request->all(), [
                 'amount' => 'required|integer',
                 'description' => 'required|string',
-                'customer_id' => 'required|integer'
+                'customer_id' => 'required|integer',
             ]);
 
             // If validation fails, return error listed with 400 http code
             if ($validator->fails()) {
                 return response()->json([
-                    'errors' => $validator->errors()
+                    'errors' => $validator->errors(),
                 ], 400);
             }
 
@@ -117,7 +119,7 @@ class PaymentController extends Controller
             if (! $customer->hasDefaultPaymentMethod()) {
                 return response()->json([
                     'status' => 'failed',
-                    'error' => 'Customer has not default payment method'
+                    'error' => 'Customer has not default payment method',
                 ], 200);
             }
 
@@ -128,35 +130,35 @@ class PaymentController extends Controller
             );
 
             return response()->json(['status' => 'succeeded'], 200);
-
-
         } catch (IncompletePayment $exception) {
             return response()->json([
-                'status' => $exception->payment->status
+                'status' => $exception->payment->status,
             ], 200);
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 200);
         }
     }
 
     /**
      * [addPaymentMethod description]
-     * @param Request $request [description]
+     *
+     * @param  Request  $request [description]
      */
-    public function addPaymentMethod(Request $request) {
+    public function addPaymentMethod(Request $request)
+    {
         // Validate the params
         $validator = Validator::make($request->all(), [
             'token' => 'required|string',
-            'customer_id' => 'required|integer'
+            'customer_id' => 'required|integer',
         ]);
 
         // If validation fails, return error listed with 400 http code
         if ($validator->fails()) {
             return response()->json([
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 400);
         }
 
@@ -173,28 +175,29 @@ class PaymentController extends Controller
 
         return response()->json([
             'status' => 'succeeded',
-            'result' => $card
+            'result' => $card,
         ]);
-
     }
 
     /**
      * [deletePaymentMethod description]
-     * @param  Request $request [description]
+     *
+     * @param  Request  $request [description]
      * @return [type]           [description]
      */
-    public function deletePaymentMethod(Request $request) {
+    public function deletePaymentMethod(Request $request)
+    {
         // Validate the params
         $validator = Validator::make($request->all(), [
             'token' => 'required|string',
             'customer_id' => 'required|integer',
-            'is_default' => 'required|boolean'
+            'is_default' => 'required|boolean',
         ]);
 
         // If validation fails, return error listed with 400 http code
         if ($validator->fails()) {
             return response()->json([
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 400);
         }
 
@@ -206,9 +209,9 @@ class PaymentController extends Controller
         // Deleting payment method
         $customer->findPaymentMethod($request->token)->delete();
 
-        if (!$request->is_default) {
+        if (! $request->is_default) {
             return response()->json([
-                'status' => 'succeeded'
+                'status' => 'succeeded',
             ], 200);
         }
 
@@ -225,26 +228,27 @@ class PaymentController extends Controller
         }
 
         return response()->json([
-            'status' => 'succeeded'
+            'status' => 'succeeded',
         ], 200);
-
     }
 
     /**
      * [setDefaultPaymentMethod description]
-     * @param Request $request [description]
+     *
+     * @param  Request  $request [description]
      */
-    public function setDefaultPaymentMethod(Request $request) {
+    public function setDefaultPaymentMethod(Request $request)
+    {
         // Validate the params
         $validator = Validator::make($request->all(), [
             'token' => 'required|string',
-            'customer_id' => 'required|integer'
+            'customer_id' => 'required|integer',
         ]);
 
         // If validation fails, return error listed with 400 http code
         if ($validator->fails()) {
             return response()->json([
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 400);
         }
 
@@ -263,15 +267,17 @@ class PaymentController extends Controller
 
     /**
      * [getDefaultPaymentMethod description]
-     * @param  Request $request [description]
+     *
+     * @param  Request  $request [description]
      * @return [type]           [description]
      */
-    public function getDefaultPaymentMethod(Request $request, $customer_id) {
+    public function getDefaultPaymentMethod(Request $request, $customer_id)
+    {
 
         // If validation fails, return error listed with 400 http code
-        if (!$customer_id) {
+        if (! $customer_id) {
             return response()->json([
-                'errors' => ['Customer Id is required']
+                'errors' => ['Customer Id is required'],
             ], 400);
         }
 
@@ -285,19 +291,21 @@ class PaymentController extends Controller
         return response()->json([
             'card' => $paymentMethod
                 ? Customer::getCardResume($paymentMethod)
-                : []
+                : [],
         ], 200);
     }
 
     /**
      * [paymentMethods description]
-     * @param  Request $request     [description]
+     *
+     * @param  Request  $request     [description]
      * @param  [type]  $customer_id [description]
      * @return [type]               [description]
      */
-    public function paymentMethods(Request $request, $customer_id) {
+    public function paymentMethods(Request $request, $customer_id)
+    {
         $customer = Customer::whereCustomerId($customer_id)->first();
-        $defaultMethod = "";
+        $defaultMethod = '';
 
         if (is_null($customer)) {
             return response()->json(['message' => 'Customer not found'], 404);
@@ -317,16 +325,18 @@ class PaymentController extends Controller
 
     /**
      * [getCustomer description]
-     * @param  int    $customerId [description]
+     *
+     * @param  int  $customerId [description]
      * @return [type]             [description]
      */
-    protected function getCustomer($customerId) {
+    protected function getCustomer($customerId)
+    {
         $customer = Customer::whereCustomerId((int) $customerId)->first();
 
         if (is_null($customer)) {
             return [
                 'status' => 'failed',
-                'error' => 'Customer not found'
+                'error' => 'Customer not found',
             ];
         }
 
@@ -335,11 +345,13 @@ class PaymentController extends Controller
 
     /**
      * [prepareResponseData description]
+     *
      * @param  [type]  $paymentMethod [description]
-     * @param  boolean $isDefault     [description]
+     * @param  bool  $isDefault     [description]
      * @return [type]                 [description]
      */
-    protected function prepareResponseData($paymentMethod, $isDefault = true) {
+    protected function prepareResponseData($paymentMethod, $isDefault = true)
+    {
         $card = Customer::getCardResume($paymentMethod);
         $paymentMethod = $paymentMethod->toArray();
 
@@ -350,7 +362,7 @@ class PaymentController extends Controller
         return [
             'status' => 'succeeded',
             'card' => $card,
-            'payment_method' => $paymentMethod
+            'payment_method' => $paymentMethod,
         ];
     }
 }

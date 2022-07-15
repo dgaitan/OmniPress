@@ -2,15 +2,16 @@
 
 namespace App\Models\Concerns;
 
-trait HasMetaData {
-
+trait HasMetaData
+{
     /**
      * Get a meta value
      *
-     * @param string $key
+     * @param  string  $key
      * @return void
      */
-    public function getMetaValue(string $key, mixed $default = null) {
+    public function getMetaValue(string $key, mixed $default = null)
+    {
         $metaData = collect($this->meta_data)->where('key', $key);
 
         if ($metaData->count() > 0) {
@@ -20,16 +21,24 @@ trait HasMetaData {
         return $default;
     }
 
-    public function updateMetaValue(string $key, mixed $value = null) {
+    /**
+     * Update meta value
+     *
+     * @param  string  $key
+     * @param  mixed  $value
+     * @return void
+     */
+    public function updateMetaValue(string $key, mixed $value = null)
+    {
         if (is_null($this->getMetaValue($key))) {
             return null;
         }
-        
+
         $this->meta_data = collect($this->meta_data)->map(function ($m) use ($key, $value) {
             if ($m['key'] === $key) {
                 $m['value'] = $value;
             }
-            
+
             return $m;
         });
 

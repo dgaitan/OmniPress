@@ -2,57 +2,60 @@
 
 namespace App\Http\Clients\WooCommerce;
 
-use App\Http\Clients\WooCommerce\Endpoints\CustomerEndpoint;
+use App\Helpers\API\Testeable;
 use App\Http\Clients\WooCommerce\Endpoints\CouponEndpoint;
+use App\Http\Clients\WooCommerce\Endpoints\CustomerEndpoint;
+use App\Http\Clients\WooCommerce\Endpoints\MembershipEndpoint;
 use App\Http\Clients\WooCommerce\Endpoints\OrderEndpoint;
 use App\Http\Clients\WooCommerce\Endpoints\ProductEndpoint;
-use App\Http\Clients\WooCommerce\Endpoints\MembershipEndpoint;
-use App\Helpers\API\Testeable;
 
-class WooCommerceClient {
-
+class WooCommerceClient
+{
     use Testeable;
 
     /**
      * The Client
-     * 
+     *
      * @var \App\Http\Clients\Client;
      */
     protected $client;
 
     /**
      * The endpoints handlers
-     * 
+     *
      * @var array
      */
     protected $endpoints;
 
-    public function __construct(\App\Http\Clients\Client $client) {
+    public function __construct(\App\Http\Clients\Client $client)
+    {
         $this->client = $client;
         $this->loadEndpoints();
     }
 
     /**
      * WOoCOmmerce Endpoints Requests
-     * 
+     *
      * @return array
      */
-    public function getEndpoints(): array {
+    public function getEndpoints(): array
+    {
         return [
             'customers' => CustomerEndpoint::class,
             'coupons' => CouponEndpoint::class,
             'orders' => OrderEndpoint::class,
             'products' => ProductEndpoint::class,
-            'memberships' => MembershipEndpoint::class
+            'memberships' => MembershipEndpoint::class,
         ];
     }
 
     /**
      * Load the enpoints registered
-     * 
+     *
      * @return void
      */
-    public function loadEndpoints() : void {
+    public function loadEndpoints(): void
+    {
         $endpoints = $this->getEndpoints();
 
         if ($endpoints) {
@@ -62,14 +65,16 @@ class WooCommerceClient {
         }
     }
 
-    public function getEndpoint(string $endpoint) {
+    public function getEndpoint(string $endpoint)
+    {
         return $this->endpoints[$endpoint];
     }
-    
+
     /**
-     * Check 
+     * Check
      */
-    public function __call(string $name, array $params) {
+    public function __call(string $name, array $params)
+    {
         $methodName = explode('get', $name);
 
         if (count($methodName) === 1) {
@@ -89,15 +94,14 @@ class WooCommerceClient {
                     ->setTestingData($this->testingCollectionData[$methodName])
                     ->retrieveDataFromAPI($this->retrieveFromAPI);
             }
-            
+
             return $this->endpoints[$methodName]->get(...$params);
         }
 
-        if (!array_key_exists($methodName, get_class_methods($this))) {
-			return null;
-		}
+        if (! array_key_exists($methodName, get_class_methods($this))) {
+            return null;
+        }
 
-        
         return $this->{$methodName}(...$params);
     }
 }

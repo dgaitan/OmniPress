@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\WooCommerce\Order;
-use App\Analytics\OrderAnalytics;
 use App\Analytics\CustomerAnalytics;
 use App\Analytics\MembershipAnalytics;
+use App\Analytics\OrderAnalytics;
 use App\Http\Resources\OrderCollection;
+use App\Models\WooCommerce\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
@@ -16,10 +16,11 @@ class DashboardController extends Controller
     /**
      * Dashboard View
      *
-     * @param Request $request
+     * @param  Request  $request
      * @return void
      */
-    public function dashboard(Request $request) {
+    public function dashboard(Request $request)
+    {
         $cacheKey = 'dashboard_stats';
         $stats = Cache::get($cacheKey, []);
 
@@ -27,13 +28,13 @@ class DashboardController extends Controller
             $stats = [
                 'orders' => $this->getOrderStats(),
                 'customers' => $this->getCustomerStats(),
-                'memberships' => $this->getMembershipStats()
+                'memberships' => $this->getMembershipStats(),
             ];
 
             Cache::remember(
-                $cacheKey, strtotime('1 day 30 second', 0), function() use ($stats) {
-                return $stats;
-            });
+                $cacheKey, strtotime('1 day 30 second', 0), function () use ($stats) {
+                    return $stats;
+                });
         }
 
         return Inertia::render('Dashboard', $stats);
@@ -44,7 +45,8 @@ class DashboardController extends Controller
      *
      * @return array
      */
-    protected function getOrderStats(): array {
+    protected function getOrderStats(): array
+    {
         $stats = [];
 
         $orderAnalytics = new OrderAnalytics(
@@ -56,7 +58,7 @@ class DashboardController extends Controller
             'net_sales' => $orderAnalytics->getNetSales(),
             'total_orders' => $orderAnalytics->getTotalOrders(),
             'percentage' => $orderAnalytics->getSalesPercentageDifference(),
-            'percentage_count' => $orderAnalytics->getTotalOrdersPercentageDifference()
+            'percentage_count' => $orderAnalytics->getTotalOrdersPercentageDifference(),
         ];
 
         // Total orders to fulfill
@@ -73,7 +75,8 @@ class DashboardController extends Controller
      *
      * @return array
      */
-    protected function getCustomerStats(): array {
+    protected function getCustomerStats(): array
+    {
         $stats = [];
 
         $customerAnalytics = new CustomerAnalytics(
@@ -92,7 +95,8 @@ class DashboardController extends Controller
      *
      * @return array
      */
-    protected function getMembershipStats(): array {
+    protected function getMembershipStats(): array
+    {
         $stats = [];
 
         $membershipAnalytics = new MembershipAnalytics(

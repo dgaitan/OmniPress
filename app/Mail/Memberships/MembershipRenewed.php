@@ -4,7 +4,6 @@ namespace App\Mail\Memberships;
 
 use App\Models\Membership;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
@@ -39,7 +38,7 @@ class MembershipRenewed extends Mailable
     public function build()
     {
         $subject = sprintf(
-            "Hello %s, Your Kindhumans Membership has been Renewed! 🥳",
+            'Hello %s, Your Kindhumans Membership has been Renewed! 🥳',
             $this->membership->customer->getfullName()
         );
 
@@ -58,7 +57,7 @@ class MembershipRenewed extends Mailable
                 ),
                 'memberSince' => $this->membership->start_at->format('F j, Y'),
                 'memberEnds' => $this->membership->end_at->format('F j, Y'),
-                'kindCash' => $this->membership->kindCash->cashForHuman()
+                'kindCash' => $this->membership->kindCash->cashForHuman(),
             ]);
     }
 }

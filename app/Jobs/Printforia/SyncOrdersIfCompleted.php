@@ -1,0 +1,46 @@
+<?php
+
+namespace App\Jobs\Printforia;
+
+use App\Actions\WooCommerce\Orders\UpdateOrderAction;
+use App\Models\Printforia\PrintforiaOrder;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+
+class SyncOrdersIfCompleted implements ShouldQueue
+{
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    protected PrintforiaOrder $printforiaOrder;
+
+    /**
+     * Create a new job instance.
+     *
+     * @return void
+     */
+    public function __construct(PrintforiaOrder $printforiaOrder)
+    {
+        $this->printforiaOrder = $printforiaOrder;
+    }
+
+    /**
+     * Execute the job.
+     *
+     * @return void
+     */
+    public function handle()
+    {
+        $order = PrintforiaOrder::find($this->printforiaOrder->id);
+
+        if (! in_array($order->status, ['shipped', 'completed'])) {
+            return;
+        }
+
+        UpdateOrderAction::run($order->order->order_id, [
+            'status' => 'completed'
+        ], true);
+    }
+}

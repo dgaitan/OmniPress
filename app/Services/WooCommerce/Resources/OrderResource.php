@@ -3,8 +3,8 @@
 namespace App\Services\WooCommerce\Resources;
 
 use App\Services\Contracts\ResourceContract;
-use App\Services\WooCommerce\Factories\OrderFactory;
 use App\Services\Resources\BaseResource;
+use App\Services\WooCommerce\Factories\OrderFactory;
 
 class OrderResource extends BaseResource implements ResourceContract
 {

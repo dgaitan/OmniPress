@@ -22,10 +22,10 @@ class SyncResource extends JsonResource
             'description' => $this->description,
             'status' => $this->status,
             'batch_id' => $this->batch_id,
-            'user' => array(
+            'user' => [
                 'id' => $this->user->id,
-                'name' => $this->user->name
-            )
+                'name' => $this->user->name,
+            ],
         ];
     }
 }

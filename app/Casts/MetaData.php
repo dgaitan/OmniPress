@@ -2,8 +2,8 @@
 
 namespace App\Casts;
 
-use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use App\Data\Shared\MetaData as MetaDataHandler;
+use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 
 class MetaData implements CastsAttributes
 {
@@ -20,7 +20,7 @@ class MetaData implements CastsAttributes
     {
         return json_decode($value);
         // return ! is_null($value)
-        //     ? MetaDataHandler::collection(json_decode($value, true)) 
+        //     ? MetaDataHandler::collection(json_decode($value, true))
         //     : [];
     }
 
@@ -35,10 +35,10 @@ class MetaData implements CastsAttributes
      */
     public function set($model, $key, $value, $attributes)
     {
-        if (!is_string($value) || is_array($value)) {
+        if (! is_string($value) || is_array($value)) {
             $value = json_encode($value);
         }
-        
+
         return $value;
     }
 }

@@ -2,25 +2,24 @@
 
 namespace App\Http\Clients\WooCommerce\Endpoints;
 
-use Exception;
-use Automattic\WooCommerce\Client as WooCommerce;
 use App\Helpers\API\Testeable;
 use App\Models\Sync;
+use Automattic\WooCommerce\Client as WooCommerce;
 
-abstract class BaseEndpoint {
-
+abstract class BaseEndpoint
+{
     use Testeable;
 
     /**
      * WooCommerce api instnace
-     * 
+     *
      * @var WooCommerce
      */
     protected $api;
-    
+
     /**
      * Endpoint where it should goes to
-     * 
+     *
      * @var string
      */
     protected $endpoint;
@@ -28,18 +27,20 @@ abstract class BaseEndpoint {
     /**
      * Constructor
      */
-    public function __construct(WooCommerce $api) {
+    public function __construct(WooCommerce $api)
+    {
         $this->api = $api;
     }
 
     /**
      * Data processor.
-     * 
+     *
      * Should be an instance of Data
      */
     abstract protected function getDataProcessor();
 
-    public function post(array $params = []) {
+    public function post(array $params = [])
+    {
         $request = $this->api->post($this->endpoint, $params);
         $result = $this->getDataProcessor()::_fromResponse((array) $request);
 
@@ -48,29 +49,33 @@ abstract class BaseEndpoint {
 
     /**
      * Get Data
-     * 
-     * @var array $params
+     *
+     * @var array
+     *
      * @return array
      */
-    public function get(array $params = array(), Sync|null $sync = null, int $id = 0) {
-        $results = array();
-        
+    public function get(array $params = [], Sync|null $sync = null, int $id = 0)
+    {
+        $results = [];
+
         // If id is greater than one, it means that we are trying to retrieve a simple element
-        if ( $id > 0 ) {
+        if ($id > 0) {
             $response = $this->api->get(sprintf('%s/%s', $this->endpoint, $id));
 
             if ($response) {
                 $results = $this->getDataProcessor()::_fromResponse((array) $response);
             }
-            
+
             return $results;
         }
 
         $params = $this->getParams($params);
 
-        if ($this->endpoint === 'products') $params['status'] = 'publish';
+        if ($this->endpoint === 'products') {
+            $params['status'] = 'publish';
+        }
 
-        if ($this->isTesting && !$this->retrieveFromAPI) {
+        if ($this->isTesting && ! $this->retrieveFromAPI) {
             $response = $this->testingData;
             $results[1] = $this->getDataProcessor()::collectFromResponse($response);
 
@@ -93,10 +98,10 @@ abstract class BaseEndpoint {
             while ($hasResults) {
                 $params['page'] = $page;
                 $response = $this->api->get($this->endpoint, $params);
-                
+
                 // If the response returns an empty array.
                 // it means we should stop the loop
-                if (!$response) {
+                if (! $response) {
                     $hasResults = false;
                     $sync->complete();
                     break;
@@ -105,14 +110,13 @@ abstract class BaseEndpoint {
                 if ($sync->shouldStop($page)) {
                     $hasResults = false;
                     $sync->update(['current_page' => $page - 1]);
-                    $sync->add_log(sprintf("Sync paused in page %s", $page - 1));
+                    $sync->add_log(sprintf('Sync paused in page %s', $page - 1));
                     break;
                 }
 
                 $results[$page] = $this->getDataProcessor()::collectFromResponse($response);
                 $page++;
             }
-
         }
 
         return $results;
@@ -120,20 +124,22 @@ abstract class BaseEndpoint {
 
     /**
      * Get params ready to go
-     * 
-     * @var array $param
+     *
+     * @var array
+     *
      * @return array
      */
-    protected function getParams(array $params): array {
-        if (!isset($params['per_page'])) {
+    protected function getParams(array $params): array
+    {
+        if (! isset($params['per_page'])) {
             $params['per_page'] = 100;
         }
 
-        if (!isset($params['page'])) {
+        if (! isset($params['page'])) {
             $params['page'] = 1;
         }
 
-        if (!isset($params['role'])) {
+        if (! isset($params['role'])) {
             $params['role'] = 'all';
         }
 

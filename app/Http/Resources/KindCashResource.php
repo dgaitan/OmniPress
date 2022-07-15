@@ -16,17 +16,17 @@ class KindCashResource extends JsonResource
     {
         $data = [
             'points' => is_null($this->points) ? 0 : $this->points,
-            'last_earned' => is_null($this->last_earned) ? 0 : $this->last_earned
+            'last_earned' => is_null($this->last_earned) ? 0 : $this->last_earned,
         ];
 
         if ($this->logs) {
-            $data['logs'] = $this->logs()->get()->map(function($log) {
+            $data['logs'] = $this->logs()->get()->map(function ($log) {
                 return [
                     'event' => $log->event,
                     'date' => $log->date->toDateString(),
                     'order_id' => $log->order_id,
                     'points' => $log->points,
-                    'description' => $log->description
+                    'description' => $log->description,
                 ];
             });
         }

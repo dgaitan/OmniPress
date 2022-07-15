@@ -4,9 +4,10 @@ namespace App\Data\Http;
 
 use App\Data\BaseData;
 
-class MembershipData extends BaseData {
+class MembershipData extends BaseData
+{
     public static $id_field = 'membership_id';
-    
+
     public function __construct(
         public int $membership_id,
         public int $customer_id,
@@ -24,6 +25,5 @@ class MembershipData extends BaseData {
         public int $payment_intents,
         public array $kind_cash
     ) {
-
     }
 }

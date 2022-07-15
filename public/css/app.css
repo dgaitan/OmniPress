@@ -778,9 +778,6 @@ select {
 .mb-5 {
   margin-bottom: 1.25rem;
 }
-.mb-10 {
-  margin-bottom: 2.5rem;
-}
 .mr-1 {
   margin-right: 0.25rem;
 }
@@ -801,6 +798,9 @@ select {
 }
 .ml-px {
   margin-left: 1px;
+}
+.mb-10 {
+  margin-bottom: 2.5rem;
 }
 .ml-6 {
   margin-left: 1.5rem;
@@ -1306,6 +1306,9 @@ select {
 .p-5 {
   padding: 1.25rem;
 }
+.p-3 {
+  padding: 0.75rem;
+}
 .px-4 {
   padding-left: 1rem;
   padding-right: 1rem;
@@ -1445,6 +1448,9 @@ select {
 }
 .pl-7 {
   padding-left: 1.75rem;
+}
+.pl-12 {
+  padding-left: 3rem;
 }
 .pb-10 {
   padding-bottom: 2.5rem;
@@ -2107,6 +2113,10 @@ select {
 .hover\:text-gray-800:hover {
   --tw-text-opacity: 1;
   color: rgb(31 41 55 / var(--tw-text-opacity));
+}
+.hover\:text-gray-600:hover {
+  --tw-text-opacity: 1;
+  color: rgb(75 85 99 / var(--tw-text-opacity));
 }
 .focus\:z-10:focus {
   z-index: 10;

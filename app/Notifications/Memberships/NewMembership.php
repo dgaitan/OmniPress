@@ -2,11 +2,11 @@
 
 namespace App\Notifications\Memberships;
 
+use App\Models\Membership;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use App\Models\Membership;
 
 class NewMembership extends Notification implements ShouldQueue
 {

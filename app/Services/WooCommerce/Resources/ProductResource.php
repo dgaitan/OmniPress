@@ -3,8 +3,8 @@
 namespace App\Services\WooCommerce\Resources;
 
 use App\Services\Contracts\ResourceContract;
-use App\Services\WooCommerce\Factories\ProductFactory;
 use App\Services\Resources\BaseResource;
+use App\Services\WooCommerce\Factories\ProductFactory;
 
 class ProductResource extends BaseResource implements ResourceContract
 {

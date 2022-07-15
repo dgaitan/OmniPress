@@ -4,20 +4,22 @@ namespace App\Analytics\Base;
 
 use Carbon\Carbon;
 
-abstract class Analytics {
-
-
+abstract class Analytics
+{
     /**
      * Comparisson Ranges
      */
     const CURRENT_MONTH_RANGE = 'current_month';
+
     const LAST_MONTH_RAGE = 'last_month';
+
     const CURRENT_YEAR_RANGE = 'current_year';
-    
+
     /**
      * Comparisson Periods
      */
     const PREVIOUS_PERIOD = 'previous_period';
+
     const PREVIOUS_YEAR = 'previous_year';
 
     /**
@@ -48,10 +50,11 @@ abstract class Analytics {
      */
     protected string $comparissonPeriod = '';
 
-        /**
+    /**
      * Undocumented function
      */
-    public function __construct(string $range, string $period) {
+    public function __construct(string $range, string $period)
+    {
         $this->setComparisonRange($range);
         $this->comparissonPeriod = $period;
     }
@@ -61,19 +64,20 @@ abstract class Analytics {
      *
      * @return array
      */
-    protected function getRangeDates(): array {
+    protected function getRangeDates(): array
+    {
         $ranges = [
             self::CURRENT_MONTH_RANGE => [
-                (new Carbon)->startOfMonth(), Carbon::now()
+                (new Carbon)->startOfMonth(), Carbon::now(),
             ],
             self::LAST_MONTH_RAGE => [
                 (new Carbon)->subMonth(1)->startOfMonth(),
-                (new Carbon)->subMonth(1)->endOfMonth() 
+                (new Carbon)->subMonth(1)->endOfMonth(),
             ],
             self::CURRENT_YEAR_RANGE => [
                 (new Carbon)->startOfYear(),
-                (new Carbon)->endOfYear()
-            ]
+                (new Carbon)->endOfYear(),
+            ],
         ];
 
         return $ranges[$this->comparissonRange];
@@ -84,9 +88,10 @@ abstract class Analytics {
      *
      * @return array
      */
-    protected function getPeriodDates(): array {
+    protected function getPeriodDates(): array
+    {
         $dateRanges = $this->getRangeDates();
-        
+
         $periods = [
             self::PREVIOUS_PERIOD => [
                 Carbon::create($dateRanges[0])
@@ -98,8 +103,8 @@ abstract class Analytics {
             ],
             self::PREVIOUS_YEAR => [
                 Carbon::create($dateRanges[0])->subYear()->startOfYear(),
-                Carbon::create($dateRanges[0])->subYear()->endOfYear()
-            ]
+                Carbon::create($dateRanges[0])->subYear()->endOfYear(),
+            ],
         ];
 
         return $periods[$this->comparissonPeriod];
@@ -111,7 +116,8 @@ abstract class Analytics {
      *
      * @return string
      */
-    protected function getPeriodSubstractionMethod(string $prefix): string {
+    protected function getPeriodSubstractionMethod(string $prefix): string
+    {
         return sprintf(
             '%s%s',
             $prefix,
@@ -122,12 +128,13 @@ abstract class Analytics {
     /**
      * Set Comparisson Range
      *
-     * @param string $range
+     * @param  string  $range
      * @return void
      */
-    protected function setComparisonRange(string $range): void {
+    protected function setComparisonRange(string $range): void
+    {
         $readRange = explode('_', $range);
-        
+
         $this->rangeGroup = end($readRange);
         $this->comparissonRange = $range;
     }
@@ -136,11 +143,12 @@ abstract class Analytics {
      * Te formula to calculate percentage of comparission
      * between to values is the following one:
      *
-     * @param integer $baseValue
-     * @param integer $actualValue
+     * @param  int  $baseValue
+     * @param  int  $actualValue
      * @return mixed
      */
-    protected function calculatePercentageComparisson(int $actualValue, int $baseValue): mixed {
+    protected function calculatePercentageComparisson(int $actualValue, int $baseValue): mixed
+    {
         if ($baseValue === 0 && $actualValue === 0) {
             return 0;
         }

@@ -12,7 +12,8 @@ class ProductSetting extends BaseObject implements DataObjectContract
      *
      * @return void
      */
-    protected function schema(): void {
+    protected function schema(): void
+    {
         $this->string('date_on_sale_from', null);
         $this->string('date_on_sale_to', null);
         $this->string('price_html');

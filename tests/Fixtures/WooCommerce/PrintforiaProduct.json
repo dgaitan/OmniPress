@@ -1,0 +1,628 @@
+{
+    "id": 549943,
+    "name": "Printforia Shirt",
+    "slug": "printforia-shirt",
+    "permalink": "http://kind.humans/product/printforia-shirt/",
+    "date_created": "2022-06-13T21:10:23",
+    "date_created_gmt": "2022-06-14T04:10:23",
+    "date_modified": "2022-06-30T17:03:22",
+    "date_modified_gmt": "2022-07-01T00:03:22",
+    "type": "variable",
+    "status": "publish",
+    "featured": false,
+    "catalog_visibility": "visible",
+    "description": "<p>This ia printforia product</p>\n",
+    "short_description": "",
+    "sku": "KH00020FOO",
+    "price": "35",
+    "regular_price": "",
+    "sale_price": "",
+    "date_on_sale_from": null,
+    "date_on_sale_from_gmt": null,
+    "date_on_sale_to": null,
+    "date_on_sale_to_gmt": null,
+    "on_sale": false,
+    "purchasable": true,
+    "total_sales": 46,
+    "virtual": false,
+    "downloadable": false,
+    "downloads": [],
+    "download_limit": -1,
+    "download_expiry": -1,
+    "external_url": "",
+    "button_text": "",
+    "tax_status": "taxable",
+    "tax_class": "",
+    "manage_stock": true,
+    "stock_quantity": 954,
+    "backorders": "no",
+    "backorders_allowed": false,
+    "backordered": false,
+    "low_stock_amount": null,
+    "sold_individually": false,
+    "weight": "",
+    "dimensions": {
+        "length": "",
+        "width": "",
+        "height": ""
+    },
+    "shipping_required": true,
+    "shipping_taxable": true,
+    "shipping_class": "",
+    "shipping_class_id": 0,
+    "reviews_allowed": true,
+    "average_rating": "0.00",
+    "rating_count": 0,
+    "upsell_ids": [],
+    "cross_sell_ids": [],
+    "parent_id": 0,
+    "purchase_note": "",
+    "categories": [
+        {
+            "id": 15,
+            "name": "Uncategorized",
+            "slug": "uncategorized"
+        }
+    ],
+    "tags": [],
+    "images": [
+        {
+            "id": 549944,
+            "date_created": "2022-06-13T14:05:41",
+            "date_created_gmt": "2022-06-14T04:05:41",
+            "date_modified": "2022-06-13T14:05:41",
+            "date_modified_gmt": "2022-06-14T04:05:41",
+            "src": "http://kind.humans/wp-content/uploads/2022/06/KindHumans_Logo_icon.png",
+            "name": "KindHumans_Logo_icon",
+            "alt": ""
+        }
+    ],
+    "attributes": [
+        {
+            "id": 5,
+            "name": "Size",
+            "position": 0,
+            "visible": true,
+            "variation": true,
+            "options": [
+                "Large"
+            ]
+        }
+    ],
+    "default_attributes": [],
+    "variations": [
+        549970
+    ],
+    "grouped_products": [],
+    "menu_order": 0,
+    "price_html": "<span class=\"woocommerce-Price-amount amount\"><bdi><span class=\"woocommerce-Price-currencySymbol\">&#36;</span>35.00</bdi></span>",
+    "related_ids": [
+        543003,
+        544432,
+        484215,
+        544434,
+        544443
+    ],
+    "meta_data": [
+        {
+            "id": 7203864,
+            "key": "_swatch_type",
+            "value": "default"
+        },
+        {
+            "id": 7203865,
+            "key": "wpfoof-exclude-product",
+            "value": "0"
+        },
+        {
+            "id": 7203866,
+            "key": "wpfoof-identifier_exists",
+            "value": "true"
+        },
+        {
+            "id": 7203867,
+            "key": "_coupon_title",
+            "value": []
+        },
+        {
+            "id": 7203868,
+            "key": "send_coupons_on_renewals",
+            "value": "no"
+        },
+        {
+            "id": 7203870,
+            "key": "_domestic_shipping_only",
+            "value": "no"
+        },
+        {
+            "id": 7203871,
+            "key": "_custom_visibility",
+            "value": "visible"
+        },
+        {
+            "id": 7203887,
+            "key": "_is_kind_pre_order",
+            "value": "no"
+        },
+        {
+            "id": 7203888,
+            "key": "_kind_pre_order_date",
+            "value": "2022-06-14 04:10:23"
+        },
+        {
+            "id": 7203889,
+            "key": "_kind_pre_order_fee",
+            "value": ""
+        },
+        {
+            "id": 7203890,
+            "key": "_kh_regular_price",
+            "value": ""
+        },
+        {
+            "id": 7203892,
+            "key": "_kh_expires_at",
+            "value": "1_year"
+        },
+        {
+            "id": 7203893,
+            "key": "_kindhumans_subscription",
+            "value": "no"
+        },
+        {
+            "id": 7203894,
+            "key": "_ks_recurring_price",
+            "value": ""
+        },
+        {
+            "id": 7203895,
+            "key": "_ks_subscription_fee",
+            "value": ""
+        },
+        {
+            "id": 7203896,
+            "key": "_kh_expiration_date",
+            "value": ""
+        },
+        {
+            "id": 7203897,
+            "key": "_ks_label",
+            "value": ""
+        },
+        {
+            "id": 7203898,
+            "key": "_kh_period_intervals",
+            "value": "a:0:{}"
+        },
+        {
+            "id": 7203899,
+            "key": "_kindhumans_dropship",
+            "value": "no"
+        },
+        {
+            "id": 7203900,
+            "key": "_kindhumans_dropship_supplier",
+            "value": ""
+        },
+        {
+            "id": 7203901,
+            "key": "_kindhumans_dropship_shipping_type",
+            "value": ""
+        },
+        {
+            "id": 7203902,
+            "key": "_kindhumans_dropship_shipping_value",
+            "value": ""
+        },
+        {
+            "id": 7203905,
+            "key": "_gift_card_expiration_days",
+            "value": "0"
+        },
+        {
+            "id": 7203906,
+            "key": "display_product_title",
+            "value": ""
+        },
+        {
+            "id": 7203907,
+            "key": "_display_product_title",
+            "value": "field_605526400352d"
+        },
+        {
+            "id": 7203908,
+            "key": "is_new",
+            "value": "1"
+        },
+        {
+            "id": 7203909,
+            "key": "_is_new",
+            "value": "field_5ddd7d652a967"
+        },
+        {
+            "id": 7203910,
+            "key": "is_sticker",
+            "value": "0"
+        },
+        {
+            "id": 7203911,
+            "key": "_is_sticker",
+            "value": "field_5d4ddf03b10e8"
+        },
+        {
+            "id": 7203912,
+            "key": "is_kindness_product",
+            "value": "0"
+        },
+        {
+            "id": 7203913,
+            "key": "_is_kindness_product",
+            "value": "field_5db2edc6e2aa4"
+        },
+        {
+            "id": 7203914,
+            "key": "is_collab_for_cause",
+            "value": "0"
+        },
+        {
+            "id": 7203915,
+            "key": "_is_collab_for_cause",
+            "value": "field_5ee781379ac67"
+        },
+        {
+            "id": 7203916,
+            "key": "is_one_for_one",
+            "value": "0"
+        },
+        {
+            "id": 7203917,
+            "key": "_is_one_for_one",
+            "value": "field_5ee7819e9ac68"
+        },
+        {
+            "id": 7203918,
+            "key": "is_printforia_product",
+            "value": "1"
+        },
+        {
+            "id": 7203919,
+            "key": "_is_printforia_product",
+            "value": "field_62a7d46dfa64e"
+        },
+        {
+            "id": 7203920,
+            "key": "description_headline",
+            "value": ""
+        },
+        {
+            "id": 7203921,
+            "key": "_description_headline",
+            "value": "field_5d62984f5f111"
+        },
+        {
+            "id": 7203922,
+            "key": "description_subheadline",
+            "value": ""
+        },
+        {
+            "id": 7203923,
+            "key": "_description_subheadline",
+            "value": "field_5d6298665f112"
+        },
+        {
+            "id": 7203924,
+            "key": "printforia_product_info_printforia_product_sku",
+            "value": "PRINTFORIA.BASIC-TEE-UNISEX.BLACK.L"
+        },
+        {
+            "id": 7203925,
+            "key": "_printforia_product_info_printforia_product_sku",
+            "value": "field_62a7d4abfa650"
+        },
+        {
+            "id": 7203926,
+            "key": "printforia_product_info_printforia_product_description",
+            "value": "Test description"
+        },
+        {
+            "id": 7203927,
+            "key": "_printforia_product_info_printforia_product_description",
+            "value": "field_62a7d4fcfa651"
+        },
+        {
+            "id": 7203928,
+            "key": "printforia_product_info_prints_0_image_url",
+            "value": "549944"
+        },
+        {
+            "id": 7203929,
+            "key": "_printforia_product_info_prints_0_image_url",
+            "value": "field_62a7d537fa653"
+        },
+        {
+            "id": 7203930,
+            "key": "printforia_product_info_prints_0_mockup_url",
+            "value": "549944"
+        },
+        {
+            "id": 7203931,
+            "key": "_printforia_product_info_prints_0_mockup_url",
+            "value": "field_62a7d567fa654"
+        },
+        {
+            "id": 7203932,
+            "key": "printforia_product_info_prints_0_location",
+            "value": "front"
+        },
+        {
+            "id": 7203933,
+            "key": "_printforia_product_info_prints_0_location",
+            "value": "field_62a7d57bfa655"
+        },
+        {
+            "id": 7203934,
+            "key": "printforia_product_info_prints",
+            "value": "1"
+        },
+        {
+            "id": 7203935,
+            "key": "_printforia_product_info_prints",
+            "value": "field_62a7d520fa652"
+        },
+        {
+            "id": 7203936,
+            "key": "printforia_product_info",
+            "value": ""
+        },
+        {
+            "id": 7203937,
+            "key": "_printforia_product_info",
+            "value": "field_62a7d493fa64f"
+        },
+        {
+            "id": 7203938,
+            "key": "product_tabs",
+            "value": ""
+        },
+        {
+            "id": 7203939,
+            "key": "_product_tabs",
+            "value": "field_5db4822fdd57c"
+        },
+        {
+            "id": 7203940,
+            "key": "modules_before",
+            "value": ""
+        },
+        {
+            "id": 7203941,
+            "key": "_modules_before",
+            "value": "field_60e86cc9706ba"
+        },
+        {
+            "id": 7203942,
+            "key": "show_related_products",
+            "value": "0"
+        },
+        {
+            "id": 7203943,
+            "key": "_show_related_products",
+            "value": "field_60edc9864679c"
+        },
+        {
+            "id": 7203944,
+            "key": "modules_after",
+            "value": ""
+        },
+        {
+            "id": 7203945,
+            "key": "_modules_after",
+            "value": "field_629933c649588"
+        },
+        {
+            "id": 7203946,
+            "key": "essb_cached_image",
+            "value": "http://kind.humans/wp-content/uploads/2022/06/KindHumans_Logo_icon.png"
+        },
+        {
+            "id": 7203947,
+            "key": "_yoast_wpseo_content_score",
+            "value": "30"
+        },
+        {
+            "id": 7203948,
+            "key": "_yoast_wpseo_estimated-reading-time-minutes",
+            "value": "1"
+        },
+        {
+            "id": 7205081,
+            "key": "54997wpfoof-exclude-product",
+            "value": "0"
+        },
+        {
+            "id": 7205082,
+            "key": "54997wpfoof-identifier_exists",
+            "value": "true"
+        },
+        {
+            "id": 7205085,
+            "key": "_as_printforia_product",
+            "value": "yes"
+        },
+        {
+            "id": 7205092,
+            "key": "_swatch_type_options",
+            "value": {
+                "5a8b913ebbdf432784bd7f456bbf40ce": {
+                    "type": "default",
+                    "layout": "default",
+                    "size": "swatches_image_size",
+                    "attributes": {
+                        "2db95e8e1a9267b7a1188556b2013b33": {
+                            "type": "color",
+                            "color": "#FFFFFF",
+                            "image": "0"
+                        }
+                    }
+                }
+            }
+        }
+    ],
+    "stock_status": "instock",
+    "yoast_head": "<!-- This site is optimized with the Yoast SEO plugin v16.7 - https://yoast.com/wordpress/plugins/seo/ -->\n<title>Printforia Shirt | Kindhumans</title>\n<!-- Admin only notice: this page does not show a meta description because it does not have one, either write it for this page specifically or go into the [SEO - Search Appearance] menu and set up a template. -->\n<meta name=\"robots\" content=\"index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1\" />\n<link rel=\"canonical\" href=\"http://kind.humans/product/printforia-shirt/\" />\n<meta property=\"og:locale\" content=\"en_US\" />\n<meta property=\"og:type\" content=\"article\" />\n<meta property=\"og:title\" content=\"Printforia Shirt | Kindhumans\" />\n<meta property=\"og:description\" content=\"This ia printforia product\" />\n<meta property=\"og:url\" content=\"http://kind.humans/product/printforia-shirt/\" />\n<meta property=\"og:site_name\" content=\"Kindhumans\" />\n<meta property=\"article:publisher\" content=\"https://www.facebook.com/kindhumans.movement/\" />\n<meta property=\"article:modified_time\" content=\"2022-07-01T00:03:22+00:00\" />\n<meta property=\"og:image\" content=\"http://kind.humans/wp-content/uploads/2022/06/KindHumans_Logo_icon.png\" />\n\t<meta property=\"og:image:width\" content=\"1500\" />\n\t<meta property=\"og:image:height\" content=\"1159\" />\n<meta name=\"twitter:card\" content=\"summary_large_image\" />\n<meta name=\"twitter:label1\" content=\"Est. reading time\" />\n\t<meta name=\"twitter:data1\" content=\"1 minute\" />\n<script type=\"application/ld+json\" class=\"yoast-schema-graph\">{\"@context\":\"https://schema.org\",\"@graph\":[{\"@type\":\"Organization\",\"@id\":\"http://kind.humans/#organization\",\"name\":\"Kindhumans\",\"url\":\"http://kind.humans/\",\"sameAs\":[\"https://www.facebook.com/kindhumans.movement/\",\"https://www.instagram.com/kindhumans_movement/\"],\"logo\":{\"@type\":\"ImageObject\",\"@id\":\"http://kind.humans/#logo\",\"inLanguage\":\"en-US\",\"url\":\"http://kind.humans/wp-content/uploads/2019/04/logo-color.svg\",\"contentUrl\":\"http://kind.humans/wp-content/uploads/2019/04/logo-color.svg\",\"width\":169,\"height\":51,\"caption\":\"Kindhumans\"},\"image\":{\"@id\":\"http://kind.humans/#logo\"}},{\"@type\":\"WebSite\",\"@id\":\"http://kind.humans/#website\",\"url\":\"http://kind.humans/\",\"name\":\"Kindhumans\",\"description\":\"Kindness. Pass it on. One Sticker at a time.\",\"publisher\":{\"@id\":\"http://kind.humans/#organization\"},\"potentialAction\":[{\"@type\":\"SearchAction\",\"target\":{\"@type\":\"EntryPoint\",\"urlTemplate\":\"http://kind.humans/?s={search_term_string}\"},\"query-input\":\"required name=search_term_string\"}],\"inLanguage\":\"en-US\"},{\"@type\":\"ImageObject\",\"@id\":\"http://kind.humans/product/printforia-shirt/#primaryimage\",\"inLanguage\":\"en-US\",\"url\":\"http://kind.humans/wp-content/uploads/2022/06/KindHumans_Logo_icon.png\",\"contentUrl\":\"http://kind.humans/wp-content/uploads/2022/06/KindHumans_Logo_icon.png\",\"width\":1500,\"height\":1159},{\"@type\":\"WebPage\",\"@id\":\"http://kind.humans/product/printforia-shirt/#webpage\",\"url\":\"http://kind.humans/product/printforia-shirt/\",\"name\":\"Printforia Shirt | Kindhumans\",\"isPartOf\":{\"@id\":\"http://kind.humans/#website\"},\"primaryImageOfPage\":{\"@id\":\"http://kind.humans/product/printforia-shirt/#primaryimage\"},\"datePublished\":\"2022-06-14T04:10:23+00:00\",\"dateModified\":\"2022-07-01T00:03:22+00:00\",\"breadcrumb\":{\"@id\":\"http://kind.humans/product/printforia-shirt/#breadcrumb\"},\"inLanguage\":\"en-US\",\"potentialAction\":[{\"@type\":\"ReadAction\",\"target\":[\"http://kind.humans/product/printforia-shirt/\"]}]},{\"@type\":\"BreadcrumbList\",\"@id\":\"http://kind.humans/product/printforia-shirt/#breadcrumb\",\"itemListElement\":[{\"@type\":\"ListItem\",\"position\":1,\"name\":\"Shop\",\"item\":\"http://kind.humans/products/\"},{\"@type\":\"ListItem\",\"position\":2,\"name\":\"Uncategorized\",\"item\":\"http://kind.humans/product-category/uncategorized/\"},{\"@type\":\"ListItem\",\"position\":3,\"name\":\"Printforia Shirt\"}]}]}</script>\n<!-- / Yoast SEO plugin. -->",
+    "product_variations": [
+        {
+            "id": 549970,
+            "name": "Printforia Shirt - Large",
+            "slug": "printforia-shirt",
+            "permalink": "http://kind.humans/product/printforia-shirt/?attribute_pa_size=l",
+            "date_created": "2022-06-22T08:31:39",
+            "date_modified": "2022-06-29T16:39:46",
+            "type": "variation",
+            "status": "publish",
+            "featured": "no",
+            "catalog_visibility": "visible",
+            "description": "",
+            "short_description": "",
+            "sku": "KH000TESTL",
+            "price": "35",
+            "regular_price": "35",
+            "price_html": "<span class=\"woocommerce-Price-amount amount\"><bdi><span class=\"woocommerce-Price-currencySymbol\">&#36;</span>35.00</bdi></span>",
+            "date_on_sale_from": null,
+            "date_on_sale_to": null,
+            "on_sale": "no",
+            "purchasable": "yes",
+            "total_sales": "0",
+            "virtual": "no",
+            "downloadable": false,
+            "external_url": "",
+            "button_text": "",
+            "tax_status": "taxable",
+            "tax_class": "",
+            "manage_stock": "yes",
+            "stock_quantity": 954,
+            "in_stock": "yes",
+            "stock_status": "instock",
+            "backorders": "no",
+            "backorders_allowed": false,
+            "backordered": "no",
+            "low_stock_amount": null,
+            "sold_individually": "no",
+            "weight": "",
+            "dimensions": {
+                "length": "",
+                "width": "",
+                "height": ""
+            },
+            "shipping_required": "yes",
+            "shipping_taxable": "yes",
+            "shipping_class": "",
+            "shipping_class_id": 0,
+            "reviews_allowed": "no",
+            "avarage_rating": "0.00",
+            "rating_count": 0,
+            "parent_id": 549943,
+            "purchase_note": "",
+            "categories": [],
+            "tags": [],
+            "images": [
+                {
+                    "id": 549944,
+                    "date_created": "2022-06-13T14:05:41",
+                    "date_created_gmt": "2022-06-14T04:05:41",
+                    "date_modified": "2022-06-13T14:05:41",
+                    "date_modified_gmt": "2022-06-14T04:05:41",
+                    "src": "http://kind.humans/wp-content/uploads/2022/06/KindHumans_Logo_icon.png",
+                    "name": "KindHumans_Logo_icon",
+                    "alt": ""
+                }
+            ],
+            "attributes": [
+                {
+                    "id": 5,
+                    "name": "Size",
+                    "option": "Large"
+                }
+            ],
+            "default_attribute": [],
+            "meta_data": [
+                {
+                    "id": 7205068,
+                    "key": "_printforia_sku_field",
+                    "value": "PRINTFORIA.BASIC-TEE-UNISEX.BLACK.L"
+                },
+                {
+                    "id": 7205069,
+                    "key": "_printforia_description_field",
+                    "value": "Fancy Kindhumans Tee Test"
+                },
+                {
+                    "id": 7205070,
+                    "key": "_printforia_prints_field",
+                    "value": [
+                        {
+                            "image_url": "https://staging.kindhumans.com/wp-content/uploads/2022/06/khlogo_shirt_15x19-new.png",
+                            "mockup_url": "https://info.printforia.com/hs-fs/hubfs/15x19.png?width=800&name=15x19.png",
+                            "location": "front"
+                        }
+                    ]
+                },
+                {
+                    "id": 7205071,
+                    "key": "wpfoof-exclude-product",
+                    "value": "0"
+                },
+                {
+                    "id": 7205072,
+                    "key": "wpfoof-identifier_exists",
+                    "value": "true"
+                },
+                {
+                    "id": 7205073,
+                    "key": "_coupon_title",
+                    "value": []
+                },
+                {
+                    "id": 7205074,
+                    "key": "send_coupons_on_renewals",
+                    "value": "no"
+                },
+                {
+                    "id": 7205075,
+                    "key": "_wc_additional_variation_images",
+                    "value": ""
+                },
+                {
+                    "id": 7205077,
+                    "key": "_ks_use_parent_subscription_settings",
+                    "value": "no"
+                },
+                {
+                    "id": 7205078,
+                    "key": "_ks_recurring_price",
+                    "value": ""
+                },
+                {
+                    "id": 7205079,
+                    "key": "_ks_subscription_fee",
+                    "value": ""
+                }
+            ],
+            "is_printforia": true
+        }
+    ],
+    "is_printforia": true,
+    "brands": [],
+    "_links": {
+        "self": [
+            {
+                "href": "http://kind.humans/wp-json/wc/v3/products/549943"
+            }
+        ],
+        "collection": [
+            {
+                "href": "http://kind.humans/wp-json/wc/v3/products"
+            }
+        ]
+    }
+}

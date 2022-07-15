@@ -2,12 +2,13 @@
 
 namespace App\Models\WooCommerce;
 
-use App\Models\Membership;
+use App\Models\Causes\UserDonation;
 use App\Models\Concerns\HasMetaData;
+use App\Models\Membership;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Notifications\Notifiable;
 use Laravel\Cashier\Billable;
 
 /**
@@ -32,6 +33,7 @@ use Laravel\Cashier\Billable;
  * @property int|null $service_id
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\WooCommerce\Order[] $orders
  * @property-read int|null $orders_count
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Customer newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Customer newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Customer query()
@@ -53,6 +55,7 @@ use Laravel\Cashier\Billable;
  * @method static \Illuminate\Database\Eloquent\Builder|Customer whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Customer whereUsername($value)
  * @mixin \Eloquent
+ *
  * @property string|null $stripe_id
  * @property string|null $pm_type
  * @property string|null $pm_last_four
@@ -61,12 +64,16 @@ use Laravel\Cashier\Billable;
  * @property-read int|null $notifications_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Cashier\Subscription[] $subscriptions
  * @property-read int|null $subscriptions_count
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Customer wherePmLastFour($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Customer wherePmType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Customer whereStripeId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Customer whereTrialEndsAt($value)
+ *
  * @property-read \Illuminate\Database\Eloquent\Collection|Membership[] $memberships
  * @property-read int|null $memberships_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|UserDonation[] $donations
+ * @property-read int|null $donations_count
  */
 class Customer extends Model
 {
@@ -85,7 +92,7 @@ class Customer extends Model
         'billing' => 'object',
         'shipping' => 'object',
         'date_created' => 'datetime',
-        'date_modified' => 'datetime'
+        'date_modified' => 'datetime',
     ];
 
     /**
@@ -106,7 +113,7 @@ class Customer extends Model
         'shipping',
         'is_paying_customer',
         'avatar_url',
-        'meta_data'
+        'meta_data',
     ];
 
     /**
@@ -114,7 +121,8 @@ class Customer extends Model
      *
      * @return HasMany
      */
-    public function orders(): HasMany {
+    public function orders(): HasMany
+    {
         return $this->hasMany(Order::class);
     }
 
@@ -123,16 +131,28 @@ class Customer extends Model
      *
      * @return HasMany
      */
-    public function memberships(): HasMany {
+    public function memberships(): HasMany
+    {
         return $this->hasMany(Membership::class);
+    }
+
+    /**
+     * Customer donation
+     *
+     * @return HasMany
+     */
+    public function donations(): HasMany
+    {
+        return $this->hasMany(UserDonation::class, 'customer_id');
     }
 
     /**
      * This customer has an active membership?
      *
-     * @return boolean
+     * @return bool
      */
-    public function hasMemberships(): bool {
+    public function hasMemberships(): bool
+    {
         return $this->memberships()
             ->where('status', '!=', 'expired')
             ->exists();
@@ -143,7 +163,8 @@ class Customer extends Model
      *
      * @return Membership
      */
-    public function membership(): Membership {
+    public function membership(): Membership
+    {
         return $this->memberships()
             ->where('status', '!=', 'expired')
             ->first();
@@ -151,9 +172,11 @@ class Customer extends Model
 
     /**
      * [getfullName description]
+     *
      * @return [type] [description]
      */
-    public function getfullName() {
+    public function getfullName()
+    {
         return sprintf('%s %s', $this->first_name, $this->last_name);
     }
 
@@ -162,7 +185,8 @@ class Customer extends Model
      *
      * @return string
      */
-    public function getDateCreated(): string {
+    public function getDateCreated(): string
+    {
         if (! $this->date_created) {
             return '';
         }
@@ -179,7 +203,8 @@ class Customer extends Model
      *
      * @return string
      */
-    public function getPermalinkOnStore(): string {
+    public function getPermalinkOnStore(): string
+    {
         return sprintf(
             '%s/wp-admin/user-edit.php?user_id=%s',
             env('CLIENT_DOMAIN', 'https://kindhumans.com'),
@@ -190,13 +215,14 @@ class Customer extends Model
     /**
      * Convert Model To Array
      *
-     * @param boolean $isSingle
+     * @param  bool  $isSingle
      * @return array
      */
-    public function toArray($isSingle = false): array {
+    public function toArray($isSingle = false): array
+    {
         $data = parent::toArray();
 
-        if (!$isSingle) {
+        if (! $isSingle) {
             unset($data['shipping']);
             unset($data['billing']);
             unset($data['meta_data']);
@@ -224,21 +250,21 @@ class Customer extends Model
      * @return void
      */
     public function setPaymentMethodsFromCustomerId()
-    {   
+    {
         $stripCustomerId = $this->getMetaValue('_stripe_customer_id', null);
-        
+
         if (! is_null($stripCustomerId)) {
             try {
-                // Try retrieve the customer to avoid 
+                // Try retrieve the customer to avoid
                 $this->stripe()->customers->retrieve($stripCustomerId, []);
                 $this->stripe_id = $stripCustomerId;
                 $this->save();
-                
+
                 $paymentMethods = $this->stripe()->customers->allPaymentMethods(
                     $stripCustomerId,
                     ['type' => 'card']
                 );
-    
+
                 if ($paymentMethods) {
                     foreach ($paymentMethods as $paymentMethod) {
                         $this->addPaymentMethod($paymentMethod->id);
@@ -247,17 +273,17 @@ class Customer extends Model
             } catch (\Stripe\Exception\InvalidRequestException $e) {
                 $this->stripe_id = null;
                 $this->save();
-                
+
                 return $e->getMessage();
             } catch (\Stripe\Exception\InvalidArgumentException $e) {
                 $this->stripe_id = null;
                 $this->save();
-                
+
                 return $e->getMessage();
             }
         }
 
-        return "Yes";
+        return 'Yes';
     }
 
     /**
@@ -278,16 +304,17 @@ class Customer extends Model
     /**
      * Add a new payment method and assign it as default payment method.
      *
-     * @param string $token [description]
+     * @param  string  $token [description]
      * @return array - The new payment method resume
      */
-    public function addAndAssignDefaultPaymentMethod(string $token): array {
+    public function addAndAssignDefaultPaymentMethod(string $token): array
+    {
         $paymentMethod = $this->addPaymentMethod($token);
         $defaultCard = $this->updateDefaultPaymentMethod($paymentMethod->id);
 
         return [
             'card' => self::getCardResume($paymentMethod),
-            'payment_method' => $paymentMethod->toArray()
+            'payment_method' => $paymentMethod->toArray(),
         ];
     }
 
@@ -297,12 +324,13 @@ class Customer extends Model
      * @param  [type] $paymentMethod [description]
      * @return [type]                [description]
      */
-    public static function getCardResume($paymentMethod) {
+    public static function getCardResume($paymentMethod)
+    {
         return [
             'brand' => $paymentMethod->card->brand,
             'exp_month' => $paymentMethod->card->exp_month,
             'exp_year' => $paymentMethod->card->exp_year,
-            'last4' => $paymentMethod->card->last4
+            'last4' => $paymentMethod->card->last4,
         ];
     }
 
@@ -311,7 +339,8 @@ class Customer extends Model
      *
      * @return array
      */
-    public static function getRoles(): array {
+    public static function getRoles(): array
+    {
         $roles = [];
         $_roles = [
             'administrator' => 'Administrator',
@@ -320,10 +349,10 @@ class Customer extends Model
             'customer' => 'Customer',
             'shop_manager' => 'Shop Manager',
             'affiliate' => 'Affiliate',
-            'kindhumans_dropship_supplier' => 'Dropship Supplier'
+            'kindhumans_dropship_supplier' => 'Dropship Supplier',
         ];
 
-        foreach ( $_roles as $key => $value ) {
+        foreach ($_roles as $key => $value) {
             $roles[] = ['slug' => $key, 'label' => $value];
         }
 

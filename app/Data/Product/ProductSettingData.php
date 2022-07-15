@@ -2,14 +2,13 @@
 
 namespace App\Data\Product;
 
-use Spatie\LaravelData\DataCollection;
 use App\Data\BaseData;
-use App\Data\Product\DimensionsData;
+use Spatie\LaravelData\DataCollection;
 
-class ProductSettingData extends BaseData {
-
+class ProductSettingData extends BaseData
+{
     protected static $floatFields = [
-        'weight'
+        'weight',
     ];
 
     protected static $collectionFields = [
@@ -21,7 +20,7 @@ class ProductSettingData extends BaseData {
         'backordered',
         'shipping_required',
         'shipping_taxable',
-        'reviews_allowed'
+        'reviews_allowed',
     ];
 
     public function __construct(
@@ -60,6 +59,5 @@ class ProductSettingData extends BaseData {
         /** @var \App\Data\Product\DownloadData[] */
         public ?DataCollection $downloads,
     ) {
-
     }
 }

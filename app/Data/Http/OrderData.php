@@ -2,11 +2,12 @@
 
 namespace App\Data\Http;
 
-use Spatie\LaravelData\DataCollection;
 use App\Data\BaseData;
 use App\Data\Shared\AddressData;
+use Spatie\LaravelData\DataCollection;
 
-class OrderData extends BaseData {
+class OrderData extends BaseData
+{
     public static $id_field = 'order_id';
 
     protected static $priceFields = [
@@ -16,7 +17,7 @@ class OrderData extends BaseData {
         'shipping_tax',
         'cart_tax',
         'total_tax',
-        'total'
+        'total',
     ];
 
     protected static $collectionFields = [
@@ -26,13 +27,13 @@ class OrderData extends BaseData {
         'shipping_lines' => \App\Data\Order\ShippingLineData::class,
         'fee_lines' => \App\Data\Order\FeeLineData::class,
         'coupon_lines' => \App\Data\Order\CouponLineData::class,
-        'refunds' => \App\Data\Order\RefundData::class
+        'refunds' => \App\Data\Order\RefundData::class,
     ];
 
     protected static $objectFields = ['billing', 'shipping'];
 
     protected static $booleanFields = [
-        'set_paid'
+        'set_paid',
     ];
 
     /**
@@ -40,7 +41,7 @@ class OrderData extends BaseData {
      *
      * Change it if you will import data from a csv
      *
-     * @var boolean
+     * @var bool
      */
     protected static $keepPriceValue = false;
 

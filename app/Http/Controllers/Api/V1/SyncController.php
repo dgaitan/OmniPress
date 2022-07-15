@@ -3,35 +3,52 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-use App\Rules\SyncContentType;
-use App\Jobs\SingleWooCommerceSync;
+use App\Services\Sync\BulkSincronization;
+use App\Services\Sync\SyncronizeEntity;
+use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class SyncController extends Controller
 {
-    public function index(Request $request) {}
+    public function index(Request $request)
+    {
+    }
 
     /**
      * [update description]
-     * @param  Request $request [description]
+     *
+     * @param  Request  $request [description]
      * @return [type]           [description]
      */
-    public function update(Request $request) {
-        // Validate the params
-        $validator = Validator::make($request->all(), [
-            'content_type' => ['required', new SyncContentType],
-            'element_id' => ['required', 'integer']
-        ]);
+    public function update(Request $request)
+    {
+        try {
+            SyncronizeEntity::dispatch($request->content_type, $request->element_id);
 
-        if ($validator->fails()) {
+            return response()->json(['status' => 'Syncing started']);
+        } catch (Exception $e) {
             return response()->json([
-                'errors' => $validator->errors()
+                'errors' => json_decode($e->getMessage()),
             ], 400);
         }
+    }
 
-        SingleWooCommerceSync::dispatch($request->element_id, $request->content_type);
+    /**
+     * Bulk Sync
+     *
+     * @param  Request  $request
+     * @return void
+     */
+    public function bulkSync(Request $request)
+    {
+        try {
+            BulkSincronization::dispatch($request->content_type, $request->ids);
 
-        return response()->json(['status' => 'Syncing started']);
+            return response()->json(['status' => 'Syncing started']);
+        } catch (Exception $e) {
+            return response()->json([
+                'errors' => json_decode($e->getMessage()),
+            ], 400);
+        }
     }
 }

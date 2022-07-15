@@ -3,11 +3,11 @@
 namespace App\Actions\Fortify;
 
 use App\Models\User;
+use App\Rules\KindHumansDomain;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 use Laravel\Jetstream\Jetstream;
-use App\Rules\KindHumansDomain;
 
 class CreateNewUser implements CreatesNewUsers
 {

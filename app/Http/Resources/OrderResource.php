@@ -2,8 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Http\Resources\OrderItemCollection;
-use App\Http\Resources\PaymentMethodResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class OrderResource extends JsonResource
@@ -45,9 +43,11 @@ class OrderResource extends JsonResource
             'permalink_on_store' => $this->getPermalinkOnStore(),
             // Default Values for relationships
             'customer' => null,
-            'items' => array(),
+            'items' => [],
             'membership' => null,
-            'payment_method' => null
+            'payment_method' => null,
+            'printforia_order' => null,
+            'donations' => null,
         ];
 
         if (! is_null($this->customer)) {
@@ -68,6 +68,19 @@ class OrderResource extends JsonResource
             $order['payment_method'] = new PaymentMethodResource(
                 $this->paymentMethod
             );
+        }
+
+        if ($this->printforiaOrder) {
+            $order['printforia_order'] = [
+                'id' => $this->printforiaOrder->printforia_order_id,
+                'status' => $this->printforiaOrder->status,
+                'permalink' => $this->printforiaOrder->getPermalink(),
+            ];
+        }
+
+        if ($this->donations->isNotEmpty()) {
+            $order['donations'] = $this->getDonations();
+            $order['total_donations'] = $this->totalDonated()->format();
         }
 
         return $order;

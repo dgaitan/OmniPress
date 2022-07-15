@@ -2,15 +2,15 @@
 
 namespace App\Exports;
 
-use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\FromArray;
+use Maatwebsite\Excel\Concerns\WithHeadings;
 
 class MembershipExport implements FromArray, WithHeadings
 {
-
     protected array $memberships;
 
-    public function __construct(array $memberships) {
+    public function __construct(array $memberships)
+    {
         $this->memberships = $memberships;
     }
 
@@ -24,13 +24,13 @@ class MembershipExport implements FromArray, WithHeadings
             'Gift Product',
             'Start At',
             'End At',
-            'Kind Cash'
+            'Kind Cash',
         ];
     }
 
     /**
-    * @return array
-    */
+     * @return array
+     */
     public function array(): array
     {
         return $this->memberships;

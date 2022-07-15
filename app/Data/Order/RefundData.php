@@ -4,11 +4,12 @@ namespace App\Data\Order;
 
 use App\Data\BaseData;
 
-class RefundData extends BaseData {
+class RefundData extends BaseData
+{
     public static $id_field = 'refund_id';
 
     protected static $priceFields = [
-        'total'
+        'total',
     ];
 
     protected static $collectionFields = [
@@ -20,6 +21,5 @@ class RefundData extends BaseData {
         public string|null $reason,
         public float|null $total
     ) {
-
     }
 }

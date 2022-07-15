@@ -1,0 +1,2059 @@
+{
+    "id": 539489,
+    "name": "Kinja Tee - Ocean",
+    "slug": "kinja-tee-ocean",
+    "permalink": "http://kind.humans/product/kinja-tee-ocean/",
+    "date_created": "2022-02-02T11:32:59",
+    "date_created_gmt": "2022-02-02T19:32:59",
+    "date_modified": "2022-06-22T07:49:58",
+    "date_modified_gmt": "2022-06-22T14:49:58",
+    "type": "variable",
+    "status": "publish",
+    "featured": false,
+    "catalog_visibility": "visible",
+    "description": "<p><strong>What’s a “kinja” you ask?</strong></p>\n<p>kin·ja | \\ ˈkin-jə , -(ˌ)jä\\<br />\nnoun, plural kinja also kinjas<br />\nDefinition: A kindness ninja; a person trained in the martial art of kindness, employed especially for peace and the creation of positive solutions for the greater good.</p>\n<p>&nbsp;</p>\n<p><strong>Why you’ll love it</strong></p>\n<p>The kinja, or kindness ninja, is at the heart of our logo, and at the heart of everyone. We like to think kindness is in all of us just waiting for the right moment to pop up. So as you go about your day, passing on kindness, smile — you have a little kinja in you, too. We chose this tee made from organic cotton to reduce the water required to make our garments, and steer clear of pesticides and GMOs. Now that’s something to smile about.</p>\n<p>&nbsp;</p>\n<p><strong>Features</strong></p>\n<ul>\n<li>Unisex design for both women and men</li>\n<li>100% ring-spun organic cotton</li>\n<li>Super soft hand feel</li>\n<li>Made in the USA</li>\n</ul>\n",
+    "short_description": "<p>Kinja = Kindness Ninja! We chose this tee made from organic cotton to reduce the water required to make our garments, and steer clear of pesticides and GMOs. Now that’s something to smile about.</p>\n<ul>\n<li>Unisex design for both women and men</li>\n<li>100% ring-spun organic cotton</li>\n<li>Super soft hand feel</li>\n<li>Made in the USA</li>\n</ul>\n",
+    "sku": "KH00692",
+    "price": 33.600000000000001,
+    "regular_price": "",
+    "sale_price": "",
+    "date_on_sale_from": null,
+    "date_on_sale_from_gmt": null,
+    "date_on_sale_to": null,
+    "date_on_sale_to_gmt": null,
+    "on_sale": true,
+    "purchasable": true,
+    "total_sales": 1,
+    "virtual": false,
+    "downloadable": false,
+    "downloads": [],
+    "download_limit": -1,
+    "download_expiry": -1,
+    "external_url": "",
+    "button_text": "",
+    "tax_status": "taxable",
+    "tax_class": "",
+    "manage_stock": false,
+    "stock_quantity": null,
+    "backorders": "no",
+    "backorders_allowed": false,
+    "backordered": false,
+    "low_stock_amount": null,
+    "sold_individually": false,
+    "weight": "9",
+    "dimensions": {
+        "length": "",
+        "width": "",
+        "height": ""
+    },
+    "shipping_required": true,
+    "shipping_taxable": true,
+    "shipping_class": "",
+    "shipping_class_id": 0,
+    "reviews_allowed": true,
+    "average_rating": "0.00",
+    "rating_count": 0,
+    "upsell_ids": [],
+    "cross_sell_ids": [],
+    "parent_id": 0,
+    "purchase_note": "",
+    "categories": [
+        {
+            "id": 7203,
+            "name": "Gifts For Him",
+            "slug": "for-him"
+        },
+        {
+            "id": 7202,
+            "name": "Gifts For Her",
+            "slug": "for-her"
+        }
+    ],
+    "tags": [
+        {
+            "id": 9130,
+            "name": "comfort T",
+            "slug": "comfort-t"
+        }
+    ],
+    "images": [
+        {
+            "id": 549313,
+            "date_created": "2022-01-31T06:28:23",
+            "date_created_gmt": "2022-01-31T22:28:23",
+            "date_modified": "2022-01-31T06:28:23",
+            "date_modified_gmt": "2022-01-31T22:28:23",
+            "src": "http://kind.humans/wp-content/uploads/2021/12/KH00692_AdultKinjaOceanTee_01.jpg",
+            "name": "KH00692_AdultKinjaOceanTee_01",
+            "alt": ""
+        },
+        {
+            "id": 549314,
+            "date_created": "2022-01-31T06:28:34",
+            "date_created_gmt": "2022-01-31T22:28:34",
+            "date_modified": "2022-01-31T06:28:34",
+            "date_modified_gmt": "2022-01-31T22:28:34",
+            "src": "http://kind.humans/wp-content/uploads/2021/12/KH00692_AdultKinjaOceanTee_00.jpg",
+            "name": "KH00692_AdultKinjaOceanTee_00",
+            "alt": ""
+        }
+    ],
+    "attributes": [
+        {
+            "id": 5,
+            "name": "Size",
+            "position": 0,
+            "visible": true,
+            "variation": true,
+            "options": [
+                "X-Small",
+                "Small",
+                "Medium",
+                "Large",
+                "X-Large",
+                "XX-Large"
+            ]
+        }
+    ],
+    "default_attributes": [],
+    "variations": [
+        547475,
+        547476,
+        547477,
+        547478,
+        547479,
+        547480
+    ],
+    "grouped_products": [],
+    "menu_order": 108,
+    "price_html": "<del aria-hidden=\"true\"><span class=\"woocommerce-Price-amount amount\"><bdi><span class=\"woocommerce-Price-currencySymbol\">&#36;</span>42.00</bdi></span></del> <ins><span class=\"woocommerce-Price-amount amount\"><bdi><span class=\"woocommerce-Price-currencySymbol\">&#36;</span>33.60</bdi></span></ins>",
+    "related_ids": [
+        4243,
+        510541,
+        58104,
+        156126,
+        544555
+    ],
+    "meta_data": [
+        {
+            "id": 6444697,
+            "key": "mwqb_sync_uiiqb",
+            "value": "0"
+        },
+        {
+            "id": 6574691,
+            "key": "_swatch_type",
+            "value": "pickers"
+        },
+        {
+            "id": 6574692,
+            "key": "wpfoof-exclude-product",
+            "value": "0"
+        },
+        {
+            "id": 6574693,
+            "key": "wpfoof-identifier_exists",
+            "value": "true"
+        },
+        {
+            "id": 6574695,
+            "key": "_domestic_shipping_only",
+            "value": "no"
+        },
+        {
+            "id": 6574696,
+            "key": "_custom_visibility",
+            "value": "visible"
+        },
+        {
+            "id": 6574697,
+            "key": "_is_kind_pre_order",
+            "value": "no"
+        },
+        {
+            "id": 6574698,
+            "key": "_kind_pre_order_date",
+            "value": "2021-10-08 07:28:18"
+        },
+        {
+            "id": 6574699,
+            "key": "_kind_pre_order_fee",
+            "value": ""
+        },
+        {
+            "id": 6574700,
+            "key": "_kh_regular_price",
+            "value": ""
+        },
+        {
+            "id": 6574702,
+            "key": "_kh_expires_at",
+            "value": "1_year"
+        },
+        {
+            "id": 6574703,
+            "key": "_kindhumans_subscription",
+            "value": "no"
+        },
+        {
+            "id": 6574704,
+            "key": "_ks_recurring_price",
+            "value": ""
+        },
+        {
+            "id": 6574705,
+            "key": "_ks_subscription_fee",
+            "value": ""
+        },
+        {
+            "id": 6574706,
+            "key": "_kh_expiration_date",
+            "value": ""
+        },
+        {
+            "id": 6574707,
+            "key": "_ks_label",
+            "value": ""
+        },
+        {
+            "id": 6574708,
+            "key": "_kh_period_intervals",
+            "value": "a:0:{}"
+        },
+        {
+            "id": 6574709,
+            "key": "_kindhumans_dropship",
+            "value": "no"
+        },
+        {
+            "id": 6574710,
+            "key": "_kindhumans_dropship_supplier",
+            "value": ""
+        },
+        {
+            "id": 6574711,
+            "key": "_kindhumans_dropship_shipping_type",
+            "value": ""
+        },
+        {
+            "id": 6574712,
+            "key": "_kindhumans_dropship_shipping_value",
+            "value": ""
+        },
+        {
+            "id": 6574713,
+            "key": "_gift_card_expiration_days",
+            "value": "0"
+        },
+        {
+            "id": 6574714,
+            "key": "_wc_memberships_use_custom_product_viewing_restricted_message",
+            "value": "no"
+        },
+        {
+            "id": 6574715,
+            "key": "_wc_memberships_use_custom_product_purchasing_restricted_message",
+            "value": "no"
+        },
+        {
+            "id": 6574716,
+            "key": "_wc_memberships_force_public",
+            "value": "no"
+        },
+        {
+            "id": 6574717,
+            "key": "_wc_memberships_exclude_discounts",
+            "value": "no"
+        },
+        {
+            "id": 6574718,
+            "key": "display_product_title",
+            "value": "Kinja Tee"
+        },
+        {
+            "id": 6574719,
+            "key": "_display_product_title",
+            "value": "field_605526400352d"
+        },
+        {
+            "id": 6574720,
+            "key": "is_new",
+            "value": "0"
+        },
+        {
+            "id": 6574721,
+            "key": "_is_new",
+            "value": "field_5ddd7d652a967"
+        },
+        {
+            "id": 6574722,
+            "key": "is_sticker",
+            "value": "0"
+        },
+        {
+            "id": 6574723,
+            "key": "_is_sticker",
+            "value": "field_5d4ddf03b10e8"
+        },
+        {
+            "id": 6574724,
+            "key": "is_kindness_product",
+            "value": "0"
+        },
+        {
+            "id": 6574725,
+            "key": "_is_kindness_product",
+            "value": "field_5db2edc6e2aa4"
+        },
+        {
+            "id": 6574726,
+            "key": "is_collab_for_cause",
+            "value": "0"
+        },
+        {
+            "id": 6574727,
+            "key": "_is_collab_for_cause",
+            "value": "field_5ee781379ac67"
+        },
+        {
+            "id": 6574728,
+            "key": "is_one_for_one",
+            "value": "0"
+        },
+        {
+            "id": 6574729,
+            "key": "_is_one_for_one",
+            "value": "field_5ee7819e9ac68"
+        },
+        {
+            "id": 6574730,
+            "key": "description_headline",
+            "value": "Kinja = Kindness Ninja "
+        },
+        {
+            "id": 6574731,
+            "key": "_description_headline",
+            "value": "field_5d62984f5f111"
+        },
+        {
+            "id": 6574732,
+            "key": "description_subheadline",
+            "value": "Kinja Tee"
+        },
+        {
+            "id": 6574733,
+            "key": "_description_subheadline",
+            "value": "field_5d6298665f112"
+        },
+        {
+            "id": 6574734,
+            "key": "product_tabs",
+            "value": [
+                "impact",
+                "impact",
+                "impact"
+            ]
+        },
+        {
+            "id": 6574735,
+            "key": "_product_tabs",
+            "value": "field_5db4822fdd57c"
+        },
+        {
+            "id": 6574736,
+            "key": "modules_before",
+            "value": ""
+        },
+        {
+            "id": 6574737,
+            "key": "_modules_before",
+            "value": "field_60e86cc9706ba"
+        },
+        {
+            "id": 6574738,
+            "key": "hide_related_products",
+            "value": "0"
+        },
+        {
+            "id": 6574739,
+            "key": "_hide_related_products",
+            "value": "field_60edc9864679c"
+        },
+        {
+            "id": 6574740,
+            "key": "related_products",
+            "value": ""
+        },
+        {
+            "id": 6574741,
+            "key": "_related_products",
+            "value": "field_5e68106eca145"
+        },
+        {
+            "id": 6574742,
+            "key": "_yoast_wpseo_focuskw",
+            "value": "Kinja Tee - Ocean"
+        },
+        {
+            "id": 6574743,
+            "key": "_yoast_wpseo_linkdex",
+            "value": "42"
+        },
+        {
+            "id": 6574744,
+            "key": "_yoast_wpseo_focuskeywords",
+            "value": "[{\"keyword\":\"sustainable cotton kinja tee\",\"score\":\"ok\"},{\"keyword\":\"kinja ocean blue t-shirt\",\"score\":\"ok\"},{\"keyword\":\"organic cotton kinja tee\",\"score\":\"ok\"},{\"keyword\":\"kinja ocean blue t-shirt\",\"score\":\"ok\"}]"
+        },
+        {
+            "id": 6574745,
+            "key": "_yoast_wpseo_keywordsynonyms",
+            "value": "[\"\",\"\",\"\",\"\",\"\"]"
+        },
+        {
+            "id": 6788390,
+            "key": "_sbi_oembed_done_checking",
+            "value": "1"
+        },
+        {
+            "id": 6860774,
+            "key": "show_related_products",
+            "value": "0"
+        },
+        {
+            "id": 6860775,
+            "key": "_show_related_products",
+            "value": "field_60edc9864679c"
+        },
+        {
+            "id": 6956021,
+            "key": "547475-wpfoof-exclude-product",
+            "value": "0"
+        },
+        {
+            "id": 6956022,
+            "key": "547475-wpfoof-identifier_exists",
+            "value": "true"
+        },
+        {
+            "id": 6956023,
+            "key": "547476-wpfoof-exclude-product",
+            "value": "0"
+        },
+        {
+            "id": 6956024,
+            "key": "547476-wpfoof-identifier_exists",
+            "value": "true"
+        },
+        {
+            "id": 6956025,
+            "key": "547477-wpfoof-exclude-product",
+            "value": "0"
+        },
+        {
+            "id": 6956026,
+            "key": "547477-wpfoof-identifier_exists",
+            "value": "true"
+        },
+        {
+            "id": 6956027,
+            "key": "547478-wpfoof-exclude-product",
+            "value": "0"
+        },
+        {
+            "id": 6956028,
+            "key": "547478-wpfoof-identifier_exists",
+            "value": "true"
+        },
+        {
+            "id": 6956029,
+            "key": "547479-wpfoof-exclude-product",
+            "value": "0"
+        },
+        {
+            "id": 6956030,
+            "key": "547479-wpfoof-identifier_exists",
+            "value": "true"
+        },
+        {
+            "id": 6956031,
+            "key": "54748wpfoof-exclude-product",
+            "value": "0"
+        },
+        {
+            "id": 6956032,
+            "key": "54748wpfoof-identifier_exists",
+            "value": "true"
+        },
+        {
+            "id": 6956036,
+            "key": "_swatch_type_options",
+            "value": {
+                "5a8b913ebbdf432784bd7f456bbf40ce": {
+                    "type": "term_options",
+                    "layout": "label_below",
+                    "size": "swatches_image_size",
+                    "attributes": {
+                        "44d610b3325b4aa08f32d925bc693149": {
+                            "type": "color",
+                            "color": "#FFFFFF",
+                            "image": "0"
+                        },
+                        "03c7c0ace395d80182db07ae2c30f034": {
+                            "type": "color",
+                            "color": "#FFFFFF",
+                            "image": "0"
+                        },
+                        "6f8f57715090da2632453988d9a1501b": {
+                            "type": "color",
+                            "color": "#FFFFFF",
+                            "image": "0"
+                        },
+                        "2db95e8e1a9267b7a1188556b2013b33": {
+                            "type": "color",
+                            "color": "#FFFFFF",
+                            "image": "0"
+                        },
+                        "fb35806dc8c37e4e178f261553a1d698": {
+                            "type": "color",
+                            "color": "#FFFFFF",
+                            "image": "0"
+                        },
+                        "c2912fe9a6ae9d1f03d142399fab8f4c": {
+                            "type": "color",
+                            "color": "#FFFFFF",
+                            "image": "0"
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "id": 6957274,
+            "key": "_yoast_wpseo_content_score",
+            "value": "90"
+        },
+        {
+            "id": 6983579,
+            "key": "_yoast_wpseo_primary_product_brand",
+            "value": "233"
+        },
+        {
+            "id": 6983580,
+            "key": "_yoast_wpseo_primary_product_cat",
+            "value": "401"
+        },
+        {
+            "id": 6983581,
+            "key": "_yoast_wpseo_metadesc",
+            "value": "Kinja = Kindness Ninja! This Kinja tee is made from organic cotton to steer clear of pesticides and GMOs. Shop now!"
+        },
+        {
+            "id": 7180829,
+            "key": "essb_cached_image",
+            "value": "http://kind.humans/wp-content/uploads/2021/12/KH00692_AdultKinjaOceanTee_01.jpg"
+        },
+        {
+            "id": 7182992,
+            "key": "_wp_old_date",
+            "value": "2022-01-31"
+        },
+        {
+            "id": 7182993,
+            "key": "_pin_description_template",
+            "value": ""
+        },
+        {
+            "id": 7182994,
+            "key": "_pin_title_template",
+            "value": ""
+        },
+        {
+            "id": 7203670,
+            "key": "_coupon_title",
+            "value": []
+        },
+        {
+            "id": 7203671,
+            "key": "send_coupons_on_renewals",
+            "value": "no"
+        },
+        {
+            "id": 7204874,
+            "key": "is_printforia_product",
+            "value": "0"
+        },
+        {
+            "id": 7204875,
+            "key": "_is_printforia_product",
+            "value": "field_62a7d46dfa64e"
+        },
+        {
+            "id": 7204876,
+            "key": "modules_after",
+            "value": ""
+        },
+        {
+            "id": 7204877,
+            "key": "_modules_after",
+            "value": "field_629933c649588"
+        },
+        {
+            "id": 7204895,
+            "key": "_yoast_wpseo_estimated-reading-time-minutes",
+            "value": ""
+        },
+        {
+            "id": 7204977,
+            "key": "product_tabs_0_tab_name",
+            "value": "Materials"
+        },
+        {
+            "id": 7204978,
+            "key": "_product_tabs_0_tab_name",
+            "value": "field_5db486ca6d7e7"
+        },
+        {
+            "id": 7204979,
+            "key": "product_tabs_0_headline",
+            "value": "Kinja = Kindness Ninja"
+        },
+        {
+            "id": 7204980,
+            "key": "_product_tabs_0_headline",
+            "value": "field_5db48342dd57d_field_5db466d6095b1_field_5c72a7333d06e"
+        },
+        {
+            "id": 7204981,
+            "key": "product_tabs_0_subheadline",
+            "value": "Kindhumans Kinja Tee "
+        },
+        {
+            "id": 7204982,
+            "key": "_product_tabs_0_subheadline",
+            "value": "field_5db48342dd57d_field_5db466d6095b1_field_5c72a7543d06f"
+        },
+        {
+            "id": 7204983,
+            "key": "product_tabs_0_impact_image",
+            "value": ""
+        },
+        {
+            "id": 7204984,
+            "key": "_product_tabs_0_impact_image",
+            "value": "field_5db48342dd57d_field_5db46704095b2"
+        },
+        {
+            "id": 7204985,
+            "key": "product_tabs_0_impact_description",
+            "value": "<strong>Materials</strong>\r\n\r\n100% ring-spun organic cotton."
+        },
+        {
+            "id": 7204986,
+            "key": "_product_tabs_0_impact_description",
+            "value": "field_5db48342dd57d_field_5db46727095b3"
+        },
+        {
+            "id": 7204987,
+            "key": "product_tabs_1_tab_name",
+            "value": "How To Use"
+        },
+        {
+            "id": 7204988,
+            "key": "_product_tabs_1_tab_name",
+            "value": "field_5db486ca6d7e7"
+        },
+        {
+            "id": 7204989,
+            "key": "product_tabs_1_headline",
+            "value": "Kinja = Kindness Ninja"
+        },
+        {
+            "id": 7204990,
+            "key": "_product_tabs_1_headline",
+            "value": "field_5db48342dd57d_field_5db466d6095b1_field_5c72a7333d06e"
+        },
+        {
+            "id": 7204991,
+            "key": "product_tabs_1_subheadline",
+            "value": "Kindhumans Kinja Tee "
+        },
+        {
+            "id": 7204992,
+            "key": "_product_tabs_1_subheadline",
+            "value": "field_5db48342dd57d_field_5db466d6095b1_field_5c72a7543d06f"
+        },
+        {
+            "id": 7204993,
+            "key": "product_tabs_1_impact_image",
+            "value": ""
+        },
+        {
+            "id": 7204994,
+            "key": "_product_tabs_1_impact_image",
+            "value": "field_5db48342dd57d_field_5db46704095b2"
+        },
+        {
+            "id": 7204995,
+            "key": "product_tabs_1_impact_description",
+            "value": "<strong>Instructions, etc.</strong>\r\n\r\nMachine wash cold with like colors."
+        },
+        {
+            "id": 7204996,
+            "key": "_product_tabs_1_impact_description",
+            "value": "field_5db48342dd57d_field_5db46727095b3"
+        },
+        {
+            "id": 7204997,
+            "key": "product_tabs_2_tab_name",
+            "value": "When You're Done"
+        },
+        {
+            "id": 7204998,
+            "key": "_product_tabs_2_tab_name",
+            "value": "field_5db486ca6d7e7"
+        },
+        {
+            "id": 7204999,
+            "key": "product_tabs_2_headline",
+            "value": "Kinja = Kindness Ninja"
+        },
+        {
+            "id": 7205000,
+            "key": "_product_tabs_2_headline",
+            "value": "field_5db48342dd57d_field_5db466d6095b1_field_5c72a7333d06e"
+        },
+        {
+            "id": 7205001,
+            "key": "product_tabs_2_subheadline",
+            "value": "Kindhumans Kinja Tee "
+        },
+        {
+            "id": 7205002,
+            "key": "_product_tabs_2_subheadline",
+            "value": "field_5db48342dd57d_field_5db466d6095b1_field_5c72a7543d06f"
+        },
+        {
+            "id": 7205003,
+            "key": "product_tabs_2_impact_image",
+            "value": ""
+        },
+        {
+            "id": 7205004,
+            "key": "_product_tabs_2_impact_image",
+            "value": "field_5db48342dd57d_field_5db46704095b2"
+        },
+        {
+            "id": 7205005,
+            "key": "product_tabs_2_impact_description",
+            "value": "<strong>What to do when you're done</strong>\r\n\r\nThese tees are durable and made to last. Please consider passing on to a friend or family member or donating."
+        },
+        {
+            "id": 7205006,
+            "key": "_product_tabs_2_impact_description",
+            "value": "field_5db48342dd57d_field_5db46727095b3"
+        },
+        {
+            "id": 7205044,
+            "key": "_as_printforia_product",
+            "value": "no"
+        }
+    ],
+    "stock_status": "instock",
+    "yoast_head": "<!-- This site is optimized with the Yoast SEO plugin v16.7 - https://yoast.com/wordpress/plugins/seo/ -->\n<title>Kinja Tee - Ocean | Kindhumans</title>\n<meta name=\"description\" content=\"Kinja = Kindness Ninja! This Kinja tee is made from organic cotton to steer clear of pesticides and GMOs. Shop now!\" />\n<meta name=\"robots\" content=\"index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1\" />\n<link rel=\"canonical\" href=\"http://kind.humans/product/kinja-tee-ocean/\" />\n<meta property=\"og:locale\" content=\"en_US\" />\n<meta property=\"og:type\" content=\"article\" />\n<meta property=\"og:title\" content=\"Kinja Tee - Ocean | Kindhumans\" />\n<meta property=\"og:description\" content=\"Kinja = Kindness Ninja! This Kinja tee is made from organic cotton to steer clear of pesticides and GMOs. Shop now!\" />\n<meta property=\"og:url\" content=\"http://kind.humans/product/kinja-tee-ocean/\" />\n<meta property=\"og:site_name\" content=\"Kindhumans\" />\n<meta property=\"article:publisher\" content=\"https://www.facebook.com/kindhumans.movement/\" />\n<meta property=\"article:modified_time\" content=\"2022-06-22T14:49:58+00:00\" />\n<meta property=\"og:image\" content=\"http://kind.humans/wp-content/uploads/2021/12/KH00692_AdultKinjaOceanTee_01.jpg\" />\n\t<meta property=\"og:image:width\" content=\"700\" />\n\t<meta property=\"og:image:height\" content=\"700\" />\n<meta name=\"twitter:card\" content=\"summary_large_image\" />\n<meta name=\"twitter:label1\" content=\"Est. reading time\" />\n\t<meta name=\"twitter:data1\" content=\"1 minute\" />\n<script type=\"application/ld+json\" class=\"yoast-schema-graph\">{\"@context\":\"https://schema.org\",\"@graph\":[{\"@type\":\"Organization\",\"@id\":\"http://kind.humans/#organization\",\"name\":\"Kindhumans\",\"url\":\"http://kind.humans/\",\"sameAs\":[\"https://www.facebook.com/kindhumans.movement/\",\"https://www.instagram.com/kindhumans_movement/\"],\"logo\":{\"@type\":\"ImageObject\",\"@id\":\"http://kind.humans/#logo\",\"inLanguage\":\"en-US\",\"url\":\"http://kind.humans/wp-content/uploads/2019/04/logo-color.svg\",\"contentUrl\":\"http://kind.humans/wp-content/uploads/2019/04/logo-color.svg\",\"width\":169,\"height\":51,\"caption\":\"Kindhumans\"},\"image\":{\"@id\":\"http://kind.humans/#logo\"}},{\"@type\":\"WebSite\",\"@id\":\"http://kind.humans/#website\",\"url\":\"http://kind.humans/\",\"name\":\"Kindhumans\",\"description\":\"Kindness. Pass it on. One Sticker at a time.\",\"publisher\":{\"@id\":\"http://kind.humans/#organization\"},\"potentialAction\":[{\"@type\":\"SearchAction\",\"target\":{\"@type\":\"EntryPoint\",\"urlTemplate\":\"http://kind.humans/?s={search_term_string}\"},\"query-input\":\"required name=search_term_string\"}],\"inLanguage\":\"en-US\"},{\"@type\":\"ImageObject\",\"@id\":\"http://kind.humans/product/kinja-tee-ocean/#primaryimage\",\"inLanguage\":\"en-US\",\"url\":\"http://kind.humans/wp-content/uploads/2021/12/KH00692_AdultKinjaOceanTee_01.jpg\",\"contentUrl\":\"http://kind.humans/wp-content/uploads/2021/12/KH00692_AdultKinjaOceanTee_01.jpg\",\"width\":700,\"height\":700},{\"@type\":\"WebPage\",\"@id\":\"http://kind.humans/product/kinja-tee-ocean/#webpage\",\"url\":\"http://kind.humans/product/kinja-tee-ocean/\",\"name\":\"Kinja Tee - Ocean | Kindhumans\",\"isPartOf\":{\"@id\":\"http://kind.humans/#website\"},\"primaryImageOfPage\":{\"@id\":\"http://kind.humans/product/kinja-tee-ocean/#primaryimage\"},\"datePublished\":\"2022-02-02T19:32:59+00:00\",\"dateModified\":\"2022-06-22T14:49:58+00:00\",\"description\":\"Kinja = Kindness Ninja! This Kinja tee is made from organic cotton to steer clear of pesticides and GMOs. Shop now!\",\"breadcrumb\":{\"@id\":\"http://kind.humans/product/kinja-tee-ocean/#breadcrumb\"},\"inLanguage\":\"en-US\",\"potentialAction\":[{\"@type\":\"ReadAction\",\"target\":[\"http://kind.humans/product/kinja-tee-ocean/\"]}]},{\"@type\":\"BreadcrumbList\",\"@id\":\"http://kind.humans/product/kinja-tee-ocean/#breadcrumb\",\"itemListElement\":[{\"@type\":\"ListItem\",\"position\":1,\"name\":\"Shop\",\"item\":\"http://kind.humans/products/\"},{\"@type\":\"ListItem\",\"position\":2,\"name\":\"Apparel\",\"item\":\"http://kind.humans/product-category/apparel/\"},{\"@type\":\"ListItem\",\"position\":3,\"name\":\"Kinja Tee &#8211; Ocean\"}]}]}</script>\n<!-- / Yoast SEO plugin. -->",
+    "yoast_head_json": {
+        "title": "Kinja Tee - Ocean | Kindhumans",
+        "description": "Kinja = Kindness Ninja! This Kinja tee is made from organic cotton to steer clear of pesticides and GMOs. Shop now!",
+        "robots": {
+            "index": "index",
+            "follow": "follow",
+            "max-snippet": "max-snippet:-1",
+            "max-image-preview": "max-image-preview:large",
+            "max-video-preview": "max-video-preview:-1"
+        },
+        "canonical": "http://kind.humans/product/kinja-tee-ocean/",
+        "og_locale": "en_US",
+        "og_type": "article",
+        "og_title": "Kinja Tee - Ocean | Kindhumans",
+        "og_description": "Kinja = Kindness Ninja! This Kinja tee is made from organic cotton to steer clear of pesticides and GMOs. Shop now!",
+        "og_url": "http://kind.humans/product/kinja-tee-ocean/",
+        "og_site_name": "Kindhumans",
+        "article_publisher": "https://www.facebook.com/kindhumans.movement/",
+        "article_modified_time": "2022-06-22T14:49:58+00:00",
+        "og_image": [
+            {
+                "width": 700,
+                "height": 700,
+                "url": "http://kind.humans/wp-content/uploads/2021/12/KH00692_AdultKinjaOceanTee_01.jpg",
+                "path": "/Users/dgaitan/Documents/Code/wp/kind.humans/app/public/wp-content/uploads/2021/12/KH00692_AdultKinjaOceanTee_01.jpg",
+                "size": "full",
+                "id": 549313,
+                "alt": "",
+                "pixels": 490000,
+                "type": "image/jpeg"
+            }
+        ],
+        "twitter_card": "summary_large_image",
+        "twitter_misc": {
+            "Est. reading time": "1 minute"
+        },
+        "schema": {
+            "@context": "https://schema.org",
+            "@graph": [
+                {
+                    "@type": "Organization",
+                    "@id": "http://kind.humans/#organization",
+                    "name": "Kindhumans",
+                    "url": "http://kind.humans/",
+                    "sameAs": [
+                        "https://www.facebook.com/kindhumans.movement/",
+                        "https://www.instagram.com/kindhumans_movement/"
+                    ],
+                    "logo": {
+                        "@type": "ImageObject",
+                        "@id": "http://kind.humans/#logo",
+                        "inLanguage": "en-US",
+                        "url": "http://kind.humans/wp-content/uploads/2019/04/logo-color.svg",
+                        "contentUrl": "http://kind.humans/wp-content/uploads/2019/04/logo-color.svg",
+                        "width": 169,
+                        "height": 51,
+                        "caption": "Kindhumans"
+                    },
+                    "image": {
+                        "@id": "http://kind.humans/#logo"
+                    }
+                },
+                {
+                    "@type": "WebSite",
+                    "@id": "http://kind.humans/#website",
+                    "url": "http://kind.humans/",
+                    "name": "Kindhumans",
+                    "description": "Kindness. Pass it on. One Sticker at a time.",
+                    "publisher": {
+                        "@id": "http://kind.humans/#organization"
+                    },
+                    "potentialAction": [
+                        {
+                            "@type": "SearchAction",
+                            "target": {
+                                "@type": "EntryPoint",
+                                "urlTemplate": "http://kind.humans/?s={search_term_string}"
+                            },
+                            "query-input": "required name=search_term_string"
+                        }
+                    ],
+                    "inLanguage": "en-US"
+                },
+                {
+                    "@type": "ImageObject",
+                    "@id": "http://kind.humans/product/kinja-tee-ocean/#primaryimage",
+                    "inLanguage": "en-US",
+                    "url": "http://kind.humans/wp-content/uploads/2021/12/KH00692_AdultKinjaOceanTee_01.jpg",
+                    "contentUrl": "http://kind.humans/wp-content/uploads/2021/12/KH00692_AdultKinjaOceanTee_01.jpg",
+                    "width": 700,
+                    "height": 700
+                },
+                {
+                    "@type": "WebPage",
+                    "@id": "http://kind.humans/product/kinja-tee-ocean/#webpage",
+                    "url": "http://kind.humans/product/kinja-tee-ocean/",
+                    "name": "Kinja Tee - Ocean | Kindhumans",
+                    "isPartOf": {
+                        "@id": "http://kind.humans/#website"
+                    },
+                    "primaryImageOfPage": {
+                        "@id": "http://kind.humans/product/kinja-tee-ocean/#primaryimage"
+                    },
+                    "datePublished": "2022-02-02T19:32:59+00:00",
+                    "dateModified": "2022-06-22T14:49:58+00:00",
+                    "description": "Kinja = Kindness Ninja! This Kinja tee is made from organic cotton to steer clear of pesticides and GMOs. Shop now!",
+                    "breadcrumb": {
+                        "@id": "http://kind.humans/product/kinja-tee-ocean/#breadcrumb"
+                    },
+                    "inLanguage": "en-US",
+                    "potentialAction": [
+                        {
+                            "@type": "ReadAction",
+                            "target": [
+                                "http://kind.humans/product/kinja-tee-ocean/"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "@type": "BreadcrumbList",
+                    "@id": "http://kind.humans/product/kinja-tee-ocean/#breadcrumb",
+                    "itemListElement": [
+                        {
+                            "@type": "ListItem",
+                            "position": 1,
+                            "name": "Shop",
+                            "item": "http://kind.humans/products/"
+                        },
+                        {
+                            "@type": "ListItem",
+                            "position": 2,
+                            "name": "Apparel",
+                            "item": "http://kind.humans/product-category/apparel/"
+                        },
+                        {
+                            "@type": "ListItem",
+                            "position": 3,
+                            "name": "Kinja Tee &#8211; Ocean"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    "product_variations": [
+        {
+            "id": 547475,
+            "name": "Kinja Tee - Ocean - X-Small",
+            "slug": "kinja-tee-ocean-x-small",
+            "permalink": "http://kind.humans/product/kinja-tee-ocean/?attribute_pa_size=xs",
+            "date_created": "2021-12-08T15:57:39",
+            "date_modified": "2022-06-21T11:51:13",
+            "type": "variation",
+            "status": "publish",
+            "featured": "no",
+            "catalog_visibility": "visible",
+            "description": "",
+            "short_description": "",
+            "sku": "KH00692XS",
+            "price": 33.600000000000001,
+            "regular_price": "42",
+            "price_html": "<del aria-hidden=\"true\"><span class=\"woocommerce-Price-amount amount\"><bdi><span class=\"woocommerce-Price-currencySymbol\">&#36;</span>42.00</bdi></span></del> <ins><span class=\"woocommerce-Price-amount amount\"><bdi><span class=\"woocommerce-Price-currencySymbol\">&#36;</span>33.60</bdi></span></ins>",
+            "date_on_sale_from": null,
+            "date_on_sale_to": null,
+            "on_sale": "yes",
+            "purchasable": "yes",
+            "total_sales": "0",
+            "virtual": "no",
+            "downloadable": false,
+            "external_url": "",
+            "button_text": "",
+            "tax_status": "taxable",
+            "tax_class": "",
+            "manage_stock": "yes",
+            "stock_quantity": 14,
+            "in_stock": "yes",
+            "stock_status": "instock",
+            "backorders": "no",
+            "backorders_allowed": false,
+            "backordered": "no",
+            "low_stock_amount": null,
+            "sold_individually": "no",
+            "weight": "6.3",
+            "dimensions": {
+                "length": "",
+                "width": "",
+                "height": ""
+            },
+            "shipping_required": "yes",
+            "shipping_taxable": "yes",
+            "shipping_class": "",
+            "shipping_class_id": 0,
+            "reviews_allowed": "no",
+            "avarage_rating": "0.00",
+            "rating_count": 0,
+            "parent_id": 539489,
+            "purchase_note": "",
+            "categories": [],
+            "tags": [],
+            "images": [
+                {
+                    "id": 549313,
+                    "date_created": "2022-01-31T06:28:23",
+                    "date_created_gmt": "2022-01-31T22:28:23",
+                    "date_modified": "2022-01-31T06:28:23",
+                    "date_modified_gmt": "2022-01-31T22:28:23",
+                    "src": "http://kind.humans/wp-content/uploads/2021/12/KH00692_AdultKinjaOceanTee_01.jpg",
+                    "name": "KH00692_AdultKinjaOceanTee_01",
+                    "alt": ""
+                }
+            ],
+            "attributes": [
+                {
+                    "id": 5,
+                    "name": "Size",
+                    "option": "X-Small"
+                }
+            ],
+            "default_attribute": [],
+            "meta_data": [
+                {
+                    "id": 6955889,
+                    "key": "wpfoof-exclude-product",
+                    "value": "0"
+                },
+                {
+                    "id": 6955890,
+                    "key": "wpfoof-identifier_exists",
+                    "value": "true"
+                },
+                {
+                    "id": 6955891,
+                    "key": "547476-wpfoof-exclude-product",
+                    "value": "0"
+                },
+                {
+                    "id": 6955892,
+                    "key": "547476-wpfoof-identifier_exists",
+                    "value": "true"
+                },
+                {
+                    "id": 6955893,
+                    "key": "547477-wpfoof-exclude-product",
+                    "value": "0"
+                },
+                {
+                    "id": 6955894,
+                    "key": "547477-wpfoof-identifier_exists",
+                    "value": "true"
+                },
+                {
+                    "id": 6955895,
+                    "key": "547478-wpfoof-exclude-product",
+                    "value": "0"
+                },
+                {
+                    "id": 6955896,
+                    "key": "547478-wpfoof-identifier_exists",
+                    "value": "true"
+                },
+                {
+                    "id": 6955897,
+                    "key": "547479-wpfoof-exclude-product",
+                    "value": "0"
+                },
+                {
+                    "id": 6955898,
+                    "key": "547479-wpfoof-identifier_exists",
+                    "value": "true"
+                },
+                {
+                    "id": 6955899,
+                    "key": "54748wpfoof-exclude-product",
+                    "value": "0"
+                },
+                {
+                    "id": 6955900,
+                    "key": "54748wpfoof-identifier_exists",
+                    "value": "true"
+                },
+                {
+                    "id": 6955901,
+                    "key": "_wc_additional_variation_images",
+                    "value": ""
+                },
+                {
+                    "id": 6955903,
+                    "key": "_ks_use_parent_subscription_settings",
+                    "value": "no"
+                },
+                {
+                    "id": 6955904,
+                    "key": "_ks_recurring_price",
+                    "value": ""
+                },
+                {
+                    "id": 6955905,
+                    "key": "_ks_subscription_fee",
+                    "value": ""
+                },
+                {
+                    "id": 6955906,
+                    "key": "_has_pin_title_template",
+                    "value": ""
+                },
+                {
+                    "id": 6955907,
+                    "key": "_pin_title_template",
+                    "value": ""
+                },
+                {
+                    "id": 6955908,
+                    "key": "_has_pin_description_template",
+                    "value": ""
+                },
+                {
+                    "id": 6955909,
+                    "key": "_pin_description_template",
+                    "value": ""
+                },
+                {
+                    "id": 6986625,
+                    "key": "_sbi_oembed_done_checking",
+                    "value": "1"
+                },
+                {
+                    "id": 7204887,
+                    "key": "_printforia_sku_field",
+                    "value": "KH00692XS-FOO"
+                },
+                {
+                    "id": 7204888,
+                    "key": "_printforia_description_field",
+                    "value": "Testing X-SMALL"
+                },
+                {
+                    "id": 7204889,
+                    "key": "_coupon_title",
+                    "value": []
+                },
+                {
+                    "id": 7204890,
+                    "key": "send_coupons_on_renewals",
+                    "value": "no"
+                },
+                {
+                    "id": 7204900,
+                    "key": "_printforia_prints_field",
+                    "value": [
+                        {
+                            "image_url": "http://kind.humans/wp-content/uploads/2022/06/KindHumans_Logo_icon.png",
+                            "mockup_url": "http://kind.humans/wp-content/uploads/2022/02/Screen_Shot_2022-06-14_at_2.29.46_PM-removebg-preview.png",
+                            "location": "back"
+                        }
+                    ]
+                }
+            ],
+            "is_printforia": false
+        },
+        {
+            "id": 547476,
+            "name": "Kinja Tee - Ocean - Small",
+            "slug": "kinja-tee-ocean-small",
+            "permalink": "http://kind.humans/product/kinja-tee-ocean/?attribute_pa_size=s",
+            "date_created": "2021-12-08T15:57:39",
+            "date_modified": "2022-02-07T09:03:44",
+            "type": "variation",
+            "status": "publish",
+            "featured": "no",
+            "catalog_visibility": "visible",
+            "description": "",
+            "short_description": "",
+            "sku": "KH00692S",
+            "price": 33.600000000000001,
+            "regular_price": "42",
+            "price_html": "<del aria-hidden=\"true\"><span class=\"woocommerce-Price-amount amount\"><bdi><span class=\"woocommerce-Price-currencySymbol\">&#36;</span>42.00</bdi></span></del> <ins><span class=\"woocommerce-Price-amount amount\"><bdi><span class=\"woocommerce-Price-currencySymbol\">&#36;</span>33.60</bdi></span></ins>",
+            "date_on_sale_from": null,
+            "date_on_sale_to": null,
+            "on_sale": "yes",
+            "purchasable": "yes",
+            "total_sales": "0",
+            "virtual": "no",
+            "downloadable": false,
+            "external_url": "",
+            "button_text": "",
+            "tax_status": "taxable",
+            "tax_class": "",
+            "manage_stock": "yes",
+            "stock_quantity": 28,
+            "in_stock": "yes",
+            "stock_status": "instock",
+            "backorders": "no",
+            "backorders_allowed": false,
+            "backordered": "no",
+            "low_stock_amount": null,
+            "sold_individually": "no",
+            "weight": "6.3",
+            "dimensions": {
+                "length": "",
+                "width": "",
+                "height": ""
+            },
+            "shipping_required": "yes",
+            "shipping_taxable": "yes",
+            "shipping_class": "",
+            "shipping_class_id": 0,
+            "reviews_allowed": "no",
+            "avarage_rating": "0.00",
+            "rating_count": 0,
+            "parent_id": 539489,
+            "purchase_note": "",
+            "categories": [],
+            "tags": [],
+            "images": [
+                {
+                    "id": 549313,
+                    "date_created": "2022-01-31T06:28:23",
+                    "date_created_gmt": "2022-01-31T22:28:23",
+                    "date_modified": "2022-01-31T06:28:23",
+                    "date_modified_gmt": "2022-01-31T22:28:23",
+                    "src": "http://kind.humans/wp-content/uploads/2021/12/KH00692_AdultKinjaOceanTee_01.jpg",
+                    "name": "KH00692_AdultKinjaOceanTee_01",
+                    "alt": ""
+                }
+            ],
+            "attributes": [
+                {
+                    "id": 5,
+                    "name": "Size",
+                    "option": "Small"
+                }
+            ],
+            "default_attribute": [],
+            "meta_data": [
+                {
+                    "id": 6955911,
+                    "key": "547475-wpfoof-exclude-product",
+                    "value": "0"
+                },
+                {
+                    "id": 6955912,
+                    "key": "547475-wpfoof-identifier_exists",
+                    "value": "true"
+                },
+                {
+                    "id": 6955913,
+                    "key": "wpfoof-exclude-product",
+                    "value": "0"
+                },
+                {
+                    "id": 6955914,
+                    "key": "wpfoof-identifier_exists",
+                    "value": "true"
+                },
+                {
+                    "id": 6955915,
+                    "key": "547477-wpfoof-exclude-product",
+                    "value": "0"
+                },
+                {
+                    "id": 6955916,
+                    "key": "547477-wpfoof-identifier_exists",
+                    "value": "true"
+                },
+                {
+                    "id": 6955917,
+                    "key": "547478-wpfoof-exclude-product",
+                    "value": "0"
+                },
+                {
+                    "id": 6955918,
+                    "key": "547478-wpfoof-identifier_exists",
+                    "value": "true"
+                },
+                {
+                    "id": 6955919,
+                    "key": "547479-wpfoof-exclude-product",
+                    "value": "0"
+                },
+                {
+                    "id": 6955920,
+                    "key": "547479-wpfoof-identifier_exists",
+                    "value": "true"
+                },
+                {
+                    "id": 6955921,
+                    "key": "54748wpfoof-exclude-product",
+                    "value": "0"
+                },
+                {
+                    "id": 6955922,
+                    "key": "54748wpfoof-identifier_exists",
+                    "value": "true"
+                },
+                {
+                    "id": 6955923,
+                    "key": "_wc_additional_variation_images",
+                    "value": ""
+                },
+                {
+                    "id": 6955925,
+                    "key": "_ks_use_parent_subscription_settings",
+                    "value": "no"
+                },
+                {
+                    "id": 6955926,
+                    "key": "_ks_recurring_price",
+                    "value": ""
+                },
+                {
+                    "id": 6955927,
+                    "key": "_ks_subscription_fee",
+                    "value": ""
+                },
+                {
+                    "id": 6955928,
+                    "key": "_has_pin_title_template",
+                    "value": ""
+                },
+                {
+                    "id": 6955929,
+                    "key": "_pin_title_template",
+                    "value": ""
+                },
+                {
+                    "id": 6955930,
+                    "key": "_has_pin_description_template",
+                    "value": ""
+                },
+                {
+                    "id": 6955931,
+                    "key": "_pin_description_template",
+                    "value": ""
+                },
+                {
+                    "id": 6986624,
+                    "key": "_sbi_oembed_done_checking",
+                    "value": "1"
+                }
+            ],
+            "is_printforia": false
+        },
+        {
+            "id": 547477,
+            "name": "Kinja Tee - Ocean - Medium",
+            "slug": "kinja-tee-ocean-medium",
+            "permalink": "http://kind.humans/product/kinja-tee-ocean/?attribute_pa_size=m",
+            "date_created": "2021-12-08T15:57:39",
+            "date_modified": "2022-02-03T12:36:59",
+            "type": "variation",
+            "status": "publish",
+            "featured": "no",
+            "catalog_visibility": "visible",
+            "description": "",
+            "short_description": "",
+            "sku": "KH00692M",
+            "price": 33.600000000000001,
+            "regular_price": "42",
+            "price_html": "<del aria-hidden=\"true\"><span class=\"woocommerce-Price-amount amount\"><bdi><span class=\"woocommerce-Price-currencySymbol\">&#36;</span>42.00</bdi></span></del> <ins><span class=\"woocommerce-Price-amount amount\"><bdi><span class=\"woocommerce-Price-currencySymbol\">&#36;</span>33.60</bdi></span></ins>",
+            "date_on_sale_from": null,
+            "date_on_sale_to": null,
+            "on_sale": "yes",
+            "purchasable": "yes",
+            "total_sales": "0",
+            "virtual": "no",
+            "downloadable": false,
+            "external_url": "",
+            "button_text": "",
+            "tax_status": "taxable",
+            "tax_class": "",
+            "manage_stock": "yes",
+            "stock_quantity": 32,
+            "in_stock": "yes",
+            "stock_status": "instock",
+            "backorders": "no",
+            "backorders_allowed": false,
+            "backordered": "no",
+            "low_stock_amount": null,
+            "sold_individually": "no",
+            "weight": "6.5",
+            "dimensions": {
+                "length": "",
+                "width": "",
+                "height": ""
+            },
+            "shipping_required": "yes",
+            "shipping_taxable": "yes",
+            "shipping_class": "",
+            "shipping_class_id": 0,
+            "reviews_allowed": "no",
+            "avarage_rating": "0.00",
+            "rating_count": 0,
+            "parent_id": 539489,
+            "purchase_note": "",
+            "categories": [],
+            "tags": [],
+            "images": [
+                {
+                    "id": 549313,
+                    "date_created": "2022-01-31T06:28:23",
+                    "date_created_gmt": "2022-01-31T22:28:23",
+                    "date_modified": "2022-01-31T06:28:23",
+                    "date_modified_gmt": "2022-01-31T22:28:23",
+                    "src": "http://kind.humans/wp-content/uploads/2021/12/KH00692_AdultKinjaOceanTee_01.jpg",
+                    "name": "KH00692_AdultKinjaOceanTee_01",
+                    "alt": ""
+                }
+            ],
+            "attributes": [
+                {
+                    "id": 5,
+                    "name": "Size",
+                    "option": "Medium"
+                }
+            ],
+            "default_attribute": [],
+            "meta_data": [
+                {
+                    "id": 6955933,
+                    "key": "547475-wpfoof-exclude-product",
+                    "value": "0"
+                },
+                {
+                    "id": 6955934,
+                    "key": "547475-wpfoof-identifier_exists",
+                    "value": "true"
+                },
+                {
+                    "id": 6955935,
+                    "key": "547476-wpfoof-exclude-product",
+                    "value": "0"
+                },
+                {
+                    "id": 6955936,
+                    "key": "547476-wpfoof-identifier_exists",
+                    "value": "true"
+                },
+                {
+                    "id": 6955937,
+                    "key": "wpfoof-exclude-product",
+                    "value": "0"
+                },
+                {
+                    "id": 6955938,
+                    "key": "wpfoof-identifier_exists",
+                    "value": "true"
+                },
+                {
+                    "id": 6955939,
+                    "key": "547478-wpfoof-exclude-product",
+                    "value": "0"
+                },
+                {
+                    "id": 6955940,
+                    "key": "547478-wpfoof-identifier_exists",
+                    "value": "true"
+                },
+                {
+                    "id": 6955941,
+                    "key": "547479-wpfoof-exclude-product",
+                    "value": "0"
+                },
+                {
+                    "id": 6955942,
+                    "key": "547479-wpfoof-identifier_exists",
+                    "value": "true"
+                },
+                {
+                    "id": 6955943,
+                    "key": "54748wpfoof-exclude-product",
+                    "value": "0"
+                },
+                {
+                    "id": 6955944,
+                    "key": "54748wpfoof-identifier_exists",
+                    "value": "true"
+                },
+                {
+                    "id": 6955945,
+                    "key": "_wc_additional_variation_images",
+                    "value": ""
+                },
+                {
+                    "id": 6955947,
+                    "key": "_ks_use_parent_subscription_settings",
+                    "value": "no"
+                },
+                {
+                    "id": 6955948,
+                    "key": "_ks_recurring_price",
+                    "value": ""
+                },
+                {
+                    "id": 6955949,
+                    "key": "_ks_subscription_fee",
+                    "value": ""
+                },
+                {
+                    "id": 6955950,
+                    "key": "_has_pin_title_template",
+                    "value": ""
+                },
+                {
+                    "id": 6955951,
+                    "key": "_pin_title_template",
+                    "value": ""
+                },
+                {
+                    "id": 6955952,
+                    "key": "_has_pin_description_template",
+                    "value": ""
+                },
+                {
+                    "id": 6955953,
+                    "key": "_pin_description_template",
+                    "value": ""
+                },
+                {
+                    "id": 6986621,
+                    "key": "_sbi_oembed_done_checking",
+                    "value": "1"
+                }
+            ],
+            "is_printforia": false
+        },
+        {
+            "id": 547478,
+            "name": "Kinja Tee - Ocean - Large",
+            "slug": "kinja-tee-ocean-large",
+            "permalink": "http://kind.humans/product/kinja-tee-ocean/?attribute_pa_size=l",
+            "date_created": "2021-12-08T15:57:39",
+            "date_modified": "2022-02-03T12:37:00",
+            "type": "variation",
+            "status": "publish",
+            "featured": "no",
+            "catalog_visibility": "visible",
+            "description": "",
+            "short_description": "",
+            "sku": "KH00692L",
+            "price": 33.600000000000001,
+            "regular_price": "42",
+            "price_html": "<del aria-hidden=\"true\"><span class=\"woocommerce-Price-amount amount\"><bdi><span class=\"woocommerce-Price-currencySymbol\">&#36;</span>42.00</bdi></span></del> <ins><span class=\"woocommerce-Price-amount amount\"><bdi><span class=\"woocommerce-Price-currencySymbol\">&#36;</span>33.60</bdi></span></ins>",
+            "date_on_sale_from": null,
+            "date_on_sale_to": null,
+            "on_sale": "yes",
+            "purchasable": "yes",
+            "total_sales": "0",
+            "virtual": "no",
+            "downloadable": false,
+            "external_url": "",
+            "button_text": "",
+            "tax_status": "taxable",
+            "tax_class": "",
+            "manage_stock": "yes",
+            "stock_quantity": 38,
+            "in_stock": "yes",
+            "stock_status": "instock",
+            "backorders": "no",
+            "backorders_allowed": false,
+            "backordered": "no",
+            "low_stock_amount": null,
+            "sold_individually": "no",
+            "weight": "6.8",
+            "dimensions": {
+                "length": "",
+                "width": "",
+                "height": ""
+            },
+            "shipping_required": "yes",
+            "shipping_taxable": "yes",
+            "shipping_class": "",
+            "shipping_class_id": 0,
+            "reviews_allowed": "no",
+            "avarage_rating": "0.00",
+            "rating_count": 0,
+            "parent_id": 539489,
+            "purchase_note": "",
+            "categories": [],
+            "tags": [],
+            "images": [
+                {
+                    "id": 549313,
+                    "date_created": "2022-01-31T06:28:23",
+                    "date_created_gmt": "2022-01-31T22:28:23",
+                    "date_modified": "2022-01-31T06:28:23",
+                    "date_modified_gmt": "2022-01-31T22:28:23",
+                    "src": "http://kind.humans/wp-content/uploads/2021/12/KH00692_AdultKinjaOceanTee_01.jpg",
+                    "name": "KH00692_AdultKinjaOceanTee_01",
+                    "alt": ""
+                }
+            ],
+            "attributes": [
+                {
+                    "id": 5,
+                    "name": "Size",
+                    "option": "Large"
+                }
+            ],
+            "default_attribute": [],
+            "meta_data": [
+                {
+                    "id": 6955955,
+                    "key": "547475-wpfoof-exclude-product",
+                    "value": "0"
+                },
+                {
+                    "id": 6955956,
+                    "key": "547475-wpfoof-identifier_exists",
+                    "value": "true"
+                },
+                {
+                    "id": 6955957,
+                    "key": "547476-wpfoof-exclude-product",
+                    "value": "0"
+                },
+                {
+                    "id": 6955958,
+                    "key": "547476-wpfoof-identifier_exists",
+                    "value": "true"
+                },
+                {
+                    "id": 6955959,
+                    "key": "547477-wpfoof-exclude-product",
+                    "value": "0"
+                },
+                {
+                    "id": 6955960,
+                    "key": "547477-wpfoof-identifier_exists",
+                    "value": "true"
+                },
+                {
+                    "id": 6955961,
+                    "key": "wpfoof-exclude-product",
+                    "value": "0"
+                },
+                {
+                    "id": 6955962,
+                    "key": "wpfoof-identifier_exists",
+                    "value": "true"
+                },
+                {
+                    "id": 6955963,
+                    "key": "547479-wpfoof-exclude-product",
+                    "value": "0"
+                },
+                {
+                    "id": 6955964,
+                    "key": "547479-wpfoof-identifier_exists",
+                    "value": "true"
+                },
+                {
+                    "id": 6955965,
+                    "key": "54748wpfoof-exclude-product",
+                    "value": "0"
+                },
+                {
+                    "id": 6955966,
+                    "key": "54748wpfoof-identifier_exists",
+                    "value": "true"
+                },
+                {
+                    "id": 6955967,
+                    "key": "_wc_additional_variation_images",
+                    "value": ""
+                },
+                {
+                    "id": 6955969,
+                    "key": "_ks_use_parent_subscription_settings",
+                    "value": "no"
+                },
+                {
+                    "id": 6955970,
+                    "key": "_ks_recurring_price",
+                    "value": ""
+                },
+                {
+                    "id": 6955971,
+                    "key": "_ks_subscription_fee",
+                    "value": ""
+                },
+                {
+                    "id": 6955972,
+                    "key": "_has_pin_title_template",
+                    "value": ""
+                },
+                {
+                    "id": 6955973,
+                    "key": "_pin_title_template",
+                    "value": ""
+                },
+                {
+                    "id": 6955974,
+                    "key": "_has_pin_description_template",
+                    "value": ""
+                },
+                {
+                    "id": 6955975,
+                    "key": "_pin_description_template",
+                    "value": ""
+                },
+                {
+                    "id": 6986622,
+                    "key": "_sbi_oembed_done_checking",
+                    "value": "1"
+                }
+            ],
+            "is_printforia": false
+        },
+        {
+            "id": 547479,
+            "name": "Kinja Tee - Ocean - X-Large",
+            "slug": "kinja-tee-ocean-x-large",
+            "permalink": "http://kind.humans/product/kinja-tee-ocean/?attribute_pa_size=xl",
+            "date_created": "2021-12-08T15:57:39",
+            "date_modified": "2022-02-03T12:37:00",
+            "type": "variation",
+            "status": "publish",
+            "featured": "no",
+            "catalog_visibility": "visible",
+            "description": "",
+            "short_description": "",
+            "sku": "KH00692XL",
+            "price": 33.600000000000001,
+            "regular_price": "42",
+            "price_html": "<del aria-hidden=\"true\"><span class=\"woocommerce-Price-amount amount\"><bdi><span class=\"woocommerce-Price-currencySymbol\">&#36;</span>42.00</bdi></span></del> <ins><span class=\"woocommerce-Price-amount amount\"><bdi><span class=\"woocommerce-Price-currencySymbol\">&#36;</span>33.60</bdi></span></ins>",
+            "date_on_sale_from": null,
+            "date_on_sale_to": null,
+            "on_sale": "yes",
+            "purchasable": "yes",
+            "total_sales": "0",
+            "virtual": "no",
+            "downloadable": false,
+            "external_url": "",
+            "button_text": "",
+            "tax_status": "taxable",
+            "tax_class": "",
+            "manage_stock": "yes",
+            "stock_quantity": 24,
+            "in_stock": "yes",
+            "stock_status": "instock",
+            "backorders": "no",
+            "backorders_allowed": false,
+            "backordered": "no",
+            "low_stock_amount": null,
+            "sold_individually": "no",
+            "weight": "7.2",
+            "dimensions": {
+                "length": "",
+                "width": "",
+                "height": ""
+            },
+            "shipping_required": "yes",
+            "shipping_taxable": "yes",
+            "shipping_class": "",
+            "shipping_class_id": 0,
+            "reviews_allowed": "no",
+            "avarage_rating": "0.00",
+            "rating_count": 0,
+            "parent_id": 539489,
+            "purchase_note": "",
+            "categories": [],
+            "tags": [],
+            "images": [
+                {
+                    "id": 549313,
+                    "date_created": "2022-01-31T06:28:23",
+                    "date_created_gmt": "2022-01-31T22:28:23",
+                    "date_modified": "2022-01-31T06:28:23",
+                    "date_modified_gmt": "2022-01-31T22:28:23",
+                    "src": "http://kind.humans/wp-content/uploads/2021/12/KH00692_AdultKinjaOceanTee_01.jpg",
+                    "name": "KH00692_AdultKinjaOceanTee_01",
+                    "alt": ""
+                }
+            ],
+            "attributes": [
+                {
+                    "id": 5,
+                    "name": "Size",
+                    "option": "X-Large"
+                }
+            ],
+            "default_attribute": [],
+            "meta_data": [
+                {
+                    "id": 6955977,
+                    "key": "547475-wpfoof-exclude-product",
+                    "value": "0"
+                },
+                {
+                    "id": 6955978,
+                    "key": "547475-wpfoof-identifier_exists",
+                    "value": "true"
+                },
+                {
+                    "id": 6955979,
+                    "key": "547476-wpfoof-exclude-product",
+                    "value": "0"
+                },
+                {
+                    "id": 6955980,
+                    "key": "547476-wpfoof-identifier_exists",
+                    "value": "true"
+                },
+                {
+                    "id": 6955981,
+                    "key": "547477-wpfoof-exclude-product",
+                    "value": "0"
+                },
+                {
+                    "id": 6955982,
+                    "key": "547477-wpfoof-identifier_exists",
+                    "value": "true"
+                },
+                {
+                    "id": 6955983,
+                    "key": "547478-wpfoof-exclude-product",
+                    "value": "0"
+                },
+                {
+                    "id": 6955984,
+                    "key": "547478-wpfoof-identifier_exists",
+                    "value": "true"
+                },
+                {
+                    "id": 6955985,
+                    "key": "wpfoof-exclude-product",
+                    "value": "0"
+                },
+                {
+                    "id": 6955986,
+                    "key": "wpfoof-identifier_exists",
+                    "value": "true"
+                },
+                {
+                    "id": 6955987,
+                    "key": "54748wpfoof-exclude-product",
+                    "value": "0"
+                },
+                {
+                    "id": 6955988,
+                    "key": "54748wpfoof-identifier_exists",
+                    "value": "true"
+                },
+                {
+                    "id": 6955989,
+                    "key": "_wc_additional_variation_images",
+                    "value": ""
+                },
+                {
+                    "id": 6955991,
+                    "key": "_ks_use_parent_subscription_settings",
+                    "value": "no"
+                },
+                {
+                    "id": 6955992,
+                    "key": "_ks_recurring_price",
+                    "value": ""
+                },
+                {
+                    "id": 6955993,
+                    "key": "_ks_subscription_fee",
+                    "value": ""
+                },
+                {
+                    "id": 6955994,
+                    "key": "_has_pin_title_template",
+                    "value": ""
+                },
+                {
+                    "id": 6955995,
+                    "key": "_pin_title_template",
+                    "value": ""
+                },
+                {
+                    "id": 6955996,
+                    "key": "_has_pin_description_template",
+                    "value": ""
+                },
+                {
+                    "id": 6955997,
+                    "key": "_pin_description_template",
+                    "value": ""
+                },
+                {
+                    "id": 6986623,
+                    "key": "_sbi_oembed_done_checking",
+                    "value": "1"
+                }
+            ],
+            "is_printforia": false
+        },
+        {
+            "id": 547480,
+            "name": "Kinja Tee - Ocean - XX-Large",
+            "slug": "kinja-tee-ocean-xx-large",
+            "permalink": "http://kind.humans/product/kinja-tee-ocean/?attribute_pa_size=xxl",
+            "date_created": "2021-12-08T15:57:39",
+            "date_modified": "2022-02-03T12:37:00",
+            "type": "variation",
+            "status": "publish",
+            "featured": "no",
+            "catalog_visibility": "visible",
+            "description": "",
+            "short_description": "",
+            "sku": "KH00692XXL",
+            "price": 33.600000000000001,
+            "regular_price": "42",
+            "price_html": "<del aria-hidden=\"true\"><span class=\"woocommerce-Price-amount amount\"><bdi><span class=\"woocommerce-Price-currencySymbol\">&#36;</span>42.00</bdi></span></del> <ins><span class=\"woocommerce-Price-amount amount\"><bdi><span class=\"woocommerce-Price-currencySymbol\">&#36;</span>33.60</bdi></span></ins>",
+            "date_on_sale_from": null,
+            "date_on_sale_to": null,
+            "on_sale": "yes",
+            "purchasable": "yes",
+            "total_sales": "0",
+            "virtual": "no",
+            "downloadable": false,
+            "external_url": "",
+            "button_text": "",
+            "tax_status": "taxable",
+            "tax_class": "",
+            "manage_stock": "yes",
+            "stock_quantity": 7,
+            "in_stock": "yes",
+            "stock_status": "instock",
+            "backorders": "no",
+            "backorders_allowed": false,
+            "backordered": "no",
+            "low_stock_amount": null,
+            "sold_individually": "no",
+            "weight": "7.7",
+            "dimensions": {
+                "length": "",
+                "width": "",
+                "height": ""
+            },
+            "shipping_required": "yes",
+            "shipping_taxable": "yes",
+            "shipping_class": "",
+            "shipping_class_id": 0,
+            "reviews_allowed": "no",
+            "avarage_rating": "0.00",
+            "rating_count": 0,
+            "parent_id": 539489,
+            "purchase_note": "",
+            "categories": [],
+            "tags": [],
+            "images": [
+                {
+                    "id": 549313,
+                    "date_created": "2022-01-31T06:28:23",
+                    "date_created_gmt": "2022-01-31T22:28:23",
+                    "date_modified": "2022-01-31T06:28:23",
+                    "date_modified_gmt": "2022-01-31T22:28:23",
+                    "src": "http://kind.humans/wp-content/uploads/2021/12/KH00692_AdultKinjaOceanTee_01.jpg",
+                    "name": "KH00692_AdultKinjaOceanTee_01",
+                    "alt": ""
+                }
+            ],
+            "attributes": [
+                {
+                    "id": 5,
+                    "name": "Size",
+                    "option": "XX-Large"
+                }
+            ],
+            "default_attribute": [],
+            "meta_data": [
+                {
+                    "id": 6955999,
+                    "key": "547475-wpfoof-exclude-product",
+                    "value": "0"
+                },
+                {
+                    "id": 6956000,
+                    "key": "547475-wpfoof-identifier_exists",
+                    "value": "true"
+                },
+                {
+                    "id": 6956001,
+                    "key": "547476-wpfoof-exclude-product",
+                    "value": "0"
+                },
+                {
+                    "id": 6956002,
+                    "key": "547476-wpfoof-identifier_exists",
+                    "value": "true"
+                },
+                {
+                    "id": 6956003,
+                    "key": "547477-wpfoof-exclude-product",
+                    "value": "0"
+                },
+                {
+                    "id": 6956004,
+                    "key": "547477-wpfoof-identifier_exists",
+                    "value": "true"
+                },
+                {
+                    "id": 6956005,
+                    "key": "547478-wpfoof-exclude-product",
+                    "value": "0"
+                },
+                {
+                    "id": 6956006,
+                    "key": "547478-wpfoof-identifier_exists",
+                    "value": "true"
+                },
+                {
+                    "id": 6956007,
+                    "key": "547479-wpfoof-exclude-product",
+                    "value": "0"
+                },
+                {
+                    "id": 6956008,
+                    "key": "547479-wpfoof-identifier_exists",
+                    "value": "true"
+                },
+                {
+                    "id": 6956009,
+                    "key": "wpfoof-exclude-product",
+                    "value": "0"
+                },
+                {
+                    "id": 6956010,
+                    "key": "wpfoof-identifier_exists",
+                    "value": "true"
+                },
+                {
+                    "id": 6956011,
+                    "key": "_wc_additional_variation_images",
+                    "value": ""
+                },
+                {
+                    "id": 6956013,
+                    "key": "_ks_use_parent_subscription_settings",
+                    "value": "no"
+                },
+                {
+                    "id": 6956014,
+                    "key": "_ks_recurring_price",
+                    "value": ""
+                },
+                {
+                    "id": 6956015,
+                    "key": "_ks_subscription_fee",
+                    "value": ""
+                },
+                {
+                    "id": 6956016,
+                    "key": "_has_pin_title_template",
+                    "value": ""
+                },
+                {
+                    "id": 6956017,
+                    "key": "_pin_title_template",
+                    "value": ""
+                },
+                {
+                    "id": 6956018,
+                    "key": "_has_pin_description_template",
+                    "value": ""
+                },
+                {
+                    "id": 6956019,
+                    "key": "_pin_description_template",
+                    "value": ""
+                },
+                {
+                    "id": 6986626,
+                    "key": "_sbi_oembed_done_checking",
+                    "value": "1"
+                }
+            ],
+            "is_printforia": false
+        }
+    ],
+    "is_printforia": false,
+    "brands": [
+        {
+            "id": 9995,
+            "name": "Rebels of Kindness",
+            "slug": "rebels-of-kindness"
+        }
+    ],
+    "_links": {
+        "self": [
+            {
+                "href": "http://kind.humans/wp-json/wc/v3/products/539489"
+            }
+        ],
+        "collection": [
+            {
+                "href": "http://kind.humans/wp-json/wc/v3/products"
+            }
+        ]
+    }
+}

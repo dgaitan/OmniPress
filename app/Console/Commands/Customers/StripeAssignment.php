@@ -38,7 +38,7 @@ class StripeAssignment extends Command
     public function handle()
     {
         $customers = \App\Models\WooCommerce\Customer::get();
-        $customers->map(function($customer) {
+        $customers->map(function ($customer) {
             $__this = $customer->setPaymentMethodsFromCustomerId();
             $this->info(sprintf(
                 'Customer %s -> updating status: %s',
@@ -46,6 +46,5 @@ class StripeAssignment extends Command
                 $__this
             ));
         });
-
     }
 }

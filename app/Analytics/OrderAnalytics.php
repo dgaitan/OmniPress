@@ -2,13 +2,13 @@
 
 namespace App\Analytics;
 
-use App\Models\WooCommerce\Order;
 use App\Analytics\Base\Analytics;
+use App\Models\WooCommerce\Order;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 
-class OrderAnalytics extends Analytics {
-
+class OrderAnalytics extends Analytics
+{
     /**
      * Model to analyze
      *
@@ -33,27 +33,30 @@ class OrderAnalytics extends Analytics {
     /**
      * Get The total Orders
      *
-     * @return integer
+     * @return int
      */
-    public function getTotalOrders(): int {
+    public function getTotalOrders(): int
+    {
         return $this->getRangeQueryset()->count();
     }
 
     /**
      * Get total sold
      *
-     * @return integer
+     * @return int
      */
-    public function getTotalSold(): int {
+    public function getTotalSold(): int
+    {
         return $this->getRangeQueryset()->sum('total');
     }
 
     /**
      * Get Total Fees
      *
-     * @return integer
+     * @return int
      */
-    public function getTotalFees(): int {
+    public function getTotalFees(): int
+    {
         return $this->getRangeQueryset()->sum(
             DB::raw('total_tax + shipping_tax + shipping_total')
         );
@@ -62,36 +65,40 @@ class OrderAnalytics extends Analytics {
     /**
      * Get Net Sales Amount of current period
      *
-     * @return integer
+     * @return int
      */
-    public function getNetSales(): int {
+    public function getNetSales(): int
+    {
         return $this->getTotalSold() - $this->getTotalFees();
     }
 
     /**
      * Get The total Orders
      *
-     * @return integer
+     * @return int
      */
-    public function getPeriodTotalOrders(): int {
+    public function getPeriodTotalOrders(): int
+    {
         return $this->getPeriodQueryset()->count();
     }
 
     /**
      * Get total sold
      *
-     * @return integer
+     * @return int
      */
-    public function getPeriodTotalSold(): int {
+    public function getPeriodTotalSold(): int
+    {
         return $this->getPeriodQueryset()->sum('total');
     }
 
     /**
      * Get Total Fees
      *
-     * @return integer
+     * @return int
      */
-    public function getPeriodTotalFees(): int {
+    public function getPeriodTotalFees(): int
+    {
         return $this->getPeriodQueryset()->sum(
             DB::raw('total_tax + shipping_tax + shipping_total')
         );
@@ -100,19 +107,22 @@ class OrderAnalytics extends Analytics {
     /**
      * Get Net Sales Amount of current period
      *
-     * @return integer
+     * @return int
      */
-    public function getPeriodNetSales(): int {
+    public function getPeriodNetSales(): int
+    {
         return $this->getPeriodTotalSold() - $this->getPeriodTotalFees();
     }
 
-    public function getSalesPercentageDifference() {
+    public function getSalesPercentageDifference()
+    {
         return $this->calculatePercentageComparisson(
             $this->getNetSales(), $this->getPeriodNetSales()
         );
     }
 
-    public function getTotalOrdersPercentageDifference() {
+    public function getTotalOrdersPercentageDifference()
+    {
         return $this->calculatePercentageComparisson(
             $this->getTotalOrders(), $this->getPeriodTotalOrders()
         );
@@ -123,7 +133,8 @@ class OrderAnalytics extends Analytics {
      *
      * @return Builder
      */
-    protected function getRangeQueryset(): Builder {
+    protected function getRangeQueryset(): Builder
+    {
         if (is_null($this->rangeQueryset)) {
             $this->rangeQueryset = $this->model::whereBetween(
                 'date_created',
@@ -133,13 +144,14 @@ class OrderAnalytics extends Analytics {
 
         return $this->rangeQueryset;
     }
-    
+
     /**
      * Get Period Queryset
      *
      * @return Builder
      */
-    protected function getPeriodQueryset(): Builder {
+    protected function getPeriodQueryset(): Builder
+    {
         return $this->model::whereBetween(
             'date_created',
             $this->getPeriodDates()

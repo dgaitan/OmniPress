@@ -2,14 +2,16 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
-use Laravel\Cashier\Cashier;
+use App\Models\Printforia\PrintforiaOrder;
 use App\Models\WooCommerce\Customer;
 use App\Models\WooCommerce\Order;
 use App\Models\WooCommerce\Product;
 use App\Observers\OrderObserver;
+use App\Observers\PrintforiaOrderObserver;
 use App\Observers\ProductObserver;
 use App\Services\WooCommerce\WooCommerceService;
+use Illuminate\Support\ServiceProvider;
+use Laravel\Cashier\Cashier;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -26,7 +28,7 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(
             abstract: WooCommerceService::class,
-            concrete: fn() => new WooCommerceService(
+            concrete: fn () => new WooCommerceService(
                 domain: env('WOO_CUSTOMER_DOMAIN', ''),
                 key: env('WOO_CUSTOMER_KEY', ''),
                 secret: env('WOO_CUSTOMER_SECRET', '')
@@ -44,5 +46,6 @@ class AppServiceProvider extends ServiceProvider
         Cashier::useCustomerModel(Customer::class);
         Order::observe(OrderObserver::class);
         Product::observe(ProductObserver::class);
+        PrintforiaOrder::observe(PrintforiaOrderObserver::class);
     }
 }

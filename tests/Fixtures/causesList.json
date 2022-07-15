@@ -1,0 +1,72 @@
+[
+    {
+        "id": 508,
+        "name": "Plant trees",
+        "image_url": "https://kind.humans/wp-content/uploads/2019/03/planet.svg",
+        "beneficiary": "National Forest Foundation",
+        "cause_type": "bucket"
+    },
+    {
+        "id": 580,
+        "name": "Teach kids",
+        "image_url": "https://kind.humans/wp-content/uploads/2019/04/Icon-Kids.svg",
+        "beneficiary": "Leave No Trace",
+        "cause_type": "bucket"
+    },
+    {
+        "id": 581,
+        "name": "Provide drinking water",
+        "image_url": "https://kind.humans/wp-content/uploads/2019/04/Icon-Humanitarian.svg",
+        "beneficiary": "501CTHREE",
+        "cause_type": "bucket"
+    },
+    {
+        "id": 61482,
+        "name": "Coronavirus relief",
+        "image_url": "https://kind.humans/wp-content/uploads/2020/03/covid-e1585262256111.png",
+        "beneficiary": "The Grassroots Aid Partnership",
+        "cause_type": "bucket"
+    },
+    {
+        "id": 81509,
+        "name": "dawda",
+        "image_url": false,
+        "beneficiary": null,
+        "cause_type": null
+    },
+    {
+        "id": 97045,
+        "name": "Clean beaches",
+        "image_url": "https://kind.humans/wp-content/uploads/2020/06/Beache-Cause.jpg",
+        "beneficiary": "Clean Beaches Foundation ",
+        "cause_type": "fixed"
+    },
+    {
+        "id": 97047,
+        "name": "Save a Dog",
+        "image_url": "https://kind.humans/wp-content/uploads/2020/06/Dog-Cause.jpg",
+        "beneficiary": "Save a Husky ",
+        "cause_type": "fixed"
+    },
+    {
+        "id": 98539,
+        "name": "Raffle For Unity",
+        "image_url": false,
+        "beneficiary": "Rally For Unity",
+        "cause_type": "fixed"
+    },
+    {
+        "id": 102529,
+        "name": "Teach kids",
+        "image_url": "https://kind.humans/wp-content/uploads/2019/04/Icon-Kids.svg",
+        "beneficiary": "STOKED",
+        "cause_type": "bucket"
+    },
+    {
+        "id": 102540,
+        "name": "Plant Sea Trees",
+        "image_url": "https://kind.humans/wp-content/uploads/2019/03/planet.svg",
+        "beneficiary": "SeaTrees ",
+        "cause_type": "bucket"
+    }
+]

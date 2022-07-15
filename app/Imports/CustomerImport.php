@@ -3,18 +3,18 @@
 namespace App\Imports;
 
 use App\Services\WooCommerce\Factories\CustomerFactory;
-use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\Importable;
-use Maatwebsite\Excel\Concerns\WithProgressBar;
+use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\WithProgressBar;
 
 class CustomerImport implements ToModel, WithProgressBar, WithHeadingRow
 {
     use Importable;
 
-    protected $fields = array(
+    protected $fields = [
         'email',
-        'date_created', 
+        'date_created',
         'date_modified',
         'first_name',
         'last_name',
@@ -26,17 +26,18 @@ class CustomerImport implements ToModel, WithProgressBar, WithHeadingRow
         'avatar_url',
         'billing',
         'shipping',
-        'meta_data'
-    );
+        'meta_data',
+    ];
 
     /**
-    * @param array $row
-    *
-    * @return \Illuminate\Database\Eloquent\Model|null
-    */
+     * @param  array  $row
+     * @return \Illuminate\Database\Eloquent\Model|null
+     */
     public function model(array $row)
     {
-        if (empty($row['email'])) return null;
+        if (empty($row['email'])) {
+            return null;
+        }
 
         // prepare format data
         $row['billing'] = json_decode($row['billing'], true);
