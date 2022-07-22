@@ -11,9 +11,59 @@ use Cknow\Money\Money;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Collection as SupportCollection;
+use Illuminate\Support\Facades\Cache;
 
 class CauseAnalyticsService extends BaseAnalyticsService
 {
+    public const CACHE_TAG = 'cause_stats';
+
+    /**
+     * Collect Data
+     *
+     * @return array
+     */
+    public function getData(): array
+    {
+        if ($this->period->getPeriod() === 'month_to_date') {
+            return $this->getContents();
+        }
+
+        if (! Cache::tags(self::CACHE_TAG)->has($this->getCacheKey())) {
+            Cache::tags(self::CACHE_TAG)->remember($this->getCacheKey(), now()->addYear(1), function () {
+                return $this->getContents();
+            });
+        }
+
+        return Cache::tags(self::CACHE_TAG)->get($this->getCacheKey());
+    }
+
+    /**
+     * Get contents without cache
+     *
+     * @return array
+     */
+    public function getContents(): array
+    {
+        return [
+            'totalDonated' => $this->getTotalDonatedInPeriod(),
+            'causeDonations' => $this->getCausesWithDonationsInPeriod(),
+            'customerDonations' => $this->getCustomerDonationsInPeriod()
+        ];
+    }
+
+    /**
+     * Get cache string
+     *
+     * @return string
+     */
+    public function getCacheKey(): string
+    {
+        return sprintf(
+            'cause_stats_from_%s_to_%s',
+            $this->period->getFromDate()->format('Y_m_d_h_i_s'),
+            $this->period->getToDate()->format('Y_m_d_h_i_s')
+        );
+    }
 
     public function getOrdersPerPeriod()
     {
@@ -34,6 +84,11 @@ class CauseAnalyticsService extends BaseAnalyticsService
         );
     }
 
+    /**
+     * Get User Donations in Period
+     *
+     * @return Builder
+     */
     protected function getUserDonationsByPeriodQuery(): Builder
     {
         return UserDonation::whereBetween(
@@ -92,7 +147,12 @@ class CauseAnalyticsService extends BaseAnalyticsService
         return $donations;
     }
 
-    public function getCustomersInPeriod()
+    /**
+     * Get Customers in Period
+     *
+     * @return Collection
+     */
+    public function getCustomersInPeriod(): Collection
     {
         $customerIds = $this->getUserDonationsByPeriodQuery()
             ->select('customer_id')
@@ -104,6 +164,11 @@ class CauseAnalyticsService extends BaseAnalyticsService
         return Customer::whereIn('id', $customerIds)->get();
     }
 
+    /**
+     * Get Customer Donations in Period
+     *
+     * @return SupportCollection
+     */
     public function getCustomerDonationsInPeriod(): SupportCollection
     {
         $donations = $this->getCustomersInPeriod()->map(function ($customer) {
@@ -118,5 +183,25 @@ class CauseAnalyticsService extends BaseAnalyticsService
         });
 
         return $donations;
+    }
+
+    /**
+     * Forget cache of current instance
+     *
+     * @return void
+     */
+    public function clearCache(): void
+    {
+        Cache::tags(self::CACHE_TAG)->forget($this->getCacheKey());
+    }
+
+    /**
+     * Clear Cache Data
+     *
+     * @return void
+     */
+    public static function clearCacheData(): void
+    {
+        Cache::tags(self::CACHE_TAG)->flush();
     }
 }
