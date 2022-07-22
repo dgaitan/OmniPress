@@ -13,11 +13,15 @@ class AssignOrderDonationToCustomerAction
     /**
      * Handling the order doantion for a customer
      *
-     * @param  int|string  $orderId
+     * @param  int|string|Order  $orderId
      * @return void
      */
-    public function handle(int|string $orderId): void
+    public function handle(int|string|Order $orderId): void
     {
+        if ($orderId instanceof Order) {
+            $orderId = $orderId->id;
+        }
+
         $order = Order::find($orderId);
 
         // Order needs to has a customer to calculate things.
@@ -30,19 +34,12 @@ class AssignOrderDonationToCustomerAction
         }
 
         $order->donations->map(function ($donation) use ($order) {
-            $userDonation = UserDonation::whereCauseId($donation->cause->id)
-                ->whereCustomerId($order->customer->id)
-                ->first();
-
-            if (is_null($userDonation)) {
-                $userDonation = UserDonation::create([
-                    'customer_id' => $order->customer->id,
-                    'cause_id' => $donation->cause->id,
-                    'donation' => 0,
-                ]);
-            }
-
-            $userDonation->addDonation($donation->amount);
+            UserDonation::updateOrCreate([
+                'cause_id' => $donation->cause->id,
+                'customer_id' => $order->customer->id,
+                'donation' => $donation->amount,
+                'donation_date' => $order->date_created
+            ]);
         });
     }
 }
