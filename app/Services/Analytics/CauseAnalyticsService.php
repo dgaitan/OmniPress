@@ -2,6 +2,8 @@
 
 namespace App\Services\Analytics;
 
+use App\Http\Resources\Causes\CauseResource;
+use App\Http\Resources\CustomerResource;
 use App\Models\Causes\Cause;
 use App\Models\Causes\OrderDonation;
 use App\Models\Causes\UserDonation;
@@ -48,6 +50,46 @@ class CauseAnalyticsService extends BaseAnalyticsService
             'totalDonated' => $this->getTotalDonatedInPeriod(),
             'causeDonations' => $this->getCausesWithDonationsInPeriod(),
             'customerDonations' => $this->getCustomerDonationsInPeriod()
+        ];
+    }
+
+    /**
+     * Get data serialised just if it's needed for views
+     *
+     * @param boolean $cached
+     * @return array
+     */
+    public function getSerializedData(bool $cached = false): array
+    {
+        $data = $cached ? $this->getData() : $this->getContents();
+
+        return [
+            'totalDonated' => $data['totalDonated'],
+            'causeDonations' => $data['causeDonations']->map(function ($item) {
+                return [
+                    'cause' => [
+                        'id' => $item->cause->id,
+                        'name' => $item->cause->name,
+                        'cause_type' => $item->cause->cause_type,
+                        'cause_type_label' => $item->cause->getCauseType(),
+                        'image_url' => $item->cause->getImage(),
+                        'beneficiary' => $item->cause->beneficiary,
+                    ],
+                    'donated' => $item->donated
+                ];
+            })->toArray(),
+            'customerDonations' => $data['customerDonations']->map(function ($item) {
+                return [
+                    'customer' => [
+                        'id' => $item->customer->id,
+                        'customer_id' => $item->customer->customer_id,
+                        'first_name' => $item->customer->first_name,
+                        'last_name' => $item->customer->last_name,
+                        'avatar' => $item->customer->avatar_url
+                    ],
+                    'donated' => $item->donated
+                ];
+            })->toArray()
         ];
     }
 

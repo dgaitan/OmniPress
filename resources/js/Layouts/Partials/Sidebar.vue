@@ -45,18 +45,18 @@
 	              			<template #icon><EmojiHappyIcon class="w-5 h-5" /></template>
 	              			Causes
 	              		</SidebarNavLink> -->
-                        <!-- <SidebarNavLink
+                        <SidebarNavLink
                             :href="routes.analytics.index"
                             :active="isActive(routes.analytics.activeIf)">
 	              			<template #icon><ChartBarIcon class="w-5 h-5" /></template>
 	              			Analytics
 
                             <template v-if="isActive(routes.analytics.activeIf)" #subitems>
-                                <SidebarNavSubLink href="/foo/">
+                                <SidebarNavSubLink :href="route('kinja.analytics.causes')" :active="route().current('kinja.analytics.causes')">
                                     Causes
                                 </SidebarNavSubLink>
                             </template>
-	              		</SidebarNavLink> -->
+	              		</SidebarNavLink>
 	            	</SidebarNav>
 
 	              	<!-- Admin -->
