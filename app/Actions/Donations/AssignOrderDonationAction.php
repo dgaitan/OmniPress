@@ -37,6 +37,7 @@ class AssignOrderDonationAction
                     'cause_id' => $cause->id,
                     'order_id' => $order->id,
                     'amount' => OrderDonation::valueToMoney($amount),
+                    'donation_date' => $order->date_created
                 ]);
             }
         }
@@ -57,6 +58,7 @@ class AssignOrderDonationAction
                         'cause_id' => $cause->id,
                         'order_id' => $order->id,
                         'amount' => OrderDonation::valueToMoney($donation),
+                        'donation_date' => $order->date_created
                     ]);
                 }
 
