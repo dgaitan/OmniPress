@@ -128,6 +128,36 @@ class Period implements AnalyticServiceable
     }
 
     /**
+     * Retrieve the current period
+     *
+     * @return string
+     */
+    public function getPeriod(): string
+    {
+        return $this->period;
+    }
+
+    /**
+     * Get From Date
+     *
+     * @return Carbon
+     */
+    public function getFromDate(): Carbon
+    {
+        return $this->fromDate;
+    }
+
+    /**
+     * Get To Date
+     *
+     * @return Carbon
+     */
+    public function getToDate(): Carbon
+    {
+        return $this->toDate;
+    }
+
+    /**
      * Check if the period slug is valid
      *
      * @param string $period
