@@ -40,7 +40,7 @@ class SyncOrdersIfCompleted implements ShouldQueue
         }
 
         UpdateOrderAction::run($order->order->order_id, [
-            'status' => 'completed'
+            'status' => 'completed',
         ], true);
     }
 }

@@ -39,7 +39,7 @@ class UserDonation extends Model
         'customer_id',
         'cause_id',
         'donation',
-        'donation_date'
+        'donation_date',
     ];
 
     /**

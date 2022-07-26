@@ -21,7 +21,8 @@ class LastYearPeriod extends BasePeriod
      *
      * @return void
      */
-    public function build(): void {
+    public function build(): void
+    {
         $this->fromDate = Carbon::now()->subYear()->startOfYear();
         $this->toDate = Carbon::now()->subYear()->endOfYear();
     }

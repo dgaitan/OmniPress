@@ -4,7 +4,6 @@ namespace Tests\Feature\Actions;
 
 use App\Actions\WooCommerce\Orders\UpdateOrderAction;
 use App\Models\WooCommerce\Order;
-use App\Services\WooCommerce\DataObjects\Order as OrderDataObject;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Http;

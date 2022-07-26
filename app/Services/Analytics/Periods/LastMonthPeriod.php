@@ -21,7 +21,8 @@ class LastMonthPeriod extends BasePeriod
      *
      * @return void
      */
-    public function build(): void {
+    public function build(): void
+    {
         $this->fromDate = Carbon::now()->subMonth()->startOfMonth();
         $this->toDate = Carbon::now()->subMonth()->endOfMonth();
     }

@@ -2,8 +2,6 @@
 
 namespace App\Services\Analytics;
 
-use App\Http\Resources\Causes\CauseResource;
-use App\Http\Resources\CustomerResource;
 use App\Models\Causes\Cause;
 use App\Models\Causes\OrderDonation;
 use App\Models\Causes\UserDonation;
@@ -49,14 +47,14 @@ class CauseAnalyticsService extends BaseAnalyticsService
         return [
             'totalDonated' => $this->getTotalDonatedInPeriod(),
             'causeDonations' => $this->getCausesWithDonationsInPeriod(),
-            'customerDonations' => $this->getCustomerDonationsInPeriod()
+            'customerDonations' => $this->getCustomerDonationsInPeriod(),
         ];
     }
 
     /**
      * Get data serialised just if it's needed for views
      *
-     * @param boolean $cached
+     * @param  bool  $cached
      * @return array
      */
     public function getSerializedData(bool $cached = false): array
@@ -75,7 +73,8 @@ class CauseAnalyticsService extends BaseAnalyticsService
                         'image_url' => $item->cause->getImage(),
                         'beneficiary' => $item->cause->beneficiary,
                     ],
-                    'donated' => $item->donated
+                    'donated' => $item->donated,
+                    'intervals' => $item->intervals,
                 ];
             })->toArray(),
             'customerDonations' => $data['customerDonations']->map(function ($item) {
@@ -85,11 +84,11 @@ class CauseAnalyticsService extends BaseAnalyticsService
                         'customer_id' => $item->customer->customer_id,
                         'first_name' => $item->customer->first_name,
                         'last_name' => $item->customer->last_name,
-                        'avatar' => $item->customer->avatar_url
+                        'avatar' => $item->customer->avatar_url,
                     ],
-                    'donated' => $item->donated
+                    'donated' => $item->donated,
                 ];
-            })->toArray()
+            })->toArray(),
         ];
     }
 
@@ -168,6 +167,20 @@ class CauseAnalyticsService extends BaseAnalyticsService
         return Cause::whereIn('id', $causeIds)->get();
     }
 
+    public function getCauseDonationsByPeriodInterval(Collection $donations): array
+    {
+        return $this->period->getPeriodDateInterval()->map(function ($interval) use ($donations) {
+            $donation = $donations->filter(function ($value, $key) use ($interval) {
+                return $value->donation_date->isSameDay($interval->instance);
+            })->sum('amount');
+
+            return (object) [
+                'label' => $interval->format,
+                'amount' => Money::USD($donation),
+            ];
+        })->toArray();
+    }
+
     /**
      * Get Causes with donations in Period
      *
@@ -176,13 +189,15 @@ class CauseAnalyticsService extends BaseAnalyticsService
     public function getCausesWithDonationsInPeriod(): SupportCollection
     {
         $donations = $this->getCausesInPeriod()->map(function ($cause) {
-            $donated = $this->getOrderDonationsByPeriodQuery()
+            $_donations = $this->getOrderDonationsByPeriodQuery()
                 ->whereCauseId($cause->id)
-                ->sum('amount');
+                ->get();
+            $donated = $_donations->sum('amount');
 
             return (object) [
                 'cause' => $cause,
-                'donated' => Money::USD($donated)
+                'donated' => Money::USD($donated),
+                'intervals' => $this->getCauseDonationsByPeriodInterval($_donations),
             ];
         });
 
@@ -220,7 +235,7 @@ class CauseAnalyticsService extends BaseAnalyticsService
 
             return (object) [
                 'customer' => $customer,
-                'donated' => Money::USD($donated)
+                'donated' => Money::USD($donated),
             ];
         });
 

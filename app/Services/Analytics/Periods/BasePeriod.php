@@ -68,7 +68,7 @@ abstract class BasePeriod implements Periodicable
             foreach ($period->toArray() as $date) {
                 $this->datePeriodInterval[] = (object) [
                     'format' => $date->format('F j'),
-                    'instance' => $date
+                    'instance' => $date,
                 ];
             }
         }

@@ -21,7 +21,8 @@ class YesterdayPeriod extends BasePeriod
      *
      * @return void
      */
-    public function build(): void {
+    public function build(): void
+    {
         $this->fromDate = Carbon::now()->subDay()->startOfDay();
         $this->toDate = Carbon::now()->subDay()->endOfDay();
     }

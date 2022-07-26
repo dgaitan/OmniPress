@@ -16,7 +16,8 @@ class CustomPeriod extends BasePeriod
      */
     public const LABEL = 'Custom';
 
-    public function __construct(string $from, string $to) {
+    public function __construct(string $from, string $to)
+    {
         $this->fromDate = Carbon::parse($from);
         $this->toDate = Carbon::parse($to);
     }
@@ -26,5 +27,7 @@ class CustomPeriod extends BasePeriod
      *
      * @return void
      */
-    public function build(): void {}
+    public function build(): void
+    {
+    }
 }

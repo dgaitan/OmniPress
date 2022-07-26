@@ -25,7 +25,7 @@ class Period implements AnalyticServiceable
         'last_week' => LastWeekPeriod::class,
         'last_month' => LastMonthPeriod::class,
         'year_to_date' => YearToDatePeriod::class,
-        'last_year' => LastYearPeriod::class
+        'last_year' => LastYearPeriod::class,
     ];
 
     /**
@@ -35,11 +35,11 @@ class Period implements AnalyticServiceable
         TodayPeriod::SLUG => TodayPeriod::LABEL,
         YesterdayPeriod::SLUG => YesterdayPeriod::LABEL,
         WeekToDatePeriod::SLUG => WeekToDatePeriod::LABEL,
-        LastWeekPeriod::SLUG=> LastWeekPeriod::LABEL,
+        LastWeekPeriod::SLUG => LastWeekPeriod::LABEL,
         MonthToDatePeriod::SLUG => MonthToDatePeriod::LABEL,
         LastMonthPeriod::SLUG => LastMonthPeriod::LABEL,
         YearToDatePeriod::SLUG => YearToDatePeriod::LABEL,
-        LastYearPeriod::SLUG => LastYearPeriod::LABEL
+        LastYearPeriod::SLUG => LastYearPeriod::LABEL,
     ];
 
     /**
@@ -48,14 +48,15 @@ class Period implements AnalyticServiceable
      * @var string
      */
     protected $defaultPeriod = MonthToDatePeriod::SLUG;
+
     protected Periodicable $currentPeriod;
 
     /**
      * Build the period
      *
-     * @param string $period
-     * @param string|null $from
-     * @param string|null $to
+     * @param  string  $period
+     * @param  string|null  $from
+     * @param  string|null  $to
      */
     public function __construct(
         protected string $period = MonthToDatePeriod::SLUG,
@@ -100,7 +101,7 @@ class Period implements AnalyticServiceable
     {
         return [
             $this->getFromDate(),
-            $this->getToDate()
+            $this->getToDate(),
         ];
     }
 
@@ -142,8 +143,8 @@ class Period implements AnalyticServiceable
     /**
      * Check if the period slug is valid
      *
-     * @param string $period
-     * @return boolean
+     * @param  string  $period
+     * @return bool
      */
     public static function isValidPeriod(string $period): bool
     {
@@ -157,6 +158,6 @@ class Period implements AnalyticServiceable
      */
     public static function getValidPeriodsKeys(): array
     {
-        return array_merge( array('custom') , array_keys(self::VALID_PERIODS));
+        return array_merge(['custom'], array_keys(self::VALID_PERIODS));
     }
 }

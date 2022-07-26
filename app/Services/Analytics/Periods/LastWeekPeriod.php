@@ -21,7 +21,8 @@ class LastWeekPeriod extends BasePeriod
      *
      * @return void
      */
-    public function build(): void {
+    public function build(): void
+    {
         $this->fromDate = Carbon::now()->subWeek()->startOfWeek();
         $this->toDate = Carbon::now()->subWeek()->endOfWeek();
     }

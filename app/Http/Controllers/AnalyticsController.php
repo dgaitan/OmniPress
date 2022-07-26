@@ -24,7 +24,7 @@ class AnalyticsController extends Controller
         return Inertia::render('Analytics/Causes', [
             'stats' => $stats->getSerializedData(),
             'periods' => Period::VALID_PERIODS,
-            'currentPeriod' => $period
+            'currentPeriod' => $period,
         ]);
     }
 }

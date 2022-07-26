@@ -19,7 +19,7 @@ class PrintforiaResource extends JsonResource
             'order' => [
                 'id' => $this->order->id,
                 'order_id' => $this->order->order_id,
-                'permalink' => $this->order->getPermalink()
+                'permalink' => $this->order->getPermalink(),
             ],
             'created_at' => $this->order->created_at->diffForHumans(),
             'status' => $this->status,

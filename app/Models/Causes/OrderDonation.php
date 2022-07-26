@@ -37,7 +37,7 @@ class OrderDonation extends Model
     use HasMoney;
 
     protected $casts = [
-        'donation_date' => 'datetime'
+        'donation_date' => 'datetime',
     ];
 
     /**
@@ -49,7 +49,7 @@ class OrderDonation extends Model
         'cause_id',
         'order_id',
         'amount',
-        'donation_date'
+        'donation_date',
     ];
 
     /**

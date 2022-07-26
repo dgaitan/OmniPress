@@ -21,7 +21,8 @@ class MonthToDatePeriod extends BasePeriod
      *
      * @return void
      */
-    public function build(): void {
+    public function build(): void
+    {
         $this->fromDate = Carbon::now()->startOfMonth();
         $this->toDate = Carbon::now()->endOfDay();
     }

@@ -18,7 +18,7 @@ class PeriodTest extends TestCase
             'month_to_date' => 'Month to Date',
             'last_month' => 'Last Month',
             'year_to_date' => 'Year to Date',
-            'last_year' => 'Last Year'
+            'last_year' => 'Last Year',
         ]);
 
         $periods = array_merge(['custom'], $periods);
@@ -78,7 +78,7 @@ class PeriodTest extends TestCase
 
         $this->assertEquals([
             Carbon::now()->startOfDay(),
-            Carbon::now()->endOfDay()
+            Carbon::now()->endOfDay(),
         ], $period->getPeriodInterval());
     }
 
@@ -103,7 +103,7 @@ class PeriodTest extends TestCase
 
         $this->assertEquals([
             Carbon::now()->subDay()->startOfDay(),
-            Carbon::now()->subDay()->endOfDay()
+            Carbon::now()->subDay()->endOfDay(),
         ], $period->getPeriodInterval());
     }
 
@@ -128,7 +128,7 @@ class PeriodTest extends TestCase
 
         $this->assertEquals([
             Carbon::now()->startOfWeek(),
-            Carbon::now()->endOfDay()
+            Carbon::now()->endOfDay(),
         ], $period->getPeriodInterval());
     }
 
@@ -153,7 +153,7 @@ class PeriodTest extends TestCase
 
         $this->assertEquals([
             Carbon::now()->subWeek()->startOfWeek(),
-            Carbon::now()->subWeek()->endOfWeek()
+            Carbon::now()->subWeek()->endOfWeek(),
         ], $period->getPeriodInterval());
     }
 
@@ -178,7 +178,7 @@ class PeriodTest extends TestCase
 
         $this->assertEquals([
             Carbon::now()->subMonth()->startOfMonth(),
-            Carbon::now()->subMonth()->endOfMonth()
+            Carbon::now()->subMonth()->endOfMonth(),
         ], $period->getPeriodInterval());
     }
 
@@ -203,7 +203,7 @@ class PeriodTest extends TestCase
 
         $this->assertEquals([
             Carbon::now()->startOfYear(),
-            Carbon::now()->endOfDay()
+            Carbon::now()->endOfDay(),
         ], $period->getPeriodInterval());
     }
 
@@ -228,7 +228,7 @@ class PeriodTest extends TestCase
 
         $this->assertEquals([
             Carbon::now()->subYear()->startOfYear(),
-            Carbon::now()->subYear()->endOfYear()
+            Carbon::now()->subYear()->endOfYear(),
         ], $period->getPeriodInterval());
     }
 
@@ -256,7 +256,7 @@ class PeriodTest extends TestCase
 
         $this->assertEquals([
             Carbon::parse($start),
-            Carbon::parse($end)
+            Carbon::parse($end),
         ], $period->getPeriodInterval());
     }
 

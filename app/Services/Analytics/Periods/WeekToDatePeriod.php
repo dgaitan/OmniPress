@@ -21,7 +21,8 @@ class WeekToDatePeriod extends BasePeriod
      *
      * @return void
      */
-    public function build(): void {
+    public function build(): void
+    {
         $this->fromDate = Carbon::now()->startOfWeek();
         $this->toDate = Carbon::now()->endOfDay();
     }

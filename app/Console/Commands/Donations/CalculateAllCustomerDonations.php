@@ -3,7 +3,6 @@
 namespace App\Console\Commands\Donations;
 
 use App\Models\Causes\UserDonation;
-use App\Models\WooCommerce\Customer;
 use App\Services\DonationsService;
 use Illuminate\Console\Command;
 

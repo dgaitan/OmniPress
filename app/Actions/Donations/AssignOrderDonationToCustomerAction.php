@@ -38,7 +38,7 @@ class AssignOrderDonationToCustomerAction
                 'cause_id' => $donation->cause->id,
                 'customer_id' => $order->customer->id,
                 'donation' => $donation->amount,
-                'donation_date' => $order->date_created
+                'donation_date' => $order->date_created,
             ]);
         });
     }

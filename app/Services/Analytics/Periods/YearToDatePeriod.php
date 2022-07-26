@@ -21,7 +21,8 @@ class YearToDatePeriod extends BasePeriod
      *
      * @return void
      */
-    public function build(): void {
+    public function build(): void
+    {
         $this->fromDate = Carbon::now()->startOfYear();
         $this->toDate = Carbon::now()->endOfDay();
     }
