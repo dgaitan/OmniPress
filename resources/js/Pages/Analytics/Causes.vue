@@ -13,7 +13,8 @@
                         <h4 class="font-medium text-3xl text-gray-800">{{ stats.totalDonated.formatted }}</h4>
                     </div>
                 </Column>
-                <Column :mdSize="6">
+                <Column :mdSize="6" class="flex justify-end">
+                    <PeriodPicker :periods="periods" :currentPeriod="currentPeriod" />
                 </Column>
                 <Column><hr class="pt-5 mt-5" /></Column>
             </Row>
@@ -53,11 +54,14 @@
     import Column from '@/Components/Layouts/Column.vue'
     import Heading from '@/Components/Content/Headline.vue'
     import BarChart from '@/Components/Charts/BarChart.vue'
+    import PeriodPicker from './Partials/PeriodPicker.vue'
 
     export default defineComponent({
         props: [
             'sessions',
-            'stats'
+            'stats',
+            'periods',
+            'currentPeriod'
         ],
 
         components: {
@@ -67,7 +71,8 @@
             Row,
             Column,
             Heading,
-            BarChart
+            BarChart,
+            PeriodPicker
         },
 
         data() {
