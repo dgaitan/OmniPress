@@ -259,4 +259,15 @@ class PeriodTest extends TestCase
             Carbon::parse($end)
         ], $period->getPeriodInterval());
     }
+
+    public function test_date_period_should_work()
+    {
+        $period = new Period('custom', '2022-06-15', '2022-07-01');
+        $dateInterval = $period->getPeriodDateInterval();
+
+        // The days between both dates are 17 days.
+        $this->assertEquals(17, $dateInterval->count());
+        $this->assertEquals('June 15', $dateInterval->first()->format);
+        $this->assertInstanceOf(Carbon::class, $dateInterval->first()->instance);
+    }
 }

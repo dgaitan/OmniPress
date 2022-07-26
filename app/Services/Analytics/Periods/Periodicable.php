@@ -3,6 +3,8 @@
 namespace App\Services\Analytics\Periods;
 
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
+use Illuminate\Support\Collection;
 
 interface Periodicable
 {
@@ -28,9 +30,16 @@ interface Periodicable
     public function getToDate(): Carbon;
 
     /**
+     * A Carbon Query to get the period intervals
+     *
+     * @return CarbonPeriod
+     */
+    public function getPeriodDateIntervalQuery(): CarbonPeriod;
+
+    /**
      * Return the period in  dates
      *
-     * @return array
+     * @return Collection
      */
-    public function getDatePeriodInterval(): array;
+    public function getPeriodDateInterval(): Collection;
 }

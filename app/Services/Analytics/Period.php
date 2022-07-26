@@ -134,6 +134,11 @@ class Period implements AnalyticServiceable
         return $this->currentPeriod->getToDate();
     }
 
+    public function getPeriodDateInterval()
+    {
+        return $this->currentPeriod->getPeriodDateInterval();
+    }
+
     /**
      * Check if the period slug is valid
      *

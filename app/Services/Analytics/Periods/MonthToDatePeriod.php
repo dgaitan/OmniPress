@@ -4,7 +4,8 @@ namespace App\Services\Analytics\Periods;
 
 use Carbon\Carbon;
 
-class MonthToDatePeriod implements Periodicable {
+class MonthToDatePeriod extends BasePeriod
+{
     /**
      * The Period Slug
      */
@@ -16,27 +17,6 @@ class MonthToDatePeriod implements Periodicable {
     public const LABEL = 'Month To Date';
 
     /**
-     * From Date
-     *
-     * @var Carbon
-     */
-    protected Carbon $fromDate;
-
-    /**
-     * To Date
-     *
-     * @var Carbon
-     */
-    protected Carbon $toDate;
-
-    /**
-     * The Period Interval to show it as line chart.
-     *
-     * @var array
-     */
-    protected array $datePeriodInterval = [];
-
-    /**
      * BUild
      *
      * @return void
@@ -44,47 +24,5 @@ class MonthToDatePeriod implements Periodicable {
     public function build(): void {
         $this->fromDate = Carbon::now()->startOfMonth();
         $this->toDate = Carbon::now()->endOfDay();
-    }
-
-    /**
-     * Get the from date ot this period
-     *
-     * @return Carbon
-     */
-    public function getFromDate(): Carbon
-    {
-        return $this->fromDate;
-    }
-
-    /**
-     * Get the to date of this period
-     *
-     * @return Carbon
-     */
-    public function getToDate(): Carbon
-    {
-        return $this->toDate;
-    }
-
-    /**
-     * GEt the date period interval
-     *
-     * @return array
-     */
-    public function getDatePeriodInterval(): array
-    {
-        if (! $this->datePeriodInterval) {
-            $period = $this->getFromDate()
-                ->daysUntil($this->getToDate());
-
-            foreach ($period as $date) {
-                $this->datePeriodInterval[$date] = [
-                    'format' => $date->format('j, Y'),
-                    'instance' => $date
-                ];
-            }
-        }
-
-        return $this->datePeriodInterval;
     }
 }

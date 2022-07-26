@@ -25,26 +25,4 @@ class LastWeekPeriod extends BasePeriod
         $this->fromDate = Carbon::now()->subWeek()->startOfWeek();
         $this->toDate = Carbon::now()->subWeek()->endOfWeek();
     }
-
-    /**
-     * GEt the date period interval
-     *
-     * @return array
-     */
-    public function getDatePeriodInterval(): array
-    {
-        if (! $this->datePeriodInterval) {
-            $period = $this->getFromDate()
-                ->daysUntil($this->getToDate());
-
-            foreach ($period as $date) {
-                $this->datePeriodInterval[$date] = [
-                    'format' => $date->format('j, Y'),
-                    'instance' => $date
-                ];
-            }
-        }
-
-        return $this->datePeriodInterval;
-    }
 }

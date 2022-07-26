@@ -3,6 +3,8 @@
 namespace App\Services\Analytics\Periods;
 
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
+use Illuminate\Support\Collection;
 
 abstract class BasePeriod implements Periodicable
 {
@@ -45,5 +47,32 @@ abstract class BasePeriod implements Periodicable
     public function getToDate(): Carbon
     {
         return $this->toDate;
+    }
+
+    public function getPeriodDateIntervalQuery(): CarbonPeriod
+    {
+        return $this->getFromDate()
+            ->daysUntil($this->getToDate());
+    }
+
+    /**
+     * GEt the date period interval
+     *
+     * @return Collection
+     */
+    public function getPeriodDateInterval(): Collection
+    {
+        if (! $this->datePeriodInterval) {
+            $period = $this->getPeriodDateIntervalQuery();
+
+            foreach ($period->toArray() as $date) {
+                $this->datePeriodInterval[] = (object) [
+                    'format' => $date->format('F j'),
+                    'instance' => $date
+                ];
+            }
+        }
+
+        return collect($this->datePeriodInterval);
     }
 }
