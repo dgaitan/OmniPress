@@ -119,7 +119,7 @@ class PeriodTest extends TestCase
 
         $this->assertEquals(
             $period->getFromDate(),
-            Carbon::now()->subWeek()->startOfWeek()
+            Carbon::now()->startOfWeek()
         );
         $this->assertEquals(
             $period->getToDate(),
@@ -127,7 +127,7 @@ class PeriodTest extends TestCase
         );
 
         $this->assertEquals([
-            Carbon::now()->subWeek()->startOfWeek(),
+            Carbon::now()->startOfWeek(),
             Carbon::now()->endOfDay()
         ], $period->getPeriodInterval());
     }

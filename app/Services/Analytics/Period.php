@@ -2,23 +2,44 @@
 
 namespace App\Services\Analytics;
 
+use App\Services\Analytics\Periods\CustomPeriod;
+use App\Services\Analytics\Periods\LastMonthPeriod;
+use App\Services\Analytics\Periods\LastWeekPeriod;
+use App\Services\Analytics\Periods\LastYearPeriod;
+use App\Services\Analytics\Periods\MonthToDatePeriod;
+use App\Services\Analytics\Periods\Periodicable;
+use App\Services\Analytics\Periods\TodayPeriod;
+use App\Services\Analytics\Periods\WeekToDatePeriod;
+use App\Services\Analytics\Periods\YearToDatePeriod;
+use App\Services\Analytics\Periods\YesterdayPeriod;
 use Carbon\Carbon;
 use InvalidArgumentException;
 
 class Period implements AnalyticServiceable
 {
+    protected $periods = [
+        'today' => TodayPeriod::class,
+        'yesterday' => YesterdayPeriod::class,
+        'week_to_date' => WeekToDatePeriod::class,
+        'month_to_date' => MonthToDatePeriod::class,
+        'last_week' => LastWeekPeriod::class,
+        'last_month' => LastMonthPeriod::class,
+        'year_to_date' => YearToDatePeriod::class,
+        'last_year' => LastYearPeriod::class
+    ];
+
     /**
      * Valid Period Keys
      */
     public const VALID_PERIODS = [
-        'today' => 'Today',
-        'yesterday' => 'Yesterday',
-        'week_to_date' => 'Week to Date',
-        'last_week' => 'Last Week',
-        'month_to_date' => 'Month to Date',
-        'last_month' => 'Last Month',
-        'year_to_date' => 'Year to Date',
-        'last_year' => 'Last Year'
+        TodayPeriod::SLUG => TodayPeriod::LABEL,
+        YesterdayPeriod::SLUG => YesterdayPeriod::LABEL,
+        WeekToDatePeriod::SLUG => WeekToDatePeriod::LABEL,
+        LastWeekPeriod::SLUG=> LastWeekPeriod::LABEL,
+        MonthToDatePeriod::SLUG => MonthToDatePeriod::LABEL,
+        LastMonthPeriod::SLUG => LastMonthPeriod::LABEL,
+        YearToDatePeriod::SLUG => YearToDatePeriod::LABEL,
+        LastYearPeriod::SLUG => LastYearPeriod::LABEL
     ];
 
     /**
@@ -26,10 +47,8 @@ class Period implements AnalyticServiceable
      *
      * @var string
      */
-    protected $defaultPeriod = 'month_to_date';
-
-    protected Carbon $fromDate;
-    protected Carbon $toDate;
+    protected $defaultPeriod = MonthToDatePeriod::SLUG;
+    protected Periodicable $currentPeriod;
 
     /**
      * Build the period
@@ -39,7 +58,7 @@ class Period implements AnalyticServiceable
      * @param string|null $to
      */
     public function __construct(
-        protected string $period = 'month_to_date',
+        protected string $period = MonthToDatePeriod::SLUG,
         protected string $from = '',
         protected string $to = ''
     ) {
@@ -63,15 +82,13 @@ class Period implements AnalyticServiceable
     protected function buildPeriod(): void
     {
         if ($this->period === 'custom') {
-            $this->fromDate = Carbon::parse($this->from);
-            $this->toDate = Carbon::parse($this->to);
+            $this->currentPeriod = new CustomPeriod($this->from, $this->to);
 
             return;
         }
 
-        $datePeriods = $this->getPeriodDateInvertals();
-        $this->fromDate = $datePeriods[0];
-        $this->toDate = $datePeriods[1];
+        $this->currentPeriod = (new $this->periods[$this->period]);
+        $this->currentPeriod->build();
     }
 
     /**
@@ -81,50 +98,10 @@ class Period implements AnalyticServiceable
      */
     public function getPeriodInterval(): array
     {
-        return [$this->fromDate, $this->toDate];
-    }
-
-    /**
-     * Get Period Interval
-     *
-     * @return array
-     */
-    public function getPeriodDateInvertals(): array
-    {
         return [
-            'today' => [
-                Carbon::now()->startOfDay(),
-                Carbon::now()->endOfDay()
-            ],
-            'yesterday' => [
-                Carbon::now()->subDay()->startOfDay(),
-                Carbon::now()->subDay()->endOfDay()
-            ],
-            'week_to_date' => [
-                Carbon::now()->subWeek()->startOfWeek(),
-                Carbon::now()->endOfDay()
-            ],
-            'last_week' => [
-                Carbon::now()->subWeek()->startOfWeek(),
-                Carbon::now()->subWeek()->endOfWeek()
-            ],
-            'month_to_date' => [
-                Carbon::now()->startOfMonth(),
-                Carbon::now()->endOfDay()
-            ],
-            'last_month' => [
-                Carbon::now()->subMonth()->startOfMonth(),
-                Carbon::now()->subMonth()->endOfMonth()
-            ],
-            'year_to_date' => [
-                Carbon::now()->startOfYear(),
-                Carbon::now()->endOfDay()
-            ],
-            'last_year' => [
-                Carbon::now()->subYear()->startOfYear(),
-                Carbon::now()->subYear()->endOfYear()
-            ]
-        ][$this->period];
+            $this->getFromDate(),
+            $this->getToDate()
+        ];
     }
 
     /**
@@ -144,7 +121,7 @@ class Period implements AnalyticServiceable
      */
     public function getFromDate(): Carbon
     {
-        return $this->fromDate;
+        return $this->currentPeriod->getFromDate();
     }
 
     /**
@@ -154,7 +131,7 @@ class Period implements AnalyticServiceable
      */
     public function getToDate(): Carbon
     {
-        return $this->toDate;
+        return $this->currentPeriod->getToDate();
     }
 
     /**
