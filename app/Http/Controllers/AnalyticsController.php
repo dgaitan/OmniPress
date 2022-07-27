@@ -22,7 +22,7 @@ class AnalyticsController extends Controller
         $stats = new CauseAnalyticsService($period);
 
         return Inertia::render('Analytics/Causes', [
-            'stats' => $stats->getSerializedData(),
+            'stats' => $stats->getSerializedData(cached: false),
             'periods' => Period::VALID_PERIODS,
             'currentPeriod' => $period,
         ]);

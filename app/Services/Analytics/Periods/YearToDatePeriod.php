@@ -3,6 +3,7 @@
 namespace App\Services\Analytics\Periods;
 
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 
 class YearToDatePeriod extends BasePeriod
 {
@@ -25,5 +26,11 @@ class YearToDatePeriod extends BasePeriod
     {
         $this->fromDate = Carbon::now()->startOfYear();
         $this->toDate = Carbon::now()->endOfDay();
+    }
+
+    public function getPeriodDateIntervalQuery(): CarbonPeriod
+    {
+        return $this->getFromDate()
+            ->monthsUntil($this->getToDate());
     }
 }

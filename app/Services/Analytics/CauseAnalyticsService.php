@@ -75,6 +75,7 @@ class CauseAnalyticsService extends BaseAnalyticsService
                     ],
                     'donated' => $item->donated,
                     'intervals' => $item->intervals,
+                    'color' => '#' . substr(str_shuffle('ABCDEF0123456789'), 0, 6)
                 ];
             })->toArray(),
             'customerDonations' => $data['customerDonations']->map(function ($item) {
@@ -87,7 +88,8 @@ class CauseAnalyticsService extends BaseAnalyticsService
                         'avatar' => $item->customer->avatar_url,
                     ],
                     'donated' => $item->donated,
-                    'intervals' => $item->intervals
+                    'intervals' => $item->intervals,
+                    'color' => '#' . substr(str_shuffle('ABCDEF0123456789'), 0, 6)
                 ];
             })->toArray(),
         ];
@@ -178,7 +180,9 @@ class CauseAnalyticsService extends BaseAnalyticsService
     {
         return $this->period->getPeriodDateInterval()->map(function ($interval) use ($donations) {
             $donation = $donations->filter(function ($value, $key) use ($interval) {
-                return $value->donation_date->isSameDay($interval->instance);
+                return in_array($this->period->getPeriod(), ['year_to_date'])
+                    ? $value->donation_date->isSameMonth($interval->instance)
+                    : $value->donation_date->isSameDay($interval->instance);
             })->sum('amount');
 
             return (object) [
@@ -238,7 +242,9 @@ class CauseAnalyticsService extends BaseAnalyticsService
     {
         return $this->period->getPeriodDateInterval()->map(function ($interval) use ($donations) {
             $donation = $donations->filter(function ($value, $key) use ($interval) {
-                return $value->donation_date->isSameDay($interval->instance);
+                return in_array($this->period->getPeriod(), ['year_to_date'])
+                    ? $value->donation_date->isSameMonth($interval->instance)
+                    : $value->donation_date->isSameDay($interval->instance);
             })->sum('donation');
 
             return (object) [
