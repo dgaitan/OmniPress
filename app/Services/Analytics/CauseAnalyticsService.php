@@ -87,6 +87,7 @@ class CauseAnalyticsService extends BaseAnalyticsService
                         'avatar' => $item->customer->avatar_url,
                     ],
                     'donated' => $item->donated,
+                    'intervals' => $item->intervals
                 ];
             })->toArray(),
         ];
@@ -167,6 +168,12 @@ class CauseAnalyticsService extends BaseAnalyticsService
         return Cause::whereIn('id', $causeIds)->get();
     }
 
+    /**
+     * Get Cause Donations By Each Period
+     *
+     * @param Collection $donations
+     * @return array
+     */
     public function getCauseDonationsByPeriodInterval(Collection $donations): array
     {
         return $this->period->getPeriodDateInterval()->map(function ($interval) use ($donations) {
@@ -222,6 +229,26 @@ class CauseAnalyticsService extends BaseAnalyticsService
     }
 
     /**
+     * Get Cause Donations By Each Period
+     *
+     * @param Collection $donations
+     * @return array
+     */
+    public function getUserDonationsByPeriodInterval(Collection $donations): array
+    {
+        return $this->period->getPeriodDateInterval()->map(function ($interval) use ($donations) {
+            $donation = $donations->filter(function ($value, $key) use ($interval) {
+                return $value->donation_date->isSameDay($interval->instance);
+            })->sum('donation');
+
+            return (object) [
+                'label' => $interval->format,
+                'amount' => Money::USD($donation),
+            ];
+        })->toArray();
+    }
+
+    /**
      * Get Customer Donations in Period
      *
      * @return SupportCollection
@@ -229,13 +256,15 @@ class CauseAnalyticsService extends BaseAnalyticsService
     public function getCustomerDonationsInPeriod(): SupportCollection
     {
         $donations = $this->getCustomersInPeriod()->map(function ($customer) {
-            $donated = $this->getUserDonationsByPeriodQuery()
+            $donations = $this->getUserDonationsByPeriodQuery()
                 ->whereCustomerId($customer->id)
-                ->sum('donation');
+                ->get();
+            $donated = $donations->sum('donation');
 
             return (object) [
                 'customer' => $customer,
                 'donated' => Money::USD($donated),
+                'intervals' => $this->getUserDonationsByPeriodInterval($donations)
             ];
         });
 

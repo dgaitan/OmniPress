@@ -35,6 +35,10 @@ class UserDonation extends Model
 {
     use HasFactory;
 
+    protected $casts = [
+        'donation_date' => 'datetime',
+    ];
+
     protected $fillable = [
         'customer_id',
         'cause_id',
