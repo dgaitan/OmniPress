@@ -14,7 +14,7 @@
                     </div>
                 </Column>
                 <Column :mdSize="6" class="flex justify-end">
-                    <PeriodPicker :periods="periods" :currentPeriod="currentPeriod" />
+                    <PeriodPicker :periods="periods" :currentPeriod="period" />
                 </Column>
                 <Column><hr class="pt-5 mt-5" /></Column>
             </Row>
@@ -72,7 +72,7 @@
             'sessions',
             'stats',
             'periods',
-            'currentPeriod',
+            'period',
             'perPage'
         ],
 
@@ -96,6 +96,11 @@
             causesBarChartData() {
                 const labels = this.stats.causeDonations[0].intervals.map(interval => {
                     let label = interval.label.split(' ')
+
+                    if (label.length === 1) {
+                        return label[0]
+                    }
+
                     return parseInt(label[1]) === 1 ? interval.label : label[1]
                 })
 

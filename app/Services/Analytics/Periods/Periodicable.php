@@ -42,4 +42,13 @@ interface Periodicable
      * @return Collection
      */
     public function getPeriodDateInterval(): Collection;
+
+    /**
+     * Validate if a date is the sime with another one
+     *
+     * @param Carbon $date
+     * @param Carbon $with
+     * @return boolean
+     */
+    public function isSame(Carbon $date, Carbon $with): bool;
 }

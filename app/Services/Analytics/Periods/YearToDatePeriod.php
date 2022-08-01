@@ -27,10 +27,4 @@ class YearToDatePeriod extends BasePeriod
         $this->fromDate = Carbon::now()->startOfYear();
         $this->toDate = Carbon::now()->endOfDay();
     }
-
-    public function getPeriodDateIntervalQuery(): CarbonPeriod
-    {
-        return $this->getFromDate()
-            ->monthsUntil($this->getToDate());
-    }
 }

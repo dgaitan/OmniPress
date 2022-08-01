@@ -3,6 +3,7 @@
 namespace App\Services\Analytics\Periods;
 
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 
 class CustomPeriod extends BasePeriod
 {

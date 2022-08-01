@@ -13,6 +13,7 @@ use App\Services\Analytics\Periods\WeekToDatePeriod;
 use App\Services\Analytics\Periods\YearToDatePeriod;
 use App\Services\Analytics\Periods\YesterdayPeriod;
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 use InvalidArgumentException;
 
 class Period implements AnalyticServiceable
@@ -135,9 +136,19 @@ class Period implements AnalyticServiceable
         return $this->currentPeriod->getToDate();
     }
 
-    public function getPeriodDateInterval()
+    /**
+     * Get period date interval
+     *
+     * @return Collection
+     */
+    public function getPeriodDateInterval(): Collection
     {
         return $this->currentPeriod->getPeriodDateInterval();
+    }
+
+    public function isSame(Carbon $date, Carbon $with)
+    {
+        return $this->currentPeriod->isSame($date, $with);
     }
 
     /**

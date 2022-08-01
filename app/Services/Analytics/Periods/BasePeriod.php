@@ -51,8 +51,11 @@ abstract class BasePeriod implements Periodicable
 
     public function getPeriodDateIntervalQuery(): CarbonPeriod
     {
-        return $this->getFromDate()
-            ->daysUntil($this->getToDate());
+        return $this->differenceIsMonthThanAMonth()
+            ? $this->getFromDate()
+                ->monthsUntil($this->getToDate())
+            : $this->getFromDate()
+                ->daysUntil($this->getToDate());
     }
 
     /**
@@ -67,12 +70,45 @@ abstract class BasePeriod implements Periodicable
 
             foreach ($period->toArray() as $date) {
                 $this->datePeriodInterval[] = (object) [
-                    'format' => $date->format('F j'),
+                    'format' => $date->format($this->getDateFormat()),
                     'instance' => $date,
                 ];
             }
         }
 
         return collect($this->datePeriodInterval);
+    }
+
+    /**
+     * It helps to compare the periods.
+     *
+     * Sometimes we need to get the value in depends
+     * of day or month. no matter the time.
+     *
+     * @param Carbon $date
+     * @param Carbon $with
+     * @return boolean
+     */
+    public function isSame(Carbon $date, Carbon $with): bool
+    {
+        return $this->differenceIsMonthThanAMonth()
+            ? $date->isSameMonth($with)
+            : $date->isSameDay($with);
+    }
+
+    /**
+     * Get THe
+     *
+     * @return boolean
+     */
+    protected function differenceIsMonthThanAMonth(): bool
+    {
+        return $this->getFromDate()
+            ->monthsUntil($this->getToDate())->count() > 1;
+    }
+
+    protected function getDateFormat(): string
+    {
+        return $this->differenceIsMonthThanAMonth() ? 'F' : 'F j';
     }
 }

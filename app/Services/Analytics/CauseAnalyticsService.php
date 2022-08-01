@@ -186,9 +186,7 @@ class CauseAnalyticsService extends BaseAnalyticsService
     {
         return $this->period->getPeriodDateInterval()->map(function ($interval) use ($donations) {
             $donation = $donations->filter(function ($value, $key) use ($interval) {
-                return in_array($this->period->getPeriod(), ['year_to_date'])
-                    ? $value->donation_date->isSameMonth($interval->instance)
-                    : $value->donation_date->isSameDay($interval->instance);
+                return $this->period->isSame(date: $value->donation_date, with: $interval->instance);
             })->sum('amount');
 
             return (object) [
