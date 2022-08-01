@@ -24,11 +24,8 @@
                         </Column>
                     </Row>
                     <Row v-else>
-                        <Column :mdSize="6">
-                            <Datepicker v-model="from" class="border-gray-300 focus:border-cyan-600 focus:ring focus:ring-cyan-400 focus:ring-opacity-50 rounded-md shadow-sm py-2 pl-2 pr-10 w-full" format="MM/dd/yyyy"  />
-                        </Column>
-                        <Column :mdSize="6">
-                            <Datepicker v-model="to" format="MM/dd/yyyy " class="border-gray-300 focus:border-cyan-600 focus:ring focus:ring-cyan-400 focus:ring-opacity-50 rounded-md shadow-sm py-2 pl-2 pr-10 w-full"  />
+                        <Column>
+                            <Datepicker v-model="dateRange" class="w-full" format="MM/dd/yyyy" range />
                         </Column>
                     </Row>
                 </Column>
@@ -47,7 +44,7 @@
 </template>
 <script>
     import { defineComponent } from "vue";
-    import Datepicker from 'vue3-datepicker'
+    // import Datepicker from 'vue3-datepicker'
     import JetDropdown from '@/Jetstream/Dropdown.vue'
     import JetDropdownLink from '@/Jetstream/DropdownLink.vue'
     import { FilterIcon } from '@heroicons/vue/outline'
@@ -55,7 +52,8 @@
     import Row from '@/Components/Layouts/Row.vue'
     import Column from '@/Components/Layouts/Column.vue'
     import JetInput from '@/Jetstream/Input.vue'
-    import moment from 'moment'
+    import Datepicker from '@vuepic/vue-datepicker';
+    import '@vuepic/vue-datepicker/dist/main.css'
 
     export default defineComponent({
         components: {
@@ -87,19 +85,19 @@
                 filterBy: 'week_to_date',
                 from: '',
                 to: '',
-                perPage: 10
+                perPage: 10,
+                dateRange: new Date()
             }
         },
 
         created() {
             this.filterType = this.$page.props.filterType
             this.perPage = this.$page.props.perPage
-            this.from = this.$page.props.fromDate
-                ? new Date(this.$page.props.fromDate)
-                : new Date()
-            this.to = this.$page.props.toDate
-                ? new Date(this.$page.props.toDate)
-                : new Date()
+
+            if (this.filterType === 'custom') {
+                this.dateRange = [new Date(this.$page.props.fromDate), new Date(this.$page.props.toDate)]
+            }
+
             this.filterBy = this.currentPeriod
         },
 
@@ -143,13 +141,12 @@
                 }
 
                 if (filters.filterType === 'preset') {
-
                     filters['filterBy'] = this.$props.currentPeriod === this.filterBy
                         ? this.$props.currentPeriod
                         : this.filterBy
                 } else {
-                    filters['fromDate'] = this.from
-                    filters['toDate'] = this.to
+                    filters['fromDate'] = this.dateRange[0]
+                    filters['toDate'] = this.dateRange[1]
                 }
 
                 this.$inertia.get(route('kinja.analytics.causes'), filters, {

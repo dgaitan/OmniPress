@@ -29,6 +29,7 @@
     },
     "dependencies": {
         "@heroicons/vue": "^1.0.6",
+        "@vuepic/vue-datepicker": "^3.4.0",
         "chart.js": "^3.8.0",
         "moment": "^2.29.4",
         "numeral": "^2.0.6",
