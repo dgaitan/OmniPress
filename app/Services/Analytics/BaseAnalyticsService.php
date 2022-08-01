@@ -7,6 +7,13 @@ abstract class BaseAnalyticsService implements AnalyticServiceable
     protected Period $period;
 
     /**
+     * Per Page
+     *
+     * @var integer
+     */
+    protected int $perPage = 10;
+
+    /**
      * Build the period
      *
      * @param  string  $period
@@ -19,5 +26,24 @@ abstract class BaseAnalyticsService implements AnalyticServiceable
         string $to = ''
     ) {
         $this->period = new Period($period, $from, $to);
+    }
+
+    /**
+     * Set Per Page value
+     *
+     * @param integer $perPage
+     * @return void
+     */
+    public function setPerPage(int $perPage): void {
+        $this->perPage = $perPage;
+    }
+
+    /**
+     * Get per page value
+     *
+     * @return integer
+     */
+    public function getPerPage(): int {
+        return $this->perPage;
     }
 }

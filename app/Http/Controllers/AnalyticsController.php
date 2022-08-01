@@ -14,17 +14,39 @@ class AnalyticsController extends Controller
         return Inertia::render('Analytics/Index');
     }
 
+    /**
+     * Return Causes Analytics
+     *
+     * @param Request $request
+     * @return void
+     */
     public function causes(Request $request)
     {
-        $period = $request->has('filterBy')
-            ? $request->input('filterBy')
-            : 'month_to_date';
-        $stats = new CauseAnalyticsService($period);
+        $params = $this->getParams($request);
+        $stats = new CauseAnalyticsService($params->period);
 
         return Inertia::render('Analytics/Causes', [
-            'stats' => $stats->getSerializedData(cached: false),
+            'stats' => $stats->getSerializedData(cached: false, perPage: $params->perPage),
             'periods' => Period::VALID_PERIODS,
-            'currentPeriod' => $period,
+            'currentPeriod' => $params->period,
+            'perPage' => $params->perPage
         ]);
+    }
+
+    /**
+     * Get Analytics Params
+     *
+     * @param Request $request
+     * @return object
+     */
+    protected function getParams(Request $request): object {
+        return (object) [
+            'period' => $request->has('filterBy')
+                ? $request->input('filterBy')
+                : 'month_to_date',
+            'perPage' => $request->has('perPage')
+                ? $request->input('perPage')
+                : 10
+        ];
     }
 }

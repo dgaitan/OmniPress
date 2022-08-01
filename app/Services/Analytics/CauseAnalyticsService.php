@@ -57,8 +57,12 @@ class CauseAnalyticsService extends BaseAnalyticsService
      * @param  bool  $cached
      * @return array
      */
-    public function getSerializedData(bool $cached = false): array
+    public function getSerializedData(bool $cached = false, int|null $perPage = null): array
     {
+        if ($perPage) {
+            $this->setPerPage($perPage);
+        }
+
         $data = $cached ? $this->getData() : $this->getContents();
 
         return [
@@ -103,9 +107,10 @@ class CauseAnalyticsService extends BaseAnalyticsService
     public function getCacheKey(): string
     {
         return sprintf(
-            'cause_stats_from_%s_to_%s',
+            'cause_stats_from_%s_to_%s_%s',
             $this->period->getFromDate()->format('Y_m_d_h_i_s'),
-            $this->period->getToDate()->format('Y_m_d_h_i_s')
+            $this->period->getToDate()->format('Y_m_d_h_i_s'),
+            $this->getPerPage()
         );
     }
 
@@ -161,6 +166,7 @@ class CauseAnalyticsService extends BaseAnalyticsService
     public function getCausesInPeriod(): Collection
     {
         $causeIds = $this->getOrderDonationsByPeriodQuery()
+            ->take($this->getPerPage())
             ->select('cause_id')
             ->groupBy('cause_id')
             ->orderByRaw('SUM(amount) DESC')
@@ -223,6 +229,7 @@ class CauseAnalyticsService extends BaseAnalyticsService
     public function getCustomersInPeriod(): Collection
     {
         $customerIds = $this->getUserDonationsByPeriodQuery()
+            ->take($this->getPerPage())
             ->select('customer_id')
             ->groupBy('customer_id')
             ->orderByRaw('SUM(donation) DESC')

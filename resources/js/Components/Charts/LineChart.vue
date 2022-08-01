@@ -125,16 +125,5 @@
                 }
             }
         },
-        // data() {
-        //     return {
-        //         chartData: {
-        //             labels: [ 'January', 'February', 'March' ],
-        //             datasets: [ { data: [40, 20, 12] } ]
-        //         },
-        //         chartOptions: {
-        //             responsive: true
-        //         }
-        //     }
-        // }
     })
 </script>

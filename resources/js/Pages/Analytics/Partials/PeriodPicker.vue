@@ -20,6 +20,12 @@
                         </Column>
                     </Row>
                 </Column>
+                <div class="block px-4 py-2 text-xs text-gray-400">
+                    Max # of Items in stats
+                </div>
+                <Column class="mb-2">
+                    <JetInput type="number" v-model="perPage" @keypress.enter="triggerPerPage" />
+                </Column>
             </div>
         </template>
     </JetDropdown>
@@ -32,6 +38,7 @@
     import Button from '@/Components/Button.vue'
     import Row from '@/Components/Layouts/Row.vue'
     import Column from '@/Components/Layouts/Column.vue'
+    import JetInput from '@/Jetstream/Input.vue'
 
     export default defineComponent({
         components: {
@@ -40,7 +47,8 @@
             FilterIcon,
             Button,
             Row,
-            Column
+            Column,
+            JetInput
         },
 
         props: {
@@ -57,8 +65,13 @@
         data() {
             return {
                 show: false,
-                filterBy: 'week_to_date'
+                filterBy: 'week_to_date',
+                perPage: 10
             }
+        },
+
+        created() {
+            this.perPage = this.$page.props.perPage
         },
 
         computed: {
@@ -75,11 +88,7 @@
         methods: {
             filter(period) {
                 this.filterBy = period
-                this.$inertia.get(route('kinja.analytics.causes'), {
-                    filterBy: this.filterBy
-                }, {
-                    replace: true,
-                })
+                this.triggerFilter()
             },
 
             buttonActive(period) {
@@ -88,6 +97,20 @@
                 }
 
                 return 'bg-gray-100'
+            },
+
+            triggerPerPage() {
+                this.filterBy = this.$props.currentPeriod
+                this.triggerFilter()
+            },
+
+            triggerFilter() {
+                this.$inertia.get(route('kinja.analytics.causes'), {
+                    filterBy: this.filterBy,
+                    perPage: this.perPage
+                }, {
+                    replace: true,
+                })
             }
         }
     })

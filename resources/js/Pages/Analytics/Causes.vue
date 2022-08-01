@@ -1,6 +1,6 @@
 <template>
     <layout title="Analytics">
-        <Container>
+        <Container :fluid="true">
             <Row class="mb-5">
                 <Column>
                     <Heading>Cause Stats</Heading>
@@ -72,7 +72,8 @@
             'sessions',
             'stats',
             'periods',
-            'currentPeriod'
+            'currentPeriod',
+            'perPage'
         ],
 
         components: {
