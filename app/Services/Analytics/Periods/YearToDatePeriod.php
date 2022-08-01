@@ -3,7 +3,6 @@
 namespace App\Services\Analytics\Periods;
 
 use Carbon\Carbon;
-use Carbon\CarbonPeriod;
 
 class YearToDatePeriod extends BasePeriod
 {

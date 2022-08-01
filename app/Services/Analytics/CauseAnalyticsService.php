@@ -79,7 +79,7 @@ class CauseAnalyticsService extends BaseAnalyticsService
                     ],
                     'donated' => $item->donated,
                     'intervals' => $item->intervals,
-                    'color' => '#' . substr(str_shuffle('ABCDEF0123456789'), 0, 6)
+                    'color' => '#'.substr(str_shuffle('ABCDEF0123456789'), 0, 6),
                 ];
             })->toArray(),
             'customerDonations' => $data['customerDonations']->map(function ($item) {
@@ -93,7 +93,7 @@ class CauseAnalyticsService extends BaseAnalyticsService
                     ],
                     'donated' => $item->donated,
                     'intervals' => $item->intervals,
-                    'color' => '#' . substr(str_shuffle('ABCDEF0123456789'), 0, 6)
+                    'color' => '#'.substr(str_shuffle('ABCDEF0123456789'), 0, 6),
                 ];
             })->toArray(),
         ];
@@ -179,7 +179,7 @@ class CauseAnalyticsService extends BaseAnalyticsService
     /**
      * Get Cause Donations By Each Period
      *
-     * @param Collection $donations
+     * @param  Collection  $donations
      * @return array
      */
     public function getCauseDonationsByPeriodInterval(Collection $donations): array
@@ -240,7 +240,7 @@ class CauseAnalyticsService extends BaseAnalyticsService
     /**
      * Get Cause Donations By Each Period
      *
-     * @param Collection $donations
+     * @param  Collection  $donations
      * @return array
      */
     public function getUserDonationsByPeriodInterval(Collection $donations): array
@@ -275,7 +275,7 @@ class CauseAnalyticsService extends BaseAnalyticsService
             return (object) [
                 'customer' => $customer,
                 'donated' => Money::USD($donated),
-                'intervals' => $this->getUserDonationsByPeriodInterval($donations)
+                'intervals' => $this->getUserDonationsByPeriodInterval($donations),
             ];
         });
 

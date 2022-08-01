@@ -85,9 +85,9 @@ abstract class BasePeriod implements Periodicable
      * Sometimes we need to get the value in depends
      * of day or month. no matter the time.
      *
-     * @param Carbon $date
-     * @param Carbon $with
-     * @return boolean
+     * @param  Carbon  $date
+     * @param  Carbon  $with
+     * @return bool
      */
     public function isSame(Carbon $date, Carbon $with): bool
     {
@@ -99,7 +99,7 @@ abstract class BasePeriod implements Periodicable
     /**
      * Get THe
      *
-     * @return boolean
+     * @return bool
      */
     protected function differenceIsMonthThanAMonth(): bool
     {

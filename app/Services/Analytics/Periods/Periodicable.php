@@ -46,9 +46,9 @@ interface Periodicable
     /**
      * Validate if a date is the sime with another one
      *
-     * @param Carbon $date
-     * @param Carbon $with
-     * @return boolean
+     * @param  Carbon  $date
+     * @param  Carbon  $with
+     * @return bool
      */
     public function isSame(Carbon $date, Carbon $with): bool;
 }

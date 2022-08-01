@@ -9,7 +9,7 @@ abstract class BaseAnalyticsService implements AnalyticServiceable
     /**
      * Per Page
      *
-     * @var integer
+     * @var int
      */
     protected int $perPage = 10;
 
@@ -31,19 +31,21 @@ abstract class BaseAnalyticsService implements AnalyticServiceable
     /**
      * Set Per Page value
      *
-     * @param integer $perPage
+     * @param  int  $perPage
      * @return void
      */
-    public function setPerPage(int $perPage): void {
+    public function setPerPage(int $perPage): void
+    {
         $this->perPage = $perPage;
     }
 
     /**
      * Get per page value
      *
-     * @return integer
+     * @return int
      */
-    public function getPerPage(): int {
+    public function getPerPage(): int
+    {
         return $this->perPage;
     }
 }

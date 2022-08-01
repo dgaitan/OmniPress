@@ -17,7 +17,7 @@ class AnalyticsController extends Controller
     /**
      * Return Causes Analytics
      *
-     * @param Request $request
+     * @param  Request  $request
      * @return void
      */
     public function causes(Request $request)
@@ -30,14 +30,14 @@ class AnalyticsController extends Controller
         return Inertia::render('Analytics/Causes', [
             'stats' => $stats->getSerializedData(cached: false, perPage: $params->perPage),
             'periods' => Period::VALID_PERIODS,
-            ...(array) $params
+            ...(array) $params,
         ]);
     }
 
     /**
      * Get Analytics Params
      *
-     * @param Request $request
+     * @param  Request  $request
      * @return object
      */
     protected function getParams(Request $request): object
@@ -55,7 +55,7 @@ class AnalyticsController extends Controller
                 : '',
             'toDate' => $request->has('toDate')
                 ? $request->input('toDate')
-                : ''
+                : '',
         ];
 
         if ($data['filterType'] === 'custom') {
