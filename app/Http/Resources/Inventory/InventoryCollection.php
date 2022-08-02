@@ -16,16 +16,15 @@ class InventoryCollection extends ResourceCollection
     {
         return collect($this->collection)->map(function ($product) {
             return [
-                'id' => $product->id,
                 'product_id' => $product->product_id,
                 'parent_id' => $product->parent_id,
                 'name' => $product->name,
                 'type' => $product->type,
-                'sku' => $product->sku,
-                'price' => $product->price,
-                'regular_price' => $product->regular_price,
-                'sale_price' => $product->sale_price,
                 'status' => $product->status,
+                'sku' => $product->sku,
+                'price' => $product->getMoneyValue('price')->formatByDecimal(),
+                'regular_price' => $product->getMoneyValue('regular_price')->formatByDecimal(),
+                'sale_price' => $product->getMoneyValue('sale_price')->formatByDecimal(),
                 'stock' => $product->stock_quantity
             ];
         });
