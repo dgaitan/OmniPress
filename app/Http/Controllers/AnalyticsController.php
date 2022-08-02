@@ -61,7 +61,9 @@ class AnalyticsController extends Controller
         );
 
         return Inertia::render($view, [
-            'stats' => $stats->getSerializedData(cached: false, perPage: $params->perPage),
+            'stats' => $stats->getSerializedData(
+                cached: env('USE_CACHE_ON_ANALYTICS', false), perPage: $params->perPage
+            ),
             'periods' => Period::VALID_PERIODS,
             ...(array) $params,
         ]);
