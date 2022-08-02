@@ -46,5 +46,10 @@ class SyncCauses extends Command
             'Total Causes Synced: %s',
             Cause::count()
         ));
+
+        $this->info('Calculating Order donations');
+        $this->call('kinja:calculate-order-donations');
+        $this->info('Calculating Customer Donations');
+        $this->call('kinja:calculate-user-donations');
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\Donations;
 
+use App\Models\Causes\OrderDonation;
 use App\Services\DonationsService;
 use Illuminate\Console\Command;
 
@@ -28,6 +29,8 @@ class CalculateOrderDonations extends Command
      */
     public function handle()
     {
+        OrderDonation::truncate();
         DonationsService::calculateOrderDonations();
+        $this->info('Calculation finished');
     }
 }

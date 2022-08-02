@@ -15,14 +15,7 @@ class CauseCollection extends ResourceCollection
     public function toArray($request)
     {
         return collect($this->collection)->map(function ($cause) {
-            return [
-                'id' => $cause->id,
-                'name' => $cause->name,
-                'cause_type' => $cause->cause_type,
-                'cause_type_label' => $cause->getCauseType(),
-                'image_url' => $cause->getImage(),
-                'beneficiary' => $cause->beneficiary,
-            ];
+            return new CauseResource($cause);
         });
     }
 }
