@@ -58,13 +58,13 @@ abstract class BaseAnalyticsService
             return $this->getContents();
         }
 
-        if (! Cache::tags(self::CACHE_TAG)->has($this->getCacheKey())) {
-            Cache::tags(self::CACHE_TAG)->remember($this->getCacheKey(), now()->addYear(1), function () {
+        if (! Cache::tags(static::CACHE_TAG)->has($this->getCacheKey())) {
+            Cache::tags(static::CACHE_TAG)->remember($this->getCacheKey(), now()->addYear(1), function () {
                 return $this->getContents();
             });
         }
 
-        return Cache::tags(self::CACHE_TAG)->get($this->getCacheKey());
+        return Cache::tags(static::CACHE_TAG)->get($this->getCacheKey());
     }
 
     /**
@@ -86,7 +86,7 @@ abstract class BaseAnalyticsService
     {
         return sprintf(
             '%s_from_%s_to_%s_%s',
-            self::CACHE_TAG,
+            static::CACHE_TAG,
             $this->period->getFromDate()->format('Y_m_d_h_i_s'),
             $this->period->getToDate()->format('Y_m_d_h_i_s'),
             $this->getPerPage()
