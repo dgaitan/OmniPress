@@ -16,4 +16,25 @@ interface AnalyticServiceable
         string $from = '',
         string $to = ''
     );
+
+    /**
+     * Collect Data
+     *
+     * @return array
+     */
+    public function getData(): array;
+
+    /**
+     * Get analytics content
+     *
+     * @return array
+     */
+    public function getContents(): array;
+
+    /**
+     * Get Cache Key
+     *
+     * @return string
+     */
+    public function getCacheKey(): string;
 }

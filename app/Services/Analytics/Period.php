@@ -16,7 +16,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
 
-class Period implements AnalyticServiceable
+class Period
 {
     protected $periods = [
         'today' => TodayPeriod::class,
