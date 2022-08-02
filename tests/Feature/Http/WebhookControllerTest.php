@@ -22,7 +22,7 @@ class WebhookControllerTest extends BaseHttp
     {
         $data = [
             'status' => 'feliz',
-            'type' => 'order_status_change'
+            'type' => 'order_status_change',
         ];
 
         $payload = json_encode($data, JSON_UNESCAPED_SLASHES);
@@ -35,7 +35,7 @@ class WebhookControllerTest extends BaseHttp
 
         $response->assertStatus(200)
             ->assertJson([
-                'message' => 'Webhook Processed'
+                'message' => 'Webhook Processed',
             ]);
     }
 
@@ -43,21 +43,21 @@ class WebhookControllerTest extends BaseHttp
     {
         $data = [
             'status' => 'feliz',
-            'type' => 'order_status_change'
+            'type' => 'order_status_change',
         ];
 
         $response = $this->post('/webhooks/printforia', $data);
 
         $response->assertStatus(403)
             ->assertJson([
-                'error' => 'Siganture is not present in request.'
+                'error' => 'Siganture is not present in request.',
             ]);
     }
 
     public function test_printforia_webhook_should_return_error_by_missing_status_in_request(): void
     {
         $data = [
-            'type' => 'order_status_change'
+            'type' => 'order_status_change',
         ];
 
         $payload = json_encode($data, JSON_UNESCAPED_SLASHES);
@@ -70,7 +70,7 @@ class WebhookControllerTest extends BaseHttp
 
         $response->assertStatus(403)
             ->assertJson([
-                'error' => 'Status is not present in response'
+                'error' => 'Status is not present in response',
             ]);
     }
 
@@ -146,7 +146,7 @@ class WebhookControllerTest extends BaseHttp
             'customer_reference' => 'order-550013',
             'carrier' => 'USPS',
             'tracking_number' => '12345678901234567890',
-            'tracking_url' => 'https://tracking.example.com/12345678901234567890'
+            'tracking_url' => 'https://tracking.example.com/12345678901234567890',
         ];
 
         $order = Order::whereOrderId(550013)->first();
@@ -164,7 +164,7 @@ class WebhookControllerTest extends BaseHttp
 
         $response->assertStatus(200)
             ->assertJson([
-                'message' => 'Webhook Processed'
+                'message' => 'Webhook Processed',
             ]);
 
         Mail::assertQueued(OrderShipped::class);

@@ -13,8 +13,8 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use Inertia\Inertia;
 use Illuminate\Support\Str;
+use Inertia\Inertia;
 
 class OrderController extends Controller
 {
@@ -157,7 +157,7 @@ class OrderController extends Controller
     /**
      * Simulate that we're shipping an order by shiphero
      *
-     * @param Request $request
+     * @param  Request  $request
      * @return void
      */
     public function simulateShipHero(Request $request)
@@ -175,8 +175,8 @@ class OrderController extends Controller
         UpdateOrderAction::dispatch($order, [
             'status' => 'completed',
             'meta_data' => [
-                ['key' => '_tracking_number', 'value' => Str::random(20)]
-            ]
+                ['key' => '_tracking_number', 'value' => Str::random(20)],
+            ],
         ]);
 
         session()->flash('flash.banner', 'Order was shipped, please wait a few seconds to see it reflected!');

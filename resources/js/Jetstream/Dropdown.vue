@@ -19,7 +19,7 @@
                     class="absolute z-50 mt-2 rounded-md shadow-lg"
                     :class="[widthClass, alignmentClasses]"
                     style="display: none;"
-                    @click="open = false">
+                    @click="maybeCloseDropdown">
                 <div class="rounded-md ring-1 ring-black ring-opacity-5" :class="contentClasses">
                     <slot name="content"></slot>
                 </div>
@@ -41,6 +41,10 @@ export default defineComponent({
         },
         contentClasses: {
             default: () => ['py-1', 'bg-white']
+        },
+        closeOnClickItem: {
+            type: Boolean,
+            default: true
         }
     },
 
@@ -81,6 +85,16 @@ export default defineComponent({
                 return 'origin-top'
             }
         },
+    },
+
+    methods: {
+        maybeCloseDropdown() {
+            if (!this.closeOnClickItem) {
+                return;
+            }
+
+            this.open = false
+        }
     }
 })
 </script>

@@ -13,8 +13,8 @@ use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
-use Tests\Feature\Http\BaseHttp;
 use Illuminate\Support\Str;
+use Tests\Feature\Http\BaseHttp;
 
 class PrintforiaControllerTest extends BaseHttp
 {
@@ -30,12 +30,12 @@ class PrintforiaControllerTest extends BaseHttp
 
         $response = $this->withToken($token)
             ->post('/api/v1/printforia/webhook-values/sdfalsdflasdfasdf', [
-                'status' => 'shipped'
+                'status' => 'shipped',
             ]);
 
         $response->assertStatus(404)
             ->assertJson([
-                'message' => 'Order not found'
+                'message' => 'Order not found',
             ]);
     }
 
@@ -56,17 +56,17 @@ class PrintforiaControllerTest extends BaseHttp
 
         $response = $this->withToken($token)
             ->post(sprintf('/api/v1/printforia/webhook-values/%s', $printforiaOrder->printforia_order_id), [
-                'status' => 'invalid_status'
+                'status' => 'invalid_status',
             ]);
 
         $response->assertStatus(200)
             ->assertJson([
-                'message' => 'Invalid status. Please use shipped or approved'
+                'message' => 'Invalid status. Please use shipped or approved',
             ]);
 
         $response = $this->withToken($token)
             ->post(sprintf('/api/v1/printforia/webhook-values/%s', $printforiaOrder->printforia_order_id), [
-                'status' => 'shipped'
+                'status' => 'shipped',
             ]);
 
         $response->assertStatus(200);
@@ -89,14 +89,14 @@ class PrintforiaControllerTest extends BaseHttp
 
         $response = $this->withToken($token)
             ->post(sprintf('/api/v1/printforia/webhook-values/%s', $printforiaOrder->printforia_order_id), [
-                'status' => 'approved'
+                'status' => 'approved',
             ]);
 
         $data = [
             'type' => 'order_status_change',
             'status' => 'approved',
             'order_id' => $printforiaOrder->printforia_order_id,
-            'customer_reference' => $printforiaOrder->customer_reference
+            'customer_reference' => $printforiaOrder->customer_reference,
         ];
 
         $payload = json_encode($data, JSON_UNESCAPED_SLASHES);
@@ -106,7 +106,7 @@ class PrintforiaControllerTest extends BaseHttp
         $response->assertStatus(200)
             ->assertJson([
                 'signature' => $signature,
-                'data' => $data
+                'data' => $data,
             ]);
     }
 
