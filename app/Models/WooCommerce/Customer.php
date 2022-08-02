@@ -363,4 +363,18 @@ class Customer extends Model
     {
         return self::whereEmail($email)->first();
     }
+
+    public static function orderByDonation(int $take = 5)
+    {
+        $ids = UserDonation::select('customer_id')
+            ->groupBy('customer_id')
+            ->orderByRaw('SUM(donation) DESC')
+            ->take($take)
+            ->pluck('customer_id')
+            ->toArray();
+
+        return self::whereIn('id', $ids)
+            ->with('donations')
+            ->get();
+    }
 }

@@ -34,7 +34,7 @@ class PrintforiaController extends Controller
     {
         if (env('APP_ENV', 'local') === 'production') {
             return response()->json([
-                'message' => 'Invalid request'
+                'message' => 'Invalid request',
             ], 403);
         }
 
@@ -42,13 +42,13 @@ class PrintforiaController extends Controller
 
         if (is_null($order)) {
             return response()->json([
-                'message' => 'Order not found'
+                'message' => 'Order not found',
             ], 404);
         }
 
         if (! in_array($request->get('status'), ['shipped', 'approved'])) {
             return response()->json([
-                'message' => 'Invalid status. Please use shipped or approved'
+                'message' => 'Invalid status. Please use shipped or approved',
             ], 200);
         }
 
@@ -61,7 +61,7 @@ class PrintforiaController extends Controller
                 'customer_reference' => $order->customer_reference,
                 'carrier' => 'USPS',
                 'tracking_number' => $trackingNumber,
-                'tracking_url' => sprintf('https://tracking.example.com/%s', $trackingNumber)
+                'tracking_url' => sprintf('https://tracking.example.com/%s', $trackingNumber),
             ];
         }
 
@@ -70,7 +70,7 @@ class PrintforiaController extends Controller
                 'type' => 'order_status_change',
                 'status' => 'approved',
                 'order_id' => $orderId,
-                'customer_reference' => $order->customer_reference
+                'customer_reference' => $order->customer_reference,
             ];
         }
 
@@ -80,7 +80,7 @@ class PrintforiaController extends Controller
 
         return response()->json([
             'signature' => $signature,
-            'data' => $data
+            'data' => $data,
         ]);
     }
 }

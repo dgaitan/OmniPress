@@ -36,6 +36,10 @@ class OrderDonation extends Model
     use HasFactory;
     use HasMoney;
 
+    protected $casts = [
+        'donation_date' => 'datetime',
+    ];
+
     /**
      * Fillable fields
      *
@@ -45,6 +49,7 @@ class OrderDonation extends Model
         'cause_id',
         'order_id',
         'amount',
+        'donation_date',
     ];
 
     /**
