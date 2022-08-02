@@ -14,7 +14,7 @@
                     </div>
                 </Column>
                 <Column :mdSize="6" class="flex justify-end">
-                    <PeriodPicker :periods="periods" :currentPeriod="period" />
+                    <PeriodPicker :url="route('kinja.analytics.causes')" :periods="periods" :currentPeriod="period" />
                 </Column>
                 <Column><hr class="pt-5 mt-5" /></Column>
             </Row>

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Cache;
 abstract class BaseAnalyticsService
 {
     public const CACHE_TAG = 'analytics_stats';
+
     protected Period $period;
 
     /**

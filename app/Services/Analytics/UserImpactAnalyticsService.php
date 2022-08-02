@@ -44,6 +44,7 @@ class UserImpactAnalyticsService extends BaseAnalyticsService implements Analyti
                         'id' => $item->customer->id,
                         'customer_id' => $item->customer->customer_id,
                         'first_name' => $item->customer->first_name,
+                        'email' => $item->customer->email,
                         'last_name' => $item->customer->last_name,
                         'avatar' => $item->customer->avatar_url,
                     ],
@@ -75,7 +76,7 @@ class UserImpactAnalyticsService extends BaseAnalyticsService implements Analyti
     public function getTotalDonatedInPeriod(): Money
     {
         $totalDonated = $this->getUserDonationsByPeriodQuery()
-            ->sum('amount');
+            ->sum('donation');
 
         return Money::USD($totalDonated);
     }
@@ -91,7 +92,7 @@ class UserImpactAnalyticsService extends BaseAnalyticsService implements Analyti
         return $this->period->getPeriodDateInterval()->map(function ($interval) use ($donations) {
             $donation = $donations->filter(function ($value, $key) use ($interval) {
                 return $this->period->isSame(date: $value->donation_date, with: $interval->instance);
-            })->sum('amount');
+            })->sum('donation');
 
             return (object) [
                 'label' => $interval->format,

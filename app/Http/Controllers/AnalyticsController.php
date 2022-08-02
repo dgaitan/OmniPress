@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\Analytics\AnalyticServiceable;
 use App\Services\Analytics\CauseAnalyticsService;
 use App\Services\Analytics\Period;
+use App\Services\Analytics\UserImpactAnalyticsService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -22,12 +24,43 @@ class AnalyticsController extends Controller
      */
     public function causes(Request $request)
     {
+        return $this->render(
+            request: $request,
+            analyticClass: CauseAnalyticsService::class,
+            view: 'Analytics/Causes'
+        );
+    }
+
+    /**
+     * Return User Impact Analytics
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function userImpacts(Request $request)
+    {
+        return $this->render(
+            request: $request,
+            analyticClass: UserImpactAnalyticsService::class,
+            view: 'Analytics/UserImpacts'
+        );
+    }
+
+    /**
+     * Render an analytics view page
+     *
+     * @param Request $request
+     * @param string $analyticClass
+     * @param string $view
+     * @return void
+     */
+    protected function render(Request $request, string $analyticClass, string $view) {
         $params = $this->getParams($request);
-        $stats = new CauseAnalyticsService(
+        $stats = new $analyticClass(
             period: $params->period, from: $params->fromDate, to: $params->toDate
         );
 
-        return Inertia::render('Analytics/Causes', [
+        return Inertia::render($view, [
             'stats' => $stats->getSerializedData(cached: false, perPage: $params->perPage),
             'periods' => Period::VALID_PERIODS,
             ...(array) $params,

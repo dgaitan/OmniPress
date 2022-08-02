@@ -68,6 +68,10 @@
         },
 
         props: {
+            url: {
+                type: String,
+                default: '',
+            },
             periods: {
                 type: Object,
                 default: []
@@ -149,7 +153,7 @@
                     filters['toDate'] = this.dateRange[1]
                 }
 
-                this.$inertia.get(route('kinja.analytics.causes'), filters, {
+                this.$inertia.get(this.url, filters, {
                     replace: true,
                 })
             }

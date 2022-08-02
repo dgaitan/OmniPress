@@ -110,6 +110,7 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('/dashboard')->group(fun
         Route::controller(AnalyticsController::class)->prefix('/analytics')->group(function () {
             Route::get('/', 'index')->name('kinja.analytics.index');
             Route::get('/causes', 'causes')->name('kinja.analytics.causes');
+            Route::get('/user-impacts', 'userImpacts')->name('kinja.analytics.userImpacts');
         });
     });
 

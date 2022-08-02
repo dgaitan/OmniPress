@@ -55,6 +55,9 @@
                                 <SidebarNavSubLink :href="route('kinja.analytics.causes')" :active="route().current('kinja.analytics.causes')">
                                     Causes
                                 </SidebarNavSubLink>
+                                <SidebarNavSubLink :href="route('kinja.analytics.userImpacts')" :active="route().current('kinja.analytics.userImpacts')">
+                                    User Impacts
+                                </SidebarNavSubLink>
                             </template>
 	              		</SidebarNavLink>
 	            	</SidebarNav>
@@ -155,7 +158,8 @@
                         index: route('kinja.analytics.index'),
                         activeIf: [
                             'kinja.analytics.index',
-                            'kinja.analytics.causes'
+                            'kinja.analytics.causes',
+                            'kinja.analytics.userImpacts'
                         ]
                     }
                 }
