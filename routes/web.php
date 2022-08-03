@@ -5,6 +5,7 @@ use App\Http\Controllers\CauseController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\MembershipController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
@@ -93,6 +94,12 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('/dashboard')->group(fun
             Route::get('/', 'index')->name('kinja.products.index');
             Route::get('/export-subscriptions', 'exportSubscriptions')
                 ->name('kinja.products.export-subscriptions');
+
+            Route::controller(InventoryController::class)->prefix('/inventory')->group(function () {
+                Route::get('/', 'index')->name('kinja.products.inventory');
+                Route::post('/update', 'update')->name('kinja.products.inventoryUpdate');
+            });
+
             Route::get('/{id}', 'show')->name('kinja.products.show');
         });
 
