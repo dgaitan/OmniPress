@@ -139,7 +139,11 @@
                     replace: true,
                     onSuccess: () => {
                         this.dataToUpdate = {}
-                        this.canUpdate = false
+                        this.canUpdate = false,
+
+                        this.datasets.forEach((v, i) => {
+                            this.datasets[i].stock.hasChanged = false
+                        })
                     }
                 })
             },
