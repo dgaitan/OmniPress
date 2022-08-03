@@ -2,6 +2,7 @@
 
 namespace App\Models\Printforia;
 
+use App\Mail\Printforia\OrderShipped;
 use App\Models\WooCommerce\Order;
 use App\Services\Printforia\PrintforiaApiClient;
 use App\Services\Printforia\PrintforiaService;
@@ -9,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Mail;
 
 /**
  * App\Models\Printforia\PrintforiaOrder
@@ -230,6 +232,12 @@ class PrintforiaOrder extends Model
     public function getItemsAsWooItems()
     {
         return PrintforiaService::getOrderItemsHasWooCommerceItems($this);
+    }
+
+    public function sendOrderHasShippedEmail()
+    {
+        Mail::to($this->ship_to_address->email)
+            ->queue(new OrderShipped($this));
     }
 
     public static function getOrderFromApi(string $orderId)

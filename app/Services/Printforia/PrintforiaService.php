@@ -201,6 +201,7 @@ class PrintforiaService
                 $printforiaOrder->tracking_url = $request->tracking_url;
                 $printforiaOrder->save();
 
+                $printforiaOrder->sendOrderHasShippedEmail();
                 PrintforiaOrderWasShipped::dispatch($printforiaOrder);
             }
         }

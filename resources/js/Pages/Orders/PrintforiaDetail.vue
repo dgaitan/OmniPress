@@ -7,6 +7,7 @@
                 </Column>
                 <Column :mdSize="6" class="text-right">
                     <!-- <Button size="md" @click="goToStore()">See on kindhumans.com</Button> -->
+                    <Button size="md" @click="sendOrderShippedEmail">Send Order Shipped Email</Button>
                 </Column>
             </Row>
 
@@ -59,6 +60,12 @@ export default defineComponent({
     methods: {
         goToStore() {
             window.open(this.order.data.permalink_on_store, '_blank').focus();
+        },
+
+        sendOrderShippedEmail() {
+            this.$inertia.post(route('kinja.orders.printforia.sendPrintforiaShippedEmail'), {
+                order_id: this.order.data.id
+            }, { replace: true });
         }
     }
 })
