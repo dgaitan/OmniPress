@@ -176,7 +176,7 @@ class Product extends Model
      */
     public function parent(): BelongsTo
     {
-        return $this->belongsTo(self::class, 'parent_id')->with('images');
+        return $this->belongsTo(self::class, 'parent_id');
     }
 
     /**
@@ -410,35 +410,35 @@ class Product extends Model
         return $query->with(['categories', 'tags', 'brands']);
     }
 
-    public function toArray(array $args = [])
-    {
-        $array = parent::toArray();
-        $args = array_replace([
-            'withImages' => false,
-        ], $args);
+    // public function toArray(array $args = [])
+    // {
+    //     $array = parent::toArray();
+    //     $args = array_replace([
+    //         'withImages' => false,
+    //     ], $args);
 
-        $array['categories'] = collect($this->categories)->map(function ($cat) {
-            return $cat->toArray();
-        });
+    //     $array['categories'] = collect($this->categories)->map(function ($cat) {
+    //         return $cat->toArray();
+    //     });
 
-        if (isset($args['withTags']) && $args['withTags']) {
-            $array['tags'] = collect($this->tags)->map(function ($tag) {
-                return $tag->toArray();
-            });
-        }
+    //     if (isset($args['withTags']) && $args['withTags']) {
+    //         $array['tags'] = collect($this->tags)->map(function ($tag) {
+    //             return $tag->toArray();
+    //         });
+    //     }
 
-        $array['date_created'] = $this->date_created
-            ? $this->date_created->format('F j, Y')
-            : '';
+    //     $array['date_created'] = $this->date_created
+    //         ? $this->date_created->format('F j, Y')
+    //         : '';
 
-        if ($args['withImages']) {
-            $array['images'] = collect($this->images)->map(function ($image) {
-                return $image->toArray();
-            });
-        }
+    //     if ($args['withImages']) {
+    //         $array['images'] = collect($this->images)->map(function ($image) {
+    //             return $image->toArray();
+    //         });
+    //     }
 
-        return $array;
-    }
+    //     return $array;
+    // }
 
     public static function searchByKey(string $q)
     {
