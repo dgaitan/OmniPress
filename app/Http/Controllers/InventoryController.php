@@ -59,7 +59,7 @@ class InventoryController extends Controller
             $p->update(['stock_quantity' => (int) $product['stock']['value']]);
 
             UpdateProductAction::dispatch(
-                productId:$p->product_id,
+                product: $p,
                 params: [
                     'stock_quantity' => (int) $product['stock']['value']
                 ],
@@ -70,6 +70,6 @@ class InventoryController extends Controller
         session()->flash('flash.banner', 'Inventory has updated successfully!');
         session()->flash('flash.bannerStyle', 'success');
 
-        return back();
+        return back()->banner('Inventory has updated successfully!');
     }
 }

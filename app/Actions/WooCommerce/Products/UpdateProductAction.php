@@ -12,16 +12,27 @@ class UpdateProductAction
     use AsAction;
 
     public function handle(
-        int|string|Product $productId, array $params = [], bool $sync = false
+        int|string|Product $product, array $params = [], bool $sync = false
     ): Product|DataObjectsProduct|null {
-        if ($productId instanceof Product) {
-            $productId = $productId->product_id;
+        if (! $product instanceof Product) {
+            $product = Product::whereProductId($product)->first();
         }
 
         $api = WooCommerceService::make();
 
+        if ($product->type === 'variation') {
+            $response = $api->put(
+                endpoint: sprintf('products/%s/variations/%s', $product->parent->product_id, $product->product_id),
+                data: $params
+            );
+
+            return $response->ok()
+                ? Product::whereProductId($response->object()->id)->first()
+                : null;
+        }
+
         return $api->products()->update(
-            element_id: $productId, params: $params, sync: $sync
+            element_id: $product->product_id, params: $params, sync: $sync
         );
     }
 }
