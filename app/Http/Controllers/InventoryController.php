@@ -6,7 +6,6 @@ use App\Actions\WooCommerce\Products\UpdateProductAction;
 use App\Http\Resources\Inventory\InventoryCollection;
 use App\Models\WooCommerce\Product;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class InventoryController extends Controller
@@ -24,6 +23,15 @@ class InventoryController extends Controller
             ->whereStatus('publish')
             ->where('type', '!=', 'variation');
 
+        if ($request->has('s')) {
+            $s = $request->input('s');
+            $products->where(function ($query) use ($s) {
+                return $query->where('name', 'ilike', "%$s%")
+                    ->orWhere('product_id', 'ilike', "%$s")
+                    ->orWhere('sku', 'ilike', "%$s%");
+            });
+        }
+
         $products = $this->paginate($request, $products);
         $data = $this->getPaginationResponse($products);
 
@@ -34,6 +42,12 @@ class InventoryController extends Controller
         ]);
     }
 
+    /**
+     * Update Inventory
+     *
+     * @param Request $request
+     * @return void
+     */
     public function update(Request $request)
     {
         $validated = $request->validate([

@@ -9,13 +9,16 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(data, key) in datasets" :key="key" class="bg-white border-b hover:bg-gray-50">
+                <tr v-for="(data, key) in datasets"
+                    :key="key"
+                    class="bg-white border-b hover:bg-gray-50"
+                    :class="[data.type.value !== 'variable' && parseInt(data.stock.value) < 5 ? 'bg-red-100/30' : '']">
                     <th v-for="item in data" :key="item.key" scope="row" class="py-4 px-6 font-medium text-gray-500 whitespace-nowrap">
-                        <span v-if="item.key === 'stock'">
+                        <span v-if="item.key === 'stock' && data.type.value !== 'variable'">
                             <JetInput
                                 type="number"
                                 class=" w-28"
-                                :class="[item.hasChanged ? 'border-cyan-600 border-2' : '']"
+                                :class="[item.hasChanged ? 'border-cyan-600 border-2 bg-cyan-50' : '']"
                                 :value="item.value"
                                 @input="e => $emit('inputChanged', e.target.value, key)" />
                         </span>

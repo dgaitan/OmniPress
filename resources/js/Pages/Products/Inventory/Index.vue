@@ -3,7 +3,7 @@
         <ListWrapper title="Product Inventory" :fluid="true">
             <template #actions>
                 <div class="flex justify-between items-center">
-                    <JetInput type="search" placeholder="Search..." v-model="filters.s" />
+                    <JetInput type="search" placeholder="Search..." v-model="filters.s" v-on:keyup.enter="search" />
                     <div>
                         <Button v-if="canUpdate" type="button" color="primary" @click="updateInventory">Update Inventory</Button>
                     </div>
@@ -142,6 +142,12 @@
                         this.canUpdate = false
                     }
                 })
+            },
+
+            search() {
+                this.$inertia.get(route('kinja.products.inventory'), {
+                    s: this.filters.s
+                }, { replace: true })
             }
         }
     })
