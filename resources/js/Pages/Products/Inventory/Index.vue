@@ -42,7 +42,7 @@
         computed: {
             tableHeaders() {
                 return [
-                    'ID', 'Parent ID', 'Name', 'Type', 'Status', 'SKU', 'Price', 'Regular Price', 'Sale Price', 'Stock Qty'
+                    'ID', 'Parent ID', 'Name', 'Type', 'SKU', 'Stock Qty'
                 ]
             }
         },

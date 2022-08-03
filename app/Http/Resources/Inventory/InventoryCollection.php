@@ -14,17 +14,26 @@ class InventoryCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-        return collect($this->collection)->map(function ($product) {
+        $data = [];
+
+        foreach ($this->collection as $product) {
+            $data[] = $product;
+
+            if ($product->variations->isNotEmpty()) {
+                foreach ($product->variations as $v) {
+                    $data[] = $v;
+                }
+            }
+        }
+
+        return collect($data)->map(function ($product) {
             return [
                 'product_id' => $product->product_id,
-                'parent_id' => $product->parent_id,
+                'parent_id' => $product->type === 'variation'
+                    ? $product->parent->product_id : null,
                 'name' => $product->name,
                 'type' => $product->type,
-                'status' => $product->status,
                 'sku' => $product->sku,
-                'price' => $product->getMoneyValue('price')->formatByDecimal(),
-                'regular_price' => $product->getMoneyValue('regular_price')->formatByDecimal(),
-                'sale_price' => $product->getMoneyValue('sale_price')->formatByDecimal(),
                 'stock' => $product->stock_quantity
             ];
         });
