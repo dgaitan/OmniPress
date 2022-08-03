@@ -110,6 +110,8 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('/dashboard')->group(fun
             Route::post('/simulate-shiphero', 'simulateShipHero')->name('kinja.orders.simulateShipHero');
             Route::post('/sync-order', 'syncOrder')->name('kinja.orders.syncOrder');
             Route::get('/printforia', 'printforiaOrders')->name('kinja.orders.printforiaOrders');
+            Route::post('/printforia/send-shipped-email', 'sendPrintforiaShippedEmail')
+                ->name('kinja.orders.printforia.sendPrintforiaShippedEmail');
             Route::get('/printforia/{id}', 'printforiaDetail')->name('kinja.orders.printforiaDetail');
             Route::get('/{id}', 'show')->name('kinja.orders.show');
         });

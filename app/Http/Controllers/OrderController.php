@@ -265,6 +265,17 @@ class OrderController extends Controller
         ]);
     }
 
+    public function sendPrintforiaShippedEmail(Request $request)
+    {
+        $printforiaOrder = PrintforiaOrder::find($request->input('order_id'));
+        $printforiaOrder->sendOrderHasShippedEmail();
+
+        session()->flash('flash.banner', 'Order Email Sent.');
+        session()->flash('flash.bannerStyle', 'success');
+
+        return back()->banner('Order Email Sent.');
+    }
+
     /**
      * Process Orders Queryset
      *
