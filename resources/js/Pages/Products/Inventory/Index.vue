@@ -11,7 +11,7 @@
             </template>
 
             <template #table>
-                <Table :headers="tableHeaders" :datasets="datasets" @inputChanged="handleInputChange" />
+                <Table :headers="tableHeaders" :datasets="datasets" @inputChanged="handleInputChange" @inputEntered="updateInventory" />
             </template>
 
             <template #pagination>
@@ -136,10 +136,14 @@
 
             updateInventory() {
                 this.$inertia.post(route('kinja.products.inventoryUpdate'), { products: Object.values(this.dataToUpdate) }, {
-                    replace: true,
+                    replace: false,
                     onSuccess: () => {
                         this.dataToUpdate = {}
-                        this.canUpdate = false
+                        this.canUpdate = false,
+
+                        this.datasets.forEach((v, i) => {
+                            this.datasets[i].stock.hasChanged = false
+                        })
                     }
                 })
             },

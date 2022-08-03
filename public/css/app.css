@@ -1219,6 +1219,10 @@ select {
   --tw-border-opacity: 1;
   border-color: rgb(8 145 178 / var(--tw-border-opacity));
 }
+.border-b-red-100 {
+  --tw-border-opacity: 1;
+  border-bottom-color: rgb(254 226 226 / var(--tw-border-opacity));
+}
 .bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
