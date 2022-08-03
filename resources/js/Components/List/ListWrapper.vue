@@ -1,6 +1,6 @@
 <template>
 	<section class="pt-4 pb-8">
-		<div class="container px-4 mx-auto">
+		<Container :fluid="fluid">
 			<div class="pt-6 bg-white shadow rounded">
 				<div class="px-6 border-b">
 					<div class="flex flex-wrap items-center mb-6">
@@ -22,7 +22,7 @@
 				</div>
 
 			</div>
-		</div>
+		</Container>
 		<slot name="pagination"></slot>
 	</section>
 </template>
@@ -32,12 +32,17 @@
     import JetButton from '@/Jetstream/Button.vue'
     import Button from '@/Components/Button.vue'
     import { DownloadIcon } from '@heroicons/vue/outline'
+    import Container from '@/Components/Layouts/Container.vue'
 
 	export default defineComponent({
         emits: ['export'],
 
         props: {
 			title: String,
+            fluid: {
+                type: Boolean,
+                default: false,
+            },
             exportButton: {
                 type: Boolean,
                 default: false
@@ -46,7 +51,8 @@
 
         components: {
             Button,
-            DownloadIcon
+            DownloadIcon,
+            Container
         }
 	})
 </script>

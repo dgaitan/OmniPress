@@ -25,9 +25,17 @@
                                 </SidebarNavSubLink>
                             </template>
 	            		</SidebarNavLink>
-                        <SidebarNavLink :href="route('kinja.products.index')" :active="route().current('kinja.products.index')">
+                        <SidebarNavLink :href="routes.products.index" :active="isActive(routes.products.activeIf)">
 	              			<template #icon><ArchiveIcon class="w-5 h-5" /></template>
 	              			Products
+
+							<template v-if="isActive(routes.products.activeIf)" #subitems>
+                                <SidebarNavSubLink
+                                    :href="route('kinja.products.inventory')" 
+									:active="route().current('kinja.products.inventory')">
+                                    Inventory
+                                </SidebarNavSubLink>
+                            </template>
 	              		</SidebarNavLink>
                         <SidebarNavLink :href="route('kinja.customers.index')" :active="route().current('kinja.customers.index')">
 	              			<template #icon><UsersIcon class="w-5 h-5" /></template>
@@ -150,6 +158,14 @@
                             'kinja.orders.printforiaDetail'
                         ]
                     },
+					products: {
+						index: route('kinja.products.index'),
+						activeIf: [
+							'kinja.products.index',
+							'kinja.products.inventory',
+							'kinja.products.show'
+						]
+					},
                     memberships: {
                         index: route('kinja.memberships.index'),
                         activeIf: ['kinja.memberships.index', 'kinja.memberships.show']
