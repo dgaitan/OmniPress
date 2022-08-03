@@ -58,6 +58,8 @@ Route::middleware('auth:sanctum')->name('kinja.api.v1.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/update', 'update')->name('update');
         Route::post('/bulk-sync', 'bulkSync')->name('bulkSync');
+        Route::post('/orders/{id}/update', 'updateOrder')->name('updateOrder');
+        Route::post('/products/{id}/update', 'updateProduct')->name('updateProduct');
     });
 
     Route::controller(PaymentController::class)->name('payments.')->prefix('/payments')->group(function () {
