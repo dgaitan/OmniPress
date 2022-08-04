@@ -302,7 +302,7 @@ class Product extends Model
     public function featuredImage(): ProductImage|null
     {
         if ($this->images->isEmpty()) {
-            return null;
+            return $this->parent->featuredImage();
         }
 
         return $this->images()->first();
