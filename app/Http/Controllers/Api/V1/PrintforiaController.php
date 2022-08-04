@@ -30,6 +30,37 @@ class PrintforiaController extends Controller
         return response()->json(new PrintforiaResource($order));
     }
 
+    /**
+     * Create a Webook Response to test the printforia webhook.
+     *
+     * Steps:
+     *
+     * 1. Make a request to: /api/v1/printforia/webook-values/{printforiaOrderID} (You could use postman or https://reqbin.com/)
+     * 2. Be sure of add the API TOKEN in the Headers. (Bearer foobar123456)
+     * 3. Then send in the body (as JSON) the status to test. Ie: {"status": "approved"}
+     * 4. It will return something like:
+     *  {
+     *      "signature": "t=1656985209;s=b703e17fc89376d6ea9b162b9d91953dc301c57f9a88fd73ad26e643df4c8faf",
+     *      "data": {
+     *           "type": "order_status_change",
+     *           "status": "approved",
+     *           "order_id": "YAZwc_G_4tkexsq4LH96n",
+     *           "customer_reference": "order-418394"
+     *       }
+     *  }
+     *
+     * ONce you got that response now let's test the webhook. SO now go a new request to
+     *
+     * 1. Make a request to: /webhooks/printforia/
+     * 2. Add the signature returned in the previous response in the headers as X-Signature.
+     *  Ie: X-Signature: t=1656985209;s=b703e17fc89376d6ea9b162b9d91953dc301c57f9a88fd73ad26e643df4c8faf
+     * 3. Add the data returned in the previous request to the body of this request.
+     * 4. Sumbit the request and then you should get "Webhook processed" as response.
+     *
+     * @param Request $request
+     * @param [type] $orderId
+     * @return void
+     */
     public function getWebhookValues(Request $request, $orderId)
     {
         if (env('APP_ENV', 'local') === 'production') {
