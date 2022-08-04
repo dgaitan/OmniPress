@@ -14,13 +14,15 @@ class SyncOrderLineItemProductsAction
         $api = \App\Services\WooCommerce\WooCommerceService::make();
 
         $order->items->map(function ($item) use ($api) {
-            $productId = $item->product->product_id;
+            if ($item->order_line_id && $item->product) {
+                $productId = $item->product->product_id;
 
-            if ($item->product->type === 'variation') {
-                $productId = $item->product->parent->product_id;
+                if ($item->product->type === 'variation') {
+                    $productId = $item->product->parent->product_id;
+                }
+
+                $api->products()->getAndSync($productId);
             }
-
-            $api->products()->getAndSync($productId);
         });
     }
 

@@ -39,7 +39,7 @@ class SyncController extends Controller
             ], 400);
         }
 
-        SyncResourceAction::run(
+        SyncResourceAction::dispatch(
             resourceName: $request->resource,
             data: $request->data
         );
