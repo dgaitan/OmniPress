@@ -283,7 +283,9 @@
                             @foreach($orderItems as $item)
                                 <tr>
                                     <td width="130" valign="middle">
+                                        @if ($item->product->featuredImage())
                                         <img width="150" height="150" src="{{ $item->product->featuredImage()->getImageUrl() }}" />
+                                        @endif
                                     </td>
                                     <td valign="middle" style="padding-left:30px">
                                         <span style="display:block;font-weight:800;font-size:16px;text-decoration:underline; margin-bottom: 10px;">
