@@ -26,7 +26,7 @@ class SendPrintforiaOrderShippedMail
      */
     public function handle(PrintforiaOrderWasShipped $event)
     {
-        Mail::to($event->order->ship_to_address->email)
-                    ->queue(new OrderShipped($event->order));
+        // Mail::to($event->order->ship_to_address->email)
+        //             ->queue(new OrderShipped($event->order));
     }
 }
