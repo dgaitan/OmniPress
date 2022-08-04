@@ -150,4 +150,21 @@ class Controller extends BaseController
 
         return $query;
     }
+
+    /**
+     * Go Back with a message if needed
+     *
+     * @param string $message
+     * @return void
+     */
+    public function goBack(string $message = '') {
+        if ($message) {
+            session()->flash('flash.banner', $message);
+            session()->flash('flash.bannerStyle', 'success');
+
+            return back()->banner($message);
+        }
+
+        return back();
+    }
 }

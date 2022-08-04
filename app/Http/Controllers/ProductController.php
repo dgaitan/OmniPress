@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\WooCommerce\Products\UpdateProductAction;
 use App\Exports\Products\ProductSubscriptionExport;
 use App\Http\Resources\ProductCollection;
 use App\Http\Resources\ProductResource;
@@ -90,6 +91,23 @@ class ProductController extends Controller
         ]);
     }
 
+    public function syncProduct(Request $request)
+    {
+        $validate = $request->validate([
+            'product_id' => 'required|integer'
+        ]);
+
+        UpdateProductAction::dispatch($request->product_id);
+
+        return $this->goBack('Product sync started in the background');
+    }
+
+    /**
+     * Export subs
+     *
+     * @param Request $request
+     * @return void
+     */
     public function exportSubscriptions(Request $request)
     {
         $products = Product::getSubscriptions()->get();

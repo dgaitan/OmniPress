@@ -87,6 +87,19 @@ abstract class BaseResource
     }
 
     /**
+     * Create Or Update from a giving attribues/data
+     *
+     * @param array $attributes
+     * @return Model|null
+     */
+    public function createOrUpdate(array $attributes): Model|null
+    {
+        $object = $this->factory::make(attributes: $attributes);
+
+        return $object->sync();
+    }
+
+    /**
      * Find a
      *
      * @param  int  $order_id

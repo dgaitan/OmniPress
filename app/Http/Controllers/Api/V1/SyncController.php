@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Actions\WooCommerce\SyncResourceAction;
 use App\Http\Controllers\Controller;
 use App\Models\WooCommerce\Order;
 use App\Models\WooCommerce\Product;
@@ -11,11 +12,41 @@ use App\Services\WooCommerce\DataObjects\Order as OrderDataObject;
 use App\Services\WooCommerce\DataObjects\Product as ProductDataObject;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class SyncController extends Controller
 {
     public function index(Request $request)
     {
+    }
+
+    /**
+     * Sync A Resource
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function syncResource(Request $request)
+    {
+        $validated = Validator::make($request->all(), [
+            'resource' => 'required|string',
+            'data' => 'required|array'
+        ]);
+
+        if ($validated->fails()) {
+            return response()->json([
+                'error' => $validated->errors()
+            ], 400);
+        }
+
+        SyncResourceAction::dispatch(
+            resourceName: $request->resource,
+            data: $request->data
+        );
+
+        return response()->json([
+            'message' => 'Resource has been updated successfully!'
+        ], 200);
     }
 
     /**
