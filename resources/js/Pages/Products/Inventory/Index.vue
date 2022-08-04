@@ -19,6 +19,14 @@
             </template>
         </ListWrapper>
     </Layout>
+    <!-- Sync Confirmation Modal -->
+    <Confirm
+        title="Are you sure?"
+        message="This actions will update the stocks changed. Please be confirm before proceed."
+        :show="showActionConfirmation"
+        :processing="runningUpdate"
+        @close="showActionConfirmation = false"
+        @confirm="triggerUpdateInventory" />
 </template>
 <script>
     import { defineComponent } from 'vue'
@@ -31,6 +39,7 @@
     import ListPagination from '@/Components/List/ListPagination'
     import JetInput from '@/Jetstream/Input.vue'
     import Button from '@/Components/Button.vue'
+    import Confirm from '@/Components/Confirm.vue'
 
     export default defineComponent({
         props: {
@@ -73,7 +82,8 @@
             ListWrapper,
             ListPagination,
             JetInput,
-            Button
+            Button,
+            Confirm
         },
 
         data() {
@@ -87,6 +97,8 @@
                     page: this._currentPage,
                     perPage: this._perPage
                 },
+                showActionConfirmation: false,
+                runningUpdate: false
             }
         },
 
@@ -135,6 +147,11 @@
             },
 
             updateInventory() {
+                this.showActionConfirmation = true
+            },
+
+            triggerUpdateInventory() {
+                this.runningUpdate = true
                 this.$inertia.post(route('kinja.products.inventoryUpdate'), { products: Object.values(this.dataToUpdate) }, {
                     replace: false,
                     onSuccess: () => {
@@ -144,6 +161,9 @@
                         this.datasets.forEach((v, i) => {
                             this.datasets[i].stock.hasChanged = false
                         })
+
+                        this.runningUpdate = true
+                        this.showActionConfirmation = false
                     }
                 })
             },

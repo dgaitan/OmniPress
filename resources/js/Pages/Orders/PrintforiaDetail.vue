@@ -6,8 +6,7 @@
                     <PrintforiaOrderIntro :order="order.data" />
                 </Column>
                 <Column :mdSize="6" class="text-right">
-                    <!-- <Button size="md" @click="goToStore()">See on kindhumans.com</Button> -->
-                    <Button size="md" @click="sendOrderShippedEmail">Send Order Shipped Email</Button>
+                    <Button v-if="order.data.status === 'shipped'" size="md" @click="sendOrderShippedEmail">Send Order Shipped Email</Button>
                 </Column>
             </Row>
 
