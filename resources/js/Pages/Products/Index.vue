@@ -104,6 +104,7 @@
                                                     Show
                                                 </jet-dropdown-link>
                                                 <jet-dropdown-link :href="product.store_permalink" as="a" target="_blank">Show on kindhumans</jet-dropdown-link>
+                                                <jet-dropdown-link @click="syncProduct(product.product_id)" as="button">Sync</jet-dropdown-link>
                                             </div>
                                         </template>
                                     </jet-dropdown>
@@ -263,6 +264,14 @@
                     }
                 });
             },
+
+            syncProduct(productId) {
+                this.$inertia.post(route('kinja.products.syncProduct'), {
+                    product_id: productId
+                }, {
+                    replace: true
+                })
+            }
         }
     })
 </script>
