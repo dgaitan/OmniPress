@@ -149,7 +149,7 @@ abstract class Analytics
      */
     protected function calculatePercentageComparisson(int $actualValue, int $baseValue): mixed
     {
-        if ($baseValue === 0 && $actualValue === 0) {
+        if ($baseValue === 0 || $actualValue === 0) {
             return 0;
         }
 

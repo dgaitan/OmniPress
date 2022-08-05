@@ -47,10 +47,32 @@ class MembershipController extends Controller
             'memberships' => collect($memberships->items())->map(function ($m) {
                 $customer = $m->customer;
                 $cash = $m->kindCash;
+                $currentOrder = $m->getCurrentOrder();
+                $giftProduct = null;
+
+                if ($m->gift_product_id) {
+                    $giftProduct = Product::with('images')
+                        ->whereProductId($m->gift_product_id)->first();
+
+                    if (! is_null($giftProduct)) {
+                        $giftProduct = [
+                            'id' => $giftProduct->id,
+                            'product_id' => $giftProduct->product_id,
+                            'name' => $giftProduct->name,
+                            'sku' => $giftProduct->sku,
+                            'images' => $giftProduct->images,
+                        ];
+                    }
+                }
 
                 return [
                     'id' => $m->id,
+                    'order' => [
+                        'id' => $currentOrder->order_id,
+                        'link' => $currentOrder->getPermalink()
+                    ],
                     'status' => $m->status,
+                    'shipping_address' => $currentOrder->shippingAddress(),
                     'shipping_status' => $m->shipping_status,
                     'start_at' => $m->start_at,
                     'end_at' => $m->end_at,
@@ -61,7 +83,7 @@ class MembershipController extends Controller
                         'username' => $customer->username,
                         'email' => $customer->email,
                     ],
-
+                    'giftProduct' => $giftProduct,
                 ];
             }),
             'statuses' => Membership::getStatuses(),
