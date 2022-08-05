@@ -9,6 +9,7 @@ use App\Mail\Memberships\PaymentNotFound;
 use App\Mail\Memberships\RenewalReminder;
 use App\Mail\Memberships\RenewError;
 use App\Models\WooCommerce\Customer;
+use App\Models\WooCommerce\Order;
 use App\Models\WooCommerce\Product;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -173,6 +174,18 @@ class Membership extends Model
             'membership_id',
             'product_id'
         )->as('products')->withTimestamps();
+    }
+
+    /**
+     * Current Order
+     *
+     * @return Order
+     */
+    public function getCurrentOrder(): Order
+    {
+        return $this->orders()
+            ->orderBy('date_created', 'desc')
+            ->first();
     }
 
     /**

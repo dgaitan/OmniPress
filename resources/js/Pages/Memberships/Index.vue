@@ -1,115 +1,143 @@
 <template>
     <layout title="Memberships">
 
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <ListWrapper title="Memberships" :exportButton="true" @export="exportCsv">
-                <!-- Actions -->
-                <template #actions>
-                    <Actions
-                        :filters="filters"
-                        :shippingStatuses="shippingStatuses"
-                        :action="action"
-                        @bulkAction="confirmAction"
-                        @showFilters="showFilters = $event"/>
-                </template>
+        <ListWrapper title="Memberships" :fluid="true" :exportButton="true" @export="exportCsv">
+            <!-- Actions -->
+            <template #actions>
+                <Actions
+                    :filters="filters"
+                    :shippingStatuses="shippingStatuses"
+                    :action="action"
+                    @bulkAction="confirmAction"
+                    @showFilters="showFilters = $event"/>
+            </template>
 
-              <!-- FIlters -->
-              <template #filters>
-                <ListFilter @click="filterStatus('all')" :active="filters.status === '' || filters.status === 'all'">
-                  All
-                </ListFilter>
-                <ListFilter
-                  v-for="s in statuses"
-                  @click="filterStatus(s.slug)"
-                  :key="s.slug"
-                  :active="s.slug === filters.status">
-                  {{ s.label }}
-                </ListFilter>
-              </template>
+          <!-- FIlters -->
+          <template #filters>
+            <ListFilter @click="filterStatus('all')" :active="filters.status === '' || filters.status === 'all'">
+              All
+            </ListFilter>
+            <ListFilter
+              v-for="s in statuses"
+              @click="filterStatus(s.slug)"
+              :key="s.slug"
+              :active="s.slug === filters.status">
+              {{ s.label }}
+            </ListFilter>
+          </template>
 
-              <template #table>
-                <ListTable :columns="columns" :stateData="this.filters" :selectIds="selectAllIds">
-                    <template #body>
-                        <tr class="text-xs"
-                            v-for="(membership, i) in memberships"
-                            :key="membership.id"
-                            v-bind:class="[isOdd(i) ? '' : 'bg-gray-50']">
+          <template #table>
+            <ListTable :columns="columns" :stateData="this.filters" :selectIds="selectAllIds">
+                <template #body>
+                    <tr class="text-xs"
+                        v-for="(membership, i) in memberships"
+                        :key="membership.id"
+                        v-bind:class="[isOdd(i) ? '' : 'bg-gray-50']">
 
-                            <!-- MEmbership ID -->
-                            <td class="flex items-center py-5 px-6 font-medium">
+                        <!-- MEmbership ID -->
+                        <td class="py-4 px-6 font-medium whitespace-nowrap">
+                            <div class="flex">
                                 <input class="mr-3" type="checkbox" @change="setIds($event)" :checked="ids.includes(membership.id)" :value="membership.id">
                                 <span>#{{ membership.id }}</span>
-                            </td>
+                            </div>
+                        </td>
 
-                            <!-- Customer -->
-                            <td class="font-medium">
-                                <div v-if="membership.customer">
-                                    <p class="font-medium">{{ membership.customer.username }}</p>
-                                    <p class="text-gray-500">{{ membership.customer.email }}</p>
-                                </div>
-                            </td>
+                        <!-- Order ID -->
+                        <td class="font-medium py-4 px-2 whitespace-nowrap">
+                            <Link :href="membership.order.link" class="text-cyan-500">#{{ membership.order.id }}</Link>
+                        </td>
 
-                            <!-- Status -->
-                            <td class="font-medium">
-                                <Status :status="membership.status" />
-                            </td>
+                        <!-- Customer -->
+                        <td class="font-medium py-4 px-2 whitespace-nowrap">
+                            <div v-if="membership.customer">
+                                <p class="font-medium">{{ membership.customer.username }}</p>
+                                <p class="text-gray-500">{{ membership.customer.email }}</p>
+                            </div>
+                        </td>
 
-                            <!-- Shipping Status -->
-                            <td class="font-medium">
-                                <Status :status="membership.shipping_status" />
-                            </td>
+                        <!-- Product Includes -->
+                        <td scope="row" class="font-medium py-4 px-2 flex items-center whitespace-nowrap" v-if="membership.giftProduct">
+                            <img
+                                v-if="membership.giftProduct.images.length === 0"
+                                class="w-20 h-20 object-cover rounded-md"
+                                src="https://images.unsplash.com/photo-1559893088-c0787ebfc084?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;ixlib=rb-1.2.1&amp;auto=format&amp;fit=crop&amp;w=1050&amp;q=80" alt="">
+                            <img v-else :src="membership.giftProduct.images[0].src" class="w-20 h-20 object-cover rounded-md" >
+                            <div class="pl-3 w-72">
+                                <p class="text-sm font-medium mb-1">
+                                    <strong class="text-gray-400">ID {{ membership.giftProduct.product_id }}</strong>
+                                </p>
+                                <p class="text-sm font-medium mb-2 whitespace-normal">{{ membership.giftProduct.name }}</p>
+                                <p class="text-xs text-gray-500">SKU: {{ membership.giftProduct.sku }}</p>
+                            </div>
+                        </td>
+                        <td v-else class="font-medium py-4 px-2 whitespace-nowrap">
+                            Not Defined Yet.
+                        </td>
 
-                            <!-- Kind Cash -->
-                            <td
-                                class="font-medium cursor-pointer"
-                                @click="updateKindCash(membership)">
-                                $ {{ moneyFormat(membership.cash.points) }}
-                            </td>
+                        <!-- Status -->
+                        <td class="font-medium py-4 px-2 whitespace-nowrap">
+                            <Status :status="membership.status" />
+                        </td>
 
-                            <!-- Start At -->
-                            <td class="font-medium">
-                                {{ displayMoment(membership.start_at, 'LL') }}
-                            </td>
+                        <!-- Shipping Status -->
+                        <td class="font-medium py-4 px-2 whitespace-nowrap">
+                            <Status :status="membership.shipping_status" />
+                        </td>
 
-                            <!-- End At -->
-                            <td class="font-medium">
-                                {{ displayMoment(membership.end_at, 'LL') }}
-                            </td>
+                        <!-- Shipping Status -->
+                        <td class="font-medium py-4 px-2 whitespace-nowrap">
+                            <div v-html="membership.shipping_address"></div>
+                        </td>
 
-                            <!-- Actions -->
-                            <td class="font-medium">
-                                <jet-dropdown align="right" width="48">
-                                    <template #trigger>
-                                        <button type="button" class="inline-flex items-center px-3 py-2 border border-gray-200 text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:bg-gray-50 hover:text-gray-700 focus:outline-none focus:bg-gray-50 active:bg-gray-50 transition">
-                                            Actions
-                                        </button>
-                                    </template>
-                                    <template #content>
-                                        <div class="">
-                                            <jet-dropdown-link
-                                                :href="route('kinja.memberships.show', membership.id)">
-                                                Show
-                                            </jet-dropdown-link>
-                                            <jet-dropdown-link
-                                                as="button"
-                                                @click="updateKindCash(membership)">
-                                                Update KindCash
-                                            </jet-dropdown-link>
-                                        </div>
-                                    </template>
-                                </jet-dropdown>
-                            </td>
-                        </tr>
-                    </template>
-                </ListTable>
-            </template>
+                        <!-- Kind Cash -->
+                        <td
+                            class="font-medium py-4 px-2 cursor-pointer whitespace-nowrap"
+                            @click="updateKindCash(membership)">
+                            $ {{ moneyFormat(membership.cash.points) }}
+                        </td>
 
-            <template #pagination>
-                <ListPagination :url="route('kinja.memberships.index')" :params="this.$props" :stateData="this.filters" />
-            </template>
-            </ListWrapper>
+                        <!-- Start At -->
+                        <td class="font-medium py-4 px-2 whitespace-nowrap">
+                            {{ displayMoment(membership.start_at, 'LL') }}
+                        </td>
 
-        </div>
+                        <!-- End At -->
+                        <td class="font-medium py-4 px-2 whitespace-nowrap">
+                            {{ displayMoment(membership.end_at, 'LL') }}
+                        </td>
+
+                        <!-- Actions -->
+                        <td class="font-medium py-4 px-2 whitespace-nowrap">
+                            <jet-dropdown align="right" width="48">
+                                <template #trigger>
+                                    <button type="button" class="inline-flex items-center px-3 py-2 border border-gray-200 text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:bg-gray-50 hover:text-gray-700 focus:outline-none focus:bg-gray-50 active:bg-gray-50 transition">
+                                        Actions
+                                    </button>
+                                </template>
+                                <template #content>
+                                    <div class="">
+                                        <jet-dropdown-link
+                                            :href="route('kinja.memberships.show', membership.id)">
+                                            Show
+                                        </jet-dropdown-link>
+                                        <jet-dropdown-link
+                                            as="button"
+                                            @click="updateKindCash(membership)">
+                                            Update KindCash
+                                        </jet-dropdown-link>
+                                    </div>
+                                </template>
+                            </jet-dropdown>
+                        </td>
+                    </tr>
+                </template>
+            </ListTable>
+        </template>
+
+        <template #pagination>
+            <ListPagination :url="route('kinja.memberships.index')" :params="this.$props" :stateData="this.filters" />
+        </template>
+        </ListWrapper>
 
         <!-- Sync Confirmation Modal -->
         <Confirm
@@ -225,14 +253,24 @@
           columns() {
             return [
                 {
-                    name: 'ID',
+                    name: 'Member ID',
                     sortable: true,
                     key: 'id'
+                },
+                {
+                    name: 'Order ID',
+                    sortable: false,
+                    key: ''
                 },
                 {
                     name: 'Customer',
                     sortable: false,
                     key: ''
+                },
+                {
+                    name: 'Product Included',
+                    sortable: false,
+                    key: '',
                 },
                 {
                     name: 'Status',
@@ -241,6 +279,11 @@
                 },
                 {
                     name: 'Shipping Status',
+                    sortable: false,
+                    key: ''
+                },
+                {
+                    name: 'Shipping Address',
                     sortable: false,
                     key: ''
                 },
