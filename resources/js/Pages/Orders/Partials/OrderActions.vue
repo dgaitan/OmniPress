@@ -14,11 +14,6 @@
                 </JetDropdownLink>
                 <JetDropdownLink
                     as="button"
-                    @click="simulateShipHero">
-                    Simulate ShipHero Shipping
-                </JetDropdownLink>
-                <JetDropdownLink
-                    as="button"
                     @click="syncOrder">
                     Sync Order
                 </JetDropdownLink>
