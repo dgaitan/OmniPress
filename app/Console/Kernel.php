@@ -17,6 +17,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('kinja:renew-membership-task')->dailyAt('04:00');
         $schedule->command('printforia:check-orders')->hourly();
+        $schedule->command('kinja:sync-orders-created-today')->dailyAy('01:00');
     }
 
     /**
