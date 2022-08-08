@@ -294,11 +294,13 @@ class Product extends Model
      */
     public function featuredImage(): ProductImage|null
     {
-        if ($this->images->isEmpty()) {
+        if ($this->images->isEmpty() && $this->isVariation()) {
             return $this->parent->featuredImage();
         }
 
-        return $this->images()->first();
+        return $this->images->isNotEmpty()
+            ? $this->images()->first()
+            : null;
     }
 
     /**
