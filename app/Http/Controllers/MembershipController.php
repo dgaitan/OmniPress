@@ -60,7 +60,7 @@ class MembershipController extends Controller
                             'product_id' => $giftProduct->product_id,
                             'name' => $giftProduct->name,
                             'sku' => $giftProduct->sku,
-                            'images' => $giftProduct->images,
+                            'image' => $giftProduct->featuredImage(),
                         ];
                     }
                 }
