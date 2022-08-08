@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Actions\Donations\AssignOrderDonationAction;
 use App\Actions\Donations\AssignOrderDonationToCustomerAction;
 use App\Actions\WooCommerce\Orders\SyncCustomerIfExistsAction;
 use App\Jobs\Donations\AssignOrderDonationJob;
@@ -43,5 +44,9 @@ class OrderObserver
     {
         $cacheKey = sprintf('woocommerce_order_%s', $order->order_id);
         Cache::tags('orders')->forget($cacheKey);
+
+        // Re-Check Order Donations just in case something updated
+        AssignOrderDonationAction::dispatch($order);
+        AssignOrderDonationToCustomerAction::dispatch($order);
     }
 }

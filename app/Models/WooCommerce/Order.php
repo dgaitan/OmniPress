@@ -2,6 +2,7 @@
 
 namespace App\Models\WooCommerce;
 
+use App\Jobs\SingleWooCommerceSync;
 use App\Models\Causes\Cause;
 use App\Models\Causes\OrderDonation;
 use App\Models\Concerns\HasMetaData;
@@ -508,6 +509,10 @@ class Order extends Model
         $array['date_created'] = $this->date_created ? $this->date_created->format('F j, Y') : '';
 
         return $array;
+    }
+
+    public function syncWithWoo() {
+        SingleWooCommerceSync::dispatch($this->order_id, 'orders');
     }
 
     /**

@@ -56,7 +56,7 @@
                         </td>
 
                         <!-- Product Includes -->
-                        <td scope="row" class="font-medium py-4 px-2 flex items-center whitespace-nowrap" v-if="membership.giftProduct">
+                        <td scope="row" class="font-medium py-4 px-2 flex items-center whitespace-nowrap" v-if="membership.status !== 'awaiting_pick_gift' && membership.giftProduct">
                             <img
                                 v-if="!membership.giftProduct.image"
                                 class="w-20 h-20 object-cover rounded-md"

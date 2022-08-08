@@ -110,7 +110,6 @@ class MembershipController extends Controller
      */
     public function show(Request $request, $id)
     {
-        // Cache::tags('membership')->flush();
         $cacheKey = 'membership_'.$id;
         $membership = null;
 
