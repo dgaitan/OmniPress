@@ -69,7 +69,7 @@ class MembershipController extends Controller
                     'id' => $m->id,
                     'order' => [
                         'id' => $currentOrder->order_id,
-                        'link' => $currentOrder->getPermalink()
+                        'link' => $currentOrder->getPermalink(),
                     ],
                     'status' => $m->status,
                     'shipping_address' => $currentOrder->shippingAddress(),

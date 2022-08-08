@@ -133,8 +133,8 @@ abstract class BaseAnalyticsService
      *
      * This is like a singleton query execution.
      *
-     * @param string $queryName
-     * @param callback $query
+     * @param  string  $queryName
+     * @param  callable  $query
      * @return mixed
      */
     protected function getOrExecuteQuery(string $queryName, $callbackQuery): mixed

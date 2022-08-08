@@ -26,7 +26,7 @@ class OrderAnalyticsService extends BaseAnalyticsService implements AnalyticServ
             'net_sales' => $this->getNetSalesInPeriod(),
             'total_orders' => $this->getTotalOrdersInPeriod(),
             'order_totals_by_interval' => $this->getOrdersTotalsByPeriodInterval(),
-            'order_count_by_interval' => $this->getOrderCountByPeriodInterval()
+            'order_count_by_interval' => $this->getOrderCountByPeriodInterval(),
         ];
     }
 
@@ -108,13 +108,13 @@ class OrderAnalyticsService extends BaseAnalyticsService implements AnalyticServ
     /**
      * Get total order in the current period
      *
-     * @return integer
+     * @return int
      */
     public function getTotalOrdersInPeriod(): int
     {
         return $this->getOrExecuteQuery(
             queryName: 'totalOrdersInPeriod',
-            callbackQuery: fn() => $this->getOrdersInPeriodQuery()->count()
+            callbackQuery: fn () => $this->getOrdersInPeriodQuery()->count()
         );
     }
 
@@ -127,7 +127,7 @@ class OrderAnalyticsService extends BaseAnalyticsService implements AnalyticServ
     {
         return $this->getOrExecuteQuery(
             queryName: 'ordersInPeriod',
-            callbackQuery: fn() => $this->getOrdersInPeriodQuery()->get()
+            callbackQuery: fn () => $this->getOrdersInPeriodQuery()->get()
         );
     }
 
@@ -178,11 +178,11 @@ class OrderAnalyticsService extends BaseAnalyticsService implements AnalyticServ
                 ->sum('shipping_total');
             $totalBase = $this->filterItemsForPeriodInterval($interval)
                 ->sum('total');
-            $netSale = $totalBase - ( $taxTotals + $shippingTotals );
+            $netSale = $totalBase - ($taxTotals + $shippingTotals);
 
             return [
                 'label' => $interval->format,
-                'total' => Money::USD($netSale)
+                'total' => Money::USD($netSale),
             ];
         })->toArray();
     }
@@ -223,7 +223,7 @@ class OrderAnalyticsService extends BaseAnalyticsService implements AnalyticServ
 
             return [
                 'label' => $interval->format,
-                'total' => $total
+                'total' => $total,
             ];
         })->toArray();
     }
@@ -232,7 +232,7 @@ class OrderAnalyticsService extends BaseAnalyticsService implements AnalyticServ
      * Quick helper to filter the items in a collection that
      * are in the same period interval
      *
-     * @param stdClass $periodInterval
+     * @param  stdClass  $periodInterval
      * @return SupportCollection
      */
     protected function filterItemsForPeriodInterval(stdClass $periodInterval): SupportCollection

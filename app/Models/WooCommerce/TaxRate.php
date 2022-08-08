@@ -23,7 +23,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property bool $compound
  * @property bool $shipping
  * @property string $class
- *
  * @method static \Illuminate\Database\Eloquent\Builder|TaxRate newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|TaxRate newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|TaxRate query()
@@ -43,9 +42,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|TaxRate whereTaxRateId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|TaxRate whereUpdatedAt($value)
  * @mixin \Eloquent
- *
  * @property int|null $service_id
- *
  * @method static \Illuminate\Database\Eloquent\Builder|TaxRate whereServiceId($value)
  */
 class TaxRate extends Model
