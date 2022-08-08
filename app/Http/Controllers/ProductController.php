@@ -94,7 +94,7 @@ class ProductController extends Controller
     public function syncProduct(Request $request)
     {
         $validate = $request->validate([
-            'product_id' => 'required|integer'
+            'product_id' => 'required|integer',
         ]);
 
         UpdateProductAction::dispatch($request->product_id);
@@ -105,7 +105,7 @@ class ProductController extends Controller
     /**
      * Export subs
      *
-     * @param Request $request
+     * @param  Request  $request
      * @return void
      */
     public function exportSubscriptions(Request $request)

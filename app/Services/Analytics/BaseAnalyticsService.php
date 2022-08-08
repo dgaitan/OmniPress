@@ -11,6 +11,16 @@ abstract class BaseAnalyticsService
     protected Period $period;
 
     /**
+     * Queries run
+     *
+     * A quick hash to re-use the queries already
+     * executed during execution.
+     *
+     * @var array
+     */
+    protected $queries = [];
+
+    /**
      * Per Page
      *
      * @var int
@@ -112,5 +122,27 @@ abstract class BaseAnalyticsService
     public function getPerPage(): int
     {
         return $this->perPage;
+    }
+
+    /**
+     * Get or Execute a query.
+     *
+     * The objective of this method is avoid running queries that already
+     * were executed before. So, we store in an array in this instance with
+     * a query name which acts as the index and the query results.
+     *
+     * This is like a singleton query execution.
+     *
+     * @param  string  $queryName
+     * @param  callable  $query
+     * @return mixed
+     */
+    protected function getOrExecuteQuery(string $queryName, $callbackQuery): mixed
+    {
+        if (! isset($this->queries[$queryName])) {
+            $this->queries[$queryName] = $callbackQuery();
+        }
+
+        return $this->queries[$queryName];
     }
 }

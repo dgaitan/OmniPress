@@ -13,8 +13,7 @@ class SyncResourceAction
     public function handle(
         string $resourceName,
         array $data
-    ): Model|null
-    {
+    ): Model|null {
         $api = WooCommerceService::make();
 
         return $api->{$resourceName}()

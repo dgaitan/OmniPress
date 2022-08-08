@@ -89,7 +89,7 @@ abstract class BaseResource
     /**
      * Create Or Update from a giving attribues/data
      *
-     * @param array $attributes
+     * @param  array  $attributes
      * @return Model|null
      */
     public function createOrUpdate(array $attributes): Model|null

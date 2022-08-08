@@ -48,7 +48,7 @@ class MembershipResource extends JsonResource
                     'product_id' => $giftProduct->product_id,
                     'name' => $giftProduct->name,
                     'sku' => $giftProduct->sku,
-                    'images' => $giftProduct->images,
+                    'image' => $giftProduct->featuredImage(),
                 ];
             }
         }

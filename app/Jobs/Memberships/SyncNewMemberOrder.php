@@ -46,5 +46,7 @@ class SyncNewMemberOrder implements ShouldQueue
         ]);
 
         Cache::forget('dashboard_stats');
+        Cache::tags('memberships')->flush();
+        Cache::tags('orders')->flush();
     }
 }

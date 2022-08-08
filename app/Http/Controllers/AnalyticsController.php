@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\Analytics\AnalyticServiceable;
 use App\Services\Analytics\CauseAnalyticsService;
 use App\Services\Analytics\Period;
 use App\Services\Analytics\UserImpactAnalyticsService;
@@ -34,7 +33,7 @@ class AnalyticsController extends Controller
     /**
      * Return User Impact Analytics
      *
-     * @param Request $request
+     * @param  Request  $request
      * @return void
      */
     public function userImpacts(Request $request)
@@ -49,12 +48,13 @@ class AnalyticsController extends Controller
     /**
      * Render an analytics view page
      *
-     * @param Request $request
-     * @param string $analyticClass
-     * @param string $view
+     * @param  Request  $request
+     * @param  string  $analyticClass
+     * @param  string  $view
      * @return void
      */
-    protected function render(Request $request, string $analyticClass, string $view) {
+    protected function render(Request $request, string $analyticClass, string $view)
+    {
         $params = $this->getParams($request);
         $stats = new $analyticClass(
             period: $params->period, from: $params->fromDate, to: $params->toDate

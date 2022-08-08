@@ -16,7 +16,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $description
  * @property int|null $parent_id
  * @property string|null $sub_groups
- *
  * @method static \Illuminate\Database\Eloquent\Builder|WooSetting newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|WooSetting newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|WooSetting query()
@@ -29,9 +28,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|WooSetting whereSubGroups($value)
  * @method static \Illuminate\Database\Eloquent\Builder|WooSetting whereUpdatedAt($value)
  * @mixin \Eloquent
- *
  * @property int|null $service_id
- *
  * @method static \Illuminate\Database\Eloquent\Builder|WooSetting whereServiceId($value)
  */
 class WooSetting extends Model

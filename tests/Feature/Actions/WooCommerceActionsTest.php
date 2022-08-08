@@ -2,13 +2,8 @@
 
 namespace Tests\Feature\Actions;
 
-use App\Actions\WooCommerce\Orders\UpdateOrderAction;
 use App\Models\User;
 use App\Models\WooCommerce\Order;
-use Illuminate\Http\Client\Request;
-use Illuminate\Support\Facades\Bus;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Notification;
 use Tests\Feature\Http\BaseHttp;
 
 class WooCommerceActionsTest extends BaseHttp
@@ -20,12 +15,12 @@ class WooCommerceActionsTest extends BaseHttp
 
         $response = $this->post(route('kinja.api.v1.syncs.syncResource'), [
             'resource' => 'orders',
-            'data' => $data
+            'data' => $data,
         ]);
 
         $response->assertStatus(200)
             ->assertJson([
-                'message' => 'Resource has been updated successfully!'
+                'message' => 'Resource has been updated successfully!',
             ]);
     }
 
@@ -36,7 +31,7 @@ class WooCommerceActionsTest extends BaseHttp
 
         $response = $this->post(route('kinja.api.v1.syncs.syncResource'), [
             'resource' => 'orders',
-            'data' => $data
+            'data' => $data,
         ]);
 
         $order = Order::whereOrderId(549799)->first();
@@ -51,16 +46,16 @@ class WooCommerceActionsTest extends BaseHttp
         $data = $this->fixture('WooCommerce/OrderWithCustomer');
 
         $response = $this->post(route('kinja.api.v1.syncs.syncResource'), [
-            'data' => $data
+            'data' => $data,
         ]);
 
         $response->assertStatus(400)
             ->assertJson([
                 'error' => [
                     'resource' => [
-                        'The resource field is required.'
-                    ]
-                ]
+                        'The resource field is required.',
+                    ],
+                ],
             ]);
     }
 }

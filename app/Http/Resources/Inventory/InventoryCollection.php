@@ -34,7 +34,7 @@ class InventoryCollection extends ResourceCollection
                 'name' => $product->name,
                 'type' => $product->type,
                 'sku' => $product->sku,
-                'stock' => $product->stock_quantity
+                'stock' => $product->stock_quantity,
             ];
         });
     }

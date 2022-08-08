@@ -154,10 +154,11 @@ class Controller extends BaseController
     /**
      * Go Back with a message if needed
      *
-     * @param string $message
+     * @param  string  $message
      * @return void
      */
-    public function goBack(string $message = '') {
+    public function goBack(string $message = '')
+    {
         if ($message) {
             session()->flash('flash.banner', $message);
             session()->flash('flash.bannerStyle', 'success');
