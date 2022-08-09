@@ -31,7 +31,7 @@ class AssignOrderDonationAction
             null !== ($cause = Cause::findCause($order->getMetaValue('cause')))
         ) {
             $amount = $order->getMetaValue('1_donated_amount');
-            $amount = is_null($amount) ? $order->getMetaValue('total_donated') : $amount;
+            $amount = is_null($amount) || (int) $amount === 0 ? $order->getMetaValue('total_donated') : $amount;
 
             if (! is_null($amount) || ! empty($amount)) {
                 OrderDonation::updateOrCreate([
