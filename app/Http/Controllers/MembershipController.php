@@ -60,7 +60,7 @@ class MembershipController extends Controller
                             'product_id' => $giftProduct->product_id,
                             'name' => $giftProduct->name,
                             'sku' => $giftProduct->sku,
-                            'images' => $giftProduct->images,
+                            'image' => $giftProduct->featuredImage(),
                         ];
                     }
                 }
@@ -69,7 +69,7 @@ class MembershipController extends Controller
                     'id' => $m->id,
                     'order' => [
                         'id' => $currentOrder->order_id,
-                        'link' => $currentOrder->getPermalink()
+                        'link' => $currentOrder->getPermalink(),
                     ],
                     'status' => $m->status,
                     'shipping_address' => $currentOrder->shippingAddress(),
@@ -110,7 +110,6 @@ class MembershipController extends Controller
      */
     public function show(Request $request, $id)
     {
-        // Cache::tags('membership')->flush();
         $cacheKey = 'membership_'.$id;
         $membership = null;
 

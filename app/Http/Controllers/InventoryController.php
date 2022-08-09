@@ -13,7 +13,7 @@ class InventoryController extends Controller
     /**
      * List the inventory
      *
-     * @param Request $request
+     * @param  Request  $request
      * @return void
      */
     public function index(Request $request)
@@ -45,13 +45,13 @@ class InventoryController extends Controller
     /**
      * Update Inventory
      *
-     * @param Request $request
+     * @param  Request  $request
      * @return void
      */
     public function update(Request $request)
     {
         $validated = $request->validate([
-            'products' => 'required'
+            'products' => 'required',
         ]);
 
         collect($request->products)->map(function ($product) {
@@ -61,7 +61,7 @@ class InventoryController extends Controller
             UpdateProductAction::dispatch(
                 product: $p,
                 params: [
-                    'stock_quantity' => (int) $product['stock']['value']
+                    'stock_quantity' => (int) $product['stock']['value'],
                 ],
                 sync: true
             );

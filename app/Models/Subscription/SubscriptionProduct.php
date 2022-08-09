@@ -20,7 +20,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property bool $use_parent_settings
  * @property object|null $intervals
  * @property-read Product $product
- *
  * @method static \Illuminate\Database\Eloquent\Builder|SubscriptionProduct newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|SubscriptionProduct newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|SubscriptionProduct query()

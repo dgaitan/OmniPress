@@ -57,7 +57,7 @@ class PrintforiaController extends Controller
      * 3. Add the data returned in the previous request to the body of this request.
      * 4. Sumbit the request and then you should get "Webhook processed" as response.
      *
-     * @param Request $request
+     * @param  Request  $request
      * @param [type] $orderId
      * @return void
      */

@@ -5,6 +5,7 @@ namespace App\Actions\Donations;
 use App\Models\Causes\Cause;
 use App\Models\Causes\OrderDonation;
 use App\Models\WooCommerce\Order;
+use Illuminate\Support\Facades\Cache;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 class AssignOrderDonationAction
@@ -30,7 +31,7 @@ class AssignOrderDonationAction
             null !== ($cause = Cause::findCause($order->getMetaValue('cause')))
         ) {
             $amount = $order->getMetaValue('1_donated_amount');
-            $amount = is_null($amount) ? $order->getMetaValue('total_donated') : $amount;
+            $amount = is_null($amount) || (int) $amount === 0 ? $order->getMetaValue('total_donated') : $amount;
 
             if (! is_null($amount) || ! empty($amount)) {
                 OrderDonation::updateOrCreate([
@@ -39,6 +40,8 @@ class AssignOrderDonationAction
                     'amount' => OrderDonation::valueToMoney($amount),
                     'donation_date' => $order->date_created,
                 ]);
+
+                Cache::tags('memberships')->flush();
             }
         }
 
@@ -64,6 +67,8 @@ class AssignOrderDonationAction
 
                 $currentIndex++;
             }
+
+            Cache::tags('memberships')->flush();
         }
     }
 }

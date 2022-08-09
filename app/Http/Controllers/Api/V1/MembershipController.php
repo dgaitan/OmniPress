@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Jobs\Memberships\NewMembershipJob;
 use App\Jobs\Memberships\SyncNewMemberOrder;
+use App\Jobs\SingleWooCommerceSync;
 use App\Models\KindCash;
 use App\Models\Membership;
 use App\Models\WooCommerce\Customer;
@@ -276,8 +277,14 @@ class MembershipController extends Controller
         }
 
         $membership->status = Membership::ACTIVE_STATUS;
+        $membership->shipping_status = Membership::SHIPPING_PENDING_STATUS;
         $membership->gift_product_id = $request->gift_product_id;
         $membership->save();
+
+        SingleWooCommerceSync::dispatch(
+            $membership->getCurrentOrder()->order_id,
+            'orders'
+        )->delay(now()->addMinute());
 
         return response()->json([
             'status' => 'success',

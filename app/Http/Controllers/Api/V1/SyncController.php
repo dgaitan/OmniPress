@@ -23,19 +23,19 @@ class SyncController extends Controller
     /**
      * Sync A Resource
      *
-     * @param Request $request
+     * @param  Request  $request
      * @return void
      */
     public function syncResource(Request $request)
     {
         $validated = Validator::make($request->all(), [
             'resource' => 'required|string',
-            'data' => 'required|array'
+            'data' => 'required|array',
         ]);
 
         if ($validated->fails()) {
             return response()->json([
-                'error' => $validated->errors()
+                'error' => $validated->errors(),
             ], 400);
         }
 
@@ -45,7 +45,7 @@ class SyncController extends Controller
         );
 
         return response()->json([
-            'message' => 'Resource has been updated successfully!'
+            'message' => 'Resource has been updated successfully!',
         ], 200);
     }
 
@@ -90,8 +90,8 @@ class SyncController extends Controller
     /**
      * Endpoint to update an order
      *
-     * @param Request $request
-     * @param int $id
+     * @param  Request  $request
+     * @param  int  $id
      * @return void
      */
     public function updateOrder(Request $request, $id)
@@ -122,7 +122,7 @@ class SyncController extends Controller
         $dataObject->sync();
 
         return response()->json([
-            'status' => 'Product Updated and Synced'
+            'status' => 'Product Updated and Synced',
         ]);
     }
 }

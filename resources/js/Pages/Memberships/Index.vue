@@ -56,12 +56,12 @@
                         </td>
 
                         <!-- Product Includes -->
-                        <td scope="row" class="font-medium py-4 px-2 flex items-center whitespace-nowrap" v-if="membership.giftProduct">
+                        <td scope="row" class="font-medium py-4 px-2 flex items-center whitespace-nowrap" v-if="membership.status !== 'awaiting_pick_gift' && membership.giftProduct">
                             <img
-                                v-if="membership.giftProduct.images.length === 0"
+                                v-if="!membership.giftProduct.image"
                                 class="w-20 h-20 object-cover rounded-md"
                                 src="https://images.unsplash.com/photo-1559893088-c0787ebfc084?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;ixlib=rb-1.2.1&amp;auto=format&amp;fit=crop&amp;w=1050&amp;q=80" alt="">
-                            <img v-else :src="membership.giftProduct.images[0].src" class="w-20 h-20 object-cover rounded-md" >
+                            <img v-else :src="membership.giftProduct.image.src" class="w-20 h-20 object-cover rounded-md" >
                             <div class="pl-3 w-72">
                                 <p class="text-sm font-medium mb-1">
                                     <strong class="text-gray-400">ID {{ membership.giftProduct.product_id }}</strong>
