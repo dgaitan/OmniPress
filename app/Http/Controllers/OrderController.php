@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Actions\WooCommerce\Orders\UpdateOrderAction;
+use App\Exports\OrderUSPSExport;
 use App\Http\Resources\OrderResource;
 use App\Http\Resources\Printforia\PrintforiaOrdersCollection;
 use App\Http\Resources\Printforia\PrintforiaResource;
@@ -15,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
+use Maatwebsite\Excel\Facades\Excel;
 
 class OrderController extends Controller
 {
@@ -152,6 +154,50 @@ class OrderController extends Controller
                 ];
             });
         });
+    }
+
+    public function exportOrderWithUSPSOnly(Request $request)
+    {
+        $orders = Order::whereBetween('date_created', [now()->startOfYear(), now()->endOfDay()])
+            ->with('items', 'customer')
+            ->where('shipping_total', '!=', 0)
+            ->orderBy('id', 'desc')
+            ->get();
+
+        $orders = $orders->filter(function ($order) {
+            return $order->items->count() === 1 && collect($order->shipping_lines)
+                ->where('method_id', 'usps')
+                ->isNotEmpty();
+        })->map(function ($order) {
+            return [
+                'id' => $order->order_id,
+                'customer' => sprintf(
+                    '%s %s - %s',
+                    $order->billing->first_name,
+                    $order->billing->last_name,
+                    $order->billing->email
+                ),
+                'status' => $order->status,
+                'order_date' => $order->date_created->format('F j, Y'),
+                'shipping_total' => $order->getMoneyValue('shipping_total'),
+                'total' => $order->getMoneyValue('total')
+            ];
+        })->toArray();
+
+        $filename = sprintf(
+            'kindhumans_orders_shipping_usps_%s_%s.csv',
+            count( $orders ),
+            Carbon::now()->format('Y-m-d-His')
+        );
+
+        return Excel::download(
+            new OrderUSPSExport($orders),
+            $filename,
+            \Maatwebsite\Excel\Excel::CSV,
+            [
+                'Content-Type' => 'text/csv',
+            ]
+        );
     }
 
     /**
