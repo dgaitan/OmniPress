@@ -2,6 +2,7 @@
 
 namespace App\Services\Printforia;
 
+use App\Models\Printforia\PrintforiaOrder;
 use App\Models\WooCommerce\Order;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
@@ -66,20 +67,7 @@ class PrintforiaApiClient
                 'email' => $order->billing->email,
                 'phone' => '',
             ],
-            'return_to_address' => [
-                'recipient' => sprintf(
-                    '%s %s',
-                    $order->shipping->first_name,
-                    $order->shipping->last_name
-                ),
-                'address1' => $order->shipping->address_1,
-                'address2' => $order->shipping->address_2,
-                'address3' => '',
-                'city' => $order->shipping->city,
-                'region' => $order->shipping->state,
-                'postal_code' => $order->shipping->postcode,
-                'country_code' => $order->shipping->country,
-            ],
+            'return_to_address' => PrintforiaOrder::getReturnToAddress(),
             'shipping_method' => 'standard',
             'items' => $items,
         ];
