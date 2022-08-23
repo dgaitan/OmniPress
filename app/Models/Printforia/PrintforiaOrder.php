@@ -251,4 +251,23 @@ class PrintforiaOrder extends Model
             return $status['slug'];
         })->toArray();
     }
+
+    /**
+     * Get Return To Address
+     *
+     * @return array
+     */
+    public static function getReturnToAddress(): array
+    {
+        return [
+            'recipient' => env('PRINTFORIA_RETURN_RECIPIENT', 'Returns Department'),
+            'address1' => env('PRINTFORIA_RETURN_ADDRESS_1', ''),
+            'address2' => '',
+            'address3' => '',
+            'city' => env('PRINTFORIA_RETURN_CITY', 'Encinitas'),
+            'region' => env('PRINTFORIA_RETURN_REGION', 'CA'),
+            'postal_code' => env('PRINTFORIA_RETURN_ZIP', '92024'),
+            'country_code' => 'US',
+        ];
+    }
 }
