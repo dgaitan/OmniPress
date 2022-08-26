@@ -14,6 +14,36 @@
             <p class="text-xs text-gray-500 mb-2"><span class="text-gray-700 font-medium">PRINTFORIA SKU:</span> {{ item.sku }}</p>
             <p class="text-xs text-gray-500 mb-2"><span class="text-gray-700 font-medium">QUANTITY:</span> {{ item.quantity }}</p>
             <p class="text-xs text-gray-500 mb-2"><span class="text-gray-700 font-medium">PRINTFORIA ITEM ID:</span> {{ item.item_id }}</p>
+            <div v-if="item.prints.length > 0" class="overflow-x-auto relative border">
+                <table class="w-full text-sm text-left text-gray-500">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-100">
+                        <tr>
+                            <th scope="col" class="py-3 px-6">
+                                Image
+                            </th>
+                            <th scope="col" class="py-3 px-6">
+                                Mockup
+                            </th>
+                            <th scope="col" class="py-3 px-6">
+                                Location
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(print, index) in item.prints" :key="index" class="bg-white border-b  hover:bg-gray-50">
+                            <td class="p-4 w-32">
+                                <img :src="print.image_url" alt="Apple Watch" />
+                            </td>
+                            <td class="p-4 w-32">
+                                <img :src="print.mockup_url" alt="Apple Watch" />
+                            </td>
+                            <td class="p-4 w-32">
+                                {{ print.location }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </template>
