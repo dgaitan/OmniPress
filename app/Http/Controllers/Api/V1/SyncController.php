@@ -12,6 +12,7 @@ use App\Services\WooCommerce\DataObjects\Order as OrderDataObject;
 use App\Services\WooCommerce\DataObjects\Product as ProductDataObject;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class SyncController extends Controller
@@ -33,6 +34,14 @@ class SyncController extends Controller
             'data' => 'required|array',
         ]);
 
+        Log::info(
+            sprintf(
+                'Starting Sync of %s #%s',
+                $request->resource,
+                $request->data['id']
+            )
+        );
+
         if ($validated->fails()) {
             return response()->json([
                 'error' => $validated->errors(),
@@ -43,6 +52,21 @@ class SyncController extends Controller
             resourceName: $request->resource,
             data: $request->data
         );
+
+        /**
+         * If user is cancelling an order. Let's be sure
+         * of cancell the printforia order as well.
+         */
+        if (
+            $request->resource === 'orders'
+            && $request->data['status'] === 'cancelled'
+        ) {
+            $order = Order::whereOrderId($request->data['id'])->first();
+
+            if (! is_null($order) && $order->printforiaOrder()->exists()) {
+                $order->printforiaOrder->cancelOrder();
+            }
+        }
 
         return response()->json([
             'message' => 'Resource has been updated successfully!',
