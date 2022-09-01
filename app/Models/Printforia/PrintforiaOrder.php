@@ -2,6 +2,7 @@
 
 namespace App\Models\Printforia;
 
+use App\Actions\Printforia\CancelOrder;
 use App\Mail\Printforia\OrderShipped;
 use App\Models\WooCommerce\Order;
 use App\Services\Printforia\PrintforiaApiClient;
@@ -233,6 +234,16 @@ class PrintforiaOrder extends Model
     {
         Mail::to($this->ship_to_address->email)
             ->queue(new OrderShipped($this));
+    }
+
+    /**
+     * Cancell a printforia order locally and in the API
+     *
+     * @return void
+     */
+    public function cancelOrder(): void
+    {
+        CancelOrder::dispatch($this);
     }
 
     public static function getOrderFromApi(string $orderId)
