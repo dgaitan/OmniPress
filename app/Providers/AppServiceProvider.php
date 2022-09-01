@@ -12,6 +12,7 @@ use App\Observers\ProductObserver;
 use App\Services\WooCommerce\WooCommerceService;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Cashier\Cashier;
+use Opcodes\LogViewer\Facades\LogViewer;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -47,5 +48,11 @@ class AppServiceProvider extends ServiceProvider
         Order::observe(OrderObserver::class);
         Product::observe(ProductObserver::class);
         PrintforiaOrder::observe(PrintforiaOrderObserver::class);
+
+        LogViewer::auth(function ($request) {
+            return $request->user() && in_array($request->user()->email, [
+                'dgaitan@kindhumans.com'
+            ]);
+        });
     }
 }
