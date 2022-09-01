@@ -83,7 +83,7 @@ class AssignOrderDonationAction
                     $donation = $order->getMetaValue(sprintf('collab_for_causes_%s_donation_amount', $currentIndex));
 
                     if ($causeId && $donation && null !== ($cause = Cause::findCause($causeId))) {
-                        $donation = Order::valueToMoney($donation);
+                        $donation = $donation < 0 ? 0 : $donation;
                         $donation = Money::USD($donation, ! is_float($donation));
                         OrderDonation::updateOrCreate([
                             'cause_id' => $cause->id,
