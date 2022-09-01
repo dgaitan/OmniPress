@@ -2,6 +2,7 @@
 
 namespace App\Models\WooCommerce;
 
+use App\Actions\Donations\AssignOrderDonationAction;
 use App\Jobs\SingleWooCommerceSync;
 use App\Models\Causes\Cause;
 use App\Models\Causes\OrderDonation;
@@ -368,6 +369,11 @@ class Order extends Model
         return $billing;
     }
 
+    /**
+     * Get Payment Method Name
+     *
+     * @return string
+     */
     public function getPaymentMethodName(): string
     {
         if ($this->payment_id) {
@@ -441,6 +447,44 @@ class Order extends Model
         $coupons = $coupons->pluck('code')->toArray();
 
         return implode(', ', $coupons);
+    }
+
+    /**
+     * Get Bucket Cause Donation
+     *
+     * @return Money
+     */
+    public function getBucketCauseDonation(): Money
+    {
+        $amount = $this->getMetaValue('1_donated_amount');
+        $amount = is_null($amount) ? 0 : $amount;
+        $forceDecimals = ! is_float($amount);
+
+        return Money::USD($amount, $forceDecimals);
+    }
+
+    /**
+     * Get MEmbership Donation
+     *
+     * @return Money
+     */
+    public function getMembershipDonation(): Money
+    {
+        $amount = $this->getMetaValue('kindness_donated_amount');
+        $amount = is_null($amount) ? 0 : $amount;
+        $forceDecimals = ! is_float($amount);
+
+        return Money::USD($amount, $forceDecimals);
+    }
+
+    /**
+     * Calculate and Assign Donations
+     *
+     * @return void
+     */
+    public function calculateDonations(): void
+    {
+        AssignOrderDonationAction::run($this->id);
     }
 
     /**
