@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\WooCommerce\Order;
 use App\Services\QueryService;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class SyncOrdersCreatedToday extends Command
 {
@@ -31,12 +32,14 @@ class SyncOrdersCreatedToday extends Command
     {
         $ordersSynced = 0;
         QueryService::walkTrough(
-            query: Order::whereBetween('date_created', [now()->subMonth(), now()]),
+            query: Order::whereBetween('date_created', [now()->subDays(2), now()]),
             callback: function ($order) use ($ordersSynced) {
                 $order->syncWithWoo();
                 $ordersSynced++;
             }
         );
+
+        Log::info(sprintf('Orders created between %s and %s were synced', now()->subDays(2)->format('F j, Y'), now()->format('F j, Y')));
 
         $this->info(sprintf('%s orders were synced', $ordersSynced));
     }
