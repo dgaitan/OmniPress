@@ -90,6 +90,16 @@ class PrintforiaApiClient
         );
     }
 
+    public function cancellOrder(string $orderId): Response
+    {
+        return $this->request()->patch(
+            $this->getApiUrl(sprintf('orders/%s', $orderId)),
+            [
+                'status' => 'canceled'
+            ]
+        );
+    }
+
     /**
      * GEt Api Url
      *
