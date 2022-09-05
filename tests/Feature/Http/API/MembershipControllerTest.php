@@ -2,6 +2,8 @@
 
 namespace Tests\Feature\Http\API;
 
+use App\Models\Membership;
+use App\Models\User;
 use App\Models\WooCommerce\Customer;
 use App\Models\WooCommerce\Order;
 use App\Models\WooCommerce\PaymentMethod;
@@ -30,15 +32,40 @@ class MembershipControllerTest extends BaseHttp
         $membershipProduct = Product::whereProductId(160768)->first();
         $this->assertNotNull($membershipProduct);
 
-        // $params = [
-        //     'price' => 3500,
-        //     'customer_id' => 2064,
-        //     'email' => 'ram@ram.com',
-        //     'username' => 'David ram',
-        //     'order_id' => 549799,
-        //     'points' => 750,
-        //     'gift_product_id' => ''
-        // ];
+        $params = [
+            'price' => 3500,
+            'customer_id' => 2064,
+            'email' => 'ram@ram.com',
+            'username' => 'David ram',
+            'order_id' => 549799,
+            'points' => 750,
+            'gift_product_id' => 544443,
+            'product_id' => 160768,
+        ];
+
+        $this->actingAs($user = User::factory()->withPersonalTeam()->create());
+
+        $response = $this->post('api/v1/memberships/new', $params);
+
+        $response->assertOk();
+        $response->assertStatus(200);
+
+        $membership = Membership::whereCustomerId($customer->id)
+            ->first();
+
+        $response->assertJson([
+            'membership' => [
+                'id' => 1,
+                'start_at' => $membership->start_at->toJSON(),
+                'end_at' => $membership->end_at->toJSON(),
+                'status' => 'active',
+                'shipping_status' => 'pending'
+            ],
+            'kind_cash' => [
+                'points' => 750,
+                'last_earned' => 750
+            ]
+        ]);
     }
 
     /**
