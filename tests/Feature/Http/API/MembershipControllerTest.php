@@ -1,0 +1,100 @@
+<?php
+
+namespace Tests\Feature\Http\API;
+
+use App\Models\WooCommerce\Customer;
+use App\Models\WooCommerce\Order;
+use App\Models\WooCommerce\PaymentMethod;
+use App\Models\WooCommerce\Product;
+use App\Services\WooCommerce\WooCommerceService;
+use Illuminate\Support\Facades\Http;
+use Tests\Feature\Http\BaseHttp;
+use Tests\Utils\InteractsWithScout;
+
+class MembershipControllerTest extends BaseHttp
+{
+    use InteractsWithScout;
+
+    protected function setUp(): void {
+        parent::setUp();
+
+        $this->disableScout();
+        $this->prepareData();
+    }
+
+    public function test_new_endpoint_should_create_a_new_membership(): void
+    {
+        $customer = Customer::whereEmail('ram@ram.com')->first();
+        $this->assertNotNull($customer);
+
+        $membershipProduct = Product::whereProductId(160768)->first();
+        $this->assertNotNull($membershipProduct);
+
+        // $params = [
+        //     'price' => 3500,
+        //     'customer_id' => 2064,
+        //     'email' => 'ram@ram.com',
+        //     'username' => 'David ram',
+        //     'order_id' => 549799,
+        //     'points' => 750,
+        //     'gift_product_id' => ''
+        // ];
+    }
+
+    /**
+     * Load Orders and Customer to test memberships
+     *
+     * @return void
+     */
+    protected function prepareData(): void
+    {
+        PaymentMethod::create([
+            'payment_method_id' => 'kindhumans_stripe_gateway',
+            'title' => 'Credit Card',
+            'order' => 1,
+            'enabled' => true,
+            'method_title' => 'Kindhumans Payment Gateway',
+        ]);
+
+        Customer::create([
+            'customer_id' => 2064,
+            'email' => 'ram@ram.com',
+            'first_name' => 'John',
+            'last_name' => 'Bar',
+            'role' => 'customer',
+            'username' => 'smlueker',
+            'billing' => '{}',
+            'shipping' => '{}',
+            'is_paying_customer' => false,
+        ]);
+
+        $api = WooCommerceService::make();
+
+        Http::fake([
+            $this->getUrl('products/544443') => Http::response(
+                body: $this->fixture('Memberships/GiftProduct'),
+                status: 200
+            ),
+            $this->getUrl('products/160768') => Http::response(
+                body: $this->fixture('Memberships/MembershipProduct'),
+                status: 200
+            ),
+        ]);
+
+        $api->products()->getAndSync(160768);
+        $api->products()->getAndSync(544443);
+
+        Http::fake([
+            $this->getUrl(endpoint: 'orders/549799') => Http::response(
+                body: $this->fixture('Memberships/Order'),
+                status: 200
+            ),
+            $this->getUrl(endpoint: 'customers/2064') => Http::response(
+                body: $this->fixture('WooCommerce/CustomerDetail'),
+                status: 200
+            ),
+        ]);
+
+        $api->orders()->getAndSync(549799);
+    }
+}
