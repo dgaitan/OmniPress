@@ -3,6 +3,7 @@
 namespace Tests\Feature\Http;
 
 use App\Services\WooCommerce\WooCommerceService;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use InvalidArgumentException;
 use Tests\TestCase;
 use Tests\Utils\InteractsWithScout;
@@ -10,6 +11,7 @@ use Tests\Utils\InteractsWithScout;
 class BaseHttp extends TestCase
 {
     use InteractsWithScout;
+    use RefreshDatabase;
 
     public function fixture(string $name): array
     {

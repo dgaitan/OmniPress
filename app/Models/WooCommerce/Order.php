@@ -153,6 +153,7 @@ class Order extends Model
         'fee_lines' => 'array',
         'coupon_lines' => 'array',
         'giftcards' => 'array',
+        'has_membership' => 'boolean',
     ];
 
     protected $fillable = [
@@ -190,6 +191,7 @@ class Order extends Model
         'shipping_lines',
         'fee_lines',
         'coupon_lines',
+        'has_membership',
         'membership_id',
         'giftcards',
     ];

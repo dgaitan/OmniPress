@@ -1,5 +1,7 @@
 <?php
 
+use Tests\Feature\Http\BaseHttp;
+
 /*
 |--------------------------------------------------------------------------
 | Test Case
@@ -11,7 +13,8 @@
 |
 */
 
-uses(Tests\TestCase::class)->in('Feature');
+uses(BaseHttp::class)
+    ->in('Feature');
 
 /*
 |--------------------------------------------------------------------------
