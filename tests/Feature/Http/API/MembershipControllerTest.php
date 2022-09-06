@@ -15,6 +15,8 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Queue;
 
+$testsGroup = 'memberships';
+
 beforeEach(function () {
     $this->disableScout();
 
@@ -129,6 +131,10 @@ it('should create a new membership when call new membership endpoint', function 
     $this->assertEquals(0, $membership->pending_order_id);
     $this->assertTrue($membership->user_picked_gift);
 
+    // Assert Product
+    $this->assertEquals($membershipProduct->product_id, $membership->product_id);
+    $this->assertEquals($membershipProduct->product_id, $membership->product->product_id);
+
     // Testing membership flags after creating membership
     $this->assertTrue($membership->isActive());
     $this->assertEquals($customer::class, $membership->customer::class);
@@ -162,4 +168,73 @@ it('should create a new membership when call new membership endpoint', function 
     );
 
     Queue::assertPushed(NewMembershipJob::class);
-})->group('memberships');
+})->group($testsGroup);
+
+it('should returns a json with the membership detail when calling show endpoint', function () {
+    $params = [
+        'price' => 3500,
+        'customer_id' => 2064,
+        'email' => 'ram@ram.com',
+        'username' => 'David ram',
+        'order_id' => 549799,
+        'points' => 750,
+        'gift_product_id' => 544443,
+        'product_id' => 160768,
+    ];
+
+    $this->actingAs($user = User::factory()->withPersonalTeam()->create());
+    $this->post('api/v1/memberships/new', $params);
+
+    $response = $this->get('api/v1/memberships/1');
+
+    $m = Membership::find(1);
+
+    $response->assertOk();
+    $response->assertStatus(200);
+    $response->assertJson([
+        'id' => 1,
+        'customer_email' => 'ram@ram.com',
+        'product_id' => 160768,
+        'price' => 3500,
+        'price_as_money' => [
+            'amount' => '3500',
+            'currency' => 'USD',
+            'formatted' => '$35.00',
+        ],
+        'shipping_status' => 'pending',
+        'status' => 'active',
+        'last_payment_intent' => Carbon::parse($m->last_payment_intent)->toJson(),
+        'gift_product' => [
+            'id' => 544443,
+            'name' => 'Kindhumans Youth Be Nice Membership',
+            'sku' => 'KH00841'
+        ],
+        'payment_intents' => 0,
+        'user_picked_gift' => true,
+        'customer' => [
+            'id' => 1,
+            'email' => 'ram@ram.com',
+            'customer_id' => 2064
+        ],
+        'cash' => [
+            'points' => 750,
+            'last_earned' => 750
+        ],
+        'is_active' => true,
+        'is_in_renewal' => false,
+        'is_awaiting_pick_gift' => false,
+        'is_expired' => false,
+        'is_cancelled' => false
+    ]);
+
+})->group($testsGroup);
+
+it('should return 404 not found when request an invalid membership id', function () {
+    $this->actingAs($user = User::factory()->withPersonalTeam()->create());
+    $response = $this->get('api/v1/memberships/1111');
+
+    $response->assertStatus(404);
+    $response->assertJson([
+        'message' => 'Membership not found'
+    ]);
+});

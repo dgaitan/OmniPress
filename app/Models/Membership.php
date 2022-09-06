@@ -8,9 +8,11 @@ use App\Mail\Memberships\MembershipRenewed;
 use App\Mail\Memberships\PaymentNotFound;
 use App\Mail\Memberships\RenewalReminder;
 use App\Mail\Memberships\RenewError;
+use App\Models\Concerns\HasMoney;
 use App\Models\WooCommerce\Customer;
 use App\Models\WooCommerce\Order;
 use App\Models\WooCommerce\Product;
+use Cknow\Money\Money;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -71,6 +73,7 @@ use Illuminate\Support\Facades\Mail;
 class Membership extends Model
 {
     use HasFactory;
+    use HasMoney;
 
     const ACTIVE_STATUS = 'active';
 
@@ -143,7 +146,11 @@ class Membership extends Model
      */
     public function product(): BelongsTo
     {
-        return $this->belongsTo(Product::class, 'product_id');
+        return $this->belongsTo(
+            Product::class,
+            'product_id',
+            'product_id'
+        );
     }
 
     /**
@@ -191,6 +198,11 @@ class Membership extends Model
         return $this->orders()
             ->orderBy('date_created', 'desc')
             ->first();
+    }
+
+    public function getPriceAsMoney(): Money
+    {
+        return $this->getMoneyValue('price');
     }
 
     /**
