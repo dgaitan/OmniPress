@@ -95,6 +95,7 @@ class Membership extends Model
         'start_at' => 'date',
         'end_at' => 'date',
         'last_payment_intent' => 'date',
+        'user_picked_gift' => 'boolean'
     ];
 
     protected $fillable = [
@@ -168,6 +169,16 @@ class Membership extends Model
             'membership_id',
             'product_id'
         )->as('products')->withTimestamps();
+    }
+
+    /**
+     * Get Current Gift Product
+     *
+     * @return Product
+     */
+    public function getCurrentGiftProduct(): Product
+    {
+        return $this->giftProducts->first();
     }
 
     /**
