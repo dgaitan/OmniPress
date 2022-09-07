@@ -51,7 +51,7 @@ class AppServiceProvider extends ServiceProvider
 
         LogViewer::auth(function ($request) {
             return $request->user() && in_array($request->user()->email, [
-                'dgaitan@kindhumans.com'
+                'dgaitan@kindhumans.com',
             ]);
         });
     }

@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $amount
  * @property-read \App\Models\Causes\Cause|null $cause
  * @property-read Order|null $order
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|OrderDonation newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|OrderDonation newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|OrderDonation query()
@@ -29,7 +30,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|OrderDonation whereOrderId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|OrderDonation whereUpdatedAt($value)
  * @mixin \Eloquent
+ *
  * @property \Illuminate\Support\Carbon|null $donation_date
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|OrderDonation whereDonationDate($value)
  */
 class OrderDonation extends Model

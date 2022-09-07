@@ -32,7 +32,7 @@ trait InteractsWithStripe
             'email' => "{$description}@cashier-test.com",
             'billing' => '{}',
             'shipping' => '{}',
-            'is_paying_customer' => false
+            'is_paying_customer' => false,
         ], $options));
     }
 

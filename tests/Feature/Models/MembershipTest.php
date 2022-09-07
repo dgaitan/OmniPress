@@ -50,7 +50,7 @@ it('should send renewal reminder when is soon to expire', function () {
     Mail::assertQueued(RenewalReminder::class);
 
     $this->assertEquals(
-        "15 days email reminder was sent to customer.",
+        '15 days email reminder was sent to customer.',
         $membership->logs->last()->description
     );
 
@@ -65,7 +65,7 @@ it('should send renewal reminder when is soon to expire', function () {
     Mail::assertQueued(RenewalReminder::class);
 
     $this->assertEquals(
-        "5 days email reminder was sent to customer.",
+        '5 days email reminder was sent to customer.',
         $membership->logs->last()->description
     );
 
@@ -80,7 +80,7 @@ it('should send renewal reminder when is soon to expire', function () {
     Mail::assertQueued(RenewalReminder::class);
 
     $this->assertEquals(
-        "3 days email reminder was sent to customer.",
+        '3 days email reminder was sent to customer.',
         $membership->logs->last()->description
     );
 
@@ -91,7 +91,6 @@ it('should send renewal reminder when is soon to expire', function () {
 
     $this->assertEquals(2, $membership->daysUntilRenewal());
     $this->assertFalse($membership->maybeSendRenewalReminder());
-
 })->group($testsGroup);
 
 it('should mark as expired when end date is today', function () {
