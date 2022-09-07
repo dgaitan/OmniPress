@@ -93,3 +93,16 @@ it('should send renewal reminder when is soon to expire', function () {
     $this->assertFalse($membership->maybeSendRenewalReminder());
 
 })->group($testsGroup);
+
+it('should mark as expired when end date is today', function () {
+    $membership = Membership::find(1);
+    $membership->end_at = Carbon::now()->addDays(2);
+    $membership->save();
+
+    // Membership expireToday flag should be false yet
+    $this->assertFalse($membership->expireToday());
+
+    $membership->update(['end_at' => Carbon::now()]);
+
+    $this->assertTrue($membership->expireToday());
+})->group($testsGroup);
