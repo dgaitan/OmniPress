@@ -388,7 +388,7 @@ class Membership extends Model
      *
      * @todo Better find a strategy to compare by hours.
      *
-     * @return [type] [description]
+     * @return int
      */
     public function daysUntilRenewal(): int
     {
@@ -396,7 +396,9 @@ class Membership extends Model
     }
 
     /**
-     * [daysExpired description]
+     * Days expired
+     *
+     * Will be zero if isn't expired which is fine if this is active.
      *
      * @return [type] [description]
      */
