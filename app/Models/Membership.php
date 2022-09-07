@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Actions\Memberships\RenewAction;
 use App\Mail\Memberships\MembershipCancelled;
 use App\Mail\Memberships\MembershipExpired;
 use App\Mail\Memberships\MembershipRenewed;
@@ -315,8 +316,7 @@ class Membership extends Model
      * @return void
      */
     public function maybeRenewIfExpired(
-        bool $force = false,
-        int $time = 0
+        bool $force = false
     ): bool {
         if (! $this->isInRenewal()) {
             return false;
@@ -325,7 +325,7 @@ class Membership extends Model
         $possibleDays = [15, 5, 3];
 
         if (in_array($this->daysExpired(), $possibleDays)) {
-            $this->maybeRenew(force: $force, index: $time);
+            $this->maybeRenew(force: $force);
 
             return true;
         }
@@ -388,7 +388,7 @@ class Membership extends Model
      *
      * @todo Better find a strategy to compare by hours.
      *
-     * @return [type] [description]
+     * @return int
      */
     public function daysUntilRenewal(): int
     {
@@ -396,7 +396,9 @@ class Membership extends Model
     }
 
     /**
-     * [daysExpired description]
+     * Days expired
+     *
+     * Will be zero if isn't expired which is fine if this is active.
      *
      * @return [type] [description]
      */
@@ -538,18 +540,16 @@ class Membership extends Model
      * until user select a product.
      *
      * @param  bool  $force - Normally the trigger will validate if the membership is expired unless we force it.
-     * @param  int  $gift_product_id - Attach a Gift Product Id
-     * @param  string  $stripe_token - Is possible the user does not store the card, so is necessary pass the stripe_token to make one time payment.
-     * @return Membership
+     * @return Membership|string
      *
      * @throws if Membership isn't expired unless we force it.
      * @throws if Membership has a status different that active or in-renewal.
      * @throws if ocurred an error during auto payment.
      * @throws if customer doesn't have a payment method.
      */
-    public function maybeRenew($force = false, int $index = 1)
+    public function maybeRenew($force = false): self|string
     {
-        \App\Jobs\Memberships\RenewMembershipJob::dispatch($this->id, $force, $index);
+        return RenewAction::run($this, $force);
     }
 
     /**
