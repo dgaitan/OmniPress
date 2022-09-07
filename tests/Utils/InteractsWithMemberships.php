@@ -73,7 +73,7 @@ trait InteractsWithMemberships
                         status: 200
                     );
                 }
-            }
+            },
         ]);
     }
 

@@ -17,10 +17,11 @@ class CheckMembershipAction
      * IT will be able to renew one single membership or loop
      * through the whole memberships.
      *
-     * @param boolean $allMembership - By default it loops all memberships
-     * @param Membership|null $membership - Define a membership if will renew one single membership
-     * @throws InvalidArgumentException if membership is null and is not looping through all memberships
+     * @param  bool  $allMembership - By default it loops all memberships
+     * @param  Membership|null  $membership - Define a membership if will renew one single membership
      * @return void
+     *
+     * @throws InvalidArgumentException if membership is null and is not looping through all memberships
      */
     public function handle(
         bool $allMembership = true,
@@ -56,7 +57,7 @@ class CheckMembershipAction
     /**
      * Handle one single renewal
      *
-     * @param Membership $membership
+     * @param  Membership  $membership
      * @return void
      */
     protected function handleSingleRenewal(Membership $membership): void

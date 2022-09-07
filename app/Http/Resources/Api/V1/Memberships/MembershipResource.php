@@ -29,17 +29,17 @@ class MembershipResource extends JsonResource
             'customer' => [
                 'id' => $this->customer->id,
                 'email' => $this->customer->email,
-                'customer_id' => $this->customer->customer_id
+                'customer_id' => $this->customer->customer_id,
             ],
             'cash' => [
                 'points' => $this->kindCash->points,
-                'last_earned' => $this->kindCash->last_earned
+                'last_earned' => $this->kindCash->last_earned,
             ],
             'is_active' => $this->isActive(),
             'is_in_renewal' => $this->isInRenewal(),
             'is_awaiting_pick_gift' => $this->isAwaitingPickGift(),
             'is_expired' => $this->isExpired(),
-            'is_cancelled' => $this->isCancelled()
+            'is_cancelled' => $this->isCancelled(),
         ];
 
         if ($this->gift_product_id) {
@@ -47,7 +47,7 @@ class MembershipResource extends JsonResource
             $data['gift_product'] = [
                 'id' => $giftProduct->product_id,
                 'name' => $giftProduct->name,
-                'sku' => $giftProduct->sku
+                'sku' => $giftProduct->sku,
             ];
         }
 

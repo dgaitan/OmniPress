@@ -72,7 +72,7 @@ beforeEach(function () {
 
 it('should create a new membership when call new membership endpoint', function () {
     Queue::fake([
-        NewMembershipJob::class
+        NewMembershipJob::class,
     ]);
 
     $customer = Customer::whereEmail('ram@ram.com')->first();
@@ -108,12 +108,12 @@ it('should create a new membership when call new membership endpoint', function 
             'start_at' => $membership->start_at->toJSON(),
             'end_at' => $membership->end_at->toJSON(),
             'status' => 'active',
-            'shipping_status' => 'pending'
+            'shipping_status' => 'pending',
         ],
         'kind_cash' => [
             'points' => 750,
-            'last_earned' => 750
-        ]
+            'last_earned' => 750,
+        ],
     ]);
 
     $this->assertEquals(3500, $membership->price);
@@ -207,26 +207,25 @@ it('should returns a json with the membership detail when calling show endpoint'
         'gift_product' => [
             'id' => 544443,
             'name' => 'Kindhumans Youth Be Nice Membership',
-            'sku' => 'KH00841'
+            'sku' => 'KH00841',
         ],
         'payment_intents' => 0,
         'user_picked_gift' => true,
         'customer' => [
             'id' => 1,
             'email' => 'ram@ram.com',
-            'customer_id' => 2064
+            'customer_id' => 2064,
         ],
         'cash' => [
             'points' => 750,
-            'last_earned' => 750
+            'last_earned' => 750,
         ],
         'is_active' => true,
         'is_in_renewal' => false,
         'is_awaiting_pick_gift' => false,
         'is_expired' => false,
-        'is_cancelled' => false
+        'is_cancelled' => false,
     ]);
-
 })->group($testsGroup);
 
 it('should return 404 not found when request an invalid membership id', function () {
@@ -235,6 +234,6 @@ it('should return 404 not found when request an invalid membership id', function
 
     $response->assertStatus(404);
     $response->assertJson([
-        'message' => 'Membership not found'
+        'message' => 'Membership not found',
     ]);
 });

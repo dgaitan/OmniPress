@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $customer_id
  * @property int $cause_id
  * @property int $donation
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|UserDonation newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|UserDonation newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|UserDonation query()
@@ -26,9 +27,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|UserDonation whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|UserDonation whereUpdatedAt($value)
  * @mixin \Eloquent
+ *
  * @property-read \App\Models\Causes\Cause|null $cause
  * @property-read Customer|null $customer
  * @property \Illuminate\Support\Carbon|null $donation_date
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|UserDonation whereDonationDate($value)
  */
 class UserDonation extends Model

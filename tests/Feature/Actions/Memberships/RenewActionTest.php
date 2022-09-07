@@ -8,9 +8,7 @@ use App\Mail\Memberships\MembershipRenewed;
 use App\Mail\Memberships\PaymentNotFound;
 use App\Models\Membership;
 use App\Models\WooCommerce\Customer;
-use App\Models\WooCommerce\Order;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 
 $testsGroup = 'memberships';
@@ -74,9 +72,6 @@ it('should be expired because customer has not payment method and membership got
 })->group($testsGroup);
 
 it('should not renew if membership has an invalid status', function () {
-    // $customer = Customer::whereEmail('ram@ram.com')->first();
-    // $customer->createAsStripeCustomer();
-
     $membership = Membership::find(1);
     $membership->end_at = Carbon::now();
     $membership->status = Membership::AWAITING_PICK_GIFT_STATUS;

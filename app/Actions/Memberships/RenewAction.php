@@ -20,8 +20,7 @@ class RenewAction
      */
     public function handle(
         Membership $membership, bool $force = false
-    ): Membership|string
-    {
+    ): Membership|string {
         try {
             /**
              * Unless the renew being forced, the membership should have zero
@@ -122,7 +121,7 @@ class RenewAction
              * pick the gift product. For now, we are going to leave the
              * membership as "Awaiting Pick Gift Status". It will change to
              * Active when user has picked it.
-            */
+             */
             $membership->status = Membership::AWAITING_PICK_GIFT_STATUS;
             $membership->shipping_status = 'N/A';
             $membership->last_payment_intent = Carbon::now();
@@ -170,8 +169,8 @@ class RenewAction
                     ],
                     [
                         'key' => '_order_synced_with_kinja_admin',
-                        'value' => 'yes'
-                    ]
+                        'value' => 'yes',
+                    ],
                 ],
             ];
 

@@ -180,13 +180,13 @@ class OrderController extends Controller
                 'status' => $order->status,
                 'order_date' => $order->date_created->format('F j, Y'),
                 'shipping_total' => $order->getMoneyValue('shipping_total'),
-                'total' => $order->getMoneyValue('total')
+                'total' => $order->getMoneyValue('total'),
             ];
         })->toArray();
 
         $filename = sprintf(
             'kindhumans_orders_shipping_usps_%s_%s.csv',
-            count( $orders ),
+            count($orders),
             Carbon::now()->format('Y-m-d-His')
         );
 
