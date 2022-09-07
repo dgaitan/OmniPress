@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\WooCommerce\Customer;
 use App\Models\WooCommerce\PaymentMethod;
 use App\Services\WooCommerce\WooCommerceService;
+use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
 
 trait InteractsWithMemberships
@@ -60,6 +61,20 @@ trait InteractsWithMemberships
         ]);
 
         $api->orders()->getAndSync(549799);
+    }
+
+    protected function fakeOrderCreation(): void
+    {
+        Http::fake([
+            $this->getUrl(endpoint: 'orders') => function (Request $request) {
+                if ($request->method() === 'POST') {
+                    return Http::response(
+                        body: $this->fixture('Memberships/RenewalOrder'),
+                        status: 200
+                    );
+                }
+            }
+        ]);
     }
 
     protected function requestNewMembership(): void

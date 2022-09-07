@@ -161,7 +161,8 @@ class Membership extends Model
      */
     public function orders(): Builder
     {
-        return \App\Models\WooCommerce\Order::where('membership_id', $this->id);
+        return \App\Models\WooCommerce\Order::where('membership_id', $this->id)
+            ->orderBy('order_id', 'desc');
     }
 
     /**

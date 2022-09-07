@@ -4,10 +4,13 @@ namespace Tests\Feature\Actions\Membership;
 
 use App\Actions\Memberships\RenewAction;
 use App\Mail\Memberships\MembershipExpired;
+use App\Mail\Memberships\MembershipRenewed;
 use App\Mail\Memberships\PaymentNotFound;
 use App\Models\Membership;
 use App\Models\WooCommerce\Customer;
+use App\Models\WooCommerce\Order;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 
 $testsGroup = 'memberships';
@@ -85,4 +88,42 @@ it('should not renew if membership has an invalid status', function () {
         'Membership must be active or in-renewal to be able to create another order',
         $result
     );
+})->group($testsGroup);
+
+it('should renew the membership', function () {
+    Mail::fake();
+    $this->fakeOrderCreation();
+
+    $customer = Customer::whereEmail('ram@ram.com')->first();
+    $customer->createAsStripeCustomer();
+    $this->assignPaymentMethodToCustomer(customer: $customer);
+
+    $membership = Membership::find(1);
+    $membership->end_at = Carbon::now();
+    $membership->save();
+
+    // Run renewal
+    $result = RenewAction::run(membership: $membership);
+
+    $this->assertInstanceOf(Membership::class, $result);
+    $this->assertEquals(Membership::AWAITING_PICK_GIFT_STATUS, $result->status);
+    $this->assertTrue($result->isAwaitingPickGift());
+    $this->assertEquals(365, $result->daysUntilRenewal());
+    $this->assertEquals(0, $result->daysAfterRenewal());
+    $this->assertEquals('N/A', $result->shipping_status);
+    $this->assertEquals(
+        Carbon::now()->addYear()->format('Y-m-d'),
+        $result->end_at->format('Y-m-d')
+    );
+    $this->assertEquals(0, $result->payment_intents);
+
+    $this->assertEquals(2, $result->orders()->count());
+
+    $order = $result->orders()->first();
+    $this->assertEquals(549800, $order->order_id);
+    $this->assertTrue($order->has_membership);
+    $this->assertEquals(1, $order->membership_id);
+    $this->assertEquals($order->order_id, $result->pending_order_id);
+
+    Mail::assertQueued(MembershipRenewed::class);
 })->group($testsGroup);
