@@ -7,10 +7,12 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use InvalidArgumentException;
 use Tests\TestCase;
 use Tests\Utils\InteractsWithScout;
+use Tests\Utils\InteractsWithStripe;
 
 class BaseHttp extends TestCase
 {
     use InteractsWithScout;
+    use InteractsWithStripe;
     use RefreshDatabase;
 
     public function fixture(string $name): array
