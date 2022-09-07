@@ -9,6 +9,8 @@ use App\Models\Causes\OrderDonation;
 use App\Models\Concerns\HasMetaData;
 use App\Models\Concerns\HasMoney;
 use App\Models\Printforia\PrintforiaOrder;
+use App\Services\Contracts\ResourceContract;
+use App\Services\WooCommerce\WooCommerceService;
 use Cknow\Money\Money;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -559,6 +561,19 @@ class Order extends Model
 
     public function syncWithWoo() {
         SingleWooCommerceSync::dispatch($this->order_id, 'orders');
+    }
+
+    /**
+     * Return the api resource to be able
+     * to interact with the WooCommerce API.
+     *
+     * @return ResourceContract
+     */
+    public static function api(): ResourceContract
+    {
+        $api = WooCommerceService::make();
+
+        return $api->orders();
     }
 
     /**
