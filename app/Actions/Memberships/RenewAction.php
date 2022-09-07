@@ -38,36 +38,6 @@ class RenewAction
             }
 
             /**
-             * If the customer does not have a payment method attached,
-             * the renewal won't be possible.
-             *
-             * If the membership just expired, it will change to "IN-RENEWAL"
-             * status and this will notifiy to customer through an email that
-             * needs to attach a payment method to renew the membership.
-             *
-             * If this renewal is happening after more than one intent, it's
-             * possible that the membership has more than 30 days expired.
-             * IF this is true, the membership will be expired. status should be
-             * "EXPIRED"
-             */
-            if (! $membership->customer->hasPaymentMethod()) {
-                if ($membership->daysExpired() > 30) {
-                    $membership->expire('Membership expired because was impossible find a payment method in 30 days.');
-                } else {
-                    $membership->sendPaymentNotFoundNotification();
-                    $membership->status = Membership::IN_RENEWAL_STATUS;
-                    $membership->logs()->create([
-                        'description' => "Mebership renewal failed because we wasn't able to find a payment method for the customer.",
-                    ]);
-                }
-
-                $membership->shipping_status = 'N/A';
-                $membership->save();
-
-                throw new Exception('Customer does not have a payment method');
-            }
-
-            /**
              * Membership can renewal only if is active or in renewal status.
              *
              * Active means that currently is active (of course) and will
@@ -87,6 +57,37 @@ class RenewAction
                 throw new Exception(
                     'Membership must be active or in-renewal to be able to create another order'
                 );
+            }
+
+            /**
+             * If the customer does not have a payment method attached,
+             * the renewal won't be possible.
+             *
+             * If the membership just expired, it will change to "IN-RENEWAL"
+             * status and this will notifiy to customer through an email that
+             * needs to attach a payment method to renew the membership.
+             *
+             * If this renewal is happening after more than one intent, it's
+             * possible that the membership has more than 30 days expired.
+             * IF this is true, the membership will be expired. status should be
+             * "EXPIRED"
+             */
+            if (! $membership->customer->hasPaymentMethod()) {
+                if ($membership->daysExpired() > 30) {
+                    $errorMessage = 'Membership expired because was impossible find a payment method in 30 days.';
+                    $membership->expire($errorMessage);
+                } else {
+                    $membership->sendPaymentNotFoundNotification();
+                    $membership->status = Membership::IN_RENEWAL_STATUS;
+                    $membership->shipping_status = 'N/A';
+                    $membership->save();
+                    $errorMessage = "Mebership renewal failed because we wasn't able to find a payment method for the customer";
+                    $membership->logs()->create([
+                        'description' => $errorMessage,
+                    ]);
+                }
+
+                throw new Exception($errorMessage);
             }
 
             /**
