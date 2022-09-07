@@ -35,4 +35,12 @@ trait InteractsWithStripe
             'is_paying_customer' => false
         ], $options));
     }
+
+    protected function assignPaymentMethodToCustomer(Customer $customer): Customer
+    {
+        $paymentMethod = $customer->addPaymentMethod('pm_card_visa');
+        $customer->updateDefaultPaymentMethod($paymentMethod->id);
+
+        return $customer;
+    }
 }
