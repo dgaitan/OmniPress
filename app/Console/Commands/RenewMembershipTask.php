@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Actions\Memberships\CheckMembershipAction;
 use App\Jobs\Memberships\RenewalJob;
 use Illuminate\Console\Command;
 
@@ -45,7 +46,8 @@ class RenewMembershipTask extends Command
             $everything = $this->option('everything');
         }
 
-        RenewalJob::dispatch($everything);
+        CheckMembershipAction::dispatch(allMembership: true);
+        // RenewalJob::dispatch($everything);
         $this->info(sprintf('Looped: %s', $everything ? 'Everything' : 'Only Needed'));
         $this->info('Task Queued');
     }
