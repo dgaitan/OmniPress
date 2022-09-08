@@ -50,7 +50,7 @@ it('should send a renewal reminder', function () {
 
     $membership = Membership::find(1);
     $membership->update([
-        'end_at' => now()->addDays(15)
+        'end_at' => now()->addDays(15),
     ]);
 
     CheckMembershipAction::run(allMembership: false, membership: $membership);
@@ -70,7 +70,7 @@ it('should try to renew but will fails because customer does not have payment me
 
     $membership = Membership::find(1);
     $membership->update([
-        'end_at' => now()
+        'end_at' => now(),
     ]);
 
     CheckMembershipAction::run(allMembership: false, membership: $membership);
@@ -95,7 +95,7 @@ it('should renew a membership', function () {
 
     $membership = Membership::find(1);
     $membership->update([
-        'end_at' => now()
+        'end_at' => now(),
     ]);
 
     CheckMembershipAction::run(allMembership: false, membership: $membership);

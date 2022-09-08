@@ -319,10 +319,10 @@ class WooCommerceOrderResourceTest extends BaseHttp
             'line_items' => [
                 [
                     'product_id' => 29000,
-                    'quantity' => 2
-                ]
+                    'quantity' => 2,
+                ],
             ],
-            'total' => 7000
+            'total' => 7000,
         ];
 
         $data = new Order(attributes: $data);
