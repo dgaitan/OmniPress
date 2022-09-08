@@ -118,6 +118,7 @@ it('should renew the membership', function () {
     $this->assertEquals(2, $result->orders()->count());
 
     $order = $result->orders()->first();
+    $this->assertTrue($result->orders()->count() === 2);
     $this->assertEquals(549800, $order->order_id);
     $this->assertTrue($order->has_membership);
     $this->assertEquals(1, $order->membership_id);

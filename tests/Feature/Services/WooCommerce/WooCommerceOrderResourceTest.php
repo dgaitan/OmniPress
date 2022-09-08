@@ -290,4 +290,47 @@ class WooCommerceOrderResourceTest extends BaseHttp
         $this->assertEquals('my_new_value_from_api', $order->getMetaValue('mi_new_key_from_api'));
         $this->assertEquals('completed', $order->status);
     }
+
+    public function test_it_should_create_and_sync_an_order(): void
+    {
+        Http::fake([
+            $this->getUrl(endpoint: 'orders') => function (Request $request) {
+                if ($request->method() == 'POST') {
+                    return Http::response(
+                        body: $this->fixture('WooCommerce/OrderPutResponse'),
+                        status: 201
+                    );
+                }
+            },
+            $this->getUrl(endpoint: 'payment_gateways/kindhumans_stripe_gateway') => Http::response(
+                body: $this->fixture('WooCommerce/PaymentMethodDetail'),
+                status: 200
+            ),
+        ]);
+
+        $data = [
+            'customer_id' => 0,
+            'payment_method' => 'kindhumans_stripe_gateway',
+            'payment_method_title' => 'Credit Card',
+            'set_paid' => true,
+            'date_completed' => Carbon::now(),
+            'date_paid' => Carbon::now(),
+            'status' => 'processing',
+            'line_items' => [
+                [
+                    'product_id' => 29000,
+                    'quantity' => 2
+                ]
+            ],
+            'total' => 7000
+        ];
+
+        $data = new Order(attributes: $data);
+        $order = WooCommerceOrder::api()->create(
+            dataObject: $data,
+            sync: true
+        );
+
+        $this->assertInstanceOf(WooCommerceOrder::class, $order);
+    }
 }

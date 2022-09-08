@@ -1,0 +1,334 @@
+{
+    "id": 550019,
+    "parent_id": 0,
+    "status": "processing",
+    "currency": "USD",
+    "version": "5.5.1",
+    "prices_include_tax": false,
+    "date_created": "2022-06-30T12:57:21",
+    "date_modified": "2022-06-30T17:09:47",
+    "discount_total": "0",
+    "discount_tax": "0",
+    "shipping_total": "0",
+    "shipping_tax": "0",
+    "cart_tax": "5.78",
+    "total": "75.78",
+    "total_tax": "5.78",
+    "customer_id": 0,
+    "order_key": "wc_order_T7LIobMnd4thP",
+    "billing": {
+        "first_name": "David",
+        "last_name": "Gaitan",
+        "company": "",
+        "address_1": "TestingAddresssssss",
+        "address_2": "",
+        "city": "Encinitas",
+        "state": "CA",
+        "postcode": "92081",
+        "country": "US",
+        "email": "jdavid.gaitan@gmail.com",
+        "phone": ""
+    },
+    "shipping": {
+        "first_name": "David",
+        "last_name": "Gaitan",
+        "company": "",
+        "address_1": "TestingAddresssssss",
+        "address_2": "",
+        "city": "Encinitas",
+        "state": "CA",
+        "postcode": "92081",
+        "country": "US"
+    },
+    "payment_method": "kindhumans_stripe_gateway",
+    "payment_method_title": "Credit Card",
+    "transaction_id": "",
+    "customer_ip_address": "::1",
+    "customer_user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36",
+    "created_via": "checkout",
+    "customer_note": "",
+    "date_completed": "2022-06-30T17:09:47",
+    "date_paid": "2022-06-30T12:57:26",
+    "cart_hash": "9a1374693c7f1d8f79e8f1a2f1f2be83",
+    "number": "550019",
+    "meta_data": [
+        {
+            "id": 7207179,
+            "key": "_shipping_email",
+            "value": "jdavid.gaitan@gmail.com"
+        },
+        {
+            "id": 7207180,
+            "key": "is_vat_exempt",
+            "value": "no"
+        },
+        {
+            "id": 7207187,
+            "key": "_new_order_email_sent",
+            "value": "true"
+        },
+        {
+            "id": 7207188,
+            "key": "1_donated_amount",
+            "value": "2.09"
+        },
+        {
+            "id": 7207189,
+            "key": "_1_donated_amount",
+            "value": "field_5db2f1159c004"
+        },
+        {
+            "id": 7207190,
+            "key": "collab_for_cause_impact_amount",
+            "value": "0"
+        },
+        {
+            "id": 7207191,
+            "key": "_collab_for_cause_impact_amount",
+            "value": "field_5ee926509ede2"
+        },
+        {
+            "id": 7207192,
+            "key": "stickerpack_donated_amount",
+            "value": "0"
+        },
+        {
+            "id": 7207193,
+            "key": "_stickerpack_donated_amount",
+            "value": "field_5db2f1a59c005"
+        },
+        {
+            "id": 7207194,
+            "key": "kindness_donated_amount",
+            "value": "0"
+        },
+        {
+            "id": 7207195,
+            "key": "_kindness_donated_amount",
+            "value": "field_5db2f1f49c006"
+        },
+        {
+            "id": 7207196,
+            "key": "collab_for_causes",
+            "value": ""
+        },
+        {
+            "id": 7207197,
+            "key": "_collab_for_causes",
+            "value": "field_5eeb65174b5ae"
+        },
+        {
+            "id": 7207198,
+            "key": "total_donated",
+            "value": "2.09"
+        },
+        {
+            "id": 7207199,
+            "key": "_total_donated",
+            "value": "field_5cb60535d1426"
+        },
+        {
+            "id": 7207200,
+            "key": "total_donated_amount",
+            "value": "2.09"
+        },
+        {
+            "id": 7207201,
+            "key": "_total_donated_amount",
+            "value": "field_5db2f22a9c007"
+        },
+        {
+            "id": 7207202,
+            "key": "invitations_related",
+            "value": []
+        },
+        {
+            "id": 7207203,
+            "key": "_invitations_related",
+            "value": "field_5cb606407f9b2"
+        },
+        {
+            "id": 7207204,
+            "key": "cause",
+            "value": "581"
+        },
+        {
+            "id": 7207205,
+            "key": "_cause",
+            "value": "field_5eeb65284b5af"
+        },
+        {
+            "id": 7207206,
+            "key": "impact",
+            "value": "Through your purchase, 501CTHREE will provide safe drinking water to a household in Flint, Michigan.\n\n\n"
+        },
+        {
+            "id": 7207207,
+            "key": "_impact",
+            "value": "field_5f9f26623c58c"
+        },
+        {
+            "id": 7207208,
+            "key": "token_view",
+            "value": "550019f8b00f306c"
+        },
+        {
+            "id": 7207209,
+            "key": "_token_view",
+            "value": "field_5d25ce79d90aa"
+        },
+        {
+            "id": 7207210,
+            "key": "is_guest",
+            "value": "1"
+        },
+        {
+            "id": 7207211,
+            "key": "_is_guest",
+            "value": "field_5ce76b84e2324"
+        },
+        {
+            "id": 7207212,
+            "key": "order_type",
+            "value": "not_branded"
+        },
+        {
+            "id": 7207213,
+            "key": "_order_type",
+            "value": "field_5db3bb3388b6a"
+        },
+        {
+            "id": 7207214,
+            "key": "allow_refund_to_ga",
+            "value": "1"
+        },
+        {
+            "id": 7207215,
+            "key": "_allow_refund_to_ga",
+            "value": "field_5e9523a909edc"
+        },
+        {
+            "id": 7207216,
+            "key": "_giftcard_donation",
+            "value": "0.00"
+        },
+        {
+            "id": 7207217,
+            "key": "_has_giftcard",
+            "value": ""
+        },
+        {
+            "id": 7207218,
+            "key": "_printforia_order_id",
+            "value": "T0z1QbW57Cy-PIMDdkVIx"
+        },
+        {
+            "id": 7207548,
+            "key": "_in_house_shipped",
+            "value": "yes"
+        },
+        {
+            "id": 7207549,
+            "key": "_tracking_number",
+            "value": "55001962be3b4b372f5"
+        },
+        {
+            "id": 7207550,
+            "key": "_shipping_carrier",
+            "value": "usps"
+        },
+        {
+            "id": 7207551,
+            "key": "_shipping_tracking_url",
+            "value": "https://tools.usps.com/go/TrackConfirmAction_input?strOrigTrackNum=55001962be3b4b372f5"
+        },
+        {
+            "id": 7207605,
+            "key": "mi_new_key_from_api",
+            "value": "my_new_value_from_api"
+        }
+    ],
+    "line_items": [
+        {
+            "id": 29000,
+            "name": "Printforia Shirt - Large",
+            "product_id": 549943,
+            "variation_id": 549970,
+            "quantity": 2,
+            "tax_class": "",
+            "subtotal": "70.00",
+            "subtotal_tax": "5.78",
+            "total": "70.00",
+            "total_tax": "5.78",
+            "taxes": [
+                {
+                    "id": 29,
+                    "total": "5.775",
+                    "subtotal": "5.775"
+                }
+            ],
+            "meta_data": [
+                {
+                    "id": 237609,
+                    "key": "pa_size",
+                    "value": "l",
+                    "display_key": "Size",
+                    "display_value": "Large"
+                },
+                {
+                    "id": 237610,
+                    "key": "Supplied By",
+                    "value": "Kindhumans",
+                    "display_key": "Supplied By",
+                    "display_value": "Kindhumans"
+                },
+                {
+                    "id": 237629,
+                    "key": "_reduced_stock",
+                    "value": "2",
+                    "display_key": "_reduced_stock",
+                    "display_value": "2"
+                }
+            ],
+            "sku": "KH000TESTL",
+            "price": 35,
+            "parent_name": "Printforia Shirt"
+        }
+    ],
+    "tax_lines": [
+        {
+            "id": 29003,
+            "rate_code": "US-CA-CA TAX-1",
+            "rate_id": 29,
+            "label": "CA Tax",
+            "compound": false,
+            "tax_total": "5.78",
+            "shipping_tax_total": "0.00",
+            "rate_percent": 8.25,
+            "meta_data": []
+        }
+    ],
+    "shipping_lines": [],
+    "fee_lines": [],
+    "coupon_lines": [],
+    "refunds": [],
+    "date_created_gmt": "2022-06-30T19:57:21",
+    "date_modified_gmt": "2022-07-01T00:09:47",
+    "date_completed_gmt": "2022-07-01T00:09:47",
+    "date_paid_gmt": "2022-06-30T19:57:26",
+    "giftcards": [],
+    "giftcard_total": 0,
+    "currency_symbol": "$",
+    "_links": {
+        "self": [
+            {
+                "href": "http://kind.humans/wp-json/wc/v3/orders/550019"
+            }
+        ],
+        "collection": [
+            {
+                "href": "http://kind.humans/wp-json/wc/v3/orders"
+            }
+        ]
+    }
+}
