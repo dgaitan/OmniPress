@@ -39,7 +39,7 @@ beforeEach(function () {
 
 it('should set a new membership when the passed 30 days after auto-renewal', function () {
     Queue::fake([
-        SingleWooCommerceSync::class
+        SingleWooCommerceSync::class,
     ]);
 
     Http::fake([
@@ -48,7 +48,7 @@ it('should set a new membership when the passed 30 days after auto-renewal', fun
                 return Http::response(
                     body: [
                         'product_id' => 52020,
-                        'order_id' => 549800
+                        'order_id' => 549800,
                     ],
                     status: 200
                 );
@@ -61,7 +61,7 @@ it('should set a new membership when the passed 30 days after auto-renewal', fun
         $this->getUrl(endpoint: 'orders/549800') => Http::response(
             body: $this->fixture('Memberships/OrderWithGiftProduct'),
             status: 200
-        )
+        ),
     ]);
 
     $membership = Membership::find(1);

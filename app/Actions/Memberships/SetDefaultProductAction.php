@@ -23,7 +23,7 @@ class SetDefaultProductAction
                 'description' => sprintf(
                     'There was an error trying to set the default gift product: %s',
                     $request->body()
-                )
+                ),
             ]);
 
             return $membership;
