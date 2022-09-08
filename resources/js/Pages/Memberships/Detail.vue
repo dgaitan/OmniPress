@@ -109,6 +109,7 @@
     import CustomerMedia from '@/Components/Media/CustomerMedia.vue'
     import MembershipSummary from './Partials/MembershipSummary.vue'
     import MembershipOrders from './Partials/MembershipOrders.vue'
+    import MembershipLogs from './Partials/MembershipLogs.vue'
     import Button from '@/Components/Button.vue'
     import Confirm from '@/Components/Confirm.vue'
 
@@ -134,6 +135,7 @@
             CustomerMedia,
             MembershipSummary,
             MembershipOrders,
+            MembershipLogs,
             Edit,
             Button,
             Confirm

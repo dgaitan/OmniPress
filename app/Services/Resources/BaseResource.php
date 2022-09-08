@@ -9,6 +9,7 @@ use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 abstract class BaseResource
 {
@@ -273,17 +274,32 @@ abstract class BaseResource
             data: $dataObject->toArray()
         );
 
-        if ($response->ok()) {
-            $dataObject = $this->factory::make(attributes: $response->json());
+        Log::info(
+            sprintf(
+                'Response status %s while creating a resource: %s',
+                $response->status(),
+                $response->body()
+            )
+        );
 
-            if ($sync) {
-                return $dataObject->sync();
-            }
+        if ($response->failed()) {
+            Log::error(
+                sprintf(
+                    'Something went wrong creating an %s with following payload: %s. Error: %s',
+                    $this->endpoint,
+                    json_encode($dataObject->toArray()),
+                    $response->body()
+                )
+            );
 
-            return $dataObject;
+            return null;
         }
 
-        return null;
+        $dataObject = $this->factory::make(attributes: $response->json());
+
+        return $sync
+            ? $dataObject->sync()
+            : $dataObject;
     }
 
     public function update(

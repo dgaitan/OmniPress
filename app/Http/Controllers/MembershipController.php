@@ -118,7 +118,7 @@ class MembershipController extends Controller
         } else {
             $membership = Cache::tags('memberships')
                 ->remember($cacheKey, now()->addDay(), function () use ($id) {
-                    $m = Membership::with(['customer', 'kindCash'])->find($id);
+                    $m = Membership::with(['customer', 'kindCash', 'logs'])->find($id);
 
                     return new MembershipResource($m);
                 });
