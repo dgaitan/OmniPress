@@ -6,7 +6,6 @@ use App\Models\Membership;
 use App\Models\WooCommerce\Order;
 use Carbon\Carbon;
 use Exception;
-use Illuminate\Support\Facades\Log;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Throwable;
 
