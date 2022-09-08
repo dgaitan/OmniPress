@@ -74,7 +74,7 @@
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
         ],
-        "test": "vendor/bin/phpunit",
+        "test": "vendor/bin/pest",
         "model-docs": "php artisan ide-helper:models"
     },
     "extra": {

@@ -42,7 +42,7 @@ class SetDefaultGiftProductJob implements ShouldQueue
             $api = WooCommerceService::make();
             $request = $api->memberships()->addGiftProduct($order_id);
 
-            if ($request) {
+            if ($request->ok()) {
                 $membership->status = Membership::ACTIVE_STATUS;
                 $membership->shipping_status = Membership::SHIPPING_PENDING_STATUS;
                 $membership->save();
@@ -50,13 +50,15 @@ class SetDefaultGiftProductJob implements ShouldQueue
                 $cacheKey = sprintf('woocommerce_order_%s', $order_id);
                 Cache::tags('orders')->forget($cacheKey);
 
-                if ($request->product_id) {
-                    $product = $api->products()->findAndSync($request->product_id);
+                if ($request->object()->product_id) {
+                    $product = $api->products()->findAndSync((int) $request->object()->product_id);
                     $membership->giftProducts()->attach($product);
-                    $membership->gift_product_id = $request->product_id;
+                    $membership->gift_product_id = $product->product_id;
                     $membership->save();
 
-                    SingleWooCommerceSync::dispatch('orders', $request->order_id);
+                    SingleWooCommerceSync::dispatch(
+                        (int) $request->object()->order_id, 'orders'
+                    );
                 }
             }
         }

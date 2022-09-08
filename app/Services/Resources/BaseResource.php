@@ -41,7 +41,7 @@ abstract class BaseResource
      *
      * @var ServiceContract
      */
-    private ServiceContract $service;
+    protected ServiceContract $service;
 
     /**
      * A Resource should receive a Service
@@ -268,11 +268,13 @@ abstract class BaseResource
         DataObjectContract $dataObject,
         bool $sync = false
     ): DataObjectContract|Model|null {
-        $api = $this->service->makeRequest();
-        $response = $api->post($this->endpoint, $dataObject->toArray());
+        $response = $this->service->post(
+            endpoint: $this->endpoint,
+            data: $dataObject->toArray()
+        );
 
-        if ($response) {
-            $dataObject = $this->factory::make(attributes: (array) $response);
+        if ($response->ok()) {
+            $dataObject = $this->factory::make(attributes: $response->json());
 
             if ($sync) {
                 return $dataObject->sync();

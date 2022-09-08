@@ -95,7 +95,7 @@ class PrintforiaApiClient
         return $this->request()->patch(
             $this->getApiUrl(sprintf('orders/%s', $orderId)),
             [
-                'status' => 'canceled'
+                'status' => 'canceled',
             ]
         );
     }

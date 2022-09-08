@@ -35,7 +35,7 @@ class PrintforiaController extends Controller
      *
      * Steps:
      *
-     * 1. Make a request to: /api/v1/printforia/webook-values/{printforiaOrderID} (You could use postman or https://reqbin.com/)
+     * 1. Make a request to: /api/v1/printforia/webhook-values/{printforiaOrderID} (You could use postman or https://reqbin.com/)
      * 2. Be sure of add the API TOKEN in the Headers. (Bearer foobar123456)
      * 3. Then send in the body (as JSON) the status to test. Ie: {"status": "approved"}
      * 4. It will return something like:

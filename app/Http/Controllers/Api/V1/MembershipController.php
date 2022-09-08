@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Api\V1\Memberships\MembershipResource;
 use App\Jobs\Memberships\NewMembershipJob;
 use App\Jobs\Memberships\SyncNewMemberOrder;
 use App\Jobs\SingleWooCommerceSync;
@@ -12,6 +13,7 @@ use App\Models\WooCommerce\Customer;
 use App\Models\WooCommerce\Order;
 use App\Models\WooCommerce\Product;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -45,12 +47,15 @@ class MembershipController extends Controller
      * @param  [type]  $id      [description]
      * @return [type]           [description]
      */
-    public function show(Request $request, $id)
+    public function show(Request $request, $id): JsonResponse
     {
-        $membership = Membership::find($id);
+        $membership = Membership::with('product')->find($id);
 
         if (! is_null($membership)) {
-            return response()->json($membership->toArray(true), 200);
+            return response()->json(
+                new MembershipResource($membership),
+                200
+            );
         }
 
         return response()->json(['message' => 'Membership not found'], 404);
