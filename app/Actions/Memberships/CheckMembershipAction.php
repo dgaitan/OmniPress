@@ -4,6 +4,7 @@ namespace App\Actions\Memberships;
 
 use App\Models\Membership;
 use App\Services\QueryService;
+use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;
 use Lorisleiva\Actions\Concerns\AsAction;
 
@@ -28,6 +29,10 @@ class CheckMembershipAction
         Membership|null $membership = null
     ): void {
         if (! $allMembership && is_null($membership)) {
+            Log::error(
+                sprintf('Was impossible to check memberships because: A Membership is required when trying to renew one single membership at %s', self::class)
+            );
+
             throw new InvalidArgumentException(
                 sprintf(
                     'A Membership is required when trying to renew one single membership at %s',
