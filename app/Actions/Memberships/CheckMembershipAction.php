@@ -36,7 +36,7 @@ class CheckMembershipAction
             );
         }
 
-        return $allMembership
+        $allMembership
             ? $this->handleAllRenewals()
             : $this->handleSingleRenewal(membership: $membership);
     }
@@ -50,7 +50,7 @@ class CheckMembershipAction
     {
         $query = Membership::with('customer', 'kindCash');
         QueryService::walkTrough($query, function ($membership) {
-            $this->handleSingleRenewal($membership);
+            $this->handleSingleRenewal(membership: $membership);
         });
     }
 
@@ -62,6 +62,10 @@ class CheckMembershipAction
      */
     protected function handleSingleRenewal(Membership $membership): void
     {
+        if ($membership->isExpired()) {
+            return;
+        }
+
         // If the membership is active, send reminders
         // or maybe renew it.
         if ($membership->isActive()) {
@@ -78,9 +82,12 @@ class CheckMembershipAction
             $membership->maybeRenewIfExpired(force: false);
         }
 
-        // if (($membership->isInRenewal() || $membership->isCancelled()) && $membership->daysExpired() > 30) {
-        //     $membership->expire('Membership expired because was impossible find a payment method in 30 days.');
-        // }
+        if (
+            ($membership->isCancelled() && $membership->isExpired())
+            || ($membership->isInRenewal() && $membership->daysExpired() > 30)
+        ) {
+            $membership->expire('Membership expired because was impossible find a payment method in 30 days.');
+        }
 
         if ($membership->isAwaitingPickGift()) {
             $membership->shipping_status = 'N/A';
@@ -89,7 +96,7 @@ class CheckMembershipAction
             $membership->maybeRememberThatMembershipHasRenewed();
 
             if ($membership->daysAfterRenewal() > 30) {
-                \App\Jobs\Memberships\SetDefaultGiftProductJob::dispatch($membership->id);
+                SetDefaultProductAction::dispatch($membership);
             }
         }
     }

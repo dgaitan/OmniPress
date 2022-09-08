@@ -10,6 +10,7 @@ use App\Models\Membership;
 use App\Models\WooCommerce\Customer;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Queue;
 
 $testsGroup = 'memberships';
 
@@ -87,6 +88,8 @@ it('should not renew if membership has an invalid status', function () {
 
 it('should renew the membership', function () {
     Mail::fake();
+    Queue::fake();
+
     $this->fakeOrderCreation();
 
     $customer = Customer::whereEmail('ram@ram.com')->first();

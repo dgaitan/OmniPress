@@ -41,7 +41,7 @@ abstract class BaseResource
      *
      * @var ServiceContract
      */
-    private ServiceContract $service;
+    protected ServiceContract $service;
 
     /**
      * A Resource should receive a Service
