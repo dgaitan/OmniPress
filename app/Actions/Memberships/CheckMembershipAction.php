@@ -96,7 +96,7 @@ class CheckMembershipAction
             $membership->maybeRememberThatMembershipHasRenewed();
 
             if ($membership->daysAfterRenewal() > 30) {
-                \App\Jobs\Memberships\SetDefaultGiftProductJob::dispatch($membership->id);
+                SetDefaultProductAction::dispatch($membership);
             }
         }
     }

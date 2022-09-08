@@ -40,8 +40,6 @@ class MembershipResource extends BaseResource implements ResourceContract
      */
     public function addGiftProduct(int $order_id)
     {
-        // $request = $this->service()->makeRequest();
-
         return $this->service->put(
             sprintf('%s/%s/set-gift', $this->endpoint, $order_id),
             []
