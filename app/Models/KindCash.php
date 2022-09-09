@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasMoney;
+use Cknow\Money\Money;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
@@ -34,6 +36,7 @@ use Illuminate\Support\Facades\Cache;
 class KindCash extends Model
 {
     use HasFactory;
+    use HasMoney;
 
     protected $fillable = [
         'points', 'last_earned',
@@ -52,6 +55,16 @@ class KindCash extends Model
     public function cashForHuman(): float
     {
         return (float) ($this->points / 100);
+    }
+
+    /**
+     * Get points as money
+     *
+     * @return Money
+     */
+    public function getCash(): Money
+    {
+        return $this->getMoneyValue('points');
     }
 
     /**

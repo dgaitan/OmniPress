@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Actions\Memberships\AddKindCashAction;
 use App\Actions\Memberships\RenewAction;
 use App\Mail\Memberships\MembershipCancelled;
 use App\Mail\Memberships\MembershipExpired;
@@ -422,6 +423,22 @@ class Membership extends Model
     public function daysAfterRenewal(): int
     {
         return max($this->last_payment_intent->diffInDays($this->today(), false), 0);
+    }
+
+    /**
+     * Add Cash to this membership
+     *
+     * @param integer $cash
+     * @param string|null|null $addedBy
+     * @return self
+     */
+    public function addCash(int $cash = 0, string|null $addedBy = null): self
+    {
+        return AddKindCashAction::run(
+            membership: $this,
+            cash: $cash,
+            addedBy: $addedBy
+        );
     }
 
     /**

@@ -58,10 +58,10 @@
                         <JetDropdownLink as="button" @click="bulkActions('expire')">
                             Expire Membership
                         </JetDropdownLink>
-                        <JetDropdownLink as="button" @click="bulkActions('renew')">
+                        <JetDropdownLink v-if="userCan('force_membership_renewals')" as="button" @click="bulkActions('renew')">
                             Renew Memberships
                         </JetDropdownLink>
-                        <JetDropdownLink as="button" @click="bulkActions('run_cron')">
+                        <JetDropdownLink v-if="userCan('force_membership_renewals')" as="button" @click="bulkActions('run_cron')">
                             Run Renewal Cron
                         </JetDropdownLink>
                     </div>
