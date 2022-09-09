@@ -188,6 +188,8 @@ class KindCash extends Model
         }
 
         unset($cash['membership_id']);
+        unset($cash['created_at']);
+        unset($cash['updated_at']);
 
         return $cash;
     }

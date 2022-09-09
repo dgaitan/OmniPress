@@ -41,6 +41,12 @@ class AddKindCashAction
             );
         }
 
+        if (! $override) {
+            $membership->kindCash->update([
+                'last_earned' => $cash
+            ]);
+        }
+
         $cash = $override
             ? $cash
             : $membership->kindCash->points + $cash;

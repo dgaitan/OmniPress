@@ -236,4 +236,23 @@ it('should return 404 not found when request an invalid membership id', function
     $response->assertJson([
         'message' => 'Membership not found',
     ]);
-});
+})->group($testsGroup);
+
+it('should be able to add kind cash', function () {
+    $this->actingAs($user = User::factory()->withPersonalTeam()->create());
+    $this->requestNewMembership();
+
+    $request = $this->post('/api/v1/memberships/1/cash/add', [
+        'points' => 100,
+        'message' => 'Points earned by purchase'
+    ]);
+
+    $request->assertOk();
+    $request->assertStatus(200);
+
+    $request->assertJson([
+        "id" => 1,
+        "points" => 850,
+        "last_earned" => 100
+    ]);
+})->group($testsGroup);

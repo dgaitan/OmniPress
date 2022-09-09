@@ -432,12 +432,35 @@ class Membership extends Model
      * @param string|null|null $addedBy
      * @return self
      */
-    public function addCash(int $cash = 0, string|null $addedBy = null): self
+    public function addCash(
+        int|float|string $cash = 0,
+        string|null $addedBy = null,
+        bool $override = false
+    ): self
     {
-        return AddKindCashAction::run(
+        AddKindCashAction::run(
             membership: $this,
             cash: $cash,
+            override: $override,
             addedBy: $addedBy
+        );
+
+        return $this->refresh();
+    }
+
+    /**
+     * Add Cash to this membership
+     *
+     * @param integer $cash
+     * @param string|null|null $addedBy
+     * @return self
+     */
+    public function updateCash(int|float|string $cash = 0, string|null $addedBy = null): self
+    {
+        return $this->addCash(
+            cash: $cash,
+            addedBy: $addedBy,
+            override: true
         );
     }
 
