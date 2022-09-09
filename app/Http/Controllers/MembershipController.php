@@ -206,14 +206,10 @@ class MembershipController extends Controller
             abort(404);
         }
 
-        $points = (int) ((float) $request->input('points') * 100);
-        $membership->kindCash->update([
-            'points' => $points,
-        ]);
-        $membership->kindCash->addLog('earned', $points, sprintf(
-            'Kind Cash added by %s',
-            $request->user()->email
-        ));
+        $membership->updateCash(
+            cash: $request->input('points'),
+            addedBy: $request->user()->email
+        );
 
         Cache::tags('memberships')->flush();
 

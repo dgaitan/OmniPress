@@ -13,6 +13,7 @@ use App\Models\WooCommerce\Customer;
 use App\Models\WooCommerce\Order;
 use App\Models\WooCommerce\Product;
 use Carbon\Carbon;
+use Cknow\Money\Money;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -324,7 +325,11 @@ class MembershipController extends Controller
             ], 400);
         }
 
-        $membership->kindCash->addCash($request->points, $request->message);
+        $points = Money::USD($request->points);
+        $membership->addCash(
+            cash: $points->formatByDecimal(),
+            addedBy: $request->message
+        );
 
         return response()->json($membership->kindCash->toArray(), 200);
     }
