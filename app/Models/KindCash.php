@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasMoney;
+use Cknow\Money\Money;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
@@ -15,6 +17,7 @@ use Illuminate\Support\Facades\Cache;
  * @property int $membership_id
  * @property float $points
  * @property float|null $last_earned
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|KindCash newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|KindCash newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|KindCash query()
@@ -25,6 +28,7 @@ use Illuminate\Support\Facades\Cache;
  * @method static \Illuminate\Database\Eloquent\Builder|KindCash wherePoints($value)
  * @method static \Illuminate\Database\Eloquent\Builder|KindCash whereUpdatedAt($value)
  * @mixin \Eloquent
+ *
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\KindCashLog[] $logs
  * @property-read int|null $logs_count
  * @property-read \App\Models\Membership|null $membership
@@ -32,6 +36,7 @@ use Illuminate\Support\Facades\Cache;
 class KindCash extends Model
 {
     use HasFactory;
+    use HasMoney;
 
     protected $fillable = [
         'points', 'last_earned',
@@ -50,6 +55,16 @@ class KindCash extends Model
     public function cashForHuman(): float
     {
         return (float) ($this->points / 100);
+    }
+
+    /**
+     * Get points as money
+     *
+     * @return Money
+     */
+    public function getCash(): Money
+    {
+        return $this->getMoneyValue('points');
     }
 
     /**
@@ -173,6 +188,8 @@ class KindCash extends Model
         }
 
         unset($cash['membership_id']);
+        unset($cash['created_at']);
+        unset($cash['updated_at']);
 
         return $cash;
     }

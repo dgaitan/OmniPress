@@ -22,7 +22,7 @@ class OrderUSPSExport implements FromArray, WithHeadings
             'Order Status',
             'Order Date',
             'Shipping Amount',
-            'Total'
+            'Total',
         ];
     }
 

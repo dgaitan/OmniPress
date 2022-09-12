@@ -53,6 +53,13 @@ class MembershipResource extends JsonResource
             }
         }
 
+        $data['logs'] = $this->logs->map(function ($log) {
+            return [
+                'date' => $log->created_at,
+                'description' => $log->description,
+            ];
+        });
+
         return $data;
     }
 }

@@ -9,6 +9,7 @@ use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 abstract class BaseResource
 {
@@ -41,7 +42,7 @@ abstract class BaseResource
      *
      * @var ServiceContract
      */
-    private ServiceContract $service;
+    protected ServiceContract $service;
 
     /**
      * A Resource should receive a Service
@@ -268,20 +269,37 @@ abstract class BaseResource
         DataObjectContract $dataObject,
         bool $sync = false
     ): DataObjectContract|Model|null {
-        $api = $this->service->makeRequest();
-        $response = $api->post($this->endpoint, $dataObject->toArray());
+        $response = $this->service->post(
+            endpoint: $this->endpoint,
+            data: $dataObject->toArray()
+        );
 
-        if ($response) {
-            $dataObject = $this->factory::make(attributes: (array) $response);
+        Log::info(
+            sprintf(
+                'Response status %s while creating a resource: %s',
+                $response->status(),
+                $response->body()
+            )
+        );
 
-            if ($sync) {
-                return $dataObject->sync();
-            }
+        if ($response->failed()) {
+            Log::error(
+                sprintf(
+                    'Something went wrong creating an %s with following payload: %s. Error: %s',
+                    $this->endpoint,
+                    json_encode($dataObject->toArray()),
+                    $response->body()
+                )
+            );
 
-            return $dataObject;
+            return null;
         }
 
-        return null;
+        $dataObject = $this->factory::make(attributes: $response->json());
+
+        return $sync
+            ? $dataObject->sync()
+            : $dataObject;
     }
 
     public function update(

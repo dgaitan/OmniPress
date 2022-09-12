@@ -2,15 +2,19 @@
 
 namespace App\Models;
 
+use App\Actions\Memberships\AddKindCashAction;
+use App\Actions\Memberships\RenewAction;
 use App\Mail\Memberships\MembershipCancelled;
 use App\Mail\Memberships\MembershipExpired;
 use App\Mail\Memberships\MembershipRenewed;
 use App\Mail\Memberships\PaymentNotFound;
 use App\Mail\Memberships\RenewalReminder;
 use App\Mail\Memberships\RenewError;
+use App\Models\Concerns\HasMoney;
 use App\Models\WooCommerce\Customer;
 use App\Models\WooCommerce\Order;
 use App\Models\WooCommerce\Product;
+use Cknow\Money\Money;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -36,6 +40,7 @@ use Illuminate\Support\Facades\Mail;
  * @property \Illuminate\Support\Carbon|null $last_payment_intent
  * @property int $payment_intents
  * @property int $kind_cash_id
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Membership newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Membership newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Membership query()
@@ -54,23 +59,29 @@ use Illuminate\Support\Facades\Mail;
  * @method static \Illuminate\Database\Eloquent\Builder|Membership whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Membership whereUpdatedAt($value)
  * @mixin \Eloquent
+ *
  * @property-read Customer|null $customer
  * @property-read \App\Models\KindCash|null $kindCash
  * @property bool|null $user_picked_gift
  * @property int|null $gift_product_id
  * @property-read \Illuminate\Database\Eloquent\Collection|Product[] $giftProducts
  * @property-read int|null $gift_products_count
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Membership whereGiftProductId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Membership whereUserPickedGift($value)
+ *
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\MembershipLog[] $logs
  * @property-read int|null $logs_count
  * @property int|null $product_id
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Membership whereProductId($value)
+ *
  * @property-read Product|null $product
  */
 class Membership extends Model
 {
     use HasFactory;
+    use HasMoney;
 
     const ACTIVE_STATUS = 'active';
 
@@ -95,6 +106,7 @@ class Membership extends Model
         'start_at' => 'date',
         'end_at' => 'date',
         'last_payment_intent' => 'date',
+        'user_picked_gift' => 'boolean',
     ];
 
     protected $fillable = [
@@ -142,7 +154,11 @@ class Membership extends Model
      */
     public function product(): BelongsTo
     {
-        return $this->belongsTo(Product::class, 'product_id');
+        return $this->belongsTo(
+            Product::class,
+            'product_id',
+            'product_id'
+        );
     }
 
     /**
@@ -152,7 +168,8 @@ class Membership extends Model
      */
     public function orders(): Builder
     {
-        return \App\Models\WooCommerce\Order::where('membership_id', $this->id);
+        return \App\Models\WooCommerce\Order::where('membership_id', $this->id)
+            ->orderBy('order_id', 'desc');
     }
 
     /**
@@ -171,6 +188,16 @@ class Membership extends Model
     }
 
     /**
+     * Get Current Gift Product
+     *
+     * @return Product
+     */
+    public function getCurrentGiftProduct(): Product
+    {
+        return $this->giftProducts->first();
+    }
+
+    /**
      * Current Order
      *
      * @return Order
@@ -180,6 +207,11 @@ class Membership extends Model
         return $this->orders()
             ->orderBy('date_created', 'desc')
             ->first();
+    }
+
+    public function getPriceAsMoney(): Money
+    {
+        return $this->getMoneyValue('price');
     }
 
     /**
@@ -292,8 +324,7 @@ class Membership extends Model
      * @return void
      */
     public function maybeRenewIfExpired(
-        bool $force = false,
-        int $time = 0
+        bool $force = false
     ): bool {
         if (! $this->isInRenewal()) {
             return false;
@@ -302,7 +333,7 @@ class Membership extends Model
         $possibleDays = [15, 5, 3];
 
         if (in_array($this->daysExpired(), $possibleDays)) {
-            $this->maybeRenew(force: $force, index: $time);
+            $this->maybeRenew(force: $force);
 
             return true;
         }
@@ -365,7 +396,7 @@ class Membership extends Model
      *
      * @todo Better find a strategy to compare by hours.
      *
-     * @return [type] [description]
+     * @return int
      */
     public function daysUntilRenewal(): int
     {
@@ -373,7 +404,9 @@ class Membership extends Model
     }
 
     /**
-     * [daysExpired description]
+     * Days expired
+     *
+     * Will be zero if isn't expired which is fine if this is active.
      *
      * @return [type] [description]
      */
@@ -390,6 +423,45 @@ class Membership extends Model
     public function daysAfterRenewal(): int
     {
         return max($this->last_payment_intent->diffInDays($this->today(), false), 0);
+    }
+
+    /**
+     * Add Cash to this membership
+     *
+     * @param integer $cash
+     * @param string|null|null $addedBy
+     * @return self
+     */
+    public function addCash(
+        int|float|string $cash = 0,
+        string|null $addedBy = null,
+        bool $override = false
+    ): self
+    {
+        AddKindCashAction::run(
+            membership: $this,
+            cash: $cash,
+            override: $override,
+            addedBy: $addedBy
+        );
+
+        return $this->refresh();
+    }
+
+    /**
+     * Add Cash to this membership
+     *
+     * @param integer $cash
+     * @param string|null|null $addedBy
+     * @return self
+     */
+    public function updateCash(int|float|string $cash = 0, string|null $addedBy = null): self
+    {
+        return $this->addCash(
+            cash: $cash,
+            addedBy: $addedBy,
+            override: true
+        );
     }
 
     /**
@@ -515,18 +587,16 @@ class Membership extends Model
      * until user select a product.
      *
      * @param  bool  $force - Normally the trigger will validate if the membership is expired unless we force it.
-     * @param  int  $gift_product_id - Attach a Gift Product Id
-     * @param  string  $stripe_token - Is possible the user does not store the card, so is necessary pass the stripe_token to make one time payment.
-     * @return Membership
+     * @return Membership|string
      *
      * @throws if Membership isn't expired unless we force it.
      * @throws if Membership has a status different that active or in-renewal.
      * @throws if ocurred an error during auto payment.
      * @throws if customer doesn't have a payment method.
      */
-    public function maybeRenew($force = false, int $index = 1)
+    public function maybeRenew($force = false): self|string
     {
-        \App\Jobs\Memberships\RenewMembershipJob::dispatch($this->id, $force, $index);
+        return RenewAction::run($this, $force);
     }
 
     /**

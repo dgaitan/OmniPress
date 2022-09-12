@@ -33,6 +33,7 @@ use Laravel\Cashier\Billable;
  * @property int|null $service_id
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\WooCommerce\Order[] $orders
  * @property-read int|null $orders_count
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Customer newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Customer newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Customer query()
@@ -54,6 +55,7 @@ use Laravel\Cashier\Billable;
  * @method static \Illuminate\Database\Eloquent\Builder|Customer whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Customer whereUsername($value)
  * @mixin \Eloquent
+ *
  * @property string|null $stripe_id
  * @property string|null $pm_type
  * @property string|null $pm_last_four
@@ -62,10 +64,12 @@ use Laravel\Cashier\Billable;
  * @property-read int|null $notifications_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Cashier\Subscription[] $subscriptions
  * @property-read int|null $subscriptions_count
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Customer wherePmLastFour($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Customer wherePmType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Customer whereStripeId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Customer whereTrialEndsAt($value)
+ *
  * @property-read \Illuminate\Database\Eloquent\Collection|Membership[] $memberships
  * @property-read int|null $memberships_count
  * @property-read \Illuminate\Database\Eloquent\Collection|UserDonation[] $donations

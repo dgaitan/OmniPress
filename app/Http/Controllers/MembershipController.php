@@ -118,7 +118,7 @@ class MembershipController extends Controller
         } else {
             $membership = Cache::tags('memberships')
                 ->remember($cacheKey, now()->addDay(), function () use ($id) {
-                    $m = Membership::with(['customer', 'kindCash'])->find($id);
+                    $m = Membership::with(['customer', 'kindCash', 'logs'])->find($id);
 
                     return new MembershipResource($m);
                 });
@@ -206,14 +206,10 @@ class MembershipController extends Controller
             abort(404);
         }
 
-        $points = (int) ((float) $request->input('points') * 100);
-        $membership->kindCash->update([
-            'points' => $points,
-        ]);
-        $membership->kindCash->addLog('earned', $points, sprintf(
-            'Kind Cash added by %s',
-            $request->user()->email
-        ));
+        $membership->updateCash(
+            cash: $request->input('points'),
+            addedBy: $request->user()->email
+        );
 
         Cache::tags('memberships')->flush();
 

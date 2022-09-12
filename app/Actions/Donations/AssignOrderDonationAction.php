@@ -56,7 +56,7 @@ class AssignOrderDonationAction
             } catch (Throwable $e) {
                 $payload = [
                     'bucket' => $order->getMetaValue('1_donated_amount'),
-                    'membership' => $order->getMetaValue('kindness_donated_amount')
+                    'membership' => $order->getMetaValue('kindness_donated_amount'),
                 ];
 
                 Log::error(

@@ -143,8 +143,8 @@ class RenewMembershipJob implements ShouldQueue
                         ],
                         [
                             'key' => '_order_synced_with_kinja_admin',
-                            'value' => 'yes'
-                        ]
+                            'value' => 'yes',
+                        ],
                     ],
                 ];
 
