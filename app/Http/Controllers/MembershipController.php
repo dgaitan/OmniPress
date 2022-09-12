@@ -10,6 +10,7 @@ use App\Models\WooCommerce\Product;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use Maatwebsite\Excel\Facades\Excel;
@@ -234,6 +235,22 @@ class MembershipController extends Controller
         );
 
         $memberships = $memberships->map(function ($m) {
+            $giftProduct = $m->gift_product_id
+                ? Product::whereProductId($m->gift_product_id)->pluck('name')->first()
+                : '-';
+
+            if (is_null($giftProduct)) {
+                Log::warning(
+                    sprintf(
+                        'Membership #%s did not found product gift with id #%s',
+                        $m->id,
+                        $m->gift_product_id
+                    )
+                );
+
+                $giftProduct = '-';
+            }
+
             return [
                 'id' => $m->id,
                 'customer' => sprintf(
@@ -243,9 +260,7 @@ class MembershipController extends Controller
                 ),
                 'status' => $m->status,
                 'shipping_status' => $m->shipping_status,
-                'giftProduct' => $m->gift_product_id
-                    ? Product::whereProductId($m->gift_product_id)->pluck('name')[0]
-                    : '-',
+                'giftProduct' => $giftProduct,
                 'start_at' => $m->start_at->format('F j, Y'),
                 'end_at' => $m->end_at->format('F j, Y'),
                 'kindCash' => $m->kindCash->cashForHuman(),
