@@ -174,19 +174,21 @@ class MembershipController extends Controller
 
         $points = (int) ((float) $request->input('points') * 100);
 
+        // If the cash is different than current one. It means that admin
+        // is updating kindcash.
         if ($points !== $membership->kindCash->points) {
-            $membership->kindCash->update([
-                'points' => $points,
-            ]);
-            $membership->kindCash->addLog('earned', $points, sprintf(
-                'Kind Cash added by %s',
-                $request->user()->email
-            ));
+            $membership->updateCash(
+                cash: $request->input('points'),
+                addedBy: $request->user()->email
+            );
+
+            // Sending kindcash to kindhumans store.
+            UpdateClientKindCashAction::dispatch(membership: $membership);
         }
 
         Cache::tags('memberships')->flush();
 
-        return back();
+        return $this->goBack(message: 'Membership was updated successfully!');
     }
 
     /**
