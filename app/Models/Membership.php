@@ -220,7 +220,7 @@ class Membership extends Model
     /**
      * Determine is the membership customer has payment method.
      *
-     * @return boolean
+     * @return bool
      */
     public function customerHasPaymentMethod(): bool
     {

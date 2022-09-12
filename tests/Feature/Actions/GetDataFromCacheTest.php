@@ -91,5 +91,4 @@ it('should return the default value', function () {
     expect($value)->toBe('This is a new value');
     expect(Cache::tags('my_tag')->get('my_cache_key', 'default'))
         ->toBe('This is a new value');
-
 })->group($testsGroup);

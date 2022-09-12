@@ -16,8 +16,7 @@ class GetDataFromCache
         \DateTimeInterface|\DateInterval|int|null $expiration,
         Closure $closure,
         mixed $default = null
-    ): mixed
-    {
+    ): mixed {
         if (Cache::tags($tag)->has($cacheKey)) {
             return Cache::tags($tag)->get($cacheKey, $default);
         }

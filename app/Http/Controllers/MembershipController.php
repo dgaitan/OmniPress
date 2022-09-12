@@ -71,7 +71,7 @@ class MembershipController extends Controller
                         'email' => $customer->email,
                     ],
                     'giftProduct' => $giftProduct,
-                    'has_payment_method' => $m->customerHasPaymentMethod()
+                    'has_payment_method' => $m->customerHasPaymentMethod(),
                 ];
             }),
             'statuses' => Membership::getStatuses(),
@@ -508,7 +508,7 @@ class MembershipController extends Controller
      * Retrieve the giftproduct json data to return in
      * Membership List View in dashboard.
      *
-     * @param Membership $membership
+     * @param  Membership  $membership
      * @return array|null
      */
     protected function getGiftProductData(Membership $membership): array|null
