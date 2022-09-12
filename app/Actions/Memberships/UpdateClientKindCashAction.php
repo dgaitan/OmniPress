@@ -14,8 +14,8 @@ class UpdateClientKindCashAction
     /**
      * Update KindCash on store
      *
-     * @param Membership $membership
-     * @return Membership|boolean
+     * @param  Membership  $membership
+     * @return Membership|bool
      */
     public function handle(Membership $membership): Membership|bool
     {
@@ -26,14 +26,14 @@ class UpdateClientKindCashAction
 
             if ($response->ok()) {
                 $membership->logs()->create([
-                    'description' => sprintf('Client KindCash updated to %s', $response->json()['kind_cash'])
+                    'description' => sprintf('Client KindCash updated to %s', $response->json()['kind_cash']),
                 ]);
             }
 
             return $membership;
         } catch (Throwable $e) {
             $membership->logs()->create([
-                'description' => $e->getMessage()
+                'description' => $e->getMessage(),
             ]);
 
             return false;

@@ -13,18 +13,17 @@ class AddKindCashAction
     /**
      * Action to add kindcash to an existing Membership
      *
-     * @param Membership $membership - The membership to apply kind cash
-     * @param int $cash - The cash to add.
-     * @param bool $override - it means that it will update the entire cash. Otherwise it will add the cash.
+     * @param  Membership  $membership - The membership to apply kind cash
+     * @param  int  $cash - The cash to add.
+     * @param  bool  $override - it means that it will update the entire cash. Otherwise it will add the cash.
      * @return void
      */
     public function handle(
         Membership $membership,
-        int|float|string $cash = 0,
-        bool $override = false,
+        int|float|string $cash,
+        bool $override,
         string|null $addedBy
-    ): Membership
-    {
+    ): Membership {
         // Expired memberships can't collect cash
         if ($membership->isExpired()) {
             return $membership;
@@ -32,7 +31,7 @@ class AddKindCashAction
 
         // Convert the amount in $$ to cents
         $cash = (int) ((float) $cash * 100);
-        $message = "Kind Cash added.";
+        $message = 'Kind Cash added.';
 
         if (! is_null($addedBy)) {
             $message = sprintf(
@@ -43,7 +42,7 @@ class AddKindCashAction
 
         if (! $override) {
             $membership->kindCash->update([
-                'last_earned' => $cash
+                'last_earned' => $cash,
             ]);
         }
 

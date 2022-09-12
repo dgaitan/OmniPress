@@ -52,7 +52,7 @@ class MembershipResource extends BaseResource implements ResourceContract
     /**
      * Update the client kindcash in Kindhumans store.
      *
-     * @param integer|Membership $membership
+     * @param  int|Membership  $membership
      * @return Response
      */
     public function updateClientKindCash(int|Membership $membership): Response
@@ -75,7 +75,7 @@ class MembershipResource extends BaseResource implements ResourceContract
             ),
             [
                 'customer_id' => $membership->customer->customer_id,
-                'kind_cash' => $membership->kindCash->points
+                'kind_cash' => $membership->kindCash->points,
             ]
         );
     }

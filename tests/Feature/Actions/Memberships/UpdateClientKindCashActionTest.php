@@ -19,7 +19,7 @@ it('should update membership kind cash on kindhumans store', function () {
         $this->getUrl(endpoint: 'kindhumans-memberships/1/update-kind-cash') => Http::response(
             body: ['kind_cash' => 500],
             status: 200,
-        )
+        ),
     ]);
 
     $membership = Membership::find(1);

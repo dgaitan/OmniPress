@@ -19,7 +19,7 @@ it('should update kind cash value in the store', function () {
         $this->getUrl(endpoint: 'kindhumans-memberships/1/update-kind-cash') => Http::response(
             body: ['kind_cash' => 500],
             status: 200,
-        )
+        ),
     ]);
 
     $api = WooCommerceService::make();
@@ -32,7 +32,7 @@ it('should update kind cash value in the store', function () {
     $this->assertTrue($response->ok());
     $this->assertEquals(200, $response->status());
     $this->assertEquals($response->json(), [
-        'kind_cash' => 500
+        'kind_cash' => 500,
     ]);
 })->group($testsGroup);
 
@@ -41,7 +41,7 @@ it('should fails when a membership id fails', function () {
         $this->getUrl(endpoint: 'kindhumans-memberships/1/update-kind-cash') => Http::response(
             body: ['message' => 'Invalid Membership ID. Customer is not owner of the membership'],
             status: 403,
-        )
+        ),
     ]);
 
     $api = WooCommerceService::make();
@@ -54,6 +54,6 @@ it('should fails when a membership id fails', function () {
     $this->assertFalse($response->ok());
     $this->assertEquals(403, $response->status());
     $this->assertEquals($response->json(), [
-        'message' => 'Invalid Membership ID. Customer is not owner of the membership'
+        'message' => 'Invalid Membership ID. Customer is not owner of the membership',
     ]);
 })->group($testsGroup);
