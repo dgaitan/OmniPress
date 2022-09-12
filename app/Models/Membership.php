@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Actions\GetDataFromCache;
 use App\Actions\Memberships\AddKindCashAction;
 use App\Actions\Memberships\RenewAction;
 use App\Mail\Memberships\MembershipCancelled;
@@ -204,9 +205,32 @@ class Membership extends Model
      */
     public function getCurrentOrder(): Order
     {
-        return $this->orders()
-            ->orderBy('date_created', 'desc')
-            ->first();
+        return GetDataFromCache::run(
+            tag: 'memberships',
+            cacheKey: sprintf('membersip_%s_current_order', $this->id),
+            expiration: now()->addYear(),
+            closure: function () {
+                return $this->orders()
+                    ->orderBy('date_created', 'desc')
+                    ->first();
+            }
+        );
+    }
+
+    /**
+     * Determine is the membership customer has payment method.
+     *
+     * @return bool
+     */
+    public function customerHasPaymentMethod(): bool
+    {
+        return GetDataFromCache::run(
+            tag: 'memberships',
+            cacheKey: sprintf('membership_%s_has_payment_method', $this->id),
+            expiration: now()->addYear(),
+            closure: fn () => $this->customer->hasPaymentMethod(),
+            default: false
+        );
     }
 
     public function getPriceAsMoney(): Money

@@ -55,6 +55,12 @@
                             </div>
                         </td>
 
+                        <!-- Has Payment Method -->
+                        <td class="font-medium py-4 px-2 whitespace-nowrap">
+                            <XCircleIcon v-if="! membership.has_payment_method" class="w-5 h-5 text-red-500" />
+                            <CheckCircleIcon v-else class="w-5 h-5 text-green-500" />
+                        </td>
+
                         <!-- Product Includes -->
                         <td scope="row" class="font-medium py-4 px-2 flex items-center whitespace-nowrap" v-if="membership.status !== 'awaiting_pick_gift' && membership.giftProduct">
                             <img
@@ -178,6 +184,7 @@
     import Actions from './Partials/MembershipListActions.vue'
     import UpdateKindCash from './Partials/UpdateKindCash.vue'
     import Filters from './Partials/Filters.vue'
+    import { CheckCircleIcon, XCircleIcon } from '@heroicons/vue/solid'
 
     export default defineComponent({
         props: [
@@ -205,7 +212,9 @@
             Confirm,
             Actions,
             UpdateKindCash,
-            Filters
+            Filters,
+            CheckCircleIcon,
+            XCircleIcon
         },
 
         data() {
@@ -264,6 +273,11 @@
                 },
                 {
                     name: 'Customer',
+                    sortable: false,
+                    key: ''
+                },
+                {
+                    name: 'Has Payment Method?',
                     sortable: false,
                     key: ''
                 },
