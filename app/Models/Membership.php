@@ -428,16 +428,15 @@ class Membership extends Model
     /**
      * Add Cash to this membership
      *
-     * @param integer $cash
-     * @param string|null|null $addedBy
+     * @param  int  $cash
+     * @param  string|null|null  $addedBy
      * @return self
      */
     public function addCash(
         int|float|string $cash = 0,
         string|null $addedBy = null,
         bool $override = false
-    ): self
-    {
+    ): self {
         AddKindCashAction::run(
             membership: $this,
             cash: $cash,
@@ -451,8 +450,8 @@ class Membership extends Model
     /**
      * Add Cash to this membership
      *
-     * @param integer $cash
-     * @param string|null|null $addedBy
+     * @param  int  $cash
+     * @param  string|null|null  $addedBy
      * @return self
      */
     public function updateCash(int|float|string $cash = 0, string|null $addedBy = null): self

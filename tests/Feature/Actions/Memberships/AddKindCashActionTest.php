@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Actions\Membership;
+namespace Tests\Feature\Actions\Memberships;
 
 use App\Actions\Memberships\AddKindCashAction;
 use App\Models\Membership;

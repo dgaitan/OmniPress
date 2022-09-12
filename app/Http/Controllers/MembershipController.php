@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Memberships\UpdateClientKindCashAction;
 use App\Exports\MembershipExport;
 use App\Http\Resources\MembershipResource;
 use App\Jobs\Memberships\ManualRenewMembershipJob;
@@ -211,6 +212,9 @@ class MembershipController extends Controller
             cash: $request->input('points'),
             addedBy: $request->user()->email
         );
+
+        // Sending kindcash to kindhumans store.
+        UpdateClientKindCashAction::dispatch(membership: $membership);
 
         Cache::tags('memberships')->flush();
 
