@@ -4,6 +4,7 @@ namespace App\Actions\Memberships;
 
 use App\Models\Membership;
 use App\Services\WooCommerce\WooCommerceService;
+use Illuminate\Support\Facades\Log;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Throwable;
 
@@ -23,6 +24,14 @@ class UpdateClientKindCashAction
 
         try {
             $response = $api->memberships()->updateClientKindCash(membership: $membership);
+
+            Log::info(
+                sprintf(
+                    'Kindcash for membership #%s was updated and synced. Payload: %s',
+                    $membership->id,
+                    $response->body()
+                )
+            );
 
             if ($response->ok()) {
                 $membership->logs()->create([
