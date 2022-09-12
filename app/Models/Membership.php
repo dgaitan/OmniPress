@@ -83,24 +83,24 @@ class Membership extends Model
     use HasFactory;
     use HasMoney;
 
-    const ACTIVE_STATUS = 'active';
+    public const ACTIVE_STATUS = 'active';
 
-    const CANCELLED_STATUS = 'cancelled';
+    public const CANCELLED_STATUS = 'cancelled';
 
-    const EXPIRED_STATUS = 'expired';
+    public const EXPIRED_STATUS = 'expired';
 
-    const IN_RENEWAL_STATUS = 'in_renewal';
+    public const IN_RENEWAL_STATUS = 'in_renewal';
 
-    const AWAITING_PICK_GIFT_STATUS = 'awaiting_pick_gift';
+    public const AWAITING_PICK_GIFT_STATUS = 'awaiting_pick_gift';
 
     // Shipping Statuses
-    const SHIPPING_PENDING_STATUS = 'pending';
+    public const SHIPPING_PENDING_STATUS = 'pending';
 
-    const SHIPPING_CANCELLED_STATUS = 'cancelled';
+    public const SHIPPING_CANCELLED_STATUS = 'cancelled';
 
-    const SHIPPING_SHIPPED_STATUS = 'shipped';
+    public const SHIPPING_SHIPPED_STATUS = 'shipped';
 
-    const SHIPPING_NO_SHIP_STATUS = 'no_ship';
+    public const SHIPPING_NO_SHIP_STATUS = 'no_ship';
 
     protected $casts = [
         'start_at' => 'date',
