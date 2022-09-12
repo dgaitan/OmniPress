@@ -244,15 +244,15 @@ it('should be able to add kind cash', function () {
 
     $request = $this->post('/api/v1/memberships/1/cash/add', [
         'points' => 100,
-        'message' => 'Points earned by purchase'
+        'message' => 'Points earned by purchase',
     ]);
 
     $request->assertOk();
     $request->assertStatus(200);
 
     $request->assertJson([
-        "id" => 1,
-        "points" => 850,
-        "last_earned" => 100
+        'id' => 1,
+        'points' => 850,
+        'last_earned' => 100,
     ]);
 })->group($testsGroup);
