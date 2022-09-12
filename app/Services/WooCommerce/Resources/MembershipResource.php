@@ -71,7 +71,7 @@ class MembershipResource extends BaseResource implements ResourceContract
             sprintf(
                 '%s/%s/update-kind-cash',
                 $this->endpoint,
-                400
+                $membership->id,
             ),
             [
                 'customer_id' => $membership->customer->customer_id,
