@@ -11,7 +11,13 @@ class UpdateClientKindCashAction
 {
     use AsAction;
 
-    public function handle(Membership $membership): Membership
+    /**
+     * Update KindCash on store
+     *
+     * @param Membership $membership
+     * @return Membership|boolean
+     */
+    public function handle(Membership $membership): Membership|bool
     {
         $api = WooCommerceService::make();
 
@@ -23,12 +29,14 @@ class UpdateClientKindCashAction
                     'description' => sprintf('Client KindCash updated to %s', $response->json()['kind_cash'])
                 ]);
             }
+
+            return $membership;
         } catch (Throwable $e) {
             $membership->logs()->create([
                 'description' => $e->getMessage()
             ]);
-        }
 
-        return $membership;
+            return false;
+        }
     }
 }
