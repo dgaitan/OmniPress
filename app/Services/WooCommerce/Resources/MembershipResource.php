@@ -2,9 +2,12 @@
 
 namespace App\Services\WooCommerce\Resources;
 
+use App\Models\Membership;
 use App\Services\Contracts\ResourceContract;
 use App\Services\Resources\BaseResource;
 use App\Services\WooCommerce\Factories\MembershipFactory;
+use Illuminate\Http\Client\Response;
+use InvalidArgumentException;
 
 class MembershipResource extends BaseResource implements ResourceContract
 {
@@ -43,6 +46,37 @@ class MembershipResource extends BaseResource implements ResourceContract
         return $this->service->put(
             sprintf('%s/%s/set-gift', $this->endpoint, $order_id),
             []
+        );
+    }
+
+    /**
+     * Update the client kindcash in Kindhumans store.
+     *
+     * @param integer|Membership $membership
+     * @return Response
+     */
+    public function updateClientKindCash(int|Membership $membership): Response
+    {
+        if (! $membership instanceof Membership) {
+            $membership = Membership::find($membership);
+        }
+
+        if (is_null($membership)) {
+            throw new InvalidArgumentException(
+                sprintf('Invalid Membership to update client kind cash on: %s. Integer or a Membership is needed.', self::class)
+            );
+        }
+
+        return $this->service->post(
+            sprintf(
+                '%s/%s/update-kind-cash',
+                $this->endpoint,
+                400
+            ),
+            [
+                'customer_id' => $membership->customer->customer_id,
+                'kind_cash' => $membership->kindCash->points
+            ]
         );
     }
 }
