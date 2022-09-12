@@ -50,22 +50,7 @@ class MembershipController extends Controller
                 $customer = $m->customer;
                 $cash = $m->kindCash;
                 $currentOrder = $m->getCurrentOrder();
-                $giftProduct = null;
-
-                if ($m->gift_product_id) {
-                    $giftProduct = Product::with('images')
-                        ->whereProductId($m->gift_product_id)->first();
-
-                    if (! is_null($giftProduct)) {
-                        $giftProduct = [
-                            'id' => $giftProduct->id,
-                            'product_id' => $giftProduct->product_id,
-                            'name' => $giftProduct->name,
-                            'sku' => $giftProduct->sku,
-                            'image' => $giftProduct->featuredImage(),
-                        ];
-                    }
-                }
+                $giftProduct = $this->getGiftProductData(membership: $m);
 
                 return [
                     'id' => $m->id,
@@ -86,6 +71,7 @@ class MembershipController extends Controller
                         'email' => $customer->email,
                     ],
                     'giftProduct' => $giftProduct,
+                    'has_payment_method' => $customer->hasPaymentMethod()
                 ];
             }),
             'statuses' => Membership::getStatuses(),
@@ -516,5 +502,42 @@ class MembershipController extends Controller
             $cacheKey,
             $memberships,
         ];
+    }
+
+    /**
+     * Retrieve the giftproduct json data to return in
+     * Membership List View in dashboard.
+     *
+     * @param Membership $membership
+     * @return array|null
+     */
+    protected function getGiftProductData(Membership $membership): array|null
+    {
+        $giftProduct = null;
+        $cacheKey = sprintf('gift_product_for_%s', $membership->id);
+
+        if (Cache::tags('memberships')->has($cacheKey)) {
+            return Cache::tags('memberships')->get($cacheKey);
+        }
+
+        if ($membership->gift_product_id) {
+            $giftProduct = Product::with('images')
+                ->whereProductId($membership->gift_product_id)
+                ->first();
+
+            if (! is_null($giftProduct)) {
+                $giftProduct = [
+                    'id' => $giftProduct->id,
+                    'product_id' => $giftProduct->product_id,
+                    'name' => $giftProduct->name,
+                    'sku' => $giftProduct->sku,
+                    'image' => $giftProduct->featuredImage(),
+                ];
+            }
+        }
+
+        Cache::tags('memberships')->set($cacheKey, $giftProduct, now()->addYear());
+
+        return $giftProduct;
     }
 }
