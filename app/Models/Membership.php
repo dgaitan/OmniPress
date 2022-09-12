@@ -217,6 +217,22 @@ class Membership extends Model
         );
     }
 
+    /**
+     * Determine is the membership customer has payment method.
+     *
+     * @return boolean
+     */
+    public function customerHasPaymentMethod(): bool
+    {
+        return GetDataFromCache::run(
+            tag: 'memberships',
+            cacheKey: sprintf('membership_%s_has_payment_method', $this->id),
+            expiration: now()->addYear(),
+            closure: fn () => $this->customer->hasPaymentMethod(),
+            default: false
+        );
+    }
+
     public function getPriceAsMoney(): Money
     {
         return $this->getMoneyValue('price');

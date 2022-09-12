@@ -71,7 +71,7 @@ class MembershipController extends Controller
                         'email' => $customer->email,
                     ],
                     'giftProduct' => $giftProduct,
-                    'has_payment_method' => $customer->hasPaymentMethod()
+                    'has_payment_method' => $m->customerHasPaymentMethod()
                 ];
             }),
             'statuses' => Membership::getStatuses(),
