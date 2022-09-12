@@ -236,10 +236,10 @@ class MembershipController extends Controller
 
         $memberships = $memberships->map(function ($m) {
             $giftProduct = $m->gift_product_id
-                ? Product::whereProductId($m->gift_product_id)->pluck('name')
-                : null;
+                ? Product::whereProductId($m->gift_product_id)->pluck('name')->first()
+                : '-';
 
-            if (is_null($giftProduct) && $m->gift_product_id) {
+            if (is_null($giftProduct)) {
                 Log::warning(
                     sprintf(
                         'Membership #%s did not found product gift with id #%s',
@@ -247,9 +247,9 @@ class MembershipController extends Controller
                         $m->gift_product_id
                     )
                 );
-            }
 
-            $giftProduct = is_null($giftProduct) ? '-' : $giftProduct[0];
+                $giftProduct = '-';
+            }
 
             return [
                 'id' => $m->id,
