@@ -291,7 +291,7 @@ it('should renew a membership from kindhumans store', function () {
     $response = $this->post('api/v1/memberships/renew', [
         'order_id' => 454545,
         'membership_id' => 1,
-        'gift_product_id' => 544443
+        'gift_product_id' => 544443,
     ]);
 
     $response->assertOk();
