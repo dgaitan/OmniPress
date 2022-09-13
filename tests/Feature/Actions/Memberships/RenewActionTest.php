@@ -126,3 +126,37 @@ it('should renew the membership', function () {
 
     Mail::assertQueued(MembershipRenewed::class);
 })->group($testsGroup);
+
+it('should send change to in-renewal when renewal action cant find a payment method', function () {
+    Mail::fake();
+
+    $membership = Membership::find(1);
+    $membership->update([
+        'end_at' => Carbon::now()
+    ]);
+    RenewAction::run(membership: $membership);
+
+    $membership = Membership::find(1);
+    expect($membership->status)->toBe(Membership::IN_RENEWAL_STATUS);
+    expect($membership->isInRenewal())->toBe(true);
+    expect($membership->shipping_status)->toBe('N/A');
+
+    Mail::assertQueued(PaymentNotFound::class);
+})->group($testsGroup);
+
+it('should send reminder to renew if customer does not have a payment mehtod', function () {
+    Mail::fake();
+    $membership = Membership::find(1);
+    $membership->update([
+        'end_at' => Carbon::now()->subDays(3)
+    ]);
+
+    RenewAction::run(membership: $membership);
+
+    $membership = Membership::find(1);
+    expect($membership->status)->toBe(Membership::IN_RENEWAL_STATUS);
+    expect($membership->isInRenewal())->toBe(true);
+    expect($membership->shipping_status)->toBe('N/A');
+
+    Mail::assertQueued(PaymentNotFound::class);
+})->group($testsGroup);
