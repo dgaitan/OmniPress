@@ -132,7 +132,7 @@ it('should send change to in-renewal when renewal action cant find a payment met
 
     $membership = Membership::find(1);
     $membership->update([
-        'end_at' => Carbon::now()
+        'end_at' => Carbon::now(),
     ]);
     RenewAction::run(membership: $membership);
 
@@ -148,7 +148,7 @@ it('should send reminder to renew if customer does not have a payment mehtod', f
     Mail::fake();
     $membership = Membership::find(1);
     $membership->update([
-        'end_at' => Carbon::now()->subDays(3)
+        'end_at' => Carbon::now()->subDays(3),
     ]);
 
     RenewAction::run(membership: $membership);
