@@ -50,8 +50,12 @@ class RenewalReminder extends Mailable
      */
     public function build()
     {
+        $template = $this->membership->customer->hasPaymentMethod()
+            ? 'emails.memberships.renewal-reminder'
+            : 'emails.memberships.renewal-reminder-without-payment';
+
         return $this->subject(sprintf('Your membership will renew in %s days', $this->days))
-            ->view('emails.memberships.renewal-reminder')
+            ->view($template)
             ->with([
                 'customerName' => $this->membership->customer->getFullName(),
                 'days' => $this->days,
@@ -59,6 +63,7 @@ class RenewalReminder extends Mailable
                 'memberEnd' => $this->membership->end_at->format('F j, Y'),
                 'kindCash' => $this->membership->kindCash->cashForHuman(),
                 'accountUrl' => sprintf('%s/my-account/account-settings/', env('CLIENT_DOMAIN', 'https://kindhumans.com')),
+                'paymentMethodsUrl' => sprintf('%s/my-account/payment-methods/', env('CLIENT_DOMAIN', 'https://kindhumans.com'))
             ]);
     }
 }
