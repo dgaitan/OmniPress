@@ -16,6 +16,8 @@ class MembershipResource extends JsonResource
     {
         $data = [
             'id' => $this->id,
+            'start_at' => $this->start_at,
+            'end_at' => $this->end_at,
             'customer_email' => $this->customer_email,
             'product_id' => $this->product->product_id,
             'price' => $this->price,
