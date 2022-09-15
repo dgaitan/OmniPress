@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Actions\WooCommerce\Products\SyncProductAction;
 use App\Actions\WooCommerce\SyncResourceAction;
 use App\Http\Controllers\Controller;
 use App\Models\WooCommerce\Order;
@@ -66,6 +67,13 @@ class SyncController extends Controller
             if (! is_null($order) && $order->printforiaOrder()->exists()) {
                 $order->printforiaOrder->cancelOrder();
             }
+        }
+
+        if (
+            $request->resource === 'products'
+            && ( $request->data['status'] === 'publish' || $request->data['type'] === 'variable' )
+        ) {
+            SyncProductAction::dispatch(productId: $request->data['id']);
         }
 
         return response()->json([
