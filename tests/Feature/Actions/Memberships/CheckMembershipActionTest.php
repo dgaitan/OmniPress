@@ -62,6 +62,42 @@ it('should send a renewal reminder', function () {
     Mail::assertQueued(RenewalReminder::class);
 })->group($testsGroup);
 
+it('should send a renewal reminder 5 days before', function () {
+    Queue:fake();
+    Mail::fake();
+
+    $membership = Membership::find(1);
+    $membership->update([
+        'end_at' => now()->addDays(5),
+    ]);
+
+    CheckMembershipAction::run(allMembership: false, membership: $membership);
+
+    $updatedMembership = Membership::find(1);
+    $this->assertTrue($updatedMembership->isActive());
+    $this->assertEquals(5, $updatedMembership->daysUntilRenewal());
+
+    Mail::assertQueued(RenewalReminder::class);
+})->group($testsGroup);
+
+it('should send a renewal reminder 3 days before', function () {
+    Queue:fake();
+    Mail::fake();
+
+    $membership = Membership::find(1);
+    $membership->update([
+        'end_at' => now()->addDays(3),
+    ]);
+
+    CheckMembershipAction::run(allMembership: false, membership: $membership);
+
+    $updatedMembership = Membership::find(1);
+    $this->assertTrue($updatedMembership->isActive());
+    $this->assertEquals(3, $updatedMembership->daysUntilRenewal());
+
+    Mail::assertQueued(RenewalReminder::class);
+})->group($testsGroup);
+
 it('should try to renew but will fails because customer does not have payment method', function () {
     Mail::fake();
     Queue::fake();
