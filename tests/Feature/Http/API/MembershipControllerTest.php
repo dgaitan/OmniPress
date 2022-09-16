@@ -3,6 +3,8 @@
 namespace Tests\Feature\Http\API;
 
 use App\Jobs\Memberships\NewMembershipJob;
+use App\Jobs\Memberships\SyncNewMemberOrder;
+use App\Mail\Memberships\MembershipRenewed;
 use App\Models\KindCash;
 use App\Models\Membership;
 use App\Models\User;
@@ -13,9 +15,10 @@ use App\Models\WooCommerce\Product;
 use App\Services\WooCommerce\WooCommerceService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Queue;
 
-$testsGroup = 'memberships';
+$testsGroup = 'memberships_api';
 
 beforeEach(function () {
     $this->disableScout();
@@ -244,15 +247,56 @@ it('should be able to add kind cash', function () {
 
     $request = $this->post('/api/v1/memberships/1/cash/add', [
         'points' => 100,
-        'message' => 'Points earned by purchase'
+        'message' => 'Points earned by purchase',
     ]);
 
     $request->assertOk();
     $request->assertStatus(200);
 
     $request->assertJson([
-        "id" => 1,
-        "points" => 850,
-        "last_earned" => 100
+        'id' => 1,
+        'points' => 850,
+        'last_earned' => 100,
     ]);
+})->group($testsGroup);
+
+it('should renew a membership from kindhumans store', function () {
+    $this->requestNewMembership();
+    Mail::fake();
+    Queue::fake();
+
+    // Let's mock the order that was created from kindhumans when customer
+    // renew it manually
+    Http::fake([
+        $this->getUrl(endpoint: 'orders/454545') => Http::response(
+            body: $this->fixture('Memberships/OrderFromKindhumans'),
+            status: 200
+        ),
+        $this->getUrl(endpoint: 'customers/2064') => Http::response(
+            body: $this->fixture('WooCommerce/CustomerDetail'),
+            status: 200
+        ),
+    ]);
+
+    $api = WooCommerceService::make();
+    $api->orders()->getAndSync(454545);
+
+    // Let's mock a membership In-Renewal
+    $membership = Membership::find(1);
+    $membership->update([
+        'end_date' => Carbon::now()->subDays(20),
+        'status' => Membership::IN_RENEWAL_STATUS,
+    ]);
+
+    $response = $this->post('api/v1/memberships/renew', [
+        'order_id' => 454545,
+        'membership_id' => 1,
+        'gift_product_id' => 544443,
+    ]);
+
+    $response->assertOk();
+    $response->assertStatus(200);
+
+    Mail::assertQueued(MembershipRenewed::class);
+    Queue::assertPushed(SyncNewMemberOrder::class);
 })->group($testsGroup);

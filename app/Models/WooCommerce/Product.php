@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Cache;
 use Laravel\Scout\Searchable;
 
 /**
@@ -301,13 +302,25 @@ class Product extends Model
      */
     public function featuredImage(): ProductImage|null
     {
+        $cacheKey = sprintf(
+            'featured_image_for_%s', $this->product_id
+        );
+
+        if (Cache::tags('products')->has($cacheKey)) {
+            return Cache::tags('products')->get($cacheKey, null);
+        }
+
         if ($this->images->isEmpty() && $this->isVariation()) {
             return $this->parent->featuredImage();
         }
 
-        return $this->images->isNotEmpty()
+        $featuredImage = $this->images->isNotEmpty()
             ? $this->images()->first()
             : null;
+
+        Cache::tags('products')->set($cacheKey, $featuredImage, now()->addWeek());
+
+        return $featuredImage;
     }
 
     /**
