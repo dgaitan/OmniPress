@@ -104,6 +104,7 @@ class PrintforiaOrder extends Model
     protected $casts = [
         'ship_to_address' => 'object',
         'return_to_address' => 'object',
+        'email_sent' => 'boolean'
     ];
 
     /**
@@ -120,6 +121,7 @@ class PrintforiaOrder extends Model
         'ioss_number',
         'status',
         'printforia_order_id',
+        'email_sent'
     ];
 
     /**
