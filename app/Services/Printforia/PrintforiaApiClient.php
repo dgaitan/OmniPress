@@ -81,15 +81,21 @@ class PrintforiaApiClient
      * GEt a simple order
      *
      * @param  string  $orderId
-     * @return void
+     * @return Response
      */
-    public function getOrder(string $orderId)
+    public function getOrder(string $orderId): Response
     {
         return $this->request()->get(
             $this->getApiUrl(sprintf('orders/%s', $orderId))
         );
     }
 
+    /**
+     * Cancell an order
+     *
+     * @param string $orderId
+     * @return Response
+     */
     public function cancellOrder(string $orderId): Response
     {
         return $this->request()->patch(

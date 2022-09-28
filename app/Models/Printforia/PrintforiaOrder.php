@@ -21,8 +21,8 @@ use Illuminate\Support\Facades\Mail;
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property int $order_id
  * @property string|null $customer_reference
- * @property string|null $ship_to_address
- * @property string|null $return_to_address
+ * @property object|null $ship_to_address
+ * @property object|null $return_to_address
  * @property string|null $shipping_method
  * @property string|null $ioss_number
  * @property string $status

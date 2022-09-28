@@ -196,7 +196,7 @@ It will run the docker image and we should be able to see the site running on ht
 
 ### Running database migrations:
 
-Every time you need to run new migrations on our database you'll need to run the next command:
+Open a new terminal tab. Every time you need to run new migrations on our database you'll need to run the next command:
 
 ``` bash
 $ sail artisan migrate
