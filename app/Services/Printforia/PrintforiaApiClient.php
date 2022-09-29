@@ -45,7 +45,7 @@ class PrintforiaApiClient
      *
      * @param  Order  $order
      * @param  array  $items
-     * @return void
+     * @return Response
      */
     public function createOrder(Order $order, array $items): Response
     {

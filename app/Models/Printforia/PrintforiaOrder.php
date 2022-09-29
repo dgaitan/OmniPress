@@ -121,7 +121,10 @@ class PrintforiaOrder extends Model
         'ioss_number',
         'status',
         'printforia_order_id',
-        'email_sent'
+        'email_sent',
+        'tracking_number',
+        'tracking_url',
+        'carrier'
     ];
 
     /**
@@ -237,10 +240,38 @@ class PrintforiaOrder extends Model
         return PrintforiaService::getOrderItemsHasWooCommerceItems($this);
     }
 
-    public function sendOrderHasShippedEmail()
+    /**
+     * Send Order Has Shipped Email
+     *
+     * @return void
+     */
+    public function sendOrderHasShippedEmail(): void
     {
         Mail::to($this->ship_to_address->email)
             ->queue(new OrderShipped($this));
+    }
+
+    /**
+     * Maybe Send Shipped Email
+     *
+     * @return void
+     */
+    public function maybeSendShippedEmail(): void {
+        if ($this->isProcessed() && ! $this->email_sent) {
+            $this->email_sent = true;
+            $this->sendOrderHasShippedEmail();
+        }
+    }
+
+    /**
+     * IS printforia order processed?
+     * 
+     * It means that is shipped or completed
+     *
+     * @return boolean
+     */
+    public function isProcessed(): bool {
+        return in_array($this->status, ['shipped', 'completed']);
     }
 
     /**
