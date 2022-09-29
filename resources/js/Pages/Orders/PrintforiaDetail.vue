@@ -7,6 +7,7 @@
                 </Column>
                 <Column :mdSize="6" class="text-right">
                     <Button v-if="order.data.status === 'shipped'" size="md" @click="sendOrderShippedEmail">Send Order Shipped Email</Button>
+                    <Button size="md" @click="syncPrintforiaOrder">Sync</Button>
                 </Column>
             </Row>
 
@@ -65,6 +66,14 @@ export default defineComponent({
             this.$inertia.post(route('kinja.orders.printforia.sendPrintforiaShippedEmail'), {
                 order_id: this.order.data.id
             }, { replace: true });
+        },
+
+        syncPrintforiaOrder() {
+            if (confirm('Are you sure?')) {
+                this.$inertia.post(route('kinja.orders.syncPrinftoriaOrder'), {
+                    order_id: this.order.data.id
+                }, { replace: true });
+            }
         }
     }
 })
