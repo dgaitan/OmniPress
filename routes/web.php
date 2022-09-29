@@ -114,6 +114,7 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('/dashboard')->group(fun
             Route::get('/printforia', 'printforiaOrders')->name('kinja.orders.printforiaOrders');
             Route::post('/printforia/send-shipped-email', 'sendPrintforiaShippedEmail')
                 ->name('kinja.orders.printforia.sendPrintforiaShippedEmail');
+            Route::post('/printforia/sync', 'syncPrintforiaOrder')->name('kinja.orders.syncPrinftoriaOrder');
             Route::get('/printforia/{id}', 'printforiaDetail')->name('kinja.orders.printforiaDetail');
             Route::get('/{id}', 'show')->name('kinja.orders.show');
         });

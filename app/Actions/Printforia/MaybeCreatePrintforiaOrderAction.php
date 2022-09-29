@@ -6,13 +6,20 @@ use App\Actions\WooCommerce\Orders\UpdateOrderAction;
 use App\Models\WooCommerce\Order;
 use App\Models\WooCommerce\Product;
 use App\Services\Printforia\PrintforiaApiClient;
+use Illuminate\Support\Facades\Log;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 class MaybeCreatePrintforiaOrderAction
 {
     use AsAction;
 
-    public function handle(Order $order)
+    /**
+     * Create printforia order action
+     *
+     * @param Order $order
+     * @return bool|object
+     */
+    public function handle(Order $order): bool|object
     {
         $order = Order::find($order->id);
         $printforiaOrderItems = [];
@@ -22,7 +29,10 @@ class MaybeCreatePrintforiaOrderAction
                 continue;
             }
 
-            $printforiaOrderItems[] = $this->getPrintforiaLineItem($item->product, $item->quantity);
+            $printforiaOrderItems[] = $this->getPrintforiaLineItem(
+                $item->product, 
+                $item->quantity
+            );
         }
 
         if (count($printforiaOrderItems) === 0) {
@@ -32,16 +42,25 @@ class MaybeCreatePrintforiaOrderAction
         $response = (new PrintforiaApiClient)
             ->createOrder($order, $printforiaOrderItems);
 
-        if ($response->ok()) {
-            CreateOrUpdatePrintforiaOrderAction::run($order, $response->object()->id);
-            UpdateOrderAction::run(
-                $order->order_id,
-                ['meta_data' => [
-                    ['key' => '_printforia_order_id', 'value' => $response->object()->id],
-                ]],
-                true
+        if (! $response->ok()) {
+            Log::error(
+                sprintf(
+                    'Error creating Printforia Order: %s',
+                    $response->body()
+                )
             );
+
+            return false;
         }
+
+        CreateOrUpdatePrintforiaOrderAction::run($order, $response->object()->id);
+        UpdateOrderAction::run(
+            $order->order_id,
+            ['meta_data' => [
+                ['key' => '_printforia_order_id', 'value' => $response->object()->id],
+            ]],
+            true
+        );
 
         return $response->object();
     }

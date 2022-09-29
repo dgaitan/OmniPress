@@ -100,7 +100,7 @@ class Product extends BaseObject implements DataObjectContract
         }
 
         $product->save();
-        $product->syncSubscription();
+        // $product->syncSubscription();
 
         return $product;
     }

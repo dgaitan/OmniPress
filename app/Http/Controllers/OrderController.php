@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Printforia\CreateOrUpdatePrintforiaOrderAction;
 use App\Actions\WooCommerce\Orders\UpdateOrderAction;
 use App\Exports\OrderUSPSExport;
 use App\Http\Resources\OrderResource;
@@ -12,11 +13,14 @@ use App\Models\Printforia\PrintforiaOrder;
 use App\Models\WooCommerce\Order;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Maatwebsite\Excel\Facades\Excel;
+use Throwable;
 
 class OrderController extends Controller
 {
@@ -311,7 +315,13 @@ class OrderController extends Controller
         ]);
     }
 
-    public function sendPrintforiaShippedEmail(Request $request)
+    /**
+     * Send Printforia Shipped Email
+     *
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function sendPrintforiaShippedEmail(Request $request): RedirectResponse
     {
         $printforiaOrder = PrintforiaOrder::find($request->input('order_id'));
         $printforiaOrder->sendOrderHasShippedEmail();
@@ -320,6 +330,42 @@ class OrderController extends Controller
         session()->flash('flash.bannerStyle', 'success');
 
         return back()->banner('Order Email Sent.');
+    }
+
+    /**
+     * Sync Prinftoria ORder
+     *
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function syncPrintforiaOrder(Request $request): RedirectResponse
+    {
+        Validator::make($request->all(), [
+            'order_id' => ['required', 'integer']
+        ])->validateWithBag('printforiaOrderSync');
+        
+        $printforiaOrder = PrintforiaOrder::find($request->input('order_id'));
+
+        if (is_null($printforiaOrder)) {
+            return $this->goBack('Order not found!');
+        }
+
+        try {
+            CreateOrUpdatePrintforiaOrderAction::run(
+                $printforiaOrder->order, 
+                $printforiaOrder->printforia_order_id
+            );
+        } catch (Throwable $e) {
+            return $this->goBack(
+                sprintf(
+                    'Error: %s',
+                    $e->getMessage()
+                )
+            );
+        }
+
+
+        return $this->goBack('Printforia Order was synced');
     }
 
     /**
