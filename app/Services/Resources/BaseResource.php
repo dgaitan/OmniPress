@@ -122,11 +122,18 @@ abstract class BaseResource
      */
     public function get(int|string $id): DataObjectContract|null
     {
-        $response = $this->service->get(
-            sprintf('%s/%s', $this->endpoint, $id)
-        );
+        $url = sprintf('%s/%s', $this->endpoint, $id);
+        $response = $this->service->get($url);
 
         if (! $response->ok()) {
+            Log::error(
+                sprintf(
+                    'There was an error during request to %s. Error: %s',
+                    $url,
+                    $response->body()
+                )
+            );
+            
             return null;
         }
 
