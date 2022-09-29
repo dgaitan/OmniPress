@@ -2,6 +2,7 @@
 
 namespace App\Actions\Printforia;
 
+use App\Events\PrintforiaOrderWasShipped;
 use App\Models\Printforia\PrintforiaOrder;
 use App\Models\Printforia\PrintforiaOrderItem;
 use App\Models\Printforia\PrintforiaOrderNote;
@@ -39,8 +40,19 @@ class CreateOrUpdatePrintforiaOrderAction
             'ioss_number' => $printforiaApiData->ioss_number,
             'status' => $printforiaApiData->status,
         ]);
-        $printforiaOrder->save();
 
+        
+        if ($printforiaOrder->isProcessed() && isset($printforiaApiData->tracking_number)) {
+            $printforiaOrder->tracking_number = $printforiaApiData->tracking_number;
+            $printforiaOrder->tracking_url = $printforiaApiData->tracking_url;
+            $printforiaOrder->carrier = $printforiaApiData->carrier;
+
+            PrintforiaOrderWasShipped::dispatch($printforiaOrder);
+        }
+        
+        $printforiaOrder->maybeSendShippedEmail();
+        $printforiaOrder->save();
+        
         $this->collectItems($printforiaApiData, $printforiaOrder);
         $this->collectNotes($printforiaApiData, $printforiaOrder);
 

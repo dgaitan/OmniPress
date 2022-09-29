@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Routing\Controller as BaseController;
@@ -155,9 +156,9 @@ class Controller extends BaseController
      * Go Back with a message if needed
      *
      * @param  string  $message
-     * @return void
+     * @return RedirectResponse
      */
-    public function goBack(string $message = '')
+    public function goBack(string $message = ''): RedirectResponse
     {
         if ($message) {
             session()->flash('flash.banner', $message);

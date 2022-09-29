@@ -132,6 +132,7 @@ class Product extends Model
         'settings' => 'object',
         'meta_data' => 'array',
         'date_created' => 'datetime',
+        'is_printforia' => 'boolean'
     ];
 
     protected $fillable = [

@@ -418,7 +418,7 @@ class MembershipController extends Controller
 
         return response()->json([
             'success' => true,
-            'membership' => $membership->toArray(),
+            'membership' => new MembershipResource($membership),
         ]);
     }
 }
