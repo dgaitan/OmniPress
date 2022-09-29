@@ -1,95 +1,98 @@
 <template>
     <layout title="Printforia Orders">
 
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <ListWrapper title="Printforia Orders">
-                <!-- Actions -->
-                <template #actions>
-                    <div class="flex items-center">
-                        <!-- SearchBox -->
-                        <jet-input v-model="filters.s" type="search" v-on:keyup.enter="search" placeholder="Search..." style="width:350px" />
-                    </div>
-                </template>
+        <ListWrapper title="Printforia Orders" :fluid="true">
+            <!-- Actions -->
+            <template #actions>
+                <div class="flex items-center">
+                    <!-- SearchBox -->
+                    <jet-input v-model="filters.s" type="search" v-on:keyup.enter="search" placeholder="Search..." style="width:350px" />
+                </div>
+            </template>
 
-                <!-- FIlters -->
-                <template #filters>
-                    <ListFilter @click="filterStatus('all')" :active="filters.status === '' || filters.status === 'all'">
-                        All
-                    </ListFilter>
-                    <ListFilter
-                        v-for="s in statuses"
-                        @click="filterStatus(s.slug)"
-                        :key="s.slug"
-                        :active="s.slug === filters.status">
-                        {{ s.label }}
-                    </ListFilter>
-                </template>
+            <!-- FIlters -->
+            <template #filters>
+                <ListFilter @click="filterStatus('all')" :active="filters.status === '' || filters.status === 'all'">
+                    All
+                </ListFilter>
+                <ListFilter
+                    v-for="s in statuses"
+                    @click="filterStatus(s.slug)"
+                    :key="s.slug"
+                    :active="s.slug === filters.status">
+                    {{ s.label }}
+                </ListFilter>
+            </template>
 
-                <template #table>
-                    <ListTable :columns="columns" :stateData="this.filters" :selectIds="selectAllIds">
-                        <template #body>
-                            <tr class="text-xs"
-                                v-for="(order, i) in orders.data"
-                                :key="order.id"
-                                v-bind:class="[isOdd(i) ? '' : 'bg-gray-50']">
+            <template #table>
+                <ListTable :columns="columns" :stateData="this.filters" :selectIds="selectAllIds">
+                    <template #body>
+                        <tr class="text-xs"
+                            v-for="(order, i) in orders.data"
+                            :key="order.id"
+                            v-bind:class="[isOdd(i) ? '' : 'bg-gray-50']">
 
-                                <!-- Printforia Order ID -->
-                                <td class="flex items-start py-5 px-6 font-medium cursor-pointer" @click="goToDetail(order)">
-                                    <input class="mr-3" type="checkbox" @change="setIds($event)" :checked="ids.includes(order.id)" :value="order.id">
-                                    {{ order.printforia_order_id }}
-                                </td>
+                            <!-- Printforia Order ID -->
+                            <td class="flex items-start py-5 px-6 font-medium cursor-pointer" @click="goToDetail(order)">
+                                <input class="mr-3" type="checkbox" @change="setIds($event)" :checked="ids.includes(order.id)" :value="order.id">
+                                {{ order.printforia_order_id }}
+                            </td>
 
-                                <!-- Order Id -->
-                                <td class="font-medium px-2 cursor-pointer" @click="goToDetail(order)">
-                                    #{{ order.order.order_id }}
-                                </td>
+                            <!-- Order Id -->
+                            <td class="font-medium px-2 cursor-pointer" @click="goToDetail(order)">
+                                #{{ order.order.order_id }}
+                            </td>
 
-                                <!-- Status -->
-                                <td class="font-medium px-2 cursor-pointer" @click="goToDetail(order)">
-                                    <Status :status="order.status" />
-                                </td>
+                            <!-- Status -->
+                            <td class="font-medium px-2 cursor-pointer" @click="goToDetail(order)">
+                                <Status :status="order.status" />
+                            </td>
 
-                                <!-- Email -->
-                                <td class="font-medium px-2 cursor-pointer" @click="goToDetail(order)">
-                                    {{ order.ship_to_address.email }}
-                                </td>
+                            <!-- Created At -->
+                            <td class="font-medium px-2 cursor-pointer" @click="goToDetail(order)">
+                                {{ displayMoment(order.created_at, 'LL') }}
+                            </td>
 
-                                <td class="px-2 py-3 font-medium text-gray-500 cursor-pointer" width="250px" @click="goToDetail(order)">
-                                    <span v-html="order.ship_to_address_formatted"></span>
-                                </td>
+                            <!-- Email -->
+                            <td class="font-medium px-2 cursor-pointer" @click="goToDetail(order)">
+                                {{ order.ship_to_address.email }}
+                            </td>
 
-                                <td class="px-2 font-medium text-gray-500 cursor-pointer" width="250px" @click="goToDetail(order)">
-                                    <span v-html="order.return_to_address_formatted"></span>
-                                </td>
+                            <td class="px-2 py-3 font-medium text-gray-500 cursor-pointer" width="250px" @click="goToDetail(order)">
+                                <span v-html="order.ship_to_address_formatted"></span>
+                            </td>
 
-                                <!-- Actions -->
-                                <td class="font-medium px-2">
-                                    <jet-dropdown align="right" width="48">
-                                        <template #trigger>
-                                            <button type="button" class="inline-flex items-center px-3 py-2 border border-gray-200 text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:bg-gray-50 hover:text-gray-700 focus:outline-none focus:bg-gray-50 active:bg-gray-50 transition">
-                                                Actions
-                                            </button>
-                                        </template>
-                                        <template #content>
-                                            <div class="">
-                                                <jet-dropdown-link :href="order.permalink" @click="goToDetail(order)">
-                                                    Show
-                                                </jet-dropdown-link>
-                                                <jet-dropdown-link :href="order.woo_permalink" as="a">See WooCommerce Order</jet-dropdown-link>
-                                            </div>
-                                        </template>
-                                    </jet-dropdown>
-                                </td>
-                             </tr>
-                        </template>
-                    </ListTable>
-                </template>
+                            <td class="px-2 font-medium text-gray-500 cursor-pointer" width="250px" @click="goToDetail(order)">
+                                <span v-html="order.return_to_address_formatted"></span>
+                            </td>
 
-                <template #pagination>
-                    <ListPagination :url="route('kinja.orders.printforiaOrders')" :params="this.$props" :stateData="this.filters" />
-                </template>
-            </ListWrapper>
-        </div>
+                            <!-- Actions -->
+                            <td class="font-medium px-2">
+                                <jet-dropdown align="right" width="48">
+                                    <template #trigger>
+                                        <button type="button" class="inline-flex items-center px-3 py-2 border border-gray-200 text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:bg-gray-50 hover:text-gray-700 focus:outline-none focus:bg-gray-50 active:bg-gray-50 transition">
+                                            Actions
+                                        </button>
+                                    </template>
+                                    <template #content>
+                                        <div class="">
+                                            <jet-dropdown-link :href="order.permalink" @click="goToDetail(order)">
+                                                Show
+                                            </jet-dropdown-link>
+                                            <jet-dropdown-link :href="order.woo_permalink" as="a">See WooCommerce Order</jet-dropdown-link>
+                                        </div>
+                                    </template>
+                                </jet-dropdown>
+                            </td>
+                         </tr>
+                    </template>
+                </ListTable>
+            </template>
+
+            <template #pagination>
+                <ListPagination :url="route('kinja.orders.printforiaOrders')" :params="this.$props" :stateData="this.filters" />
+            </template>
+        </ListWrapper>
     </layout>
 </template>
 
@@ -166,6 +169,11 @@
                 },
                 {
                     name: 'Status',
+                    sortable: false,
+                    key: ''
+                },
+                {
+                    name: 'Created At',
                     sortable: false,
                     key: ''
                 },

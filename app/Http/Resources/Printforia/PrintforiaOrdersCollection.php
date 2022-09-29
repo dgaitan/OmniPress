@@ -21,6 +21,7 @@ class PrintforiaOrdersCollection extends ResourceCollection
                     'id' => $order->order->id,
                     'order_id' => $order->order->order_id,
                 ],
+                'created_at' => $order->created_at,
                 'status' => $order->status,
                 'printforia_order_id' => $order->printforia_order_id,
                 'shipping_method' => $order->shipping_method,
