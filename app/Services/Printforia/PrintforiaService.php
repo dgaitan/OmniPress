@@ -265,7 +265,7 @@ class PrintforiaService
 
                 return OrderLine::with('product')
                     ->whereOrderId($printforiaOrder->order_id)
-                    ->where('product_id', $productIds)
+                    ->whereIn('product_id', $productIds)
                     ->get();
             }
         );
