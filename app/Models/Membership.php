@@ -191,11 +191,11 @@ class Membership extends Model
     /**
      * Get Current Gift Product
      *
-     * @return Product
+     * @return Product|null
      */
-    public function getCurrentGiftProduct(): Product
+    public function getCurrentGiftProduct(): Product|null
     {
-        return $this->giftProducts->first();
+        return Product::whereProductId($this->gift_product_id)->first();
     }
 
     /**
