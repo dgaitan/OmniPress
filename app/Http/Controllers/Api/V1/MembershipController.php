@@ -16,6 +16,7 @@ use Carbon\Carbon;
 use Cknow\Money\Money;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
 
 class MembershipController extends Controller
@@ -286,6 +287,8 @@ class MembershipController extends Controller
         $membership->shipping_status = Membership::SHIPPING_PENDING_STATUS;
         $membership->gift_product_id = $request->gift_product_id;
         $membership->save();
+
+        Cache::tags('memberships')->flush();
 
         SingleWooCommerceSync::dispatch(
             $membership->getCurrentOrder()->order_id,
