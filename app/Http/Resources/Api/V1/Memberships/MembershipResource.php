@@ -44,13 +44,16 @@ class MembershipResource extends JsonResource
             'is_cancelled' => $this->isCancelled(),
         ];
 
-        if ($this->gift_product_id) {
+        if ($this->gift_product_id && ! $this->isAwaitingPickGift()) {
             $giftProduct = $this->getCurrentGiftProduct();
-            $data['gift_product'] = [
-                'id' => $giftProduct->product_id,
-                'name' => $giftProduct->name,
-                'sku' => $giftProduct->sku,
-            ];
+
+            if ($giftProduct) {
+                $data['gift_product'] = [
+                    'id' => $giftProduct->product_id,
+                    'name' => $giftProduct->name,
+                    'sku' => $giftProduct->sku,
+                ];
+            }
         }
 
         return $data;
