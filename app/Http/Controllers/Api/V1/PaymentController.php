@@ -68,12 +68,13 @@ class PaymentController extends Controller
                 }
             }
 
-            $customer->charge($request->amount, $request->token, [
+            $paymentIntent = $customer->charge($request->amount, $request->token, [
                 'description' => $request->description,
             ]);
 
             return response()->json([
                 'status' => 'succeeded',
+                'payment_intent_id' => $paymentIntent->id,
                 'card' => $defaultCard ? $defaultCard['card'] : [],
             ], 200);
         } catch (IncompletePayment $exception) {
