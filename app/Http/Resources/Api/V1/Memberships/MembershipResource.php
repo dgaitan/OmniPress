@@ -36,6 +36,7 @@ class MembershipResource extends JsonResource
             'cash' => [
                 'points' => $this->kindCash->points,
                 'last_earned' => $this->kindCash->last_earned,
+                'updated_at' => $this->kindCash->updated_at,
             ],
             'is_active' => $this->isActive(),
             'is_in_renewal' => $this->isInRenewal(),

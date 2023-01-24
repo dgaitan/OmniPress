@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Api\V1\Memberships\MembershipResource;
 use App\Models\WooCommerce\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -40,7 +41,7 @@ class CustomerController extends Controller
             ];
 
             if ($data['has_membership']) {
-                $data['membership'] = $customer->membership()->toArray();
+                $data['membership'] = new MembershipResource($customer->membership());
             }
 
             return response()->json($data, 200);
