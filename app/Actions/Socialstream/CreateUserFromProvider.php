@@ -9,9 +9,9 @@ use JoelButcher\Socialstream\Contracts\CreatesUserFromProvider;
 use JoelButcher\Socialstream\Socialstream;
 use Laravel\Jetstream\Jetstream;
 use Laravel\Socialite\Contracts\User as ProviderUser;
+use Laravel\Socialite\Contracts\User as ProviderUserContract;
 
-class CreateUserFromProvider implements CreatesUserFromProvider
-{
+class CreateUserFromProvider implements CreatesUserFromProvider {
     /**
      * The creates connected accounts instance.
      *
@@ -24,8 +24,7 @@ class CreateUserFromProvider implements CreatesUserFromProvider
      *
      * @param  \JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts  $createsConnectedAccounts
      */
-    public function __construct(CreatesConnectedAccounts $createsConnectedAccounts)
-    {
+    public function __construct(CreatesConnectedAccounts $createsConnectedAccounts) {
         $this->createsConnectedAccounts = $createsConnectedAccounts;
     }
 
@@ -33,11 +32,10 @@ class CreateUserFromProvider implements CreatesUserFromProvider
      * Create a new user from a social provider user.
      *
      * @param  string  $provider
-     * @param  \Laravel\Socialite\Contracts\User  $providerUser
-     * @return \App\Models\User
+     * @param  ProviderUserContract  $providerUser
+     * @return mixed
      */
-    public function create(string $provider, ProviderUser $providerUser)
-    {
+    public function create(string $provider, ProviderUserContract $providerUser): mixed {
         return DB::transaction(function () use ($provider, $providerUser) {
             return tap(User::create([
                 'name' => $providerUser->getName() ?? $providerUser->getNickname(),
