@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Api\V2;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Api\V1\Memberships\MembershipResource;
 use App\Http\Resources\Api\V2\Memberships\MembershipCollection;
 use App\Models\Membership;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class MembershipController extends Controller {
@@ -13,7 +15,7 @@ class MembershipController extends Controller {
      * Main Index List View
      *
      * @param Request $request
-     * @return void
+     * @return MembershipCollection
      */
     public function index(Request $request) {
         $memberships = Membership::with('customer', 'kindCash')
@@ -54,5 +56,23 @@ class MembershipController extends Controller {
         $memberships = $memberships->paginate(50);
 
         return new MembershipCollection($memberships);
+    }
+
+    /**
+     * Show a membership detail
+     *
+     * @param Request $request
+     * @param integer $id
+     * @return void
+     */
+    public function show(Request $request, int $id) {
+        $membership = Membership::find($id);
+        if (!$membership) {
+            return response()->json([
+                'message' => 'Membership Not Found'
+            ], 404);
+        }
+
+        return response()->json(new MembershipResource($membership));
     }
 }

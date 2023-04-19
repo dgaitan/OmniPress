@@ -26,5 +26,6 @@ Route::middleware('auth:sanctum')->name('kinja.api.v2.')->group(function () {
         ->prefix('/memberships')
         ->group(function () {
             Route::get('/', 'index')->name('index');
+            Route::get('/{id}', 'show')->name('show');
         });
 });
