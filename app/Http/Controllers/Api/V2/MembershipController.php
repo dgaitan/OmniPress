@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api\V2;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\V1\Memberships\MembershipResource;
 use App\Http\Resources\Api\V2\Memberships\MembershipCollection;
+use App\Http\Resources\Api\V2\Memberships\MembershipOrdersCollection;
 use App\Models\Membership;
+use App\Models\WooCommerce\Order;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -63,9 +65,9 @@ class MembershipController extends Controller {
      *
      * @param Request $request
      * @param integer $id
-     * @return void
+     * @return JsonResponse
      */
-    public function show(Request $request, int $id) {
+    public function show(Request $request, int $id): JsonResponse {
         $membership = Membership::find($id);
         if (!$membership) {
             return response()->json([
@@ -74,5 +76,23 @@ class MembershipController extends Controller {
         }
 
         return response()->json(new MembershipResource($membership));
+    }
+
+    /**
+     * List Membership Orders
+     *
+     * @return 
+     */
+    public function membershipOrders(Request $request, int $id) {
+        $membership = Membership::find($id);
+        if (!$membership) {
+            return response()->json([
+                'message' => 'Membership Not Found'
+            ], 404);
+        }
+
+        $orders = Order::whereMembershipId($membership->id)->paginate(50);
+
+        return new MembershipOrdersCollection($orders);
     }
 }
