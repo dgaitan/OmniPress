@@ -27,9 +27,19 @@ class MembershipCollection extends ResourceCollection {
                 }
             }
 
+            $currentOrder = [];
+            if ($membership->getCurrentOrder()) {
+                $currentOrder = $membership->getCurrentOrder();
+                $currentOrder = [
+                    'id' => $currentOrder->id,
+                    'woo_order_id' => $currentOrder->order_id,
+                ];
+            }
+
             return [
                 'id' => $membership->id,
                 'customer_email' => $membership->customer_email,
+                'customer_id' => $membership->customer->customer_id,
                 'start_at' => $membership->start_at,
                 'end_at' => $membership->end_at,
                 'price' => $membership->price,
@@ -38,12 +48,14 @@ class MembershipCollection extends ResourceCollection {
                 'status' => $membership->status,
                 'user_picked_gift' => $membership->user_picked_gift,
                 'gift_product' => $giftProduct,
+                'order' => $currentOrder,
                 // Flags
                 'is_active' => $membership->isActive(),
                 'is_in_renewal' => $membership->isInRenewal(),
                 'is_awaiting_pick_gift' => $membership->isAwaitingPickGift(),
                 'is_cancelled' => $membership->isCancelled(),
-                'is_expired' => $membership->isExpired()
+                'is_expired' => $membership->isExpired(),
+                'cash' => $membership->kindCash->toArray()
             ];
         });
     }

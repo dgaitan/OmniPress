@@ -176,6 +176,7 @@ class KindCash extends Model {
 
         $cash['last_earned_as_money'] = $this->getMoneyValue('last_earned');
         $cash['points_as_money'] = $this->getCash();
+        $cash['points_editable'] = Money::USD($cash['points'])->formatByDecimal();
 
         unset($cash['membership_id']);
         unset($cash['created_at']);
