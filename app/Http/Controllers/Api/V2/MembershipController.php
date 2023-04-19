@@ -81,7 +81,7 @@ class MembershipController extends Controller {
     /**
      * List Membership Orders
      *
-     * @return 
+     * @return MembershipOrdersCollection
      */
     public function membershipOrders(Request $request, int $id) {
         $membership = Membership::find($id);
@@ -94,5 +94,16 @@ class MembershipController extends Controller {
         $orders = Order::whereMembershipId($membership->id)->paginate(50);
 
         return new MembershipOrdersCollection($orders);
+    }
+
+    public function membershipKindCash(Request $request, int $id) {
+        $membership = Membership::find($id);
+        if (!$membership) {
+            return response()->json([
+                'message' => 'Membership Not Found'
+            ], 404);
+        }
+
+        return response()->json($membership->kindCash);
     }
 }
