@@ -21,7 +21,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $quantity
  * @property string|null $description
  * @property string|null $prints
- *
  * @method static \Illuminate\Database\Eloquent\Builder|PrintforiaOrderItem newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PrintforiaOrderItem newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PrintforiaOrderItem query()
@@ -36,13 +35,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|PrintforiaOrderItem whereProductId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PrintforiaOrderItem whereQuantity($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PrintforiaOrderItem whereUpdatedAt($value)
- * @mixin \Eloquent
- *
  * @property string $printforia_item_id
  * @property-read \App\Models\Printforia\PrintforiaOrder|null $order
  * @property-read Product|null $product
- *
  * @method static \Illuminate\Database\Eloquent\Builder|PrintforiaOrderItem wherePrintforiaItemId($value)
+ * @mixin \Eloquent
  */
 class PrintforiaOrderItem extends Model
 {

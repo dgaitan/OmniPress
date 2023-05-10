@@ -26,7 +26,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $sku
  * @property mixed|null $price
  * @property-read \App\Models\WooCommerce\Product|null $product
- *
  * @method static \Illuminate\Database\Eloquent\Builder|OrderLine newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|OrderLine newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|OrderLine query()
@@ -46,12 +45,10 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|OrderLine whereTotal($value)
  * @method static \Illuminate\Database\Eloquent\Builder|OrderLine whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|OrderLine whereVariationId($value)
- * @mixin \Eloquent
- *
  * @property int|null $order_id
  * @property-read \App\Models\WooCommerce\Order|null $order
- *
  * @method static \Illuminate\Database\Eloquent\Builder|OrderLine whereOrderId($value)
+ * @mixin \Eloquent
  */
 class OrderLine extends Model
 {
