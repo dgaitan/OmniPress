@@ -21,7 +21,7 @@ class PreOrderDTO extends ValidatedDTO {
             'product_name' => 'required|string',
             'sub_total' => 'required|int',
             'taxes' => 'required|int',
-            'shipping' => 'required|int',
+            'shipping' => 'required |int',
             'total' => 'required|int',
         ];
     }
