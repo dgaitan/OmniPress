@@ -47,9 +47,14 @@ class PreOrderController extends BaseApiController {
      */
     public function create(Request $request): JsonResponse {
         try {
-            $preOrderRequest = PreOrderDTO::fromRequest($request);
-            $preOrder = $preOrderRequest->toModel(PreOrder::class);
-            $preOrder->save();
+            $preOrder = PreOrder::whereWooOrderId($request->woo_order_id)->get();
+            if ($preOrder->isEmpty()) {
+                $preOrderRequest = PreOrderDTO::fromRequest($request);
+                $preOrder = $preOrderRequest->toModel(PreOrder::class);
+                $preOrder->save();
+            } else {
+                $preOrder = $preOrder->first();
+            }
 
             return response()->json(new PreOrderResource($preOrder));
         } catch (Throwable $e) {

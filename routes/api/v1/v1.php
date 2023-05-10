@@ -88,9 +88,9 @@ Route::middleware('auth:sanctum')->name('kinja.api.v1.')->group(function () {
     Route::controller(PreOrderController::class)->name('preOrders.')
         ->prefix('/pre-orders')
         ->group(function () {
-            Route::get('index', 'index')->name('index');
-            Route::post('create', 'create')->name('create');
-            Route::get('{id}', 'show')->name('show');
-            Route::put('{id}/update', 'update')->name('update');
+            Route::get('/index', 'index')->name('index');
+            Route::post('/create', 'create')->name('create');
+            Route::get('/{id}', 'show')->name('show');
+            Route::put('/{id}/update', 'update')->name('update');
         });
 });
