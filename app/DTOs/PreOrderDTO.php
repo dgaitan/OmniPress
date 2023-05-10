@@ -4,16 +4,26 @@ namespace App\DTOs;
 
 use WendellAdriel\ValidatedDTO\ValidatedDTO;
 
-class PreOrderDTO extends ValidatedDTO
-{
+class PreOrderDTO extends ValidatedDTO {
     /**
      * Defines the validation rules for the DTO.
      *
      * @return array
      */
-    protected function rules(): array
-    {
-        return [];
+    protected function rules(): array {
+        return [
+            'woo_order_id' => 'required|int',
+            'customer_email' => 'required|email',
+            'customer_id' => 'required|int',
+            'status' => 'required',
+            'release_date' => 'required|date',
+            'product_id' => 'required|int',
+            'product_name' => 'required|string',
+            'sub_total' => 'required|int',
+            'taxes' => 'required|int',
+            'shipping' => 'required|int',
+            'total' => 'required|int',
+        ];
     }
 
     /**
@@ -21,8 +31,7 @@ class PreOrderDTO extends ValidatedDTO
      *
      * @return array
      */
-    protected function defaults(): array
-    {
+    protected function defaults(): array {
         return [];
     }
 
@@ -31,8 +40,7 @@ class PreOrderDTO extends ValidatedDTO
      *
      * @return array
      */
-    protected function casts(): array
-    {
+    protected function casts(): array {
         return [];
     }
 
@@ -41,8 +49,7 @@ class PreOrderDTO extends ValidatedDTO
      *
      * @return array
      */
-    public function messages(): array
-    {
+    public function messages(): array {
         return [];
     }
 
@@ -51,8 +58,7 @@ class PreOrderDTO extends ValidatedDTO
      *
      * @return array
      */
-    public function attributes(): array
-    {
+    public function attributes(): array {
         return [];
     }
 }
