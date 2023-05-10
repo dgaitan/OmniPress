@@ -14,7 +14,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $sync_id
  * @property int $user_id
  * @property string|null $note
- *
  * @method static \Illuminate\Database\Eloquent\Builder|SyncNote newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|SyncNote newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|SyncNote query()
@@ -24,10 +23,9 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|SyncNote whereSyncId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SyncNote whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SyncNote whereUserId($value)
- * @mixin \Eloquent
- *
  * @property-read \App\Models\Sync|null $sync
  * @property-read \App\Models\User|null $user
+ * @mixin \Eloquent
  */
 class SyncNote extends Model
 {

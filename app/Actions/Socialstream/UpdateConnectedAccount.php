@@ -7,8 +7,7 @@ use JoelButcher\Socialstream\ConnectedAccount;
 use JoelButcher\Socialstream\Contracts\UpdatesConnectedAccounts;
 use Laravel\Socialite\Contracts\User;
 
-class UpdateConnectedAccount implements UpdatesConnectedAccounts
-{
+class UpdateConnectedAccount implements UpdatesConnectedAccounts {
     /**
      * Update a given connected account.
      *
@@ -18,8 +17,7 @@ class UpdateConnectedAccount implements UpdatesConnectedAccounts
      * @param  \Laravel\Socialite\Contracts\User  $providerUser
      * @return \JoelButcher\Socialstream\ConnectedAccount
      */
-    public function update($user, ConnectedAccount $connectedAccount, string $provider, User $providerUser)
-    {
+    public function update(mixed $user, ConnectedAccount $connectedAccount, string $provider, User $providerUser): ConnectedAccount {
         Gate::forUser($user)->authorize('update', $connectedAccount);
 
         $connectedAccount->forceFill([

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\V1\CustomerController;
 use App\Http\Controllers\Api\V1\MembershipController;
 use App\Http\Controllers\Api\V1\PaymentController;
+use App\Http\Controllers\Api\V1\PreOrderController;
 use App\Http\Controllers\Api\V1\PrintforiaController;
 use App\Http\Controllers\Api\V1\ProductController;
 use App\Http\Controllers\Api\V1\SyncController;
@@ -82,5 +83,14 @@ Route::middleware('auth:sanctum')->name('kinja.api.v1.')->group(function () {
         ->prefix('/customers')
         ->group(function () {
             Route::post('/profile', 'profile')->name('profile');
+        });
+
+    Route::controller(PreOrderController::class)->name('preOrders.')
+        ->prefix('/pre-orders')
+        ->group(function () {
+            Route::get('/index', 'index')->name('index');
+            Route::post('/create', 'create')->name('create');
+            Route::get('/{id}', 'show')->name('show');
+            Route::put('/{id}/update', 'update')->name('update');
         });
 });
