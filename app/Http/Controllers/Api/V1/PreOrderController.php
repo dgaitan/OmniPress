@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\DTOs\PreOrderDTO;
 use App\Http\Controllers\Api\BaseApiController;
-use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\V1\PreSales\PreOrderCollection;
 use App\Http\Resources\Api\V1\PreSales\PreOrderResource;
 use App\Models\PreSales\PreOrder;
@@ -50,6 +49,7 @@ class PreOrderController extends BaseApiController {
         try {
             $preOrderRequest = PreOrderDTO::fromRequest($request);
             $preOrder = $preOrderRequest->toModel(PreOrder::class);
+            $preOrder->save();
 
             return response()->json(new PreOrderResource($preOrder));
         } catch (Throwable $e) {
@@ -70,8 +70,14 @@ class PreOrderController extends BaseApiController {
         return $this->respondUpdate(
             id: $id,
             callback: function ($preOrder) use ($request) {
-                $preOrderRequest = PreOrderDTO::fromRequest($request);
-                $preOrder->update($preOrderRequest->toArray());
+                $preOrder->update($request->only(
+                    'status',
+                    'release_date',
+                    'sub_total',
+                    'total',
+                    'taxes',
+                    'shipping'
+                ));
 
                 return new PreOrderResource($preOrder);
             }

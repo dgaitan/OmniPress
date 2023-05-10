@@ -23,6 +23,7 @@ class PreOrderDTO extends ValidatedDTO {
             'taxes' => 'required|int',
             'shipping' => 'required |int',
             'total' => 'required|int',
+            'released' => 'boolean'
         ];
     }
 
@@ -32,7 +33,9 @@ class PreOrderDTO extends ValidatedDTO {
      * @return array
      */
     protected function defaults(): array {
-        return [];
+        return [
+            'released' => false
+        ];
     }
 
     /**
