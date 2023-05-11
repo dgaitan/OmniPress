@@ -41,7 +41,6 @@ use Illuminate\Support\Facades\Mail;
  * @property \Illuminate\Support\Carbon|null $last_payment_intent
  * @property int $payment_intents
  * @property int $kind_cash_id
- *
  * @method static \Illuminate\Database\Eloquent\Builder|Membership newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Membership newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Membership query()
@@ -59,25 +58,20 @@ use Illuminate\Support\Facades\Mail;
  * @method static \Illuminate\Database\Eloquent\Builder|Membership whereStartAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Membership whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Membership whereUpdatedAt($value)
- * @mixin \Eloquent
- *
  * @property-read Customer|null $customer
  * @property-read \App\Models\KindCash|null $kindCash
  * @property bool|null $user_picked_gift
  * @property int|null $gift_product_id
  * @property-read \Illuminate\Database\Eloquent\Collection|Product[] $giftProducts
  * @property-read int|null $gift_products_count
- *
  * @method static \Illuminate\Database\Eloquent\Builder|Membership whereGiftProductId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Membership whereUserPickedGift($value)
- *
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\MembershipLog[] $logs
  * @property-read int|null $logs_count
  * @property int|null $product_id
- *
  * @method static \Illuminate\Database\Eloquent\Builder|Membership whereProductId($value)
- *
  * @property-read Product|null $product
+ * @mixin \Eloquent
  */
 class Membership extends Model
 {

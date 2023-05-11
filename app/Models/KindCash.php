@@ -17,7 +17,6 @@ use Illuminate\Support\Facades\Cache;
  * @property int $membership_id
  * @property float $points
  * @property float|null $last_earned
- *
  * @method static \Illuminate\Database\Eloquent\Builder|KindCash newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|KindCash newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|KindCash query()
@@ -27,14 +26,12 @@ use Illuminate\Support\Facades\Cache;
  * @method static \Illuminate\Database\Eloquent\Builder|KindCash whereMembershipId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|KindCash wherePoints($value)
  * @method static \Illuminate\Database\Eloquent\Builder|KindCash whereUpdatedAt($value)
- * @mixin \Eloquent
- *
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\KindCashLog[] $logs
  * @property-read int|null $logs_count
  * @property-read \App\Models\Membership|null $membership
+ * @mixin \Eloquent
  */
-class KindCash extends Model
-{
+class KindCash extends Model {
     use HasFactory;
     use HasMoney;
 
@@ -42,8 +39,7 @@ class KindCash extends Model
         'points', 'last_earned',
     ];
 
-    public function membership()
-    {
+    public function membership() {
         return $this->belongsTo(Membership::class);
     }
 
@@ -52,8 +48,7 @@ class KindCash extends Model
      *
      * @return float
      */
-    public function cashForHuman(): float
-    {
+    public function cashForHuman(): float {
         return (float) ($this->points / 100);
     }
 
@@ -62,8 +57,7 @@ class KindCash extends Model
      *
      * @return Money
      */
-    public function getCash(): Money
-    {
+    public function getCash(): Money {
         return $this->getMoneyValue('points');
     }
 
@@ -72,8 +66,7 @@ class KindCash extends Model
      *
      * @return [type] [description]
      */
-    public function logs()
-    {
+    public function logs() {
         return $this->hasMany(KindCashLog::class, 'kind_cash_id')->orderBy('id', 'desc');
     }
 
@@ -82,8 +75,7 @@ class KindCash extends Model
      *
      * @param  int  $points [description]
      */
-    public function addRedeemedLog(int $points, string $description = '', $date = null)
-    {
+    public function addRedeemedLog(int $points, string $description = '', $date = null) {
         $this->addLog('redeem', $points, $description, $date);
     }
 
@@ -92,8 +84,7 @@ class KindCash extends Model
      *
      * @param  string  $description [description]
      */
-    public function addInitialLog(string $description = '', $date = null)
-    {
+    public function addInitialLog(string $description = '', $date = null) {
         $this->addLog('initialize', $this->points, $description, $date);
     }
 
@@ -103,8 +94,7 @@ class KindCash extends Model
      * @param  int  $points      [description]
      * @param  string  $description [description]
      */
-    public function addEarnLog(int $points, string $description = '', $date = null)
-    {
+    public function addEarnLog(int $points, string $description = '', $date = null) {
         $this->addLog('earned', $points, $description, $date);
     }
 
@@ -115,8 +105,7 @@ class KindCash extends Model
      * @param  int  $points      [description]
      * @param  string  $description [description]
      */
-    public function addLog(string $event, int $points, string $description = '', $date = null)
-    {
+    public function addLog(string $event, int $points, string $description = '', $date = null) {
         $this->logs()->create([
             'date' => $date ? (new \Carbon\Carbon(strtotime($date)))->toDateTimeString() : \Carbon\Carbon::now(),
             'event' => $event,
@@ -132,8 +121,7 @@ class KindCash extends Model
      * @param  int  $order_id [description]
      * @param [type] $date     [description]
      */
-    public function addOrderLog(int $points, int $order_id, $date = null)
-    {
+    public function addOrderLog(int $points, int $order_id, $date = null) {
         $this->logs()->create([
             'date' => $date ? (new \Carbon\Carbon(strtotime($date)))->toDateTimeString() : \Carbon\Carbon::now(),
             'event' => 'earned',
@@ -143,8 +131,7 @@ class KindCash extends Model
         ]);
     }
 
-    public function addCash(int $points, string $message)
-    {
+    public function addCash(int $points, string $message) {
         $newPoints = $points + $this->points;
 
         $this->update([
@@ -155,8 +142,7 @@ class KindCash extends Model
         $this->addEarnLog($points, $message);
     }
 
-    public function redeemCash(int $points, string $message, int $order_id)
-    {
+    public function redeemCash(int $points, string $message, int $order_id) {
         $newPoints = (int) ($this->points - $points);
 
         $this->update([
@@ -177,8 +163,7 @@ class KindCash extends Model
      *
      * @return [type] [description]
      */
-    public function toArray($isSingle = false)
-    {
+    public function toArray($isSingle = false) {
         $cash = parent::toArray();
         $cash['last_earned'] = is_null($cash['last_earned']) ? 0 : $cash['last_earned'];
         $cash['points'] = is_null($cash['points']) ? 0 : $cash['points'];
@@ -186,6 +171,10 @@ class KindCash extends Model
         if ($isSingle) {
             $cash['logs'] = $this->logs;
         }
+
+        $cash['last_earned_as_money'] = $this->getMoneyValue('last_earned');
+        $cash['points_as_money'] = $this->getCash();
+        $cash['points_editable'] = Money::USD($cash['points'])->formatByDecimal();
 
         unset($cash['membership_id']);
         unset($cash['created_at']);
@@ -199,8 +188,7 @@ class KindCash extends Model
      *
      * @return void
      */
-    protected static function boot()
-    {
+    protected static function boot() {
         parent::boot();
 
         // Forget Membership Cache

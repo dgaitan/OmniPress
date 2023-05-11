@@ -21,7 +21,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $type
  * @property mixed $options
  * @property int $group_id
- *
  * @method static \Illuminate\Database\Eloquent\Builder|WooSettingOption newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|WooSettingOption newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|WooSettingOption query()

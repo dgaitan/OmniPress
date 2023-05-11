@@ -21,7 +21,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string|null $method_description
  * @property mixed|null $method_supports
  * @property mixed|null $settings
- *
  * @method static \Illuminate\Database\Eloquent\Builder|PaymentMethod newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PaymentMethod newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PaymentMethod query()
@@ -37,10 +36,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder|PaymentMethod whereSettings($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PaymentMethod whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PaymentMethod whereUpdatedAt($value)
- * @mixin \Eloquent
- *
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\WooCommerce\Order[] $orders
  * @property-read int|null $orders_count
+ * @mixin \Eloquent
  */
 class PaymentMethod extends Model
 {
