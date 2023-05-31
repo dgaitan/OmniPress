@@ -8,8 +8,10 @@ use App\Http\Resources\Api\V2\Memberships\MembershipCollection;
 use App\Http\Resources\Api\V2\Memberships\MembershipOrdersCollection;
 use App\Models\Membership;
 use App\Models\WooCommerce\Order;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class MembershipController extends Controller {
 
@@ -53,6 +55,29 @@ class MembershipController extends Controller {
                     ->whereColumn('orders.membership_id', 'memberships.id')
                     ->where('order_id', 'ilike', "%$s%");
             });
+        }
+
+        // Filter By Date.
+        if (
+            $request->input('fromDate') || $request->input('toDate')
+        ) {
+            $dateFieldToFilter = in_array($request->input('dateFieldToFilter'), ['start_at', 'end_at'])
+                ? $request->input('dateFieldToFilter')
+                : 'start_at';
+
+            $fromDate = !empty($request->input('fromDate'))
+                ? Carbon::parse($request->input('fromDate'))
+                : null;
+
+            $toDate = !empty($request->input('toDate'))
+                ? Carbon::parse($request->input('toDate'))
+                : Carbon::now();
+
+            if ($fromDate && $toDate) {
+                $memberships->whereBetween($dateFieldToFilter, [$fromDate, $toDate]);
+            } elseif (is_null($fromDate)) {
+                $memberships->where($dateFieldToFilter, '<=', $toDate);
+            }
         }
 
         $memberships = $memberships->paginate(50);
@@ -105,5 +130,49 @@ class MembershipController extends Controller {
         }
 
         return response()->json($membership->kindCash);
+    }
+
+    /**
+     * Bulk Actions
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function bulkActions(Request $request): JsonResponse {
+        $validator = Validator::make($request->all(), [
+            'bulkAction' => 'required',
+            'ids' => 'required|array'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Something went wrong',
+                'errors' => $validator->errors()
+            ]);
+        }
+
+        $data = $validator->safe()->all();
+        $action = $data['bulkAction'];
+        $action = explode('_to_', $action);
+        $message = '';
+
+        if (count($action) === 2 && in_array($action[0], ['shipping_status', 'status'])) {
+            $memberships = Membership::whereIn('id', $data['ids'])->get();
+            if ($memberships->isNotEmpty()) {
+                $memberships->map(fn ($m) => $m->update([$action[0] => $action[1]]));
+                $status = explode('_', $action[0]);
+                $status = implode(' ', $status);
+                $_to = explode('_', $action[1]);
+                $_to = implode(' ', $_to);
+                $message = sprintf(
+                    'Memberships updated to %s',
+                    $_to
+                );
+            }
+        }
+
+        return response()->json([
+            'message' => $message,
+        ]);
     }
 }
