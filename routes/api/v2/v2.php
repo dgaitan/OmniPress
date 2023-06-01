@@ -30,5 +30,6 @@ Route::middleware('auth:sanctum')->name('kinja.api.v2.')->group(function () {
             Route::get('/{id}/orders', 'membershipOrders')->name('membershipOrders');
             Route::get('/{id}/cash', 'membershipKindCash')->name('membershipKindCash');
             Route::post('/bulk-actions', 'bulkActions')->name('bulkActions');
+            Route::post('/update-kind-cash', 'updateKindCash')->name('updateKindCash');
         });
 });

@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Api\V2;
 
+use App\Actions\Memberships\UpdateClientKindCashAction;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\V1\Memberships\MembershipResource;
 use App\Http\Resources\Api\V2\Memberships\MembershipCollection;
 use App\Http\Resources\Api\V2\Memberships\MembershipOrdersCollection;
 use App\Models\Membership;
+use App\Models\User;
 use App\Models\WooCommerce\Order;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -173,6 +175,59 @@ class MembershipController extends Controller {
 
         return response()->json([
             'message' => $message,
+        ]);
+    }
+
+    public function updateKindCash(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'membership_id' => 'required|int',
+            'amount' => 'required|numeric',
+            'email' => 'required|email'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(data: [
+                'message' => 'Something went wrong',
+                'errors' => $validator->errors()
+            ], status: 403);
+        }
+
+        $membership = Membership::find($request->membership_id);
+        if (!$membership) {
+            return response()->json(data: [
+                'message' => 'Something went wrong',
+                'errors' => 'Invalid Membership'
+            ], status: 404);
+        }
+
+        $emailWhiteList = [
+            'info@kindhumans.com',
+        ];
+
+        if (in_array($request->email, $emailWhiteList)) {
+            $user = User::whereEmail('dgaitan@kindhumans.com')->first();
+        } else {
+            $user = User::whereEmail($request->email)->first();
+        }
+
+        if (!$user) {
+            return response()->json(data: [
+                'message' => 'Something went wrong',
+                'errors' => 'Email is invalid.'
+            ], status: 403);
+        }
+
+        $membership->updateCash(
+            cash: $request->amount,
+            addedBy: $user->email
+        );
+
+        // Sending kindcash to kindhumans store.
+        UpdateClientKindCashAction::dispatch(membership: $membership);
+
+        return response()->json(data: [
+            'message' => 'Kindcash updated',
+            'kindCash' => $membership->kindCash->toArray()
         ]);
     }
 }
