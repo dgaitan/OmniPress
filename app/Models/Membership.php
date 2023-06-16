@@ -73,8 +73,7 @@ use Illuminate\Support\Facades\Mail;
  * @property-read Product|null $product
  * @mixin \Eloquent
  */
-class Membership extends Model
-{
+class Membership extends Model {
     use HasFactory;
     use HasMoney;
 
@@ -117,8 +116,7 @@ class Membership extends Model
      *
      * @return [type] [description]
      */
-    public function customer()
-    {
+    public function customer() {
         return $this->belongsTo(Customer::class, 'customer_id');
     }
 
@@ -127,8 +125,7 @@ class Membership extends Model
      *
      * @return [type] [description]
      */
-    public function kindCash()
-    {
+    public function kindCash() {
         return $this->hasOne(KindCash::class);
     }
 
@@ -137,8 +134,7 @@ class Membership extends Model
      *
      * @return [type] [description]
      */
-    public function logs()
-    {
+    public function logs() {
         return $this->hasMany(MembershipLog::class, 'membership_id');
     }
 
@@ -147,8 +143,7 @@ class Membership extends Model
      *
      * @return BelongsTo
      */
-    public function product(): BelongsTo
-    {
+    public function product(): BelongsTo {
         return $this->belongsTo(
             Product::class,
             'product_id',
@@ -161,8 +156,7 @@ class Membership extends Model
      *
      * @return Collection
      */
-    public function orders(): Builder
-    {
+    public function orders(): Builder {
         return \App\Models\WooCommerce\Order::where('membership_id', $this->id)
             ->orderBy('order_id', 'desc');
     }
@@ -172,8 +166,7 @@ class Membership extends Model
      *
      * @return [type] [description]
      */
-    public function giftProducts()
-    {
+    public function giftProducts() {
         return $this->belongsToMany(
             Product::class,
             'membership_product',
@@ -187,8 +180,7 @@ class Membership extends Model
      *
      * @return Product|null
      */
-    public function getCurrentGiftProduct(): Product|null
-    {
+    public function getCurrentGiftProduct(): Product|null {
         return Product::whereProductId($this->gift_product_id)->first();
     }
 
@@ -197,8 +189,7 @@ class Membership extends Model
      *
      * @return Order
      */
-    public function getCurrentOrder(): Order
-    {
+    public function getCurrentOrder(): Order {
         return GetDataFromCache::run(
             tag: 'memberships',
             cacheKey: sprintf('membersip_%s_current_order', $this->id),
@@ -216,8 +207,7 @@ class Membership extends Model
      *
      * @return bool
      */
-    public function customerHasPaymentMethod(): bool
-    {
+    public function customerHasPaymentMethod(): bool {
         return GetDataFromCache::run(
             tag: 'memberships',
             cacheKey: sprintf('membership_%s_has_payment_method', $this->id),
@@ -227,8 +217,7 @@ class Membership extends Model
         );
     }
 
-    public function getPriceAsMoney(): Money
-    {
+    public function getPriceAsMoney(): Money {
         return $this->getMoneyValue('price');
     }
 
@@ -238,8 +227,7 @@ class Membership extends Model
      * @param  bool  $isSingle [description]
      * @return array            [description]
      */
-    public function toArray($isSingle = false): array
-    {
+    public function toArray($isSingle = false): array {
         $data = parent::toArray();
 
         $data['customer'] = $this->customer->toArray();
@@ -258,8 +246,7 @@ class Membership extends Model
      *
      * @return bool [description]
      */
-    public function isInRenewal(): bool
-    {
+    public function isInRenewal(): bool {
         return $this->status === self::IN_RENEWAL_STATUS;
     }
 
@@ -268,8 +255,7 @@ class Membership extends Model
      *
      * @return bool [description]
      */
-    public function isActive(): bool
-    {
+    public function isActive(): bool {
         return $this->status === self::ACTIVE_STATUS;
     }
 
@@ -278,8 +264,7 @@ class Membership extends Model
      *
      * @return bool [description]
      */
-    public function isAwaitingPickGift(): bool
-    {
+    public function isAwaitingPickGift(): bool {
         return $this->status === self::AWAITING_PICK_GIFT_STATUS;
     }
 
@@ -288,8 +273,7 @@ class Membership extends Model
      *
      * @return bool [description]
      */
-    public function isCancelled(): bool
-    {
+    public function isCancelled(): bool {
         return $this->status === self::CANCELLED_STATUS;
     }
 
@@ -298,8 +282,7 @@ class Membership extends Model
      *
      * @return bool [description]
      */
-    public function isExpired(): bool
-    {
+    public function isExpired(): bool {
         return $this->status === self::EXPIRED_STATUS;
     }
 
@@ -312,9 +295,8 @@ class Membership extends Model
      * @param  int  $time
      * @return bool
      */
-    public function maybeSendRenewalReminder(int $time = 1): bool
-    {
-        if (! $this->isActive()) {
+    public function maybeSendRenewalReminder(int $time = 1): bool {
+        if (!$this->isActive()) {
             return false;
         }
         $possibleDays = [3, 5, 15];
@@ -344,7 +326,7 @@ class Membership extends Model
     public function maybeRenewIfExpired(
         bool $force = false
     ): bool {
-        if (! $this->isInRenewal()) {
+        if (!$this->isInRenewal()) {
             return false;
         }
 
@@ -370,7 +352,7 @@ class Membership extends Model
     public function maybeRememberThatMembershipHasRenewed(
         int $time = 0
     ): bool {
-        if (! $this->isAwaitingPickGift()) {
+        if (!$this->isAwaitingPickGift()) {
             return false;
         }
         $possibleDays = [1, 2, 5, 20, 30];
@@ -392,8 +374,7 @@ class Membership extends Model
      *
      * @return bool
      */
-    public function expireToday(): bool
-    {
+    public function expireToday(): bool {
         return $this->daysUntilRenewal() === 0;
     }
 
@@ -402,8 +383,7 @@ class Membership extends Model
      *
      * @return \Carbon\Carbon
      */
-    protected function today(): \Carbon\Carbon
-    {
+    protected function today(): \Carbon\Carbon {
         return \Carbon\Carbon::parse(
             \Carbon\Carbon::now()->toDateString()
         );
@@ -416,8 +396,7 @@ class Membership extends Model
      *
      * @return int
      */
-    public function daysUntilRenewal(): int
-    {
+    public function daysUntilRenewal(): int {
         return max($this->today()->diffInDays($this->end_at, false), 0);
     }
 
@@ -428,8 +407,7 @@ class Membership extends Model
      *
      * @return [type] [description]
      */
-    public function daysExpired(): int
-    {
+    public function daysExpired(): int {
         return max($this->end_at->diffInDays($this->today(), false), 0);
     }
 
@@ -438,8 +416,7 @@ class Membership extends Model
      *
      * @return [type] [description]
      */
-    public function daysAfterRenewal(): int
-    {
+    public function daysAfterRenewal(): int {
         return max($this->last_payment_intent->diffInDays($this->today(), false), 0);
     }
 
@@ -472,8 +449,7 @@ class Membership extends Model
      * @param  string|null|null  $addedBy
      * @return self
      */
-    public function updateCash(int|float|string $cash = 0, string|null $addedBy = null): self
-    {
+    public function updateCash(int|float|string $cash = 0, string|null $addedBy = null): self {
         return $this->addCash(
             cash: $cash,
             addedBy: $addedBy,
@@ -487,8 +463,7 @@ class Membership extends Model
      * @param  string  $reason
      * @return self
      */
-    public function expire(string $reason = '')
-    {
+    public function expire(string $reason = '') {
         $this->status = self::EXPIRED_STATUS;
         $this->shipping_status = self::SHIPPING_CANCELLED_STATUS;
         $this->save();
@@ -502,8 +477,7 @@ class Membership extends Model
         return $this;
     }
 
-    public function cancell(string $reason = '')
-    {
+    public function cancell(string $reason = '') {
         $this->status = self::CANCELLED_STATUS;
         $this->save();
 
@@ -520,8 +494,7 @@ class Membership extends Model
      * @param  int  $time
      * @return voiud
      */
-    public function sendCancelledEmail(int $time = 1): void
-    {
+    public function sendCancelledEmail(int $time = 1): void {
         Mail::to($this->customer->email)
             ->later(
                 now()->addSeconds($time),
@@ -534,8 +507,7 @@ class Membership extends Model
      *
      * @return void
      */
-    public function sendRenewalReminder(int $time = 1, int $days = 0): void
-    {
+    public function sendRenewalReminder(int $time = 1, int $days = 0): void {
         Mail::to($this->customer->email)
             ->later(
                 now()->addSeconds($time),
@@ -548,8 +520,7 @@ class Membership extends Model
      *
      * @return [type] [description]
      */
-    public function sendPaymentNotFoundNotification(int $time = 1): void
-    {
+    public function sendPaymentNotFoundNotification(int $time = 1): void {
         Mail::to($this->customer->email)
             ->later(now()->addSeconds($time), new PaymentNotFound($this));
     }
@@ -559,8 +530,7 @@ class Membership extends Model
      *
      * @return void
      */
-    public function sendMembershipRenewedMail(int $time = 1): void
-    {
+    public function sendMembershipRenewedMail(int $time = 1): void {
         Mail::to($this->customer->email)
             ->later(now()->addSeconds($time), new MembershipRenewed($this));
     }
@@ -571,8 +541,7 @@ class Membership extends Model
      * @param  int  $time
      * @return void
      */
-    public function sendMembershipExpiredMail(int $time = 1): void
-    {
+    public function sendMembershipExpiredMail(int $time = 1): void {
         Mail::to($this->customer->email)
             ->later(now()->addSeconds($time), new MembershipExpired($this));
     }
@@ -611,8 +580,7 @@ class Membership extends Model
      * @throws if ocurred an error during auto payment.
      * @throws if customer doesn't have a payment method.
      */
-    public function maybeRenew($force = false): self|string
-    {
+    public function maybeRenew($force = false): self|string {
         return RenewAction::run($this, $force);
     }
 
@@ -623,8 +591,7 @@ class Membership extends Model
      * @param  string  $message
      * @return Membership
      */
-    public function catchRenewalError(string $message = ''): Membership
-    {
+    public function catchRenewalError(string $message = ''): Membership {
         $this->last_payment_intent = \Carbon\Carbon::now();
         $this->payment_intents = $this->payment_intents + 1;
 
@@ -648,12 +615,33 @@ class Membership extends Model
     }
 
     /**
+     * Get Status Label
+     *
+     * @return string
+     */
+    public function getStatusLabel(): string {
+        return collect(self::getStatuses())->filter(function ($status) {
+            return $status['slug'] === $this->status;
+        })->first()['label'];
+    }
+
+    /**
+     * Get Shipping Status Label
+     *
+     * @return string
+     */
+    public function getShippingStatusLabel(): string {
+        return collect(self::getShippingStatuses())->filter(function ($status) {
+            return $status['slug'] === $this->shipping_status;
+        })->first()['label'];
+    }
+
+    /**
      * [getStatuses description]
      *
      * @return [type] [description]
      */
-    public static function getStatuses(): array
-    {
+    public static function getStatuses(): array {
         $statuses = [];
 
         $status[] = [
@@ -685,8 +673,7 @@ class Membership extends Model
      *
      * @return array
      */
-    public static function getShippingStatuses(): array
-    {
+    public static function getShippingStatuses(): array {
         $statuses = [
             [
                 'slug' => self::SHIPPING_SHIPPED_STATUS,
@@ -719,8 +706,7 @@ class Membership extends Model
      * @param  string  $status
      * @return bool
      */
-    public static function isValidShippingStatus(string $status): bool
-    {
+    public static function isValidShippingStatus(string $status): bool {
         return in_array($status, [
             self::SHIPPING_CANCELLED_STATUS,
             self::SHIPPING_NO_SHIP_STATUS,
@@ -735,8 +721,7 @@ class Membership extends Model
      * @param  string  $code [description]
      * @return string
      */
-    public static function logMessages(string $code): string
-    {
+    public static function logMessages(string $code): string {
         $messages = [
             'created_by_checkout' => 'Membership created via kindhumans checkout',
         ];
@@ -749,8 +734,7 @@ class Membership extends Model
      *
      * @return void
      */
-    protected static function boot()
-    {
+    protected static function boot() {
         parent::boot();
 
         // Forget Membership Cache
