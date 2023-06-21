@@ -4,22 +4,21 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class OrderCollection extends ResourceCollection
-{
+class OrderCollection extends ResourceCollection {
     /**
      * Transform the resource collection into an array.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
-    public function toArray($request)
-    {
+    public function toArray($request) {
         $orders = collect($this->collection)->map(function ($order) {
             $data = [
                 'id' => $order->id,
                 'order_id' => $order->order_id,
                 'status' => $order->status,
                 'total' => $order->total,
+                'total_formatted' => $order->getTotal(),
                 'shipping' => $order->shipping,
                 'date' => $order->getDateCompleted(),
                 'permalink' => $order->getPermalink(),
