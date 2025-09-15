@@ -1,272 +1,414 @@
+# OmniPress (Kinja App)
+
 <p align="center"><a href="https://kindhumans.com" target="_blank"><img src="https://kindhumans.com/wp-content/themes/kindhumans-theme/dist/development/images/kindhumans_vertical_logo.svg" width="200"></a></p>
 
+## What is OmniPress?
 
-## About Kinja App
+OmniPress (also known as Kinja App) is a comprehensive web application designed to manage and orchestrate various aspects of the Kindhumans e-commerce ecosystem. It serves as a central management platform that integrates with multiple external services to provide a unified experience for managing memberships, orders, products, and fulfillment operations.
 
-Web Application to manage Kindhumans store features like:
+### Core Purpose
 
-- Memberships
-- Dropships
-- Subscriptions
+The application acts as a **middleware layer** between the main Kindhumans WooCommerce store and various third-party services, providing:
 
-## Requirements/Dependences
+- **Membership Management**: Handle subscription-based memberships with automated renewals, gift selections, and cash rewards
+- **Order Orchestration**: Sync and manage orders between WooCommerce and fulfillment partners
+- **Product Synchronization**: Keep product catalogs synchronized across different platforms
+- **Print-on-Demand Integration**: Seamlessly integrate with Printforia for custom product fulfillment
+- **Payment Processing**: Manage payment methods and subscription billing through Stripe/Cashier
+- **Analytics & Reporting**: Provide insights into customer behavior, membership performance, and order analytics
 
-- PHP 8
-- Composer
-- Laravel 9
-- Redis
-- Mailhog
-- Meilisearch
-- Supervisor
-- PostgresSQL
+### Key Integrations
 
-## How to install?
+- **WooCommerce**: Primary e-commerce platform integration
+- **Printforia**: Print-on-demand fulfillment service
+- **Stripe**: Payment processing and subscription management
+- **Meilisearch**: Fast search functionality
+- **Redis**: Caching and session management
+- **PostgreSQL**: Primary database
 
-We have two choices to install this project. One is install the requirements/dependences mentioned above in your local machine and run it. Or installing it using `Laravel Sail`. We recommend to use this last option. It will avoid issues related to dependecies or requirements of the project.
+## Installation
 
-First, is necessary to have composer installed in your local machine. Please follow the documentation of composer to get it installed in your local machine in case you
-don't have it installed yet. https://getcomposer.org/doc/00-intro.md#installation-linux-unix-macos
+### Prerequisites
 
-Once you have ready composer, please go to the project root and run `composer install`. It will install the project dependences.
+- **PHP 8.1+**
+- **Composer**
+- **Node.js & NPM**
+- **Docker & Docker Compose** (recommended for local development)
 
-## Pre-requisites
-Please copy the `.env.example` file to load our env values. Please run:
+### Option 1: Using Laravel Sail (Recommended)
 
-```bash
-cp .env.example .env
-```
+Laravel Sail provides a Docker-based development environment that handles all dependencies automatically.
 
-### Application Urls.
-This app is a client of a kindhumans store which is necessary define some env connection values with our store installed locally. We have a few env variables
-to define some values. Look:
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd OmniPress
+   ```
 
-```
+2. **Install PHP dependencies**
+   ```bash
+   composer install
+   ```
+
+3. **Install Node.js dependencies**
+   ```bash
+   npm install
+   ```
+
+4. **Set up environment variables**
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
+
+5. **Start the development environment**
+   ```bash
+   ./vendor/bin/sail up -d
+   ```
+
+6. **Run database migrations**
+   ```bash
+   ./vendor/bin/sail artisan migrate
+   ```
+
+7. **Build frontend assets**
+   ```bash
+   ./vendor/bin/sail npm run dev
+   ```
+
+### Option 2: Local Installation
+
+If you prefer to install dependencies locally:
+
+1. **Install system requirements**
+   - PHP 8.1+ with extensions: BCMath, Ctype, cURL, DOM, Fileinfo, JSON, Mbstring, OpenSSL, PCRE, PDO, Tokenizer, XML
+   - PostgreSQL 13+
+   - Redis
+   - Meilisearch
+   - Mailhog (for email testing)
+
+2. **Follow steps 1-4 from Option 1**
+
+3. **Configure your .env file** (see Configuration section below)
+
+4. **Run the application**
+   ```bash
+   php artisan serve
+   npm run dev
+   ```
+
+### Configuration
+
+#### Essential Environment Variables
+
+```env
+# Application
+APP_NAME="OmniPress"
 APP_URL=http://localhost:8000
 FRONTEND_URL=http://localhost:8000
-ASSET_DOMAIN=https://kindhumans.com # Should no change, but if you want to redirect the asset urls base domain to another domain, change it.
-CLIENT_DOMAIN=https://your-local-host-here # Replace with the local store domain.
-```
 
-The `ASSET_DOMAIN` var will be used as the base url for images. We don't store images on this app, normally we have a link of each images to the store connected. By default we
-can use kindhumans.com, but if you want to load the images of your local kindhumans store, change it for the url used in your local machine.
-
-The `CLIENT_DOMAIN` is the url of your store in your local machine. 
-
-### Database.
-We are using PostgresSQL as our database engine, it means that we need to define this env vars in our .env file. If you're using `Laravel Sail`, you should these vars with the default values, otherwise, you should set the right values to connect to postgres in your local machine.
-
-```
+# Database (PostgreSQL)
 DB_CONNECTION=pgsql
-DB_HOST=pgsql
+DB_HOST=127.0.0.1
 DB_PORT=5432
 DB_DATABASE=omnipress
 DB_USERNAME=postgres
-DB_PASSWORD=postgres
-```
+DB_PASSWORD=your_password
 
-### Mailer
+# WooCommerce Integration
+WOO_CUSTOMER_DOMAIN=https://your-woocommerce-store.com
+WOO_CUSTOMER_KEY=your_woocommerce_consumer_key
+WOO_CUSTOMER_SECRET=your_woocommerce_consumer_secret
 
-By default the project has mailhog installed as the email client. If you use `Laravel Sail` leave these env vars as it comes in the default .env.example. Otherwise, you should change those var values to the right values of your email client.
+# Printforia Integration
+PRINTFORIA_API_KEY=your_printforia_api_key
+PRINTFORIA_API_URL=https://api-sandbox.printforia.com/v2/
 
-```
+# Stripe (for payments)
+STRIPE_KEY=your_stripe_public_key
+STRIPE_SECRET=your_stripe_secret_key
+STRIPE_WEBHOOK_SECRET=your_stripe_webhook_secret
+
+# Cache & Search
+REDIS_HOST=127.0.0.1
+REDIS_PASSWORD=null
+REDIS_PORT=6379
+
+SCOUT_DRIVER=meilisearch
+MEILISEARCH_HOST=http://127.0.0.1:7700
+MEILISEARCH_KEY=your_meilisearch_key
+
+# Mail (for development)
 MAIL_MAILER=smtp
-MAIL_HOST=mailhog
+MAIL_HOST=127.0.0.1
 MAIL_PORT=1025
 MAIL_USERNAME=null
 MAIL_PASSWORD=null
-MAIL_FROM_ADDRESS=noreply@kindhumans.com
-MAIL_FROM_NAME="${APP_NAME}"
 MAIL_ENCRYPTION=null
 ```
 
-### WooCommerce API Keys.
-To connect with WooCommerce we only need to be sure of the port we're using on our local machine. If you're using localwp to run your WordPress in your laptop, probably the port will be 10003 or 10009. To be sure of this, please run in your terminal:
+## Project Organization
 
+### Architecture Overview
+
+OmniPress follows a **modular architecture** with clear separation of concerns:
+
+```
+app/
+├── Actions/           # Business logic actions (Laravel Actions pattern)
+├── Analytics/         # Analytics and reporting services
+├── Casts/            # Eloquent model casts
+├── Console/          # Artisan commands
+├── Data/             # Data transfer objects and resources
+├── DTOs/             # Data transfer objects
+├── Enums/            # PHP enumerations
+├── Events/           # Application events
+├── Exceptions/       # Custom exception handlers
+├── Exports/          # Data export functionality
+├── Helpers/          # Utility helper classes
+├── Http/             # HTTP layer (Controllers, Middleware, Requests, Resources)
+├── Imports/          # Data import functionality
+├── Jobs/             # Background job classes
+├── Listeners/        # Event listeners
+├── Mail/             # Email templates and classes
+├── Models/           # Eloquent models
+├── Notifications/    # Notification classes
+├── Observers/        # Model observers
+├── Policies/         # Authorization policies
+├── Providers/        # Service providers
+├── Rules/            # Validation rules
+├── Services/         # Business logic services
+├── Tasks/            # Task management classes
+└── View/             # View components
+```
+
+### Key Modules
+
+#### 1. **Membership Management** (`app/Models/Membership.php`)
+- Handles subscription-based memberships
+- Manages membership statuses (active, cancelled, expired, in_renewal)
+- Integrates with Stripe for payment processing
+- Supports gift selection and KindCash rewards
+
+#### 2. **WooCommerce Integration** (`app/Services/WooCommerce/`)
+- **WooCommerceService**: Main service for API communication
+- **Tasks**: Synchronization tasks for customers, products, orders, coupons
+- **Models**: Local representations of WooCommerce entities
+- **Actions**: Business logic for WooCommerce operations
+
+#### 3. **Printforia Integration** (`app/Services/Printforia/`)
+- **PrintforiaApiClient**: API client for Printforia services
+- **PrintforiaService**: Business logic for print-on-demand operations
+- **Models**: Printforia order and item management
+- **Jobs**: Background processing for order fulfillment
+
+#### 4. **API Layer** (`routes/api/`)
+- **V1 API**: Core functionality endpoints
+- **V2 API**: Enhanced membership management
+- **Authentication**: Sanctum-based API authentication
+- **Rate Limiting**: Built-in API rate limiting
+
+#### 5. **Frontend** (`resources/js/`)
+- **Vue.js 3**: Modern reactive frontend
+- **Inertia.js**: SPA-like experience without API complexity
+- **Tailwind CSS**: Utility-first styling
+- **Chart.js**: Analytics and reporting visualizations
+
+### Database Structure
+
+The application uses PostgreSQL with the following key tables:
+
+- **memberships**: Core membership data and status
+- **orders**: WooCommerce order synchronization
+- **products**: Product catalog management
+- **customers**: Customer data and payment methods
+- **printforia_orders**: Print-on-demand order tracking
+- **sync_logs**: Synchronization history and status
+
+### Service Integration Flow
+
+```mermaid
+graph TD
+    A[WooCommerce Store] --> B[OmniPress API]
+    B --> C[Membership Management]
+    B --> D[Order Processing]
+    B --> E[Product Sync]
+    
+    D --> F[Printforia API]
+    F --> G[Print-on-Demand Fulfillment]
+    
+    C --> H[Stripe API]
+    H --> I[Payment Processing]
+    
+    B --> J[Meilisearch]
+    J --> K[Search & Analytics]
+    
+    B --> L[Redis Cache]
+    L --> M[Performance Optimization]
+```
+
+## API Endpoints
+
+### Core Endpoints
+
+#### Memberships (`/api/v1/memberships/`)
+- `GET /` - List memberships
+- `GET /{id}` - Get specific membership
+- `POST /new` - Create new membership
+- `POST /renew` - Renew existing membership
+- `POST /pick-gift` - Select membership gift
+- `POST /cancell/{id}` - Cancel membership
+- `POST /{id}/cash/add` - Add KindCash
+- `POST /{id}/cash/redeem` - Redeem KindCash
+
+#### Synchronization (`/api/v1/sync/`)
+- `GET /` - Get sync status
+- `POST /sync-resource` - Sync specific resource
+- `POST /bulk-sync` - Bulk synchronization
+- `POST /orders/{id}/update` - Update specific order
+- `POST /products/{id}/update` - Update specific product
+
+#### Payments (`/api/v1/payments/`)
+- `POST /direct` - Process direct payment
+- `GET /{customer_id}/payment-methods` - Get customer payment methods
+- `POST /add` - Add payment method
+- `POST /delete` - Delete payment method
+- `POST /set-default` - Set default payment method
+
+#### Printforia (`/api/v1/printforia/`)
+- `GET /orders/{orderId}` - Get Printforia order details
+- `POST /webhook-values/{orderId}` - Process webhook data
+
+## Development Workflow
+
+### Running Tests
 ```bash
-$ sudo lsof -i -n -P | grep TCP
+# Using Sail
+./vendor/bin/sail test
+
+# Local installation
+./vendor/bin/pest
 ```
 
-It will show you the port used. So, look for the ports used by `nginx`. Probably you will see something like:
-
+### Code Quality
 ```bash
-nginx       787        dgaitan    7u  IPv4 0x8be2049a08e8bf2b      0t0    TCP *:10003 (LISTEN)
-nginx       788        dgaitan    7u  IPv4 0x8be2049a08e87f2b      0t0    TCP *:80 (LISTEN)
-nginx       788        dgaitan    8u  IPv6 0x8be20495371cbb83      0t0    TCP *:80 (LISTEN)
-nginx       788        dgaitan    9u  IPv4 0x8be2049a08e8944b      0t0    TCP *:443 (LISTEN)
-nginx       789        dgaitan    7u  IPv4 0x8be2049a08e87f2b      0t0    TCP *:80 (LISTEN)
-nginx       789        dgaitan    8u  IPv6 0x8be20495371cbb83      0t0    TCP *:80 (LISTEN)
-nginx       789        dgaitan    9u  IPv4 0x8be2049a08e8944b      0t0    TCP *:443 (LISTEN)
+# Laravel Pint (code formatting)
+./vendor/bin/sail pint
+
+# Generate IDE helpers
+./vendor/bin/sail artisan ide-helper:models
 ```
 
-So, the localwp normally use a port greater than 10000, so if you see a port between 10000 or 100010, probably will be that.
-
-Once you have the port of your localwp, you can set the value in your `.env` to connecto to your store.
-
-```
-WOO_CUSTOMER_KEY=ck_5f944eb60ada2cfb7ffafb923603f28b99f2dd80
-WOO_CUSTOMER_SECRET=cs_c20d091b9a06ed2e0e4530f3e1d0fd5ef97ea049
-WOO_CUSTOMER_DOMAIN=http://host.docker.internal:10003 # replace the port with the port in your local.
-WOO_TIMEOUT=50
-```
-
-### Google Auth Login
-To login into the app we have to choices: login using google oauth, or just activate the register.
-
-To login into the app using google oauth is necessary generates a google auth key. To do this, please go to the Google Developer Console (https://console.cloud.google.com/apis/dashboard) and create a new api keys.
-
-Steps to create a google api key:
-
-1. Go to https://console.cloud.google.com/apis/dashboard
-2. Click on **Credentials** in the left sidebar. (Is the 3rd option)
-3. Click on **Create Credentials** then click on **OAuth Client ID**
-4. On Application type select **Web Application**
-5. Set the App Name
-6. Add a new Authorized Javascript origins. Add http://localhost:8000 and http://127.0.0.1:8000
-7. Add Authorized redirect URIs and define the next url: `http://localhost:8000/oauth/google/callback`
-8. Save it and it will take a few minutes to make effects.
-
-So far, you can add the API Keys generated by Google in the top right inside the form where we defined the step above. Copy the keys and add it to the .env file.
-You'll see the variables like this:
-
-```
-ACTIVATE_TRADITIONAL_REGISTRATION=false
-GOOGLE_CLIENT_ID=578350767445-pbhibf17vh47j2oa7cslcmpl8abfsbmm.apps.googleusercontent.com
-GOOGLE_CLIENT_SECRET=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
-GOOGLE_REDIRECT=http://localhost:8000/oauth/google/callback
-```
-
-You can try using the current api keys or set the new one.
-
-If you want to register without google, you'll to set the env var `ACTIVATE_TRADITIONAL_REGISTRATION` to `true`. It will activate a new route to register into the app.
-
-1. Go to `http://localhost:8000/register`
-2. Fill the form using an email ending with @kindhumans.com
-3. You'll need to confirm your email.
-4. Go to `http://localhost:8025` and see the new email confirmation.
-5. Click on the confirmation link.
-6. That's all.
-
-### Stripe
-We use stripe to process payments. So, let's define the api keys:
-
-```
-STRIPE_KEY=your-stripe-key
-STRIPE_SECRET=your-stripe-secret
-CASHIER_CURRENCY=usd
-```
-
-Please contact to one of the kindhumans dev team member to get the stripe keys.
-
-## Install with Laravel Sail (Docker).
-
-See: https://laravel.com/docs/9.x/sail
-
-`Laravel Sail` is a package to install a project using Docker. Having said this, the first requirement here is Docker. Once you have installed Docker in your local machine add an alias
-to your bash to use `sail` easily. So, please add to your bash:
-
+### Database Management
 ```bash
-alias sail='[ -f sail ] && bash sail || bash vendor/bin/sail'
+# Run migrations
+./vendor/bin/sail artisan migrate
+
+# Seed database
+./vendor/bin/sail artisan db:seed
+
+# Create new migration
+./vendor/bin/sail artisan make:migration create_example_table
 ```
 
-Then load this changes in your termain sourcing it!
-
+### Queue Management
 ```bash
-source ~/.zshrc
+# Process jobs
+./vendor/bin/sail artisan queue:work
+
+# Monitor failed jobs
+./vendor/bin/sail artisan queue:failed
 ```
 
-Replace `.zshrc` with the bash profile you're using.
+## Notes and Possible Improvements
 
-So, now we should be able to use `sail` command in our terminal. Before of install the docker images, let's be sure we are fine with our environment variables.
+### Current Strengths
+- **Modular Architecture**: Well-organized codebase with clear separation of concerns
+- **Comprehensive Integration**: Robust integration with multiple third-party services
+- **Modern Tech Stack**: Uses latest Laravel features, Vue.js 3, and modern tooling
+- **API-First Design**: Well-structured API endpoints for external integrations
+- **Background Processing**: Proper use of queues for heavy operations
 
-### Environment
+### Areas for Improvement
 
-Let's run our first sail command to build our docker image. Please run the following command:
+#### 1. **Documentation**
+- **API Documentation**: Consider implementing OpenAPI/Swagger documentation
+- **Code Documentation**: Add more comprehensive PHPDoc comments
+- **Deployment Guide**: Create production deployment documentation
+- **Integration Guides**: Document third-party service setup procedures
 
-```
-$ sail build --no-cache
-```
+#### 2. **Testing**
+- **Test Coverage**: Increase test coverage, especially for business logic
+- **Integration Tests**: Add more comprehensive integration tests
+- **API Testing**: Implement automated API testing
+- **Performance Tests**: Add load testing for critical endpoints
 
-The last command will be run only by the first time. Once the contianer has been installed, let's run:
+#### 3. **Performance**
+- **Caching Strategy**: Implement more sophisticated caching strategies
+- **Database Optimization**: Add database indexing and query optimization
+- **API Rate Limiting**: Implement more granular rate limiting
+- **Background Job Optimization**: Optimize queue processing and job handling
 
-```
-$ sail up
-```
+#### 4. **Security**
+- **API Security**: Implement API versioning and deprecation strategies
+- **Input Validation**: Strengthen input validation and sanitization
+- **Audit Logging**: Add comprehensive audit logging for sensitive operations
+- **Security Headers**: Implement security headers and CSRF protection
 
-It will run the docker image and we should be able to see the site running on http://localhost:8000 with an error. Of course we need to migrate our database.
+#### 5. **Monitoring & Observability**
+- **Application Monitoring**: Implement application performance monitoring (APM)
+- **Error Tracking**: Add comprehensive error tracking and alerting
+- **Health Checks**: Implement health check endpoints for all services
+- **Metrics Collection**: Add business metrics and KPI tracking
 
-### Running database migrations:
+#### 6. **Developer Experience**
+- **Development Tools**: Add more development utilities and helpers
+- **Code Generation**: Implement code generation tools for common patterns
+- **Local Development**: Improve local development setup and tooling
+- **CI/CD Pipeline**: Implement automated testing and deployment pipelines
 
-Open a new terminal tab. Every time you need to run new migrations on our database you'll need to run the next command:
+#### 7. **Scalability**
+- **Microservices Consideration**: Evaluate breaking into smaller services
+- **Database Sharding**: Consider database sharding for large datasets
+- **CDN Integration**: Implement CDN for static assets
+- **Load Balancing**: Add load balancing strategies
 
-``` bash
-$ sail artisan migrate
-```
+### Recommended Next Steps
 
-Then run:
+1. **Immediate (1-2 weeks)**
+   - Add comprehensive API documentation
+   - Implement health check endpoints
+   - Add more unit tests for critical business logic
 
-```bash
-$ sail artisan kinja:sync-permissions
-```
+2. **Short-term (1-2 months)**
+   - Implement application monitoring
+   - Add comprehensive error tracking
+   - Create deployment automation
 
-And then goes to the browser to http://locaslhost:8000 and login with your @kindhumans.com email or register into the app going to `http://localhost:8000/regiser` (be sure of have `ACTIVATE_TRADITIONAL_REGISTRATION` en var to `true`). You should be able to login to the admin and then you'll need to give super admin permissions
-to yourself. So, to do this please go back to  your terminal and run:
+3. **Medium-term (3-6 months)**
+   - Optimize database queries and add proper indexing
+   - Implement advanced caching strategies
+   - Add comprehensive integration tests
 
-```bash
-$ sail artisan kinja:become-super-admin youremail@kindhumans.com
-```
+4. **Long-term (6+ months)**
+   - Evaluate microservices architecture
+   - Implement advanced analytics and reporting
+   - Consider implementing event sourcing for critical business events
 
-Of course, replace `youremail@kindhumans.com` with the email you used to login in the admin.
+---
 
-## Adding Kindhumans Data
+## Contributing
 
-Of course we need data in our admin to keep it synced with our kindhumans store. So, let's go to our admin with super admin perms and click on `Api Tokens` (http://localhost:8000/user/api-tokens) and let's create a new one with all the perms. Then copy the API key generated and let's go to the kindhuman store wp dashboard and click on `Tools > Kinja` and set the url of our admin and the api key just 
-generated.
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-To import all the data from out store locally we have two options. Do it via API and via imports. Both works, the difference is in speed. We recommend import the data importing it via csv. So, to do it we should go to the project root of our kindhumans store and run the next wp cli command:
+## License
 
-```bash
-$ wp kinja export_customers
-$ wp kinja export_products
-$ wp kinja export_orders
-$ wp kinja export_memberships
-```
+This project is proprietary software developed for Kindhumans. All rights reserved.
 
-The we should copy those csv files and save it on a `csv/` folder in the root of this project. Then we should import the customers first. 
+## Support
 
-**Note:** The order of these imports are important to avoid errors of dependency data.
-
-1. First import customers:
-```bash
-$ sail artisan kinja:import customers csv/Customers_Kindhumans.csv
-```
-
-2. Import Products
-```bash
-$ sail artisan kinja:import products csv/Products_Kindhumans.csv
-```
-
-3. Import Orders
-```bash
-$ sail artisan kinja:import orders csv/Orders_Kindhumans.csv
-```
-
-4. Finally import memberships
-```bash
-$ sail artisan kinja:import memberships csv/Memberships_Kindhumans.csv
-```
-
-## Tasks after finished.
-
-Link storage.
-
-```bash
-$ sail artisan storage:link
-```
-
-If you want to run queue jobs, run:
-
-```bash
-$ sail artisan queue:work
-```
-
-**Note** Be sure of have running up `sail up` always, otherwise these commands will not work.
+For support and questions, please contact the development team or create an issue in the project repository.
